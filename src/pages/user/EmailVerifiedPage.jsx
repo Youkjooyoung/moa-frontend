@@ -16,7 +16,7 @@ export default function EmailVerifiedPage() {
     }
 
     axios
-      .get(`/api/uses/verify-email?token=${token}`)
+      .get(`/api/users/verify-email?token=${token}`)
       .then(() => {
         setStatus("success");
         setMessage("이메일 인증이 완료되었습니다! 이제 로그인할 수 있습니다.");

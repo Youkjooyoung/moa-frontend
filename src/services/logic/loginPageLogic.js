@@ -12,7 +12,7 @@ export function initLoginPage() {
   if (btn) {
     btn.onclick = async () => {
       const data = {
-        email: email.value,
+        userId: email.value,
         password: pw.value,
       };
 

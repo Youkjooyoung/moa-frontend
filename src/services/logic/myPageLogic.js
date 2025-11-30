@@ -11,6 +11,8 @@ export async function initMyPage() {
   const emailEl = document.getElementById("myEmail");
   if (!emailEl) return;
 
+  let user;
+
   try {
     const res = await httpClient.get("/users/me");
     const { success, data, error } = res;
@@ -22,9 +24,9 @@ export async function initMyPage() {
       return;
     }
 
-    const user = data;
+    user = data;
 
-    emailEl.textContent = user.email || "";
+    emailEl.textContent = user.userId || "";
 
     const nicknameEl = document.getElementById("myNickname");
     if (nicknameEl) nicknameEl.textContent = user.nickname || "";
@@ -55,7 +57,11 @@ export async function initMyPage() {
     const profileImageEl = document.getElementById("myProfileImage");
     if (profileImageEl) {
       if (user.profileImage) {
-        profileImageEl.src = user.profileImage;
+        if (user.profileImage.startsWith("/")) {
+          profileImageEl.src = `https://localhost:8443${user.profileImage}`;
+        } else {
+          profileImageEl.src = user.profileImage;
+        }
       } else {
         profileImageEl.src =
           "https://static.thenounproject.com/png/363633-200.png";
@@ -113,10 +119,44 @@ export async function initMyPage() {
     };
   }
 
-  const kakaoConnect = document.getElementById("btnKakaoConnect");
-  if (kakaoConnect) {
-    kakaoConnect.onclick = () => {
-      window.location.href = "/api/auth/oauth/kakao";
-    };
+  const kakaoButton = document.getElementById("btnKakaoConnect");
+  if (kakaoButton) {
+    const connections = user.oauthConnections || [];
+    const kakaoConn = connections.find(
+      (c) => c.provider === "kakao" && !c.releaseDate
+    );
+
+    if (kakaoConn) {
+      kakaoButton.textContent = "카카오 연동 해제";
+      kakaoButton.onclick = async () => {
+        if (!window.confirm("카카오 계정 연동을 해제하시겠습니까?")) {
+          return;
+        }
+        try {
+          const res = await httpClient.post("/oauth/release", {
+            oauthId: kakaoConn.oauthId,
+          });
+          if (res.success) {
+            alert("카카오 계정 연동이 해제되었습니다.");
+            window.location.reload();
+          } else {
+            const msg =
+              res.error?.message || "카카오 연동 해제 중 오류가 발생했습니다.";
+            alert(msg);
+          }
+        } catch (e) {
+          const msg =
+            e.response?.data?.error?.message ||
+            e.response?.data?.message ||
+            "카카오 연동 해제 중 오류가 발생했습니다.";
+          alert(msg);
+        }
+      };
+    } else {
+      kakaoButton.textContent = "Kakao로 시작하기";
+      kakaoButton.onclick = () => {
+        window.location.href = "https://localhost:8443/api/oauth/kakao/auth";
+      };
+    }
   }
 }

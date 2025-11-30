@@ -59,7 +59,7 @@ export function initUpdateUserPage() {
         return;
       }
       const u = res.data;
-      emailInput.value = u.email || "";
+      emailInput.value = u.userId || "";
       nicknameInput.value = u.nickname || "";
       phoneInput.value = u.phone || "";
       currentProfileImageUrl = u.profileImage || null;

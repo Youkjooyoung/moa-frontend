@@ -3,6 +3,8 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Header from "./components/common/Header";
 import Footer from "./components/common/Footer";
 
+import ProtectedRoute from "@/routes/ProtectedRoute";
+import OAuthKakaoPage from "./pages/oauth/OAuthKakaoPage";
 import MainPage from "./pages/main/MainPage";
 import PartyListPage from "./pages/party/PartyListPage";
 import PartyDetailPage from "./pages/party/PartyDetailPage";
@@ -13,6 +15,7 @@ import FindIdPage from "./pages/user/FindIdPage";
 import ResetPwdPage from "./pages/user/ResetPwdPage";
 import MyPage from "./pages/user/MyPage";
 import EmailVerifiedPage from "./pages/user/EmailVerifiedPage";
+import UpdateUserPage from "./pages/user/UpdateUserPage";
 
 import CommunityPage from "./pages/community/CommunityPage";
 
@@ -38,8 +41,13 @@ export default function App() {
           <Route path="/email-verified" element={<EmailVerifiedPage />} />
           <Route
             path="/mypage"
-            element={requireLogin() ? <MyPage /> : <Navigate to="/login" replace />}
+            element={<ProtectedRoute element={<MyPage />} />}
           />
+          <Route
+            path="/mypage/edit"
+            element={requireLogin() ? <UpdateUserPage /> : <Navigate to="/login" replace />}
+          />
+          <Route path="/oauth/kakao" element={<OAuthKakaoPage />} />
 
           {/* 커뮤니티 */}
           <Route path="/community" element={<CommunityPage />} />

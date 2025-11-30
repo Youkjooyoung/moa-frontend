@@ -69,7 +69,7 @@ export default function MyPage() {
             <div className="flex items-center">
               <img
                 id="myProfileImage"
-                src=""
+                src={null}
                 alt="프로필"
                 className="w-20 h-20 rounded-full border border-gray-300 object-cover bg-gray-100"
               />

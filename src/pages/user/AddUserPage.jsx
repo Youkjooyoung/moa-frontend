@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { initSignupPage } from "@/services/logic/addUserPageLogic";
 
 import {
@@ -14,6 +15,12 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 
 export default function AddUserPage() {
+  const [params] = useSearchParams();
+  const provider = params.get("provider");
+  const providerUserId = params.get("providerUserId");
+
+  const isSocialSignup = provider && providerUserId;
+
   useEffect(() => {
     initSignupPage();
   }, []);
@@ -27,32 +34,51 @@ export default function AddUserPage() {
         <CardHeader>
           <CardTitle className="text-xl">기본 정보 입력</CardTitle>
           <CardDescription>
-            이메일, 비밀번호, 휴대폰 번호를 입력해주세요.
+            {isSocialSignup
+              ? "카카오 계정으로 회원가입을 진행합니다."
+              : "이메일, 비밀번호, 휴대폰 번호를 입력해주세요."}
           </CardDescription>
         </CardHeader>
 
         <CardContent className="space-y-5">
-          <div className="space-y-1">
-            <Label htmlFor="signupEmail">이메일(아이디)</Label>
-            <Input id="signupEmail" placeholder="예: moa@email.com" />
-            <p id="msgEmail" className="text-xs mt-1"></p>
 
-            <p className="text-xs text-gray-400 mt-1">
-              회원가입이 완료되면 해당 이메일로 인증 메일이 발송됩니다.
-            </p>
-          </div>
+          {isSocialSignup && (
+            <>
+              <div className="p-3 bg-yellow-50 border rounded text-sm">
+                <p className="font-semibold text-yellow-700">카카오 소셜 회원가입</p>
+                <p className="text-yellow-600 mt-1">이메일/비밀번호 입력은 생략됩니다.</p>
+              </div>
 
-          <div className="space-y-1">
-            <Label htmlFor="signupPassword">비밀번호</Label>
-            <Input id="signupPassword" type="password" placeholder="8~20자 / 영문+숫자 조합" />
-            <p id="msgPassword" className="text-xs mt-1"></p>
-          </div>
+              <input type="hidden" id="signupProvider" value={provider || ""} />
+              <input type="hidden" id="signupProviderUserId" value={providerUserId || ""} />
+            </>
+          )}
 
-          <div className="space-y-1">
-            <Label htmlFor="signupPasswordCheck">비밀번호 확인</Label>
-            <Input id="signupPasswordCheck" type="password" placeholder="다시 입력" />
-            <p id="msgPasswordCheck" className="text-xs mt-1"></p>
-          </div>
+          {!isSocialSignup && (
+            <>
+              <div className="space-y-1">
+                <Label htmlFor="signupEmail">이메일(아이디)</Label>
+                <Input id="signupEmail" placeholder="예: moa@email.com" />
+                <p id="msgEmail" className="text-xs mt-1"></p>
+
+                <p className="text-xs text-gray-400 mt-1">
+                  회원가입이 완료되면 해당 이메일로 인증 메일이 발송됩니다.
+                </p>
+              </div>
+
+              <div className="space-y-1">
+                <Label htmlFor="signupPassword">비밀번호</Label>
+                <Input id="signupPassword" type="password" placeholder="8~20자 / 영문+숫자 조합" />
+                <p id="msgPassword" className="text-xs mt-1"></p>
+              </div>
+
+              <div className="space-y-1">
+                <Label htmlFor="signupPasswordCheck">비밀번호 확인</Label>
+                <Input id="signupPasswordCheck" type="password" placeholder="다시 입력" />
+                <p id="msgPasswordCheck" className="text-xs mt-1"></p>
+              </div>
+            </>
+          )}
 
           <div className="space-y-1">
             <Label htmlFor="signupNickname">닉네임</Label>

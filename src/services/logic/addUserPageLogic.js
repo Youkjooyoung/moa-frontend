@@ -14,6 +14,10 @@ export function initSignupPage() {
   const phoneInput = document.getElementById("signupPhone");
   const passwordInput = document.getElementById("signupPassword");
   const passwordCheckInput = document.getElementById("signupPasswordCheck");
+  const provider = document.getElementById("signupProvider")?.value || null;
+  const providerUserId = document.getElementById("signupProviderUserId")?.value || null;
+
+  const isSocialSignup = provider && providerUserId;
 
   const msgEmail = document.getElementById("msgEmail");
   const msgNickname = document.getElementById("msgNickname");
@@ -145,7 +149,6 @@ export function initSignupPage() {
             });
 
             const { data } = verify;
-
             phoneInput.value = data.phone;
             phoneInput.readOnly = true;
 
@@ -211,13 +214,18 @@ export function initSignupPage() {
     fileInput.dataset.boundPreview = "true";
   }
 
-  const requiredFields = [
-    { el: emailInput, msg: "이메일을 입력하세요." },
-    { el: passwordInput, msg: "비밀번호를 입력하세요." },
-    { el: passwordCheckInput, msg: "비밀번호 확인을 입력하세요." },
-    { el: nicknameInput, msg: "닉네임을 입력하세요." },
-    { el: phoneInput, msg: "휴대폰 번호를 입력하세요." },
-  ];
+  const requiredFields = isSocialSignup
+    ? [
+      { el: nicknameInput, msg: "닉네임을 입력하세요." },
+      { el: phoneInput, msg: "휴대폰 번호를 입력하세요." },
+    ]
+    : [
+      { el: emailInput, msg: "이메일을 입력하세요." },
+      { el: passwordInput, msg: "비밀번호를 입력하세요." },
+      { el: passwordCheckInput, msg: "비밀번호 확인을 입력하세요." },
+      { el: nicknameInput, msg: "닉네임을 입력하세요." },
+      { el: phoneInput, msg: "휴대폰 번호를 입력하세요." },
+    ];
 
   if (btn && !btn.dataset.boundSignup) {
     btn.addEventListener("click", async () => {
@@ -257,20 +265,22 @@ export function initSignupPage() {
       }
 
       const payload = {
-        email,
-        password,
-        passwordConfirm: passwordCheck,
+        userId: isSocialSignup ? null : email,
+        password: isSocialSignup ? null : password,
+        passwordConfirm: isSocialSignup ? null : passwordCheck,
         nickname,
         phone,
         ci,
         di,
         agreeMarketing,
         profileImageBase64,
+        provider,
+        providerUserId,
       };
 
       try {
         // 컨트롤러가 POST /api/users 라면 "/users" 사용
-        const res = await httpClient.post("/users", payload);
+        const res = await httpClient.post("/users/add", payload);
 
         if (res.success) {
           alert("회원가입 완료! 이메일 인증을 확인해주세요.");

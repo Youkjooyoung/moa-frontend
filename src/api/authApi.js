@@ -4,7 +4,10 @@ export const fetchCurrentUser = () =>
   httpClient.get("/users/me");
 
 export const login = (data) =>
-  httpClient.post("/users/login", data);
+  httpClient.post("/users/login", {
+    userId: data.userId,
+    password: data.password
+  });
 
 export const logout = () =>
   httpClient.post("/users/logout");
