@@ -8,6 +8,7 @@ import OAuthKakaoPage from "./pages/oauth/OAuthKakaoPage";
 import SocialLoginCallbackPage from "./pages/oauth/SocialLoginCallbackPage";
 import MainPage from "./pages/main/MainPage";
 import PartyListPage from "./pages/party/PartyListPage";
+import PartyCreatePage from "./pages/party/PartyCreatePage";
 import PartyDetailPage from "./pages/party/PartyDetailPage";
 
 import AddUserPage from "./pages/user/AddUserPage";
@@ -20,6 +21,7 @@ import UpdateUserPage from "./pages/user/UpdateUserPage";
 
 import GetProductList from "./pages/subscription/GetProductList";
 import UserSubscriptionList from "./pages/subscription/UserSubscriptionList";
+import PaymentSuccessPage from "./pages/payment/PaymentSuccessPage";
 
 import SupportPage from "./pages/community/SupportPage";
 
@@ -35,6 +37,7 @@ export default function App() {
           {/* 메인/파티 */}
           <Route path="/" element={<MainPage />} />
           <Route path="/party" element={<PartyListPage />} />
+          <Route path="/party/create" element={<PartyCreatePage />} />
           <Route path="/party/:id" element={<PartyDetailPage />} />
 
           {/* ===== OAuth 콜백 MUST BE PUBLIC ===== */}
@@ -67,6 +70,7 @@ export default function App() {
           {/* product & Subscription */}
           <Route path="/subscriptions" element={<GetProductList />} />
           <Route path="/my/subscriptions" element={<UserSubscriptionList />} />
+          <Route path="/payment/success" element={<PaymentSuccessPage />} />
 
           <Route path="/support" element={<SupportPage />} />
         </Routes>
