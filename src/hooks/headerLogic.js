@@ -17,6 +17,13 @@ export function useHeaderLogic() {
   };
 
   useEffect(() => {
+    const path = window.location.pathname;
+    const isOAuthCallback = path.startsWith("/oauth/");
+
+    if (isOAuthCallback) {
+      return;
+    }
+
     fetchCurrentUser()
       .then((body) => {
         if (body.success && body.data) {
