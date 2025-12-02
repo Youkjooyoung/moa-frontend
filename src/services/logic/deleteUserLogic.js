@@ -1,10 +1,30 @@
+// src/services/logic/deleteUserLogic.js
 import httpClient from "@/api/httpClient";
 
 export function initDeleteUserPage() {
   const btn = document.getElementById("btnDeleteUser");
   const detail = document.getElementById("deleteDetail");
+  const reasonGroup = document.getElementById("deleteReasonGroup");
+  const detailWrapper = document.getElementById("deleteDetailWrapper");
 
-  if (!btn || !detail) return;
+  if (!btn || !detail || !reasonGroup || !detailWrapper) return;
+
+  if (!reasonGroup.dataset.boundReasonChange) {
+    reasonGroup.addEventListener("change", (event) => {
+      const target = event.target;
+      if (!target || target.name !== "deleteReason") return;
+
+      if (target.value === "OTHER") {
+        detailWrapper.classList.remove("hidden");
+        detail.focus();
+      } else {
+        detailWrapper.classList.add("hidden");
+        detail.value = "";
+      }
+    });
+
+    reasonGroup.dataset.boundReasonChange = "true";
+  }
 
   if (!btn.dataset.boundDelete) {
     btn.addEventListener("click", async () => {
