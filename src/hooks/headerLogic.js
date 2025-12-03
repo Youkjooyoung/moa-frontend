@@ -3,6 +3,18 @@ import { fetchCurrentUser, logout as requestLogout } from "@/api/authApi";
 
 export function useHeaderLogic() {
   const [user, setUser] = useState(null);
+  const [oauthProvider, setOauthProvider] = useState(null);
+
+  // ⭐ 프로필 URL 보정 함수
+  const fixProfileImage = (url) => {
+    if (!url) return null;
+
+    // 서버가 제공하는 정적 파일: /uploads/** 형태
+    if (url.startsWith("/")) {
+      return `https://localhost:8443${url}`;
+    }
+    return url;
+  };
 
   useEffect(() => {
     const path = window.location.pathname;
@@ -15,13 +27,21 @@ export function useHeaderLogic() {
     fetchCurrentUser()
       .then((body) => {
         if (body.success && body.data) {
-          setUser(body.data);
+          const u = body.data;
+
+          // ⭐ 프로필 이미지 URL 보정
+          u.profileImage = fixProfileImage(u.profileImage);
+
+          setUser(u);
+          setOauthProvider(u.loginProvider ?? null);
         } else {
           setUser(null);
+          setOauthProvider(null);
         }
       })
       .catch(() => {
         setUser(null);
+        setOauthProvider(null);
       });
   }, []);
 
@@ -34,9 +54,10 @@ export function useHeaderLogic() {
       }
     } finally {
       setUser(null);
+      setOauthProvider(null);
       window.location.href = "/";
     }
   };
 
-  return { user, logout };
+  return { user, oauthProvider, logout };
 }

@@ -5,18 +5,15 @@ import Footer from "./components/common/Footer";
 
 import ProtectedRoute from "@/routes/ProtectedRoute";
 import OAuthKakaoPage from "./pages/oauth/OAuthKakaoPage";
-import OAuthGooglePage from "./pages/oauth/OAuthGooglePage";
+import SocialLoginCallbackPage from "./pages/oauth/SocialLoginCallbackPage";
 import MainPage from "./pages/main/MainPage";
 import PartyListPage from "./pages/party/PartyListPage";
-import PartyCreatePage from "./pages/party/PartyCreatePage";
 import PartyDetailPage from "./pages/party/PartyDetailPage";
 
 import AddUserPage from "./pages/user/AddUserPage";
 import LoginPage from "./pages/user/LoginPage";
 import FindIdPage from "./pages/user/FindIdPage";
 import ResetPwdPage from "./pages/user/ResetPwdPage";
-import UpdatePwdPage from "./pages/user/UpdatePwdPage";
-import DeleteUserPage from "./pages/user/DeleteUserPage";
 import MyPage from "./pages/user/MyPage";
 import EmailVerifiedPage from "./pages/user/EmailVerifiedPage";
 import UpdateUserPage from "./pages/user/UpdateUserPage";
@@ -32,9 +29,6 @@ import GetSubscriptionList from "./pages/subscription/GetSubscriptionList";
 import GetSubscription from "./pages/subscription/GetSubscription";
 import UpdateSubscription from "./pages/subscription/UpdateSubscription";
 import CancelSubscription from "./pages/subscription/CancelSubscription";
-import GetProductList from "./pages/subscription/GetProductList";
-import UserSubscriptionList from "./pages/subscription/UserSubscriptionList";
-import PaymentSuccessPage from "./pages/payment/PaymentSuccessPage";
 
 import SupportPage from "./pages/community/SupportPage";
 
@@ -50,34 +44,24 @@ export default function App() {
           {/* 메인/파티 */}
           <Route path="/" element={<MainPage />} />
           <Route path="/party" element={<PartyListPage />} />
-          <Route path="/party/create" element={<PartyCreatePage />} />
           <Route path="/party/:id" element={<PartyDetailPage />} />
 
           {/* ===== OAuth 콜백 MUST BE PUBLIC ===== */}
           <Route path="/oauth/kakao" element={<OAuthKakaoPage />} />
+          <Route path="/login/social" element={<SocialLoginCallbackPage />} />
 
-          <Route path="/oauth/google" element={<OAuthGooglePage />} />
-
-          {/* User 도메인 (Public) */}
-
+          {/* User */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<AddUserPage />} />
           <Route path="/find-email" element={<FindIdPage />} />
           <Route path="/reset-password" element={<ResetPwdPage />} />
           <Route path="/email-verified" element={<EmailVerifiedPage />} />
+
           <Route
             path="/mypage"
             element={<ProtectedRoute element={<MyPage />} />}
           />
 
-          <Route
-            path="/mypage/password"
-            element={<ProtectedRoute element={<UpdatePwdPage />} />}
-          />
-          <Route
-            path="/mypage/delete"
-            element={<ProtectedRoute element={<DeleteUserPage />} />}
-          />
           <Route
             path="/mypage/edit"
             element={
@@ -97,17 +81,17 @@ export default function App() {
           <Route
             path="/product/add"
             element={<ProtectedRoute element={<AddProduct />} />}
-            // TODO: Add role check for ADMIN
+          // TODO: Add role check for ADMIN
           />
           <Route
             path="/product/:id/edit"
             element={<ProtectedRoute element={<UpdateProduct />} />}
-            // TODO: Add role check for ADMIN
+          // TODO: Add role check for ADMIN
           />
           <Route
             path="/product/:id/delete"
             element={<ProtectedRoute element={<DeleteProduct />} />}
-            // TODO: Add role check for ADMIN
+          // TODO: Add role check for ADMIN
           />
 
           {/* Subscription (User) */}
@@ -131,12 +115,6 @@ export default function App() {
             path="/subscription/:id/cancel"
             element={<ProtectedRoute element={<CancelSubscription />} />}
           />
-
-          {/* 고객센터/커뮤니티 */}
-          {/* product & Subscription */}
-          <Route path="/subscriptions" element={<GetProductList />} />
-          <Route path="/my/subscriptions" element={<UserSubscriptionList />} />
-          <Route path="/payment/success" element={<PaymentSuccessPage />} />
 
           <Route path="/support" element={<SupportPage />} />
         </Routes>
