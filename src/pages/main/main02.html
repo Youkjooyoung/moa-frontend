@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="ko" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MoA - NEXUS 레벨의 구독 관리</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
+    <style>
+        :root {
+            --font-pretendard: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+        }
+        body {
+            font-family: var(--font-pretendard);
+            background-color: #030014; /* 아주 깊은 남색 배경 */
+            color: #E2E8F0;
+        }
+        
+        /* 화려한 네온 그라데이션 배경 */
+        .neon-bg {
+            background: radial-gradient(circle at 50% 50%, rgba(76, 29, 149, 0.2) 0%, rgba(15, 23, 42, 1) 100%),
+                        linear-gradient(180deg, #030014 0%, #0F172A 100%);
+        }
+
+        /* 다크 글래스모피즘 */
+        .glass-dark {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+        
+        /* 네온 테두리 효과 */
+        .neon-border {
+            position: relative;
+        }
+        .neon-border::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(45deg, #ff00cc, #3333ff, #00ccff, #ff00cc);
+            background-size: 400% 400%;
+            z-index: -1;
+            filter: blur(10px);
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            border-radius: inherit;
+            animation: neon-pulse 3s ease-in-out infinite;
+        }
+        .neon-border:hover::before {
+            opacity: 1;
+        }
+
+        @keyframes neon-pulse {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* 텍스트 네온 효과 */
+        .text-neon-pink {
+            text-shadow: 0 0 10px rgba(255, 0, 204, 0.7), 0 0 20px rgba(255, 0, 204, 0.5);
+        }
+        .text-neon-blue {
+            text-shadow: 0 0 10px rgba(0, 204, 255, 0.7), 0 0 20px rgba(0, 204, 255, 0.5);
+        }
+
+    </style>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        border: "rgba(255, 255, 255, 0.1)",
+                        input: "rgba(255, 255, 255, 0.1)",
+                        ring: "rgba(255, 0, 204, 0.5)",
+                        background: "#030014",
+                        foreground: "#E2E8F0",
+                        primary: {
+                            DEFAULT: "#FF00CC", /* 핫핑크 */
+                            foreground: "#FFFFFF",
+                        },
+                        secondary: {
+                            DEFAULT: "#00CCFF", /* 사이언 블루 */
+                            foreground: "#030014",
+                        },
+                        muted: {
+                            DEFAULT: "rgba(15, 23, 42, 0.6)",
+                            foreground: "#94A3B8",
+                        },
+                        accent: {
+                            DEFAULT: "rgba(255, 0, 204, 0.2)",
+                            foreground: "#FF00CC",
+                        },
+                    },
+                     boxShadow: {
+                        'neon-pink': '0 0 20px rgba(255, 0, 204, 0.5), 0 0 40px rgba(255, 0, 204, 0.3)',
+                        'neon-blue': '0 0 20px rgba(0, 204, 255, 0.5), 0 0 40px rgba(0, 204, 255, 0.3)',
+                    },
+                    backgroundImage: {
+                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                        'neon-gradient-to-r': 'linear-gradient(to right, #ff00cc, #3333ff, #00ccff)',
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="neon-bg antialiased selection:bg-primary selection:text-white overflow-x-hidden">
+
+    <nav class="fixed top-0 w-full z-50 border-b border-white/10 glass-dark">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-2 cursor-pointer group">
+                    <div class="bg-primary/20 text-primary p-1.5 rounded-lg border border-primary/50 shadow-neon-pink transition-all group-hover:shadow-[0_0_30px_rgba(255,0,204,0.8)]">
+                        <i data-lucide="layers" class="w-5 h-5"></i>
+                    </div>
+                    <span class="text-2xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-primary via-purple-500 to-secondary">MoA</span>
+                </div>
+                <div class="hidden md:flex space-x-8 text-sm font-medium text-slate-300">
+                    <a href="#" class="hover:text-primary transition-colors hover:shadow-neon-pink">파티 찾기</a>
+                    <a href="#" class="hover:text-primary transition-colors hover:shadow-neon-pink">이용 가이드</a>
+                    <a href="#" class="hover:text-primary transition-colors hover:shadow-neon-pink">자주 묻는 질문</a>
+                </div>
+                <div class="flex items-center gap-4">
+                    <a href="#" class="text-sm font-medium text-slate-300 hover:text-white transition-colors">로그인</a>
+                    <a href="#" class="relative inline-flex h-9 items-center justify-center rounded-md px-6 py-2 text-sm font-bold text-white transition-all hover:scale-105 overflow-hidden group">
+                        <span class="absolute inset-0 bg-gradient-to-r from-primary via-purple-600 to-secondary opacity-80 group-hover:opacity-100 transition-opacity"></span>
+                        <span class="absolute inset-0 shadow-neon-pink opacity-50 group-hover:opacity-100 blur-md transition-opacity"></span>
+                        <span class="relative z-10 flex items-center gap-1">시작하기 <i data-lucide="zap" class="w-4 h-4"></i></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="pt-16">
+        <section class="relative py-24 lg:py-36 overflow-hidden">
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/30 rounded-full blur-[120px] -z-10 animate-pulse"></div>
+            <div class="absolute top-0 right-0 w-[400px] h-[400px] bg-secondary/20 rounded-full blur-[100px] -z-10"></div>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center relative z-10">
+                
+                <div class="inline-flex items-center rounded-full border border-primary/30 bg-primary/10 backdrop-blur-md px-4 py-1.5 text-sm font-semibold text-primary shadow-neon-pink mb-8 animate-fade-in-up ring-1 ring-primary/50">
+                    <span class="flex h-2.5 w-2.5 rounded-full bg-primary mr-2 shadow-[0_0_10px_#ff00cc]"></span>
+                    NEXUS 레벨 멤버십 오픈 🎉 첫 달 수수료 FREE
+                </div>
+                
+                <h1 class="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight text-white mb-8 max-w-5xl leading-none drop-shadow-2xl">
+                    구독의 <span class="text-transparent bg-clip-text bg-neon-gradient-to-r filter drop-shadow-[0_0_15px_rgba(255,0,204,0.5)]">한계 돌파.</span><br/>
+                    MoA에서 접속하라.
+                </h1>
+                
+                <p class="text-xl md:text-2xl text-slate-300 mb-12 max-w-3xl leading-relaxed drop-shadow-md">
+                    넷플릭스, 디즈니+, 유튜브 프리미엄. <br class="hidden md:block"/>
+                    모든 디지털 유니버스를 반값에 소유하세요. 안전하고 강력하게.
+                </p>
+
+                <div class="flex flex-col sm:flex-row gap-6 w-full sm:w-auto">
+                    <a href="/parties" class="relative inline-flex h-14 items-center justify-center rounded-xl px-10 text-lg font-bold text-white transition-all hover:scale-105 overflow-hidden group w-full sm:w-auto">
+                        <div class="absolute inset-0 bg-neon-gradient-to-r opacity-90 group-hover:opacity-100 transition-opacity"></div>
+                        <div class="absolute inset-0 blur-lg bg-neon-gradient-to-r opacity-50 group-hover:opacity-80 transition-opacity"></div>
+                        <span class="relative z-10 flex items-center">파티 탐색 프로토콜 가동 <i data-lucide="rocket" class="ml-2 w-5 h-5"></i></span>
+                    </a>
+                    <a href="/parties/create" class="group relative inline-flex h-14 items-center justify-center rounded-xl border-2 border-secondary/50 bg-secondary/10 backdrop-blur-md px-10 text-lg font-bold text-secondary shadow-neon-blue transition-all hover:bg-secondary/20 hover:border-secondary hover:text-white w-full sm:w-auto overflow-hidden">
+                         <span class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-secondary/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></span>
+                        새로운 파티 생성
+                    </a>
+                </div>
+
+                <div class="mt-24 relative w-full max-w-5xl perspective-1000">
+                    <div class="relative rounded-2xl border-2 border-white/10 bg-slate-900/60 backdrop-blur-xl shadow-[0_0_50px_rgba(0,204,255,0.2)] overflow-hidden transform rotateX(5deg) hover:rotateX(0deg) transition-transform duration-500 group">
+                        <div class="absolute inset-0 bg-gradient-to-b from-secondary/10 to-transparent opacity-50 w-full h-2 animate-[scan_3s_linear_infinite] pointer-events-none z-20"></div>
+                        
+                        <div class="flex items-center border-b border-white/10 bg-slate-950/50 px-5 py-4">
+                            <div class="flex space-x-2">
+                                <div class="h-3 w-3 rounded-full bg-red-500 shadow-[0_0_10px_red]"></div>
+                                <div class="h-3 w-3 rounded-full bg-amber-500 shadow-[0_0_10px_orange]"></div>
+                                <div class="h-3 w-3 rounded-full bg-green-500 shadow-[0_0_10px_green]"></div>
+                            </div>
+                            <div class="ml-4 text-xs text-secondary font-mono">SYSTEM STATUS: OPTIMAL // SECURE CONNECTION ESTABLISHED</div>
+                        </div>
+                        <div class="p-10 grid grid-cols-1 md:grid-cols-3 gap-8 text-left relative z-10">
+                            <div class="space-y-3 p-4 rounded-xl bg-white/5 border border-white/10 group-hover:border-secondary/50 transition-colors">
+                                <div class="text-sm font-medium text-slate-400 uppercase tracking-wider">Total Savings</div>
+                                <div class="text-4xl font-black text-transparent bg-clip-text bg-neon-gradient-to-r drop-shadow-[0_0_10px_rgba(255,0,204,0.5)]">₩ 27,500</div>
+                                <div class="text-xs text-secondary flex items-center font-bold">
+                                    <i data-lucide="trending-up" class="w-4 h-4 mr-1"></i> Efficiency +15% 증가
+                                </div>
+                            </div>
+                             <div class="space-y-3 p-4 rounded-xl bg-white/5 border border-white/10 group-hover:border-primary/50 transition-colors">
+                                <div class="text-sm font-medium text-slate-400 uppercase tracking-wider">Active Modules</div>
+                                <div class="flex -space-x-4">
+                                    <img class="w-12 h-12 rounded-full border-2 border-slate-900 shadow-neon-pink" src="https://picsum.photos/seed/n/100/100" alt="">
+                                    <img class="w-12 h-12 rounded-full border-2 border-slate-900 shadow-neon-blue" src="https://picsum.photos/seed/d/100/100" alt="">
+                                    <img class="w-12 h-12 rounded-full border-2 border-slate-900 shadow-[0_0_15px_rgba(255,255,255,0.4)]" src="https://picsum.photos/seed/y/100/100" alt="">
+                                    <div class="w-12 h-12 rounded-full border-2 border-slate-900 bg-slate-800 flex items-center justify-center text-sm font-bold text-white shadow-sm">+1</div>
+                                </div>
+                            </div>
+                             <div class="space-y-3 p-4 rounded-xl bg-white/5 border border-white/10 group-hover:border-secondary/50 transition-colors">
+                                <div class="text-sm font-medium text-slate-400 uppercase tracking-wider">Next Cycle</div>
+                                <div class="text-2xl font-bold text-white">12월 25일 <span class="text-xs text-slate-500 font-normal">D-5</span></div>
+                                <div class="w-full bg-slate-800/50 rounded-full h-3 mt-3 overflow-hidden border border-white/5">
+                                    <div class="bg-neon-gradient-to-r h-full rounded-full shadow-[0_0_15px_rgba(0,204,255,0.5)] relative" style="width: 70%">
+                                        <span class="absolute right-0 top-0 h-full w-1 bg-white animate-ping"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-28 relative z-10">
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-[#0F172A] to-transparent -z-10 opacity-80"></div>
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-20">
+                    <h2 class="text-4xl md:text-5xl font-black tracking-tight text-white">WHY MoA? <span class="text-primary">SYSTEM CORE</span></h2>
+                    <p class="mt-6 text-xl text-slate-400 max-w-2xl mx-auto">복잡한 구독 관리, MoA의 진보된 시스템으로 통제하십시오.</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="group relative rounded-3xl glass-dark p-10 shadow-2xl transition-all duration-500 hover:-translate-y-3 hover:shadow-[0_20px_40px_-15px_rgba(255,0,204,0.3)] overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-br from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10"></div>
+                        <div class="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/20 text-primary group-hover:bg-primary group-hover:text-white transition-all duration-500 shadow-neon-pink group-hover:rotate-12 group-hover:scale-110">
+                            <i data-lucide="shield-check" class="w-8 h-8"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-4 group-hover:text-primary transition-colors">보안 프로토콜 작동</h3>
+                        <p class="text-slate-400 leading-relaxed font-medium">
+                            Escrow 안전 결제 시스템 탑재. 파티 종료 시점까지 귀하의 자산은 완벽하게 보호됩니다. 먹튀는 불가능합니다.
+                        </p>
+                    </div>
+
+                    <div class="group relative rounded-3xl glass-dark p-10 shadow-2xl transition-all duration-500 hover:-translate-y-3 hover:shadow-[0_20px_40px_-15px_rgba(168,85,247,0.3)] overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10"></div>
+                        <div class="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-purple-500/20 text-purple-400 group-hover:bg-purple-500 group-hover:text-white transition-all duration-500 shadow-[0_0_20px_rgba(168,85,247,0.5)] group-hover:rotate-12 group-hover:scale-110">
+                            <i data-lucide="zap" class="w-8 h-8"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-4 group-hover:text-purple-400 transition-colors">초고속 매칭 엔진</h3>
+                        <p class="text-slate-400 leading-relaxed font-medium">
+                            대기 시간 제로. 결제 즉시 계정 데이터가 전송됩니다. 5초 안에 콘텐츠의 바다로 다이브하십시오.
+                        </p>
+                    </div>
+
+                    <div class="group relative rounded-3xl glass-dark p-10 shadow-2xl transition-all duration-500 hover:-translate-y-3 hover:shadow-[0_20px_40px_-15px_rgba(0,204,255,0.3)] overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-br from-secondary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10"></div>
+                        <div class="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-secondary/20 text-secondary group-hover:bg-secondary group-hover:text-white transition-all duration-500 shadow-neon-blue group-hover:rotate-12 group-hover:scale-110">
+                            <i data-lucide="cpu" class="w-8 h-8"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-4 group-hover:text-secondary transition-colors">자동화 정산 시스템</h3>
+                        <p class="text-slate-400 leading-relaxed font-medium">
+                            더 이상 신경 쓸 필요 없습니다. 시스템이 매월 지정된 날짜에 정확하게 정산을 수행합니다.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-28 relative">
+             <div class="absolute right-0 top-1/3 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] -z-10"></div>
+            <div class="absolute left-0 bottom-1/3 w-[500px] h-[500px] bg-secondary/10 rounded-full blur-[120px] -z-10"></div>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-end mb-14">
+                    <div>
+                        <h2 class="text-4xl font-black tracking-tight text-white flex items-center">LIVE PARTIES <span class="text-red-500 ml-2 animate-pulse">●</span></h2>
+                        <p class="mt-3 text-xl text-slate-400">실시간으로 모집 중인 인기 파티에 탑승하세요.</p>
+                    </div>
+                    <a href="#" class="hidden md:flex items-center text-lg font-bold text-secondary hover:text-white transition-colors group">
+                        전체 데이터 보기 <i data-lucide="chevron-right" class="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
+                    </a>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    
+                    <div class="group relative rounded-3xl glass-dark overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-neon-blue neon-border">
+                        <div class="p-8 relative z-10">
+                            <div class="flex justify-between items-start mb-6">
+                                <div class="flex items-center gap-5">
+                                    <div class="relative">
+                                        <img src="https://picsum.photos/seed/netflix/80/80" class="w-16 h-16 rounded-2xl object-cover shadow-[0_0_20px_rgba(255,255,255,0.2)] border border-white/20" />
+                                        <div class="absolute -bottom-2 -right-2 bg-slate-900 rounded-full p-1">
+                                            <div class="w-4 h-4 bg-green-500 rounded-full border-2 border-slate-900 shadow-[0_0_10px_#22c55e]"></div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-2xl font-black text-white tracking-tight">Netflix 4K</h3>
+                                        <p class="text-sm font-bold text-secondary">프리미엄 요금제</p>
+                                    </div>
+                                </div>
+                                <span class="inline-flex items-center rounded-full bg-secondary/20 border border-secondary/50 px-4 py-1.5 text-sm font-bold text-secondary shadow-neon-blue animate-pulse">
+                                    ON AIR
+                                </span>
+                            </div>
+
+                            <div class="mb-8 p-5 rounded-2xl bg-slate-950/50 border border-white/10">
+                                <h4 class="text-3xl font-black text-white mb-3">₩ 4,250 <span class="text-slate-400 font-bold text-sm">/ 월</span></h4>
+                                <div class="w-full bg-slate-800/80 rounded-full h-4 overflow-hidden border border-white/10">
+                                    <div class="bg-secondary h-full rounded-full shadow-[0_0_15px_#00ccff] relative" style="width: 50%">
+                                         <span class="absolute right-0 top-0 h-full w-2 bg-white/50 animate-ping"></span>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between text-sm font-medium text-slate-400 mt-3">
+                                    <span>2명 접속중</span>
+                                    <span class="font-bold text-secondary">2 SLOTS LEFT</span>
+                                </div>
+                            </div>
+
+                            <button class="w-full inline-flex items-center justify-center rounded-xl bg-secondary/80 hover:bg-secondary px-6 py-4 text-lg font-bold text-slate-900 transition-all duration-300 shadow-neon-blue hover:shadow-[0_0_30px_#00ccff]">
+                                파티 접속하기
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="group relative rounded-3xl glass-dark overflow-hidden transition-all duration-500 opacity-75 hover:opacity-100 hover:border-red-500/50 hover:shadow-[0_0_30px_rgba(239,68,68,0.3)]">
+                        <div class="p-8 relative z-10 grayscale group-hover:grayscale-0 transition-all duration-500">
+                            <div class="flex justify-between items-start mb-6">
+                                <div class="flex items-center gap-5">
+                                    <div class="relative">
+                                        <img src="https://picsum.photos/seed/disney/80/80" class="w-16 h-16 rounded-2xl object-cover shadow-sm border border-white/10" />
+                                    </div>
+                                    <div>
+                                        <h3 class="font-black text-slate-300">Disney+</h3>
+                                        <p class="text-sm font-bold text-slate-500">스탠다드 요금제</p>
+                                    </div>
+                                </div>
+                                <span class="inline-flex items-center rounded-full bg-slate-700/50 border border-slate-600 px-4 py-1.5 text-sm font-bold text-slate-400">
+                                    CLOSED
+                                </span>
+                            </div>
+
+                            <div class="mb-8 p-5 rounded-2xl bg-slate-950/50 border border-white/5">
+                                <h4 class="text-3xl font-black text-slate-400 mb-3">₩ 2,400 <span class="text-slate-500 font-bold text-sm">/ 월</span></h4>
+                                <div class="w-full bg-slate-800/80 rounded-full h-4 overflow-hidden border border-white/10">
+                                    <div class="bg-slate-600 h-full rounded-full" style="width: 100%"></div>
+                                </div>
+                                <div class="flex justify-between text-sm font-medium text-slate-500 mt-3">
+                                    <span>4명 접속중</span>
+                                    <span>FULL SQUAD</span>
+                                </div>
+                            </div>
+
+                            <button disabled class="w-full inline-flex items-center justify-center rounded-xl bg-slate-800 px-6 py-4 text-lg font-bold text-slate-500 cursor-not-allowed border border-white/5">
+                                모집 마감됨
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="group relative rounded-3xl glass-dark overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-neon-pink neon-border">
+                        <div class="absolute inset-0 bg-primary/5 animate-pulse z-0 pointer-events-none"></div>
+
+                        <div class="p-8 relative z-10">
+                            <div class="flex justify-between items-start mb-6">
+                                <div class="flex items-center gap-5">
+                                    <div class="relative">
+                                        <img src="https://picsum.photos/seed/youtube/80/80" class="w-16 h-16 rounded-2xl object-cover shadow-[0_0_20px_rgba(255,0,204,0.3)] border border-white/20" />
+                                        <div class="absolute -bottom-2 -right-2 bg-slate-900 rounded-full p-1">
+                                            <div class="w-4 h-4 bg-red-500 rounded-full border-2 border-slate-900 shadow-[0_0_15px_red] animate-ping"></div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-2xl font-black text-white tracking-tight">YouTube Premium</h3>
+                                        <p class="text-sm font-bold text-primary">가족 요금제</p>
+                                    </div>
+                                </div>
+                                <span class="inline-flex items-center rounded-full bg-primary/20 border border-primary/50 px-4 py-1.5 text-sm font-bold text-primary shadow-neon-pink animate-[bounce_1s_infinite]">
+                                    URGENT
+                                </span>
+                            </div>
+
+                            <div class="mb-8 p-5 rounded-2xl bg-slate-950/50 border border-white/10">
+                                <h4 class="text-3xl font-black text-white mb-3">₩ 3,600 <span class="text-slate-400 font-bold text-sm">/ 월</span></h4>
+                                <div class="w-full bg-slate-800/80 rounded-full h-4 overflow-hidden border border-white/10">
+                                    <div class="bg-primary h-full rounded-full shadow-[0_0_15px_#ff00cc] relative" style="width: 80%">
+                                         <span class="absolute right-0 top-0 h-full w-2 bg-white/50 animate-ping"></span>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between text-sm font-medium text-slate-400 mt-3">
+                                    <span>4명 접속중</span>
+                                    <span class="font-bold text-primary drop-shadow-[0_0_10px_#ff00cc]">LAST 1 SLOT!</span>
+                                </div>
+                            </div>
+
+                            <button class="w-full inline-flex items-center justify-center rounded-xl bg-primary/80 hover:bg-primary px-6 py-4 text-lg font-bold text-white transition-all duration-300 shadow-neon-pink hover:shadow-[0_0_30px_#ff00cc]">
+                                긴급 탑승하기
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-12 text-center md:hidden">
+                    <button class="w-full inline-flex items-center justify-center rounded-xl border-2 border-secondary/50 bg-secondary/10 backdrop-blur-md px-6 py-4 text-lg font-bold text-secondary hover:bg-secondary/20 hover:text-white transition-all">
+                        전체 파티 데이터 보기
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="glass-dark border-t border-white/5 py-16 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-8">
+                <div class="flex items-center gap-3 group cursor-pointer">
+                    <div class="bg-primary/20 text-primary p-2 rounded-lg border border-primary/50 shadow-neon-pink group-hover:shadow-[0_0_30px_rgba(255,0,204,0.8)] transition-all">
+                        <i data-lucide="layers" class="w-6 h-6"></i>
+                    </div>
+                    <span class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">MoA</span>
+                </div>
+                <p class="text-slate-500 font-medium text-sm">© 2024 MoA Inc. The Future of Subscription. All rights reserved.</p>
+                <div class="flex space-x-8">
+                    <a href="#" class="text-slate-500 hover:text-primary hover:shadow-neon-pink transition-all transform hover:scale-110">
+                        <i data-lucide="github" class="w-6 h-6"></i>
+                    </a>
+                    <a href="#" class="text-slate-500 hover:text-secondary hover:shadow-neon-blue transition-all transform hover:scale-110">
+                        <i data-lucide="twitter" class="w-6 h-6"></i>
+                    </a>
+                    <a href="#" class="text-slate-500 hover:text-purple-400 hover:shadow-[0_0_20px_rgba(168,85,247,0.5)] transition-all transform hover:scale-110">
+                        <i data-lucide="instagram" class="w-6 h-6"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+    </script>
+    <style>
+        /* 추가적인 애니메이션 정의 */
+        @keyframes shimmer {
+            100% {
+                transform: translateX(100%);
+            }
+        }
+        @keyframes scan {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(500%); }
+        }
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+    </style>
+</body>
+</html>

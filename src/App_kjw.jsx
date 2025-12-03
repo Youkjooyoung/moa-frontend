@@ -5,7 +5,7 @@ import Footer from "./components/common/Footer";
 
 import ProtectedRoute from "@/routes/ProtectedRoute";
 import OAuthKakaoPage from "./pages/oauth/OAuthKakaoPage";
-import OAuthGooglePage from "./pages/oauth/OAuthGooglePage";
+import SocialLoginCallbackPage from "./pages/oauth/SocialLoginCallbackPage";
 import MainPage from "./pages/main/MainPage";
 import PartyListPage from "./pages/party/PartyListPage";
 import PartyDetailPage from "./pages/party/PartyDetailPage";
@@ -14,8 +14,6 @@ import AddUserPage from "./pages/user/AddUserPage";
 import LoginPage from "./pages/user/LoginPage";
 import FindIdPage from "./pages/user/FindIdPage";
 import ResetPwdPage from "./pages/user/ResetPwdPage";
-import UpdatePwdPage from "./pages/user/UpdatePwdPage";
-import DeleteUserPage from "./pages/user/DeleteUserPage";
 import MyPage from "./pages/user/MyPage";
 import EmailVerifiedPage from "./pages/user/EmailVerifiedPage";
 import UpdateUserPage from "./pages/user/UpdateUserPage";
@@ -50,29 +48,20 @@ export default function App() {
 
           {/* ===== OAuth 콜백 MUST BE PUBLIC ===== */}
           <Route path="/oauth/kakao" element={<OAuthKakaoPage />} />
+          <Route path="/login/social" element={<SocialLoginCallbackPage />} />
 
-          <Route path="/oauth/google" element={<OAuthGooglePage />} />
-
-          {/* User 도메인 (Public) */}
-
+          {/* User */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<AddUserPage />} />
           <Route path="/find-email" element={<FindIdPage />} />
           <Route path="/reset-password" element={<ResetPwdPage />} />
           <Route path="/email-verified" element={<EmailVerifiedPage />} />
+
           <Route
             path="/mypage"
             element={<ProtectedRoute element={<MyPage />} />}
           />
 
-          <Route
-            path="/mypage/password"
-            element={<ProtectedRoute element={<UpdatePwdPage />} />}
-          />
-          <Route
-            path="/mypage/delete"
-            element={<ProtectedRoute element={<DeleteUserPage />} />}
-          />
           <Route
             path="/mypage/edit"
             element={
@@ -92,17 +81,17 @@ export default function App() {
           <Route
             path="/product/add"
             element={<ProtectedRoute element={<AddProduct />} />}
-            // TODO: Add role check for ADMIN
+          // TODO: Add role check for ADMIN
           />
           <Route
             path="/product/:id/edit"
             element={<ProtectedRoute element={<UpdateProduct />} />}
-            // TODO: Add role check for ADMIN
+          // TODO: Add role check for ADMIN
           />
           <Route
             path="/product/:id/delete"
             element={<ProtectedRoute element={<DeleteProduct />} />}
-            // TODO: Add role check for ADMIN
+          // TODO: Add role check for ADMIN
           />
 
           {/* Subscription (User) */}
@@ -127,7 +116,6 @@ export default function App() {
             element={<ProtectedRoute element={<CancelSubscription />} />}
           />
 
-          {/* 고객센터/커뮤니티 */}
           <Route path="/support" element={<SupportPage />} />
         </Routes>
       </main>

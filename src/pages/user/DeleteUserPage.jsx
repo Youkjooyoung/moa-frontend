@@ -15,7 +15,10 @@ export default function DeleteUserPage() {
       </p>
 
       <div className="w-full max-w-xl bg-white rounded-2xl shadow p-8 space-y-6">
-        <div className="space-y-3 text-sm">
+        <div
+          id="deleteReasonGroup"
+          className="space-y-3 text-sm"
+        >
           <p className="font-semibold">탈퇴 사유</p>
 
           <label className="flex items-center gap-2">
@@ -55,11 +58,14 @@ export default function DeleteUserPage() {
               value="OTHER"
               className="cursor-pointer"
             />
-            기타
+            기타(상세내용 입력)
           </label>
         </div>
 
-        <div className="space-y-2">
+        <div
+          id="deleteDetailWrapper"
+          className="space-y-2 hidden"
+        >
           <p className="text-sm font-semibold">상세 사유 (선택)</p>
           <textarea
             id="deleteDetail"
