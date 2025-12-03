@@ -21,6 +21,8 @@ export default function PartyCreatePage() {
     const [createdPartyId, setCreatedPartyId] = useState(null);
     const [ottInfo, setOttInfo] = useState({ ottId: "", ottPassword: "" });
     const [loading, setLoading] = useState(false);
+    // 리다이렉트 복귀 시 데이터 복구 중인지 여부
+    const [isRestoring, setIsRestoring] = useState(!!searchParams.get("step"));
 
     // Step 1: Load Products & Check for Redirect Return
     useEffect(() => {
@@ -42,28 +44,25 @@ export default function PartyCreatePage() {
         const partyIdParam = searchParams.get("partyId");
 
         if (stepParam && partyIdParam) {
-            setStep(Number(stepParam));
-            setCreatedPartyId(Number(partyIdParam));
-
             try {
                 // 파티 정보 조회하여 선택된 상품 정보 복구
                 const party = await fetchPartyDetail(partyIdParam);
-                // products가 로드된 상태라면 거기서 찾을 수도 있지만, 
-                // 비동기 시점 문제로 직접 product 정보를 가져오거나 party 정보에 있는 product를 사용해야 함.
-                // 여기서는 party 정보에 product 정보가 포함되어 있다고 가정하거나, 
-                // productId로 products 배열에서 찾아야 함.
-                // 하지만 products가 아직 로드 안 됐을 수 있음.
-                // 간단히 party.productName 등을 사용할 수 있다면 좋음.
-                // PartyDetailResponse에 productName, price가 있다고 가정.
+
                 if (party) {
                     setSelectedProduct({
                         productId: party.productId,
                         productName: party.productName || "Unknown Product",
                         price: party.monthlyFee || 0, // 보증금 = 월구독료
                     });
+                    setCreatedPartyId(Number(partyIdParam));
+                    setStep(Number(stepParam));
                 }
             } catch (error) {
                 console.error("Failed to restore party info", error);
+                alert("파티 정보를 불러오는 데 실패했습니다. 처음부터 다시 시도해주세요.");
+                setStep(1);
+            } finally {
+                setIsRestoring(false);
             }
         }
     };
@@ -158,6 +157,19 @@ export default function PartyCreatePage() {
             alert("OTT 정보 저장에 실패했습니다.");
         }
     };
+
+    if (isRestoring) {
+        return (
+            <div className="min-h-screen flex flex-col bg-gray-50">
+                <Header />
+                <main className="flex-1 flex flex-col items-center justify-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
+                    <p className="text-gray-600">결제 정보를 확인하고 있습니다...</p>
+                </main>
+                <Footer />
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen flex flex-col bg-gray-50">
@@ -328,7 +340,7 @@ export default function PartyCreatePage() {
 
                             <div>
                                 <label className="block text-sm font-medium mb-1">
-                                    {selectedProduct.productName} 아이디 (이메일)
+                                    {selectedProduct?.productName || "상품"} 아이디 (이메일)
                                 </label>
                                 <input
                                     type="text"
@@ -342,7 +354,7 @@ export default function PartyCreatePage() {
 
                             <div>
                                 <label className="block text-sm font-medium mb-1">
-                                    {selectedProduct.productName} 비밀번호
+                                    {selectedProduct?.productName || "상품"} 비밀번호
                                 </label>
                                 <input
                                     type="text" // 비밀번호 공유 목적이므로 보이게 하는 게 나을 수도 있음, 일단 text로

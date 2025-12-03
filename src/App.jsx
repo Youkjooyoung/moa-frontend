@@ -32,7 +32,6 @@ import GetSubscriptionList from "./pages/subscription/GetSubscriptionList";
 import GetSubscription from "./pages/subscription/GetSubscription";
 import UpdateSubscription from "./pages/subscription/UpdateSubscription";
 import CancelSubscription from "./pages/subscription/CancelSubscription";
-import GetProductList from "./pages/subscription/GetProductList";
 import UserSubscriptionList from "./pages/subscription/UserSubscriptionList";
 import PaymentSuccessPage from "./pages/payment/PaymentSuccessPage";
 
@@ -97,17 +96,17 @@ export default function App() {
           <Route
             path="/product/add"
             element={<ProtectedRoute element={<AddProduct />} />}
-            // TODO: Add role check for ADMIN
+          // TODO: Add role check for ADMIN
           />
           <Route
             path="/product/:id/edit"
             element={<ProtectedRoute element={<UpdateProduct />} />}
-            // TODO: Add role check for ADMIN
+          // TODO: Add role check for ADMIN
           />
           <Route
             path="/product/:id/delete"
             element={<ProtectedRoute element={<DeleteProduct />} />}
-            // TODO: Add role check for ADMIN
+          // TODO: Add role check for ADMIN
           />
 
           {/* Subscription (User) */}

@@ -54,7 +54,7 @@ export const getProducts = () => {
 
 export const updateOttAccount = (partyId, ottData) => {
     return fetch(`${API_BASE_URL}/${partyId}/ott-account`, {
-        method: "PUT",
+        method: "PATCH",
         headers: {
             "Content-Type": "application/json",
         },
