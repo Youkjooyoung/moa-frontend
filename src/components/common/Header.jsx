@@ -1,23 +1,15 @@
 import { useHeaderLogic } from "@/hooks/headerLogic";
-import {
-  Bell,
-  Search,
-  LogOut,
-  Menu,
-  User as UserIcon,
-} from "lucide-react";
+import { Bell, Search, LogOut, Menu, User as UserIcon } from "lucide-react";
 import { useState } from "react";
 
 export default function Header() {
-  const { user, oauthProvider, logout } = useHeaderLogic();
+  const { user, oauthProvider, logout, isAdmin } = useHeaderLogic();
   const [menuOpen, setMenuOpen] = useState(false);
-
   const onMenuToggle = () => setMenuOpen((prev) => !prev);
 
   return (
     <header className="sticky top-0 z-40 bg-white border-b border-slate-200 h-16">
       <div className="max-w-7xl mx-auto px-6 h-full flex items-center justify-between">
-
         {/* Logo */}
         <button role="link" data-href="/" className="flex items-center gap-2">
           <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center shadow">
@@ -28,18 +20,55 @@ export default function Header() {
 
         {/* ───────── Navigation (홈 제거됨) ───────── */}
         <nav className="hidden lg:flex items-center gap-6 text-sm font-semibold text-slate-600">
-
-          <button role="link" data-href="/product" className="hover:text-blue-600">
-            구독상품
-          </button>
-
-          <button role="link" data-href="/subscription" className="hover:text-blue-600">
-            구독목록
-          </button>
-
-          <button role="link" data-href="/party" className="hover:text-blue-600">
-            파티 찾기
-          </button>
+          {isAdmin ? (
+            <>
+              <button
+                role="link"
+                data-href="/admin/users"
+                className="hover:text-blue-600"
+              >
+                회원 관리
+              </button>
+              <button
+                role="link"
+                data-href="/admin/blacklist"
+                className="hover:text-blue-600"
+              >
+                블랙리스트
+              </button>
+              <button
+                role="link"
+                data-href="/admin/logs"
+                className="hover:text-blue-600"
+              >
+                시스템 로그
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                role="link"
+                data-href="/product"
+                className="hover:text-blue-600"
+              >
+                구독상품
+              </button>
+              <button
+                role="link"
+                data-href="/subscription"
+                className="hover:text-blue-600"
+              >
+                구독목록
+              </button>
+              <button
+                role="link"
+                data-href="/party"
+                className="hover:text-blue-600"
+              >
+                파티 찾기
+              </button>
+            </>
+          )}
         </nav>
 
         {/* Right UI */}

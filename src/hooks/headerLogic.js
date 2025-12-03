@@ -28,8 +28,6 @@ export function useHeaderLogic() {
       .then((body) => {
         if (body.success && body.data) {
           const u = body.data;
-
-          // ⭐ 프로필 이미지 URL 보정
           u.profileImage = fixProfileImage(u.profileImage);
 
           setUser(u);
@@ -59,5 +57,5 @@ export function useHeaderLogic() {
     }
   };
 
-  return { user, oauthProvider, logout };
+  return { user, oauthProvider, logout, isAdmin: user?.role === "ADMIN" };
 }

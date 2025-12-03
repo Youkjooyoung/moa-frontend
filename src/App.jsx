@@ -6,6 +6,7 @@ import Footer from "./components/common/Footer";
 import ProtectedRoute from "@/routes/ProtectedRoute";
 import OAuthKakaoPage from "./pages/oauth/OAuthKakaoPage";
 import OAuthGooglePage from "./pages/oauth/OAuthGooglePage";
+import SocialLoginPage from "./pages/oauth/SocialLoginCallbackPage";
 import MainPage from "./pages/main/MainPage";
 import PartyListPage from "./pages/party/PartyListPage";
 import PartyDetailPage from "./pages/party/PartyDetailPage";
@@ -19,6 +20,7 @@ import DeleteUserPage from "./pages/user/DeleteUserPage";
 import MyPage from "./pages/user/MyPage";
 import EmailVerifiedPage from "./pages/user/EmailVerifiedPage";
 import UpdateUserPage from "./pages/user/UpdateUserPage";
+import AddBlacklistPage from "./pages/admin/AddBlacklistPage";
 
 import GetProductList from "./pages/product/GetProductList";
 import GetProduct from "./pages/product/GetProduct";
@@ -50,8 +52,8 @@ export default function App() {
 
           {/* ===== OAuth 콜백 MUST BE PUBLIC ===== */}
           <Route path="/oauth/kakao" element={<OAuthKakaoPage />} />
-
           <Route path="/oauth/google" element={<OAuthGooglePage />} />
+          <Route path="/login/social" element={<SocialLoginPage />} />
 
           {/* User 도메인 (Public) */}
 
@@ -64,7 +66,6 @@ export default function App() {
             path="/mypage"
             element={<ProtectedRoute element={<MyPage />} />}
           />
-
           <Route
             path="/mypage/password"
             element={<ProtectedRoute element={<UpdatePwdPage />} />}
@@ -82,6 +83,10 @@ export default function App() {
                 <Navigate to="/login" replace />
               )
             }
+          />
+          <Route
+            path="/admin/blacklist/add"
+            element={<ProtectedRoute element={<AddBlacklistPage />} />}
           />
 
           {/* Product (Public) */}
