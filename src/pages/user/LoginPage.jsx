@@ -10,10 +10,8 @@ import { Button } from "@/components/ui/button";
 
 import {
   loginHandler,
-  kakaoLoginHandler,
   googleLoginHandler,
 } from "@/services/logic/loginPageLogic";
-
 import { useLoginStore } from "@/store/user/loginStore";
 
 export default function LoginPage() {
@@ -21,7 +19,23 @@ export default function LoginPage() {
 
   useEffect(() => {
     initLoginPage();
+
+    // ⭐ 카카오 SDK 초기화
+    if (window.Kakao && !window.Kakao.isInitialized()) {
+      window.Kakao.init(import.meta.env.VITE_KAKAO_JAVASCRIPT_KEY);
+    }
   }, []);
+
+  const handleKakaoLogin = () => {
+    if (!window.Kakao) {
+      alert("카카오 SDK 로드 실패");
+      return;
+    }
+
+    window.Kakao.Auth.authorize({
+      redirectUri: import.meta.env.VITE_KAKAO_REDIRECT_URI,
+    });
+  };
 
   return (
     <div className="flex flex-col items-center pt-28 pb-20">
@@ -80,8 +94,8 @@ export default function LoginPage() {
 
           <Button
             id="btnLogin"
-            onClick={loginHandler()} // <-- 연결 완료
-            className="w-full text-lg cursor-pointer"
+            onClick={loginHandler}
+            className="w-full text-lg"
           >
             로그인
           </Button>
@@ -89,15 +103,17 @@ export default function LoginPage() {
       </Card>
 
       <div className="w-full max-w-md space-y-3 mt-10">
+        {/* ⭐ 공식 SDK 방식 버튼 */}
         <Button
           id="btnKakaoLogin"
-          onClick={kakaoLoginHandler}
-          className="w-full bg-yellow-400 text-black hover:bg-yellow-300 flex items-center justify-center gap-2 font-semibold"
+          onClick={handleKakaoLogin}
+          className="w-full bg-[#FEE500] text-black hover:bg-[#F7D400] flex items-center justify-center gap-2 font-semibold"
         >
           <img src={kakaoIcon} alt="카카오" className="w-6 h-6" />
           카카오 로그인
         </Button>
 
+        {/* Google */}
         <Button
           id="btnGoogleLogin"
           onClick={googleLoginHandler}
