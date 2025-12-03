@@ -9,6 +9,7 @@ import OAuthGooglePage from "./pages/oauth/OAuthGooglePage";
 import SocialLoginPage from "./pages/oauth/SocialLoginCallbackPage";
 import MainPage from "./pages/main/MainPage";
 import PartyListPage from "./pages/party/PartyListPage";
+import PartyCreatePage from "./pages/party/PartyCreatePage";
 import PartyDetailPage from "./pages/party/PartyDetailPage";
 
 import AddUserPage from "./pages/user/AddUserPage";
@@ -33,6 +34,8 @@ import GetSubscriptionList from "./pages/subscription/GetSubscriptionList";
 import GetSubscription from "./pages/subscription/GetSubscription";
 import UpdateSubscription from "./pages/subscription/UpdateSubscription";
 import CancelSubscription from "./pages/subscription/CancelSubscription";
+import UserSubscriptionList from "./pages/subscription/UserSubscriptionList";
+import PaymentSuccessPage from "./pages/payment/PaymentSuccessPage";
 
 import SupportPage from "./pages/community/SupportPage";
 
@@ -48,6 +51,7 @@ export default function App() {
           {/* 메인/파티 */}
           <Route path="/" element={<MainPage />} />
           <Route path="/party" element={<PartyListPage />} />
+          <Route path="/party/create" element={<PartyCreatePage />} />
           <Route path="/party/:id" element={<PartyDetailPage />} />
 
           {/* ===== OAuth 콜백 MUST BE PUBLIC ===== */}
@@ -97,17 +101,17 @@ export default function App() {
           <Route
             path="/product/add"
             element={<ProtectedRoute element={<AddProduct />} />}
-            // TODO: Add role check for ADMIN
+          // TODO: Add role check for ADMIN
           />
           <Route
             path="/product/:id/edit"
             element={<ProtectedRoute element={<UpdateProduct />} />}
-            // TODO: Add role check for ADMIN
+          // TODO: Add role check for ADMIN
           />
           <Route
             path="/product/:id/delete"
             element={<ProtectedRoute element={<DeleteProduct />} />}
-            // TODO: Add role check for ADMIN
+          // TODO: Add role check for ADMIN
           />
 
           {/* Subscription (User) */}
@@ -133,6 +137,11 @@ export default function App() {
           />
 
           {/* 고객센터/커뮤니티 */}
+          {/* product & Subscription */}
+          <Route path="/subscriptions" element={<GetProductList />} />
+          <Route path="/my/subscriptions" element={<UserSubscriptionList />} />
+          <Route path="/payment/success" element={<PaymentSuccessPage />} />
+
           <Route path="/support" element={<SupportPage />} />
         </Routes>
       </main>
