@@ -1,3 +1,4 @@
+// src/services/logic/myPageLogic.js
 import httpClient from "@/api/httpClient";
 import { useMyPageStore } from "@/store/user/myPageStore";
 
@@ -40,6 +41,29 @@ export function myPageHandlers() {
       (window.location.href = `/admin/blacklist/add?user=${userId}`),
 
     oauthConnect: (provider) => {
+      if (provider === "kakao") {
+        if (!window.Kakao) {
+          alert("카카오 인증을 사용할 수 없습니다.");
+          return;
+        }
+
+        if (!window.Kakao.isInitialized()) {
+          window.Kakao.init(import.meta.env.VITE_KAKAO_JAVASCRIPT_KEY);
+        }
+
+        const redirectUri = import.meta.env.VITE_KAKAO_REDIRECT_URI;
+
+        window.Kakao.Auth.authorize({
+          redirectUri,
+        });
+        return;
+      }
+
+      if (provider === "google") {
+        window.location.href = "/api/oauth/google/auth?mode=connect";
+        return;
+      }
+
       window.location.href = `/api/oauth/${provider}/auth`;
     },
 
