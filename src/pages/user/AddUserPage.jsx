@@ -10,16 +10,19 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
+
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { useSignupStore } from "@/store/user/signupStore";
 
 export default function AddUserPage() {
   const [params] = useSearchParams();
   const provider = params.get("provider");
   const providerUserId = params.get("providerUserId");
-
   const isSocialSignup = provider && providerUserId;
+
+  const { setField } = useSignupStore();
 
   useEffect(() => {
     initSignupPage();
@@ -34,7 +37,7 @@ export default function AddUserPage() {
 
       <Card className="w-full max-w-xl">
         <CardHeader>
-          <CardTitle className="text-xl">기본 정보 입력</CardTitle>
+          <CardTitle>기본 정보 입력</CardTitle>
           <CardDescription>
             {isSocialSignup
               ? "카카오 계정으로 회원가입을 진행합니다."
@@ -43,7 +46,6 @@ export default function AddUserPage() {
         </CardHeader>
 
         <CardContent className="space-y-5">
-          {/* 소셜 로그인 */}
           {isSocialSignup && (
             <>
               <div className="p-3 bg-yellow-50 border rounded text-sm">
@@ -55,78 +57,55 @@ export default function AddUserPage() {
                 </p>
               </div>
 
-              <input type="hidden" id="signupProvider" value={provider || ""} />
-              <input
-                type="hidden"
-                id="signupProviderUserId"
-                value={providerUserId || ""}
-              />
+              <input type="hidden" value={provider || ""} />
+              <input type="hidden" value={providerUserId || ""} />
             </>
           )}
 
-          {/* 일반 회원가입 */}
           {!isSocialSignup && (
             <>
-              {/* 이메일 */}
               <div className="space-y-1">
-                <Label htmlFor="signupEmail">이메일(아이디)</Label>
-                <Input id="signupEmail" placeholder="예: moa@email.com" />
-                <p id="msgEmail" className="text-xs mt-1"></p>
-
-                <p className="text-xs text-gray-400 mt-1">
-                  회원가입이 완료되면 해당 이메일로 인증 메일이 발송됩니다.
-                </p>
+                <Label>이메일(아이디)</Label>
+                <Input
+                  placeholder="예: moa@email.com"
+                  onChange={(e) => setField("email", e.target.value)}
+                />
               </div>
 
-              {/* 비밀번호 */}
               <div className="space-y-1">
-                <Label htmlFor="signupPassword">비밀번호</Label>
+                <Label>비밀번호</Label>
                 <Input
-                  id="signupPassword"
                   type="password"
                   placeholder="8~20자 / 영문+숫자 조합"
+                  onChange={(e) => setField("password", e.target.value)}
                 />
-                <p id="msgPassword" className="text-xs mt-1"></p>
               </div>
 
-              {/* 비밀번호 확인 */}
               <div className="space-y-1">
-                <Label htmlFor="signupPasswordCheck">비밀번호 확인</Label>
+                <Label>비밀번호 확인</Label>
                 <Input
-                  id="signupPasswordCheck"
                   type="password"
                   placeholder="다시 입력"
+                  onChange={(e) => setField("passwordCheck", e.target.value)}
                 />
-                <p id="msgPasswordCheck" className="text-xs mt-1"></p>
               </div>
             </>
           )}
 
-          {/* 닉네임 */}
           <div className="space-y-1">
-            <Label htmlFor="signupNickname">닉네임</Label>
-            <Input id="signupNickname" placeholder="닉네임 입력" />
-            <p id="msgNickname" className="text-xs mt-1"></p>
+            <Label>닉네임</Label>
+            <Input onChange={(e) => setField("nickname", e.target.value)} />
           </div>
 
-          {/* 휴대폰 + PASS 인증 */}
           <div className="flex items-end gap-2">
             <div className="flex-1 space-y-1">
-              <Label htmlFor="signupPhone">휴대폰 번호</Label>
-              <Input id="signupPhone" placeholder="숫자만 입력" readOnly />
-              <p id="msgPhone" className="text-xs mt-1"></p>
+              <Label>휴대폰 번호</Label>
+              <Input placeholder="숫자만 입력" readOnly />
             </div>
 
-            <Button
-              id="btnPhoneVerify"
-              type="button"
-              className="cursor-pointer"
-            >
-              본인인증
-            </Button>
+            <Button type="button">본인인증</Button>
           </div>
 
-          {/* 프로필 이미지, 썸네일 확대 */}
           <div className="space-y-2">
             <Label>프로필 이미지</Label>
 
@@ -138,17 +117,19 @@ export default function AddUserPage() {
                 />
               </div>
 
-              <Input id="signupProfileImage" type="file" accept="image/*" />
+              <Input
+                type="file"
+                accept="image/*"
+                onChange={(e) => setField("profileImage", e.target.files[0])}
+              />
             </div>
           </div>
 
-          {/* 마케팅 동의 */}
           <div className="bg-gray-50 p-4 rounded-lg space-y-2 text-sm">
             <label className="flex items-center gap-2">
               <input
-                id="agreeMarketing"
                 type="checkbox"
-                className="cursor-pointer"
+                onChange={(e) => setField("marketingAgree", e.target.checked)}
               />
               마케팅 정보 수신 동의 (선택)
             </label>
@@ -156,9 +137,7 @@ export default function AddUserPage() {
         </CardContent>
 
         <CardFooter>
-          <Button id="btnSignup" className="w-full cursor-pointer">
-            회원가입
-          </Button>
+          <Button className="w-full">회원가입</Button>
         </CardFooter>
       </Card>
     </div>
