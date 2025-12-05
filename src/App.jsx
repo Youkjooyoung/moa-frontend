@@ -24,6 +24,7 @@ import FinancialHistoryPage from "./pages/user/FinancialHistoryPage";
 import MyWalletPage from "./pages/user/MyWalletPage";
 import MyPartyListPage from "./pages/party/MyPartyListPage";
 import AddBlacklistPage from "./pages/admin/AddBlacklistPage";
+import AdminUserListPage from "@/pages/admin/AdminUserListPage";
 
 import GetProductList from "./pages/product/GetProductList";
 import GetProduct from "./pages/product/GetProduct";
@@ -104,6 +105,7 @@ export default function App() {
             path="/admin/blacklist/add"
             element={<ProtectedRoute element={<AddBlacklistPage />} />}
           />
+          <Route path="/admin/users" element={<AdminUserListPage />} />
 
           {/* Product (Public) */}
           <Route path="/product" element={<GetProductList />} />

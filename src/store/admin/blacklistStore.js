@@ -1,12 +1,31 @@
-// src/store/admin/blacklistStore.js
 import { create } from "zustand";
 
 export const useBlacklistStore = create((set) => ({
-  userId: "",
-  reasonType: "FRAUD",
-  reasonDetail: "",
+  list: [],
+  loading: false,
+  page: 1,
+  size: 10,
+  totalCount: 0,
+  reason: "",
+  targetUserId: "",
 
-  setUserId: (v) => set({ userId: v }),
-  setReasonType: (v) => set({ reasonType: v }),
-  setReasonDetail: (v) => set({ reasonDetail: v }),
+  setLoading: (value) => set({ loading: value }),
+  setPage: (value) => set({ page: value }),
+  setSize: (value) => set({ size: value }),
+  setReason: (value) => set({ reason: value }),
+  setTargetUserId: (value) => set({ targetUserId: value }),
+
+  setList: (items, count) =>
+    set({
+      list: items,
+      totalCount: count,
+    }),
+
+  reset: () =>
+    set({
+      page: 1,
+      size: 10,
+      reason: "",
+      targetUserId: "",
+    }),
 }));
