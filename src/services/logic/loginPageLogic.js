@@ -97,9 +97,9 @@ export const useLoginPageLogic = () => {
     }
 
     try {
-      const response = await httpClient.post("/auth/login", { email, password });
-      if (response.data.success) {
-        const { accessToken, refreshToken, accessTokenExpiresIn } = response.data.data;
+      const response = await httpClient.post("/auth/login", { userId: email, password });
+      if (response.success) {
+        const { accessToken, refreshToken, accessTokenExpiresIn } = response.data;
         setTokens({ accessToken, refreshToken, accessTokenExpiresIn });
         window.location.href = "/";
       } else {
