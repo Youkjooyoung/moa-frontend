@@ -39,6 +39,7 @@ import UpdateSubscription from "./pages/subscription/UpdateSubscription";
 import CancelSubscription from "./pages/subscription/CancelSubscription";
 import UserSubscriptionList from "./pages/subscription/UserSubscriptionList";
 import PaymentSuccessPage from "./pages/payment/PaymentSuccessPage";
+import BillingSuccessPage from "./pages/payment/BillingSuccessPage";
 
 import SupportPage from "./pages/community/SupportPage";
 
@@ -162,6 +163,7 @@ export default function App() {
           <Route path="/subscriptions" element={<GetProductList />} />
           <Route path="/my/subscriptions" element={<UserSubscriptionList />} />
           <Route path="/payment/success" element={<PaymentSuccessPage />} />
+          <Route path="/payment/billing/success" element={<BillingSuccessPage />} />
 
           <Route path="/support" element={<SupportPage />} />
         </Routes>

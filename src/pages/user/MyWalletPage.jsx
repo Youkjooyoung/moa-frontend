@@ -4,6 +4,10 @@ import { ChevronRight, CreditCard, Building2, Wallet, Plus } from "lucide-react"
 import { getMyAccount, getMyCard } from "../../api/userApi";
 import { getMyDeposits } from "../../api/depositApi";
 import { useAuthStore } from "../../store/authStore";
+import { requestBillingAuth } from "../../services/paymentService";
+import { handleApiError } from "../../utils/errorHandler";
+import { toast } from "../../utils/toast";
+import { getBankLogo, getCardLogo, getBankTheme, getCardTheme } from "../../utils/logoHelper";
 
 export default function MyWalletPage() {
     const navigate = useNavigate();
@@ -44,6 +48,10 @@ export default function MyWalletPage() {
             setCard(cardRes?.data || null);
         } catch (error) {
             console.error("Failed to load wallet data:", error);
+
+            // Show error toast for wallet data loading failure
+            const errorInfo = handleApiError(error);
+            toast.error(errorInfo.message);
         } finally {
             setLoading(false);
         }
@@ -68,6 +76,26 @@ export default function MyWalletPage() {
     const handleViewPaymentHistory = (e) => {
         e.stopPropagation();
         navigate("/user/financial-history?tab=payment");
+    };
+
+    const handleRegisterCard = async () => {
+        try {
+            if (!user) {
+                toast.warning("로그인이 필요합니다");
+                navigate("/login");
+                return;
+            }
+
+            // Toss Payments 빌링 인증 요청
+            // customerKey는 사용자 고유 ID (userId)
+            await requestBillingAuth(user.userId);
+        } catch (error) {
+            console.error("Card registration failed:", error);
+
+            // Handle error with user-friendly message
+            const errorInfo = handleApiError(error);
+            toast.error(errorInfo.message);
+        }
     };
 
     if (authLoading || loading) {
@@ -127,9 +155,29 @@ export default function MyWalletPage() {
                     >
                         {account ? (
                             <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center">
-                                    <Building2 className="w-6 h-6 text-blue-600" />
-                                </div>
+                                {(() => {
+                                    const logoPath = getBankLogo(account.bankName);
+                                    const theme = getBankTheme(account.bankName);
+
+                                    return (
+                                        <div className={`w-12 h-12 rounded-xl ${theme.bg} flex items-center justify-center overflow-hidden`}>
+                                            {logoPath ? (
+                                                <img
+                                                    src={logoPath}
+                                                    alt={account.bankName}
+                                                    className="w-full h-full object-contain p-1"
+                                                    onError={(e) => {
+                                                        e.target.style.display = 'none';
+                                                        e.target.nextSibling.style.display = 'block';
+                                                    }}
+                                                />
+                                            ) : null}
+                                            <Building2
+                                                className={`w-6 h-6 ${theme.text} ${logoPath ? 'hidden' : ''}`}
+                                            />
+                                        </div>
+                                    );
+                                })()}
                                 <div className="flex-1">
                                     <div className="font-bold text-gray-900">
                                         {account.bankName}
@@ -161,14 +209,34 @@ export default function MyWalletPage() {
                         </button>
                     </div>
                     <div
-                        onClick={() => alert("결제 수단 변경 기능은 추후 구현 예정입니다.")}
+                        onClick={handleRegisterCard}
                         className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 cursor-pointer hover:border-blue-200 hover:shadow-md transition-all"
                     >
                         {card ? (
                             <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 rounded-xl bg-gray-800 flex items-center justify-center">
-                                    <CreditCard className="w-6 h-6 text-white" />
-                                </div>
+                                {(() => {
+                                    const logoPath = getCardLogo(card.cardCompany);
+                                    const theme = getCardTheme(card.cardCompany);
+
+                                    return (
+                                        <div className={`w-12 h-12 rounded-xl ${theme.bg} flex items-center justify-center overflow-hidden`}>
+                                            {logoPath ? (
+                                                <img
+                                                    src={logoPath}
+                                                    alt={card.cardCompany}
+                                                    className="w-full h-full object-contain p-1"
+                                                    onError={(e) => {
+                                                        e.target.style.display = 'none';
+                                                        e.target.nextSibling.style.display = 'block';
+                                                    }}
+                                                />
+                                            ) : null}
+                                            <CreditCard
+                                                className={`w-6 h-6 ${theme.text} ${logoPath ? 'hidden' : ''}`}
+                                            />
+                                        </div>
+                                    );
+                                })()}
                                 <div className="flex-1">
                                     <div className="font-bold text-gray-900">
                                         {card.cardCompany}
