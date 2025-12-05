@@ -1,3 +1,4 @@
+// src/services/logic/admin/adminUserListLogic.js
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchAdminUsers } from "@/api/adminUserApi";
@@ -34,12 +35,11 @@ export const useAdminUserListLogic = () => {
         size,
         q: filters.q || undefined,
         status: filters.status === "ALL" ? undefined : filters.status,
-        joinStart: filters.joinStart || undefined,
-        joinEnd: filters.joinEnd || undefined,
+        regDateFrom: filters.joinStart || undefined,
+        regDateTo: filters.joinEnd || undefined,
       };
 
-      const response = await fetchAdminUsers(params);
-      const body = response.data;
+      const body = await fetchAdminUsers(params);
 
       if (!body.success) {
         throw new Error(

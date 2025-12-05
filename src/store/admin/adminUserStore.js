@@ -32,11 +32,23 @@ export const useAdminUserStore = create((set) => ({
   setSort: (value) => set({ sort: value }),
 
   setData: (data) =>
-    set({
-      users: data.list,
-      totalCount: data.totalCount,
-      totalPages: data.totalPages,
-    }),
+  set(() => {
+    const list = data?.list || data?.content || [];
+    const totalCount =
+      typeof data?.totalCount === "number" ? data.totalCount : list.length;
+    const totalPages =
+      typeof data?.totalPages === "number"
+        ? data.totalPages
+        : totalCount > 0 && data?.size
+        ? Math.ceil(totalCount / data.size)
+        : 1;
+
+    return {
+      users: list,
+      totalCount,
+      totalPages,
+    };
+  }),
 
   setLoading: (value) => set({ loading: value }),
   setError: (value) => set({ error: value }),
