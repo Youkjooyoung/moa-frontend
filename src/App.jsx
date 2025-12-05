@@ -39,7 +39,7 @@ import CancelSubscription from "./pages/subscription/CancelSubscription";
 import UserSubscriptionList from "./pages/subscription/UserSubscriptionList";
 import PaymentSuccessPage from "./pages/payment/PaymentSuccessPage";
 
-import SupportPage from "./pages/community/SupportPage";
+import ListNotice from "./pages/community/ListNotice";
 
 import { requireLogin } from "./services/authGuard";
 
@@ -154,7 +154,7 @@ export default function App() {
           <Route path="/my/subscriptions" element={<UserSubscriptionList />} />
           <Route path="/payment/success" element={<PaymentSuccessPage />} />
 
-          <Route path="/support" element={<SupportPage />} />
+          <Route path="/listNotice" element={<ListNotice />} />
         </Routes>
       </main>
 

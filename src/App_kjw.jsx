@@ -30,7 +30,7 @@ import GetSubscription from "./pages/subscription/GetSubscription";
 import UpdateSubscription from "./pages/subscription/UpdateSubscription";
 import CancelSubscription from "./pages/subscription/CancelSubscription";
 
-import SupportPage from "./pages/community/SupportPage";
+import ListNotice from "./pages/community/ListNotice";
 
 import { requireLogin } from "./services/authGuard";
 
@@ -116,7 +116,7 @@ export default function App() {
             element={<ProtectedRoute element={<CancelSubscription />} />}
           />
 
-          <Route path="/support" element={<SupportPage />} />
+          <Route path="/listNotice" element={<ListNotice />} />
         </Routes>
       </main>
 
