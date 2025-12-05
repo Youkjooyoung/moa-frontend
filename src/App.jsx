@@ -1,7 +1,8 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom"; // Navigate는 이제 필요 없어서 제거했습니다.
 
 import Header from "./components/common/Header";
 import Footer from "./components/common/Footer";
+import { useGlobalLinkHandler } from "@/hooks/common/useGlobalLinkHandler";
 
 import ProtectedRoute from "@/routes/ProtectedRoute";
 import OAuthGooglePage from "./pages/oauth/OAuthGooglePage";
@@ -43,9 +44,12 @@ import PaymentSuccessPage from "./pages/payment/PaymentSuccessPage";
 
 import SupportPage from "./pages/community/SupportPage";
 
-import { requireLogin } from "./services/authGuard";
+// requireLogin import는 ProtectedRoute로 대체하므로 삭제했습니다.
 
 export default function App() {
+  // ✅ [수정 1] 전역 링크 핸들러 훅 실행
+  useGlobalLinkHandler();
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
@@ -68,6 +72,8 @@ export default function App() {
           <Route path="/find-email" element={<FindIdPage />} />
           <Route path="/reset-password" element={<ResetPwdPage />} />
           <Route path="/email-verified" element={<EmailVerifiedPage />} />
+          
+          {/* User 도메인 (Private - ProtectedRoute 적용) */}
           <Route
             path="/mypage"
             element={<ProtectedRoute element={<MyPage />} />}
@@ -92,16 +98,13 @@ export default function App() {
             path="/my-parties"
             element={<ProtectedRoute element={<MyPartyListPage />} />}
           />
+          
+          {/* ✅ [수정 2] 복잡한 조건부 렌더링을 ProtectedRoute로 통일 */}
           <Route
             path="/mypage/edit"
-            element={
-              requireLogin() ? (
-                <UpdateUserPage />
-              ) : (
-                <Navigate to="/login" replace />
-              )
-            }
+            element={<ProtectedRoute element={<UpdateUserPage />} />}
           />
+
           <Route
             path="/admin/blacklist/add"
             element={<ProtectedRoute element={<AddBlacklistPage />} />}
@@ -117,17 +120,14 @@ export default function App() {
           <Route
             path="/product/add"
             element={<ProtectedRoute element={<AddProduct />} />}
-            // TODO: Add role check for ADMIN
           />
           <Route
             path="/product/:id/edit"
             element={<ProtectedRoute element={<UpdateProduct />} />}
-            // TODO: Add role check for ADMIN
           />
           <Route
             path="/product/:id/delete"
             element={<ProtectedRoute element={<DeleteProduct />} />}
-            // TODO: Add role check for ADMIN
           />
 
           {/* Subscription (User) */}
@@ -152,8 +152,7 @@ export default function App() {
             element={<ProtectedRoute element={<CancelSubscription />} />}
           />
 
-          {/* 고객센터/커뮤니티 */}
-          {/* product & Subscription */}
+          {/* 고객센터/커뮤니티 & 기타 */}
           <Route path="/subscriptions" element={<GetProductList />} />
           <Route path="/my/subscriptions" element={<UserSubscriptionList />} />
           <Route path="/payment/success" element={<PaymentSuccessPage />} />

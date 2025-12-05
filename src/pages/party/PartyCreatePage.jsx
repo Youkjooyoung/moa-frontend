@@ -6,8 +6,8 @@ import {
     processLeaderDeposit,
     updateOttAccount,
     fetchPartyDetail,
-} from "../../services/partyService";
-import { requestPayment } from "../../services/paymentService";
+} from "../../hooks/party/partyService";
+import { requestPayment } from "../../utils/paymentHandler";
 import { useAuthStore } from "../../store/authStore";
 
 

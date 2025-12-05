@@ -1,11 +1,13 @@
+// src/hooks/common/useHeader.js
 import { useEffect, useState } from "react";
-import { useAuthStore } from "@/store/authStore";
 import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "@/store/authStore";
 
 export function useHeaderLogic() {
   const { user, fetchSession, logout: storeLogout, accessToken } = useAuthStore();
   const navigate = useNavigate();
   const [isAdminMode, setIsAdminMode] = useState(true);
+
   useEffect(() => {
     if (accessToken && !user) {
       fetchSession();
@@ -23,11 +25,27 @@ export function useHeaderLogic() {
     alert(isAdminMode ? "일반 관리자 모드로 전환" : "슈퍼 관리자 모드로 전환");
   };
 
+  const isAdmin = user?.role === "ADMIN" || user?.email === "admin@admin.com";
+
+  const profileImageUrl = user?.profileImage
+    ? user.profileImage.startsWith("http")
+      ? user.profileImage
+      : `https://localhost:8443${user.profileImage}`
+    : "";
+
+  const userInitial = user?.nickname ? user.nickname.substring(0, 1).toUpperCase() : "U";
+  const displayNickname = user?.nickname || "사용자";
+  const displayEmail = user?.email || "";
+
   return {
     user,
-    logout,
-    isAdmin: user?.role === "ADMIN" || user?.email === "admin@admin.com",
+    isAdmin,
     isAdminMode,
+    profileImageUrl,
+    userInitial,
+    displayNickname,
+    displayEmail,
+    logout,
     handleAdminSwitch,
   };
 }

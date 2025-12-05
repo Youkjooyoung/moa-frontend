@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { fetchPartyList } from "../../services/partyService";
+import { fetchPartyList } from "../../hooks/party/partyService";
 
 
 export default function PartyListPage() {

@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchAdminUserDetail } from "@/api/adminUserApi";
 import { useAdminUserDetailStore } from "@/store/admin/adminUserDetailStore";
-import { myPageHandlers } from "@/services/logic/myPageLogic";
+import { myPageHandlers } from "@/hooks/user/useMyPage";
 
 export const useAdminUserDetailLogic = (userId) => {
     const navigate = useNavigate();

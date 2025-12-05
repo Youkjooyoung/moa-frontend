@@ -1,6 +1,6 @@
 // src/pages/admin/AdminUserListPage.jsx
 import { useState } from "react";
-import { useAdminUserListLogic } from "@/services/logic/admin/adminUserListLogic";
+import { useAdminUserListLogic } from "@/hooks/admin/useAdminUserList";
 
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";

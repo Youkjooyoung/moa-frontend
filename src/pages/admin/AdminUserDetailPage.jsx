@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useAdminUserDetailLogic } from "@/services/logic/admin/adminUserDetailLogic";
+import { useAdminUserDetailLogic } from "@/hooks/admin/useAdminUserDetail";
 
 import { useMyPageStore } from "@/store/user/myPageStore";
 
