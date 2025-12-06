@@ -89,16 +89,16 @@ export default function BillingSuccessPage() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex items-center justify-center">
+        <div className="min-h-screen bg-stone-50 flex items-center justify-center">
             <div className="max-w-md w-full mx-4">
-                <div className="bg-white rounded-3xl shadow-2xl p-8">
+                <div className="bg-white rounded-3xl shadow-lg p-8 border border-stone-200">
                     {status === "processing" && (
                         <div className="text-center">
-                            <div className="inline-block animate-spin rounded-full h-16 w-16 border-4 border-indigo-600 border-t-transparent mb-4"></div>
-                            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                            <div className="inline-block animate-spin rounded-full h-16 w-16 border-4 border-moa-brand-600 border-t-transparent mb-4"></div>
+                            <h2 className="text-2xl font-extrabold text-gray-900 mb-2">
                                 {message}
                             </h2>
-                            <p className="text-gray-600">잠시만 기다려주세요...</p>
+                            <p className="text-stone-600 font-semibold">잠시만 기다려주세요...</p>
                         </div>
                     )}
 
@@ -119,10 +119,10 @@ export default function BillingSuccessPage() {
                                     />
                                 </svg>
                             </div>
-                            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                            <h2 className="text-2xl font-extrabold text-gray-900 mb-2">
                                 {message}
                             </h2>
-                            <p className="text-gray-600">지갑 페이지로 이동합니다...</p>
+                            <p className="text-stone-600 font-semibold">지갑 페이지로 이동합니다...</p>
                         </div>
                     )}
 
@@ -143,13 +143,13 @@ export default function BillingSuccessPage() {
                                     />
                                 </svg>
                             </div>
-                            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                            <h2 className="text-2xl font-extrabold text-gray-900 mb-2">
                                 카드 등록 실패
                             </h2>
-                            <p className="text-gray-600 mb-6">{message}</p>
+                            <p className="text-stone-600 font-semibold mb-6">{message}</p>
                             <button
                                 onClick={() => navigate("/user/my-wallet")}
-                                className="px-6 py-3 bg-indigo-600 text-white rounded-xl font-semibold hover:bg-indigo-700 transition-colors"
+                                className="px-6 py-3 bg-moa-brand-600 hover:bg-moa-brand-700 text-white rounded-2xl font-bold hover:shadow-lg transition-all duration-200 hover:translate-y-1"
                             >
                                 지갑으로 돌아가기
                             </button>

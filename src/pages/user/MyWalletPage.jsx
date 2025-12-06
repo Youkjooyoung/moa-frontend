@@ -8,6 +8,7 @@ import { requestBillingAuth } from "../../services/paymentService";
 import { handleApiError } from "../../utils/errorHandler";
 import { toast } from "../../utils/toast";
 import { getBankLogo, getCardLogo, getBankTheme, getCardTheme } from "../../utils/logoHelper";
+import SavingsChart from "../../components/charts/SavingsChart";
 
 export default function MyWalletPage() {
     const navigate = useNavigate();
@@ -100,14 +101,14 @@ export default function MyWalletPage() {
 
     if (authLoading || loading) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50">
-                <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600"></div>
+            <div className="min-h-screen flex items-center justify-center bg-stone-50">
+                <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-moa-brand-600"></div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 pb-20">
+        <div className="min-h-screen bg-stone-50 pb-20">
             {/* Header */}
             <div className="bg-white border-b">
                 <div className="max-w-md mx-auto px-6 py-5">
@@ -119,24 +120,27 @@ export default function MyWalletPage() {
                 {/* 보증금 카드 */}
                 <div
                     onClick={() => goHistory("deposit")}
-                    className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 text-white shadow-lg cursor-pointer hover:shadow-xl transition-shadow relative overflow-hidden"
+                    className="bg-gradient-to-br from-moa-brand-600 to-red-600 rounded-3xl p-6 text-white shadow-lg cursor-pointer hover:shadow-xl transition-shadow relative overflow-hidden"
                 >
                     <div className="relative z-10">
-                        <div className="flex items-center gap-2 text-blue-100 text-sm font-medium mb-1">
+                        <div className="flex items-center gap-2 text-moa-brand-100 text-sm font-semibold mb-1">
                             <Wallet className="w-4 h-4" />
                             보유 보증금
                         </div>
-                        <div className="text-4xl font-bold mb-4">
+                        <div className="text-4xl font-extrabold mb-4">
                             {totalDeposit.toLocaleString()}원
                         </div>
-                        <div className="flex items-center gap-1 text-sm text-blue-100">
+                        <div className="flex items-center gap-1 text-sm text-moa-brand-100">
                             상세 내역 보기 <ChevronRight className="w-4 h-4" />
                         </div>
                     </div>
                     {/* Background Decoration */}
-                    <div className="absolute -right-6 -bottom-10 w-32 h-32 bg-blue-400 rounded-full opacity-30 blur-2xl"></div>
-                    <div className="absolute -right-2 top-2 w-16 h-16 bg-blue-300 rounded-full opacity-20 blur-xl"></div>
+                    <div className="absolute -right-6 -bottom-10 w-32 h-32 bg-moa-brand-400 rounded-full opacity-30 blur-2xl"></div>
+                    <div className="absolute -right-2 top-2 w-16 h-16 bg-moa-brand-300 rounded-full opacity-20 blur-xl"></div>
                 </div>
+
+                {/* Savings Chart */}
+                <SavingsChart />
 
                 {/* 정산 계좌 */}
                 <div className="space-y-2">
@@ -144,14 +148,14 @@ export default function MyWalletPage() {
                         <h3 className="font-bold text-gray-900">정산 계좌</h3>
                         <button
                             onClick={handleViewAccountHistory}
-                            className="text-xs text-blue-600 hover:text-blue-700 font-medium"
+                            className="text-xs text-moa-brand-600 hover:text-moa-brand-700 font-medium"
                         >
                             내역보기
                         </button>
                     </div>
                     <div
                         onClick={() => navigate("/user/account-register")}
-                        className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 cursor-pointer hover:border-blue-200 hover:shadow-md transition-all"
+                        className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 cursor-pointer hover:border-moa-brand-200 hover:shadow-md transition-all"
                     >
                         {account ? (
                             <div className="flex items-center gap-4">
@@ -203,14 +207,14 @@ export default function MyWalletPage() {
                         <h3 className="font-bold text-gray-900">결제 정보</h3>
                         <button
                             onClick={handleViewPaymentHistory}
-                            className="text-xs text-blue-600 hover:text-blue-700 font-medium"
+                            className="text-xs text-moa-brand-600 hover:text-moa-brand-700 font-medium"
                         >
                             내역보기
                         </button>
                     </div>
                     <div
                         onClick={handleRegisterCard}
-                        className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 cursor-pointer hover:border-blue-200 hover:shadow-md transition-all"
+                        className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 cursor-pointer hover:border-moa-brand-200 hover:shadow-md transition-all"
                     >
                         {card ? (
                             <div className="flex items-center gap-4">
