@@ -8,7 +8,6 @@ import { requestBillingAuth } from "../../services/paymentService";
 import { handleApiError } from "../../utils/errorHandler";
 import { toast } from "../../utils/toast";
 import { getBankLogo, getCardLogo, getBankTheme, getCardTheme } from "../../utils/logoHelper";
-import SavingsChart from "../../components/charts/SavingsChart";
 
 export default function MyWalletPage() {
     const navigate = useNavigate();
@@ -91,6 +90,13 @@ export default function MyWalletPage() {
             // customerKey는 사용자 고유 ID (userId)
             await requestBillingAuth(user.userId);
         } catch (error) {
+            // 사용자가 결제창을 취소한 경우 조용히 처리
+            const errorMessage = error?.message || "";
+            if (errorMessage.includes("취소") || errorMessage.includes("cancel")) {
+                console.log("사용자가 카드 등록을 취소했습니다.");
+                return;
+            }
+
             console.error("Card registration failed:", error);
 
             // Handle error with user-friendly message
@@ -138,9 +144,6 @@ export default function MyWalletPage() {
                     <div className="absolute -right-6 -bottom-10 w-32 h-32 bg-[#fb923c] rounded-full opacity-30 blur-2xl"></div>
                     <div className="absolute -right-2 top-2 w-16 h-16 bg-[#fdba74] rounded-full opacity-20 blur-xl"></div>
                 </div>
-
-                {/* Savings Chart */}
-                <SavingsChart />
 
                 {/* 정산 계좌 */}
                 <div className="space-y-2">

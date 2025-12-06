@@ -90,7 +90,7 @@ const LOGO_MAP = {
 export const getBankLogo = (bankName) => {
     if (!bankName) return null;
 
-    const logoKey = BANK_LOGO_MAP[bankName];
+    const logoKey = LOGO_MAP[bankName];
     if (logoKey) {
         return `/images/banks/${logoKey}.png`;
     }
@@ -106,7 +106,7 @@ export const getBankLogo = (bankName) => {
 export const getCardLogo = (cardCompany) => {
     if (!cardCompany) return null;
 
-    const logoKey = CARD_LOGO_MAP[cardCompany];
+    const logoKey = LOGO_MAP[cardCompany];
     if (logoKey) {
         return `/images/cards/${logoKey}.png`;
     }
@@ -134,7 +134,7 @@ export const getBankTheme = (bankName) => {
 
     if (!bankName) return { bg: "bg-blue-50", text: "text-blue-600" };
 
-    const logoKey = BANK_LOGO_MAP[bankName];
+    const logoKey = LOGO_MAP[bankName];
     return themes[logoKey] || { bg: "bg-blue-50", text: "text-blue-600" };
 };
 
@@ -158,6 +158,6 @@ export const getCardTheme = (cardCompany) => {
 
     if (!cardCompany) return { bg: "bg-gray-800", text: "text-white" };
 
-    const logoKey = CARD_LOGO_MAP[cardCompany];
+    const logoKey = LOGO_MAP[cardCompany];
     return themes[logoKey] || { bg: "bg-gray-800", text: "text-white" };
 };

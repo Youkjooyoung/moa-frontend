@@ -64,7 +64,12 @@ export default function PaymentSuccessPage() {
                 } else if (type === "JOIN_PARTY") {
                     await joinParty(partyId, paymentData);
                     localStorage.removeItem("pendingPayment");
-                    navigate(`/party/${partyId}`);
+
+                    // ✨ 파티원은 월 구독료 자동 결제를 위해 빌링키 등록 필요
+                    // 결제 성공 후 자동으로 빌링키 등록 페이지로 리다이렉트
+                    localStorage.setItem("afterBillingRedirect", `/party/${partyId}`);
+                    localStorage.setItem("billingRegistrationReason", "party_join");
+                    navigate("/payment/billing/register");
                 } else {
                     throw new Error("알 수 없는 결제 유형입니다.");
                 }

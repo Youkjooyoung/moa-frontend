@@ -236,9 +236,8 @@ export default function MyPartyListPage() {
                     .filter((item) => item.partyLeaderId === currentUserId)
                     .map((item) => {
                       const badge = getStatusBadge(item.partyStatus);
-                      const perPersonFee = Math.floor(
-                        item.monthlyFee / item.maxMembers
-                      );
+                      // monthlyFee는 이미 인당 금액으로 저장됨
+                      const perPersonFee = item.monthlyFee;
 
                       return (
                         <Link
@@ -322,9 +321,8 @@ export default function MyPartyListPage() {
                     .filter((item) => item.partyLeaderId !== currentUserId)
                     .map((item) => {
                       const badge = getStatusBadge(item.partyStatus);
-                      const perPersonFee = Math.floor(
-                        item.monthlyFee / item.maxMembers
-                      );
+                      // monthlyFee는 이미 인당 금액으로 저장됨
+                      const perPersonFee = item.monthlyFee;
 
                       return (
                         <Link

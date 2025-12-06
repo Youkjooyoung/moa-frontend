@@ -45,13 +45,25 @@ export default function BillingSuccessPage() {
 
             clearTimeout(timeoutId);
             setStatus("success");
-            setMessage("카드가 성공적으로 등록되었습니다!");
 
-            toast.success("카드가 성공적으로 등록되었습니다!");
+            // 파티 가입 후 빌링키 등록인지 확인
+            const reason = localStorage.getItem("billingRegistrationReason");
+            const redirectPath = localStorage.getItem("afterBillingRedirect");
 
-            // 2초 후 지갑 페이지로 이동
+            if (reason === "party_join") {
+                setMessage("월 구독료 자동 결제가 설정되었습니다!");
+                toast.success("자동 결제 설정 완료! 파티에 참여했습니다.");
+            } else {
+                setMessage("카드가 성공적으로 등록되었습니다!");
+                toast.success("카드가 성공적으로 등록되었습니다!");
+            }
+
+            // 저장된 리다이렉트 경로로 이동 (없으면 지갑 페이지)
+            localStorage.removeItem("billingRegistrationReason");
+            localStorage.removeItem("afterBillingRedirect");
+
             setTimeout(() => {
-                navigate("/user/wallet");
+                navigate(redirectPath || "/user/wallet");
             }, 2000);
         } catch (error) {
             clearTimeout(timeoutId);
@@ -148,7 +160,7 @@ export default function BillingSuccessPage() {
                             </h2>
                             <p className="text-stone-600 font-semibold mb-6">{message}</p>
                             <button
-                                onClick={() => navigate("/user/my-wallet")}
+                                onClick={() => navigate("/user/wallet")}
                                 className="px-6 py-3 bg-[#ea580c] hover:bg-[#c2410c] text-white rounded-2xl font-bold hover:shadow-lg transition-all duration-200 hover:translate-y-1"
                             >
                                 지갑으로 돌아가기

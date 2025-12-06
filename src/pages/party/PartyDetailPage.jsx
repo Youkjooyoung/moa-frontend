@@ -36,6 +36,7 @@ export default function PartyDetailPage() {
   // Modals state
   const [isLeaveModalOpen, setIsLeaveModalOpen] = useState(false);
   const [isOttModalOpen, setIsOttModalOpen] = useState(false);
+  const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
 
   // OTT visibility state
   const [showOttInfo, setShowOttInfo] = useState(false);
@@ -76,8 +77,8 @@ export default function PartyDetailPage() {
 
     try {
       // 1. 결제 정보 준비 (보증금 + 첫 달 구독료)
-      // 인당 월 구독료 = 전체 구독료 / 최대 인원
-      const perPersonFee = Math.floor(party.monthlyFee / party.maxMembers);
+      // monthlyFee는 이미 인당 금액으로 저장됨
+      const perPersonFee = party.monthlyFee;
       const totalAmount = perPersonFee * 2;
 
       // 2. localStorage에 결제 정보 저장 (결제 성공 후 사용)
@@ -131,7 +132,8 @@ export default function PartyDetailPage() {
   const isMember = members.some((m) => m.userId === currentUser?.userId);
   const isLeader = party.partyLeaderId === currentUser?.userId;
   const isFull = party.currentMembers >= party.maxMembers;
-  const perPersonFee = Math.floor(party.monthlyFee / party.maxMembers);
+  // monthlyFee는 이미 인당 금액으로 저장됨
+  const perPersonFee = party.monthlyFee;
   const depositAmount = perPersonFee;
   const firstPayment = perPersonFee * 2;
   const availableSlots = party.maxMembers - party.currentMembers;
@@ -289,29 +291,33 @@ export default function PartyDetailPage() {
                     <div
                       className="bg-[#fff7ed] h-3 rounded-full transition-all duration-500"
                       style={{
-                        width: `${
-                          (party.currentMembers / party.maxMembers) * 100
-                        }%`,
+                        width: `${(party.currentMembers / party.maxMembers) * 100
+                          }%`,
                       }}
                     ></div>
                   </div>
                 </div>
 
-                {/* Start Date */}
+                {/* Start Date & End Date */}
                 <div className="bg-stone-100 rounded-2xl p-6">
                   <div className="flex items-center gap-2 text-stone-600 mb-3">
                     <Calendar className="w-5 h-5" />
-                    <span className="font-semibold">시작일</span>
+                    <span className="font-semibold">파티 기간</span>
                   </div>
-                  <p className="text-3xl font-black text-stone-900">
-                    {party.startDate?.split(" ")[0] || party.startDate}
-                  </p>
-                  {party.endDate && (
-                    <p className="text-sm text-stone-600 mt-2">
-                      종료일:{" "}
-                      {party.endDate?.split(" ")[0] || party.endDate}
-                    </p>
-                  )}
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-stone-500 w-16">시작일</span>
+                      <p className="text-2xl font-black text-stone-900">
+                        {party.startDate?.split("T")[0] || party.startDate?.split(" ")[0] || "-"}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-stone-500 w-16">종료일</span>
+                      <p className="text-2xl font-black text-stone-900">
+                        {party.endDate ? (party.endDate.split("T")[0] || party.endDate.split(" ")[0]) : "미정"}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -459,7 +465,7 @@ export default function PartyDetailPage() {
             <div className="bg-white rounded-3xl shadow-lg p-8 space-y-4 sticky top-6">
               {!isMember && !isLeader && !isFull && (
                 <button
-                  onClick={handleJoin}
+                  onClick={() => setIsJoinModalOpen(true)}
                   className="w-full flex items-center justify-center gap-2 py-4 bg-[#ea580c] text-white rounded-2xl font-black text-lg hover:shadow-lg hover:-translate-y-1 transition-all duration-200 group"
                 >
                   <CreditCard className="w-6 h-6 group-hover:rotate-12 transition-transform" />
@@ -507,6 +513,75 @@ export default function PartyDetailPage() {
         partyId={id}
         currentOttId={party.ottId}
       />
+
+      {/* Join Confirmation Modal */}
+      {isJoinModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="bg-white rounded-3xl shadow-2xl max-w-lg w-full p-8 transform transition-all">
+            <div className="text-center mb-6">
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#fff7ed] mb-4">
+                <UserPlus className="w-8 h-8 text-[#ea580c]" />
+              </div>
+              <h3 className="text-2xl font-extrabold text-gray-900 mb-2">
+                파티 가입 안내
+              </h3>
+              <p className="text-stone-600">
+                파티 가입 시 다음 절차가 진행됩니다
+              </p>
+            </div>
+
+            <div className="bg-stone-50 rounded-2xl p-5 mb-6 space-y-3">
+              <div className="flex items-start gap-3">
+                <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#ea580c] text-white flex items-center justify-center text-sm font-bold">
+                  1
+                </div>
+                <div className="flex-1">
+                  <p className="font-bold text-gray-900">보증금 + 첫 달 구독료 결제</p>
+                  <p className="text-sm text-stone-600 mt-1">
+                    총 {firstPayment.toLocaleString()}원 (보증금 {depositAmount.toLocaleString()}원 + 첫 달 구독료 {perPersonFee.toLocaleString()}원)
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#ea580c] text-white flex items-center justify-center text-sm font-bold">
+                  2
+                </div>
+                <div className="flex-1">
+                  <p className="font-bold text-gray-900">월 구독료 자동 결제 설정</p>
+                  <p className="text-sm text-stone-600 mt-1">
+                    매월 {party.paymentDay}일에 {perPersonFee.toLocaleString()}원이 자동 결제됩니다
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-6">
+              <p className="text-sm text-amber-800 font-medium">
+                ℹ️ 보증금은 파티 탈퇴 시 환불됩니다
+              </p>
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => setIsJoinModalOpen(false)}
+                className="flex-1 py-3 px-4 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-xl font-bold transition-colors"
+              >
+                취소
+              </button>
+              <button
+                onClick={() => {
+                  setIsJoinModalOpen(false);
+                  handleJoin();
+                }}
+                className="flex-1 py-3 px-4 bg-gradient-to-r from-[#ea580c] to-[#c2410c] hover:shadow-lg text-white rounded-xl font-bold transition-all"
+              >
+                가입하기
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

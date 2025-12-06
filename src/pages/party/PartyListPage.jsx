@@ -1,18 +1,35 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { fetchPartyList } from "../../services/partyService";
-import { Sparkles, Users, Calendar, TrendingUp, Search } from "lucide-react";
+import { fetchPartyList, fetchMyParties } from "../../services/partyService";
+import { Sparkles, Users, Calendar, TrendingUp, Search, Eye } from "lucide-react";
+import { useAuthStore } from "../../store/authStore";
 
 export default function PartyListPage() {
   const navigate = useNavigate();
+  const { user } = useAuthStore();
   const [list, setList] = useState([]);
+  const [myPartyIds, setMyPartyIds] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("");
 
   useEffect(() => {
     loadParties();
-  }, []);
+    if (user) {
+      loadMyParties();
+    }
+  }, [user]);
+
+  const loadMyParties = async () => {
+    try {
+      const data = await fetchMyParties();
+      if (data && Array.isArray(data)) {
+        setMyPartyIds(data.map((p) => p.partyId));
+      }
+    } catch (error) {
+      console.error("Failed to load my parties", error);
+    }
+  };
 
   const loadParties = async () => {
     try {
@@ -170,11 +187,14 @@ export default function PartyListPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredParties.map((party) => {
               const badge = getStatusBadge(party.partyStatus);
-              const perPersonFee = Math.floor(
-                party.monthlyFee / party.maxMembers
-              );
+              // monthlyFee는 이미 인당 금액으로 저장됨
+              const perPersonFee = party.monthlyFee;
+              // 총 금액 계산 (인당 금액 * 최대 인원)
+              const totalFee = perPersonFee * party.maxMembers;
               const isFull = party.currentMembers >= party.maxMembers;
               const availableSlots = party.maxMembers - party.currentMembers;
+              // 내가 참여 중인 파티인지 확인
+              const isMyParty = myPartyIds.includes(party.partyId);
 
               return (
                 <Link
@@ -263,7 +283,7 @@ export default function PartyListPage() {
                         <div className="flex items-end justify-between">
                           <div>
                             <p className="text-sm text-stone-600 mb-1">
-                              월 구독료
+                              인당 월 구독료
                             </p>
                             <p className="text-3xl font-black text-stone-900">
                               {perPersonFee.toLocaleString()}
@@ -274,13 +294,11 @@ export default function PartyListPage() {
                           </div>
                           <div className="text-right">
                             <p className="text-xs text-stone-500 line-through">
-                              {party.monthlyFee.toLocaleString()}원
+                              {totalFee.toLocaleString()}원
                             </p>
                             <p className="text-sm font-bold text-[#ea580c]">
                               {Math.round(
-                                ((party.monthlyFee - perPersonFee) /
-                                  party.monthlyFee) *
-                                  100
+                                ((totalFee - perPersonFee) / totalFee) * 100
                               )}
                               % 할인
                             </p>
@@ -290,14 +308,25 @@ export default function PartyListPage() {
 
                       {/* CTA */}
                       <button
-                        className={`w-full py-3 rounded-xl font-bold transition-all duration-200 ${
-                          isFull
+                        className={`w-full py-3 rounded-xl font-bold transition-all duration-200 flex items-center justify-center gap-2 ${
+                          isMyParty
+                            ? "bg-stone-700 text-white hover:bg-stone-800"
+                            : isFull
                             ? "bg-stone-100 text-stone-400 cursor-not-allowed"
                             : "bg-gradient-to-r from-[#ea580c] to-[#c2410c] text-white hover:shadow-lg hover:scale-[1.02]"
                         }`}
-                        disabled={isFull}
+                        disabled={isFull && !isMyParty}
                       >
-                        {isFull ? "모집 마감" : "파티 참여하기"}
+                        {isMyParty ? (
+                          <>
+                            <Eye className="w-4 h-4" />
+                            파티 보기
+                          </>
+                        ) : isFull ? (
+                          "모집 마감"
+                        ) : (
+                          "파티 참여하기"
+                        )}
                       </button>
                     </div>
                   </div>
