@@ -44,9 +44,16 @@ import PaymentSuccessPage from "./pages/payment/PaymentSuccessPage";
 import BillingSuccessPage from "./pages/payment/BillingSuccessPage";
 import BillingRegisterPage from "./pages/payment/BillingRegisterPage";
 
-import SupportPage from "./pages/community/SupportPage";
 
 import { requireLogin } from "./services/authGuard";
+import ListNotice from "./pages/community/ListNotice";
+import GetNotice from "./pages/community/GetNotice";
+import AddNotice from "./pages/community/AddNotice";
+import UpdateNotice from "./pages/community/UpdateNotice";
+import ListFaq from './pages/community/ListFaq';
+import AddFaq from './pages/community/AddFaq';
+import Inquiry from "./pages/community/Inquiry";
+import InquiryAdmin from "./pages/community/InquiryAdmin";
 
 export default function App() {
   return (
@@ -175,7 +182,17 @@ export default function App() {
           <Route path="/payment/billing/register" element={<BillingRegisterPage />} />
           <Route path="/payment/billing/success" element={<BillingSuccessPage />} />
 
-          <Route path="/support" element={<SupportPage />} />
+          <Route path="/community/notice" element={<ListNotice />} />
+          <Route path="/community/notice/:communityId" element={<GetNotice />} />
+          <Route path="/community/notice/add" element={<AddNotice />} />
+          <Route path="/community/notice/update/:communityId" element={<UpdateNotice />} />
+
+          <Route path="/community/faq" element={<ListFaq />} />
+          <Route path="/community/faq/add" element={<AddFaq />} />
+
+          <Route path="/community/inquiry" element={<Inquiry />} />
+          <Route path="/community/inquiry/admin" element={<InquiryAdmin />} />
+          
         </Routes>
       </main>
 
