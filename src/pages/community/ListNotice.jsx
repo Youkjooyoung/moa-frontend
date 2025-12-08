@@ -46,6 +46,8 @@ const ListNotice = () => {
             }
             
             const data = await response.json();
+            console.log('공지사항 목록 데이터:', data);
+            console.log('첫 번째 공지 조회수:', data.content?.[0]?.viewCount);
             setNotices(data.content || []);
             setCurrentPage(data.page || 1);
             setTotalPages(data.totalPages || 0);
@@ -83,8 +85,8 @@ const ListNotice = () => {
         loadNoticeList(page);
     };
 
-    const goToDetail = (communityId) => {
-        navigate(`/community/notice/${communityId}`);
+    const goToDetail = (communityId, displayIndex) => {
+        navigate(`/community/notice/${communityId}?index=${displayIndex}`);
     };
 
     const goToAdd = () => {
@@ -172,7 +174,7 @@ const ListNotice = () => {
                         <PaginationItem>
                             <PaginationPrevious 
                                 onClick={() => handlePageChange(currentPage - 1)}
-                                className={currentPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                                className={`${currentPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'} [&>span]:hidden`}
                             />
                         </PaginationItem>
                         

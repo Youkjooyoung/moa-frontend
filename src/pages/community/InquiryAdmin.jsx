@@ -24,19 +24,19 @@ const InquiryAdmin = () => {
 
     useEffect(() => {
         // 임시: 권한 체크 비활성화
-        // checkAdmin();
+        checkAdmin();
         loadAllInquiries(1);
     }, []);
 
     const checkAdmin = () => {
         // 임시: 권한 체크 비활성화
-        // const userRole = sessionStorage.getItem('role');
+        const userRole = sessionStorage.getItem('role');
         
-        // if (userRole !== 'ADMIN') {
-        //     alert('관리자만 접근 가능합니다.');
-        //     navigate('/community/inquiry');
-        //     return;
-        // }
+        if (userRole !== 'ADMIN') {
+            alert('관리자만 접근 가능합니다.');
+            navigate('/community/inquiry');
+            return;
+        }
     };
 
     const loadAllInquiries = async (page) => {

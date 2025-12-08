@@ -17,24 +17,20 @@ const CommunityLayout = ({ children }) => {
     ];
 
     function handleInquiryClick() {
-        // 임시: 로그인 체크 비활성화
-        // const userRole = sessionStorage.getItem('role');
-        // const userId = sessionStorage.getItem('userId');
+        const userRole = sessionStorage.getItem('role');
+        const userId = sessionStorage.getItem('userId');
         
-        // if (!userId) {
-        //     alert('로그인이 필요한 서비스입니다.');
-        //     navigate('/login');
-        //     return;
-        // }
+        if (!userId) {
+            alert('로그인이 필요한 서비스입니다.');
+            navigate('/login');
+            return;
+        }
         
-        // if (userRole === 'ADMIN') {
-        //     navigate('/community/inquiry/admin');
-        // } else {
-        //     navigate('/community/inquiry');
-        // }
-        
-        // 임시: 무조건 유저 페이지로
-        navigate('/community/inquiry');
+        if (userRole === 'ADMIN') {
+            navigate('/community/inquiry/admin');
+        } else {
+            navigate('/community/inquiry');
+        }
     }
 
     return (

@@ -138,7 +138,7 @@ const UpdateNotice = () => {
                                 onChange={(e) => handleCategoryChange(e.target.value)}
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             >
-                                <option value="4">FAQ</option>
+
                                 <option value="5">회원</option>
                                 <option value="6">결제</option>
                                 <option value="7">구독</option>
