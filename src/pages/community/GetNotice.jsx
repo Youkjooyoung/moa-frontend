@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import CommunityLayout from '../../components/community/CommunityLayout';
+import { useAuthStore } from '@/store/authStore';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
@@ -9,40 +10,29 @@ const GetNotice = () => {
     const navigate = useNavigate();
     const { communityId } = useParams();
     const location = useLocation();
+    const { user } = useAuthStore();
     const [notice, setNotice] = useState(null);
-    const [isAdmin, setIsAdmin] = useState(false);
-    const [displayIndex, setDisplayIndex] = useState(null);
+
+    const isAdmin = user?.role === 'ADMIN';
+    
+    const params = new URLSearchParams(location.search);
+    const displayIndex = params.get('index');
 
     useEffect(() => {
-        checkUserRole();
-        loadNoticeDetail();
+        const loadNoticeDetail = async () => {
+            try {
+                const response = await fetch(`/api/community/notice/${communityId}`);
+                const data = await response.json();
+                setNotice(data);
+            } catch (error) {
+                console.error('공지사항 상세 로드 실패:', error);
+                alert('공지사항을 불러올 수 없습니다.');
+                navigate('/community/notice');
+            }
+        };
         
-        // URL 쿼리 파라미터에서 index 가져오기
-        const params = new URLSearchParams(location.search);
-        const indexParam = params.get('index');
-        if (indexParam) {
-            setDisplayIndex(indexParam);
-        }
-    }, [communityId, location.search]);
-
-    const checkUserRole = () => {
-        const userRole = sessionStorage.getItem('role');
-        setIsAdmin(userRole === 'ADMIN');
-    };
-
-    const loadNoticeDetail = async () => {
-        try {
-            const response = await fetch(`/api/community/notice/${communityId}`);
-            const data = await response.json();
-            console.log('공지사항 상세 데이터:', data);
-            console.log('조회수:', data.viewCount);
-            setNotice(data);
-        } catch (error) {
-            console.error('공지사항 상세 로드 실패:', error);
-            alert('공지사항을 불러올 수 없습니다.');
-            navigate('/community/notice');
-        }
-    };
+        loadNoticeDetail();
+    }, [communityId, navigate]);
 
     const formatDate = (dateString) => {
         if (!dateString) return '-';
