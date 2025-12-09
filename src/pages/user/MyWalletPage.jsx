@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   ChevronRight,
@@ -6,9 +6,10 @@ import {
   Building2,
   Wallet,
   Plus,
+  ShieldCheck,
+  Zap
 } from "lucide-react";
-import { getMyAccount, getMyCard } from "../../api/userApi";
-import { getMyDeposits } from "../../api/depositApi";
+import { useWalletStore } from "../../store/wallet/walletStore";
 import { useAuthStore } from "../../store/authStore";
 import { requestBillingAuth } from "../../utils/paymentHandler";
 import { handleApiError } from "../../utils/errorHandler";
@@ -24,69 +25,36 @@ export default function MyWalletPage() {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuthStore();
 
-  const [deposits, setDeposits] = useState([]);
-  const [account, setAccount] = useState(null);
-  const [card, setCard] = useState(null);
-  const [loading, setLoading] = useState(true);
+  // Zustand Store
+  const {
+    deposits,
+    account,
+    card,
+    loading,
+    loadWalletData
+  } = useWalletStore();
 
-  // 로그인 체크
   useEffect(() => {
     if (!authLoading && !user) {
-      alert("로그인이 필요한 서비스입니다.");
+      alert("로그인이 필요합니다.");
       navigate("/login");
     }
   }, [user, authLoading, navigate]);
 
-  // 데이터 로드
   useEffect(() => {
     if (user) {
       loadWalletData();
     }
-  }, [user]);
+  }, [user, loadWalletData]);
 
-  const loadWalletData = async () => {
-    setLoading(true);
-    try {
-      const [depositsRes, accountRes, cardRes] = await Promise.all([
-        getMyDeposits().catch(() => ({ data: [] })),
-        getMyAccount().catch(() => ({ data: null })),
-        getMyCard().catch(() => ({ data: null })),
-      ]);
-
-      // Extract data from ApiResponse format: { success, data, error }
-      setDeposits(depositsRes?.data || []);
-      setAccount(accountRes?.data || null);
-      setCard(cardRes?.data || null);
-    } catch (error) {
-      console.error("Failed to load wallet data:", error);
-
-      // Show error toast for wallet data loading failure
-      const errorInfo = handleApiError(error);
-      toast.error(errorInfo.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // 보증금 합계 계산
   const totalDeposit = Array.isArray(deposits)
     ? deposits
-        .filter((d) => d.depositStatus === "HELD")
-        .reduce((sum, d) => sum + (d.depositAmount || 0), 0)
+      .filter((d) => d.depositStatus === "HELD")
+      .reduce((sum, d) => sum + (d.depositAmount || 0), 0)
     : 0;
 
   const goHistory = (tab) => {
     navigate(`/user/financial-history?tab=${tab}`);
-  };
-
-  const handleViewAccountHistory = (e) => {
-    e.stopPropagation();
-    navigate("/user/financial-history?tab=settlement");
-  };
-
-  const handleViewPaymentHistory = (e) => {
-    e.stopPropagation();
-    navigate("/user/financial-history?tab=payment");
   };
 
   const handleRegisterCard = async () => {
@@ -96,190 +64,191 @@ export default function MyWalletPage() {
         navigate("/login");
         return;
       }
-
-      // Toss Payments 빌링 인증 요청
-      // customerKey는 사용자 고유 ID (userId)
       await requestBillingAuth(user.userId);
     } catch (error) {
-      // 사용자가 결제창을 취소한 경우 조용히 처리
+      // ... existing error handling logic ...
       const errorMessage = error?.message || "";
-      if (errorMessage.includes("취소") || errorMessage.includes("cancel")) {
-        console.log("사용자가 카드 등록을 취소했습니다.");
-        return;
-      }
-
+      if (errorMessage.includes("취소") || errorMessage.includes("cancel")) return;
       console.error("Card registration failed:", error);
-
-      // Handle error with user-friendly message
-      const errorInfo = handleApiError(error);
-      toast.error(errorInfo.message);
+      toast.error(handleApiError(error).message);
     }
   };
 
-  if (authLoading || loading) {
+  if (authLoading || (loading && !account && !card)) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-stone-50">
-        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#ea580c]"></div>
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-orange-500"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-stone-50 pb-20">
+    <div className="min-h-screen bg-slate-50 pb-20 font-sans text-slate-900">
       {/* Header */}
-      <div className="bg-white border-b">
-        <div className="max-w-md mx-auto px-6 py-5">
-          <h1 className="text-2xl font-bold text-gray-900">내 지갑</h1>
+      <div className="border-b border-indigo-100 bg-white/80 backdrop-blur-md sticky top-0 z-30">
+        <div className="max-w-md mx-auto px-6 py-5 flex items-center justify-between">
+          <h1 className="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2">
+            <Wallet className="w-6 h-6 text-orange-500" />
+            내 지갑
+          </h1>
+          <div className="px-2 py-1 bg-indigo-50 rounded-lg border border-indigo-100">
+            <span className="text-xs font-bold text-indigo-600">보안 연결됨</span>
+          </div>
         </div>
       </div>
 
-      <div className="max-w-md mx-auto px-6 py-6 space-y-5">
-        {/* 보증금 카드 */}
+      <div className="max-w-md mx-auto px-6 py-8 space-y-8 relative">
+        {/* Glow Effects */}
+        <div className="absolute top-20 left-10 w-64 h-64 bg-orange-200/40 rounded-full blur-[80px] pointer-events-none mix-blend-multiply"></div>
+        <div className="absolute bottom-40 right-10 w-56 h-56 bg-indigo-200/40 rounded-full blur-[80px] pointer-events-none mix-blend-multiply"></div>
+
+        {/* Total Deposit Card */}
         <div
           onClick={() => goHistory("deposit")}
-          className="bg-gradient-to-br from-[#ea580c] to-red-600 rounded-3xl p-6 text-white shadow-lg cursor-pointer hover:shadow-xl transition-shadow relative overflow-hidden"
+          className="group relative bg-gradient-to-br from-[#ea580c] to-red-600 rounded-[2rem] p-7 text-white shadow-xl shadow-orange-500/30 cursor-pointer overflow-hidden ring-1 ring-orange-500/20 hover:scale-[1.02] transition-all duration-300"
         >
           <div className="relative z-10">
-            <div className="flex items-center gap-2 text-[#ffedd5] text-sm font-semibold mb-1">
-              <Wallet className="w-4 h-4" />
-              보유 보증금
+            <div className="flex items-center gap-2 text-orange-100/90 text-sm font-bold mb-2 uppercase tracking-wide">
+              <ShieldCheck className="w-4 h-4" />
+              총 보증금
             </div>
-            <div className="text-4xl font-extrabold mb-4">
-              {totalDeposit.toLocaleString()}원
+            <div className="text-4xl font-black mb-6 tracking-tight">
+              {totalDeposit.toLocaleString()} <span className="text-2xl font-bold opacity-80">원</span>
             </div>
-            <div className="flex items-center gap-1 text-sm text-[#ffedd5]">
-              상세 내역 보기 <ChevronRight className="w-4 h-4" />
+            <div className="flex items-center gap-1 text-sm font-semibold text-orange-100 bg-black/10 w-fit px-3 py-1.5 rounded-full backdrop-blur-sm group-hover:bg-black/20 transition-colors">
+              내역 보기 <ChevronRight className="w-4 h-4" />
             </div>
           </div>
           {/* Background Decoration */}
-          <div className="absolute -right-6 -bottom-10 w-32 h-32 bg-[#fb923c] rounded-full opacity-30 blur-2xl"></div>
-          <div className="absolute -right-2 top-2 w-16 h-16 bg-[#fdba74] rounded-full opacity-20 blur-xl"></div>
+          <div className="absolute -right-8 -bottom-12 w-40 h-40 bg-orange-400 rounded-full opacity-20 blur-3xl group-hover:opacity-30 transition-opacity"></div>
+          <div className="absolute top-0 right-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10 mix-blend-overlay"></div>
         </div>
 
-        {/* 정산 계좌 */}
-        <div className="space-y-2">
+        {/* Settlement Account */}
+        <div className="space-y-3 relative z-10">
           <div className="flex justify-between items-center px-1">
-            <h3 className="font-bold text-gray-900">정산 계좌</h3>
+            <h3 className="font-bold text-slate-700 flex items-center gap-2">
+              <Building2 className="w-4 h-4" />
+              정산 계좌
+            </h3>
             <button
-              onClick={handleViewAccountHistory}
-              className="text-xs text-[#ea580c] hover:text-[#c2410c] font-medium"
+              onClick={(e) => { e.stopPropagation(); goHistory("settlement"); }}
+              className="text-xs text-orange-500 hover:text-orange-600 font-bold uppercase tracking-wider transition-colors"
             >
-              내역보기
+              내역
             </button>
           </div>
           <div
             onClick={() => navigate("/user/account-register")}
-            className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 cursor-pointer hover:border-[#fed7aa] hover:shadow-md transition-all"
+            className="group bg-white rounded-2xl p-5 border border-slate-200 hover:border-orange-300 cursor-pointer transition-all hover:shadow-lg hover:shadow-orange-500/10"
           >
             {account ? (
               <div className="flex items-center gap-4">
                 {(() => {
                   const logoPath = getBankLogo(account.bankName);
                   const theme = getBankTheme(account.bankName);
-
                   return (
                     <div
-                      className={`w-12 h-12 rounded-xl ${theme.bg} flex items-center justify-center overflow-hidden`}
+                      className={`w-14 h-14 rounded-2xl ${theme.bg} flex items-center justify-center overflow-hidden shadow-sm border border-slate-100`}
                     >
                       {logoPath ? (
                         <img
                           src={logoPath}
                           alt={account.bankName}
-                          className="w-full h-full object-contain p-1"
+                          className="w-full h-full object-contain p-1.5"
                           onError={(e) => {
                             e.target.style.display = "none";
                             e.target.nextSibling.style.display = "block";
                           }}
                         />
                       ) : null}
-                      <Building2
-                        className={`w-6 h-6 ${theme.text} ${
-                          logoPath ? "hidden" : ""
-                        }`}
-                      />
+                      <Building2 className={`w-6 h-6 ${theme.text} ${logoPath ? "hidden" : ""}`} />
                     </div>
                   );
                 })()}
                 <div className="flex-1">
-                  <div className="font-bold text-gray-900">
+                  <div className="font-bold text-slate-900 text-lg">
                     {account.bankName}
                   </div>
-                  <div className="text-sm text-gray-400">
-                    {account.accountNumber?.replace(
-                      /(\d{4})(\d{2})(.*)/,
-                      "$1-$2-******"
-                    )}
+                  <div className="text-sm text-slate-500 font-mono tracking-wide">
+                    {account.accountNumber?.replace(/(\d{4})(\d{2})(.*)/, "$1-$2-******")}
                   </div>
                 </div>
-                <ChevronRight className="w-5 h-5 text-gray-300" />
+                <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-orange-50 group-hover:text-orange-600 transition-all">
+                  <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-orange-500" />
+                </div>
               </div>
             ) : (
-              <div className="flex flex-col items-center py-4 text-gray-400">
-                <Plus className="w-8 h-8 mb-2" />
-                <span className="text-sm">등록된 계좌가 없습니다</span>
+              <div className="flex flex-col items-center py-6 text-slate-400 group-hover:text-slate-600 transition-colors">
+                <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mb-3 group-hover:bg-slate-200">
+                  <Plus className="w-6 h-6" />
+                </div>
+                <span className="text-sm font-medium">계좌 등록하기</span>
               </div>
             )}
           </div>
         </div>
 
-        {/* 결제 정보 */}
-        <div className="space-y-2">
+        {/* Payment Method */}
+        <div className="space-y-3 relative z-10">
           <div className="flex justify-between items-center px-1">
-            <h3 className="font-bold text-gray-900">결제 정보</h3>
+            <h3 className="font-bold text-slate-700 flex items-center gap-2">
+              <CreditCard className="w-4 h-4" />
+              결제 수단
+            </h3>
             <button
-              onClick={handleViewPaymentHistory}
-              className="text-xs text-[#ea580c] hover:text-[#c2410c] font-medium"
+              onClick={(e) => { e.stopPropagation(); goHistory("payment"); }}
+              className="text-xs text-orange-500 hover:text-orange-600 font-bold uppercase tracking-wider transition-colors"
             >
-              내역보기
+              내역
             </button>
           </div>
           <div
             onClick={handleRegisterCard}
-            className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 cursor-pointer hover:border-[#fed7aa] hover:shadow-md transition-all"
+            className="group bg-white rounded-2xl p-5 border border-slate-200 hover:border-orange-300 cursor-pointer transition-all hover:shadow-lg hover:shadow-orange-500/10"
           >
             {card ? (
               <div className="flex items-center gap-4">
                 {(() => {
                   const logoPath = getCardLogo(card.cardCompany);
                   const theme = getCardTheme(card.cardCompany);
-
                   return (
                     <div
-                      className={`w-12 h-12 rounded-xl ${theme.bg} flex items-center justify-center overflow-hidden`}
+                      className={`w-14 h-14 rounded-2xl ${theme.bg} flex items-center justify-center overflow-hidden shadow-sm border border-slate-100`}
                     >
                       {logoPath ? (
                         <img
                           src={logoPath}
                           alt={card.cardCompany}
-                          className="w-full h-full object-contain p-1"
+                          className="w-full h-full object-contain p-1.5"
                           onError={(e) => {
                             e.target.style.display = "none";
                             e.target.nextSibling.style.display = "block";
                           }}
                         />
                       ) : null}
-                      <CreditCard
-                        className={`w-6 h-6 ${theme.text} ${
-                          logoPath ? "hidden" : ""
-                        }`}
-                      />
+                      <CreditCard className={`w-6 h-6 ${theme.text} ${logoPath ? "hidden" : ""}`} />
                     </div>
                   );
                 })()}
                 <div className="flex-1">
-                  <div className="font-bold text-gray-900">
+                  <div className="font-bold text-slate-900 text-lg">
                     {card.cardCompany}
                   </div>
-                  <div className="text-sm text-gray-400">
+                  <div className="text-sm text-slate-500 font-mono tracking-wide">
                     **** **** **** {card.cardNumber?.slice(-4) || "****"}
                   </div>
                 </div>
-                <ChevronRight className="w-5 h-5 text-gray-300" />
+                <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-orange-50 group-hover:text-orange-600 transition-all">
+                  <Zap className="w-4 h-4 text-slate-400 group-hover:text-orange-500 fill-current" />
+                </div>
               </div>
             ) : (
-              <div className="flex flex-col items-center py-4 text-gray-400">
-                <Plus className="w-8 h-8 mb-2" />
-                <span className="text-sm">등록된 결제 수단이 없습니다</span>
+              <div className="flex flex-col items-center py-6 text-slate-400 group-hover:text-slate-600 transition-colors">
+                <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mb-3 group-hover:bg-slate-200">
+                  <Plus className="w-6 h-6" />
+                </div>
+                <span className="text-sm font-medium">카드 등록하기</span>
               </div>
             )}
           </div>

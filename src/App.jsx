@@ -29,7 +29,7 @@ import AddBlacklistPage from "./pages/admin/AddBlacklistPage";
 import AdminUserListPage from "@/pages/admin/AdminUserListPage";
 import AdminUserDetailPage from "@/pages/admin/AdminUserDetailPage";
 import AdminBlacklistDeletePage from "@/pages/admin/RemoveBlacklistPage";
-import AdminLoginHistoryPage from "@/pages/admin/AdminLoginHistoryPage";  
+import AdminLoginHistoryPage from "@/pages/admin/AdminLoginHistoryPage";
 import AdminDashboardPage from "@/pages/admin/AdminDashboardPage";
 
 import GetProductList from "./pages/product/GetProductList";
@@ -57,11 +57,14 @@ import AddFaq from "./pages/community/AddFaq";
 import Inquiry from "./pages/community/Inquiry";
 import InquiryAdmin from "./pages/community/InquiryAdmin";
 
+import ScrollToTop from "./components/common/ScrollToTop";
+
 export default function App() {
   useGlobalLinkHandler();
 
   return (
     <div className="min-h-screen flex flex-col">
+      <ScrollToTop />
       <Header />
 
       <main className="flex-1 pt-20">

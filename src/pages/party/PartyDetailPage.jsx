@@ -1,27 +1,19 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import {
-  fetchPartyDetail,
-  fetchPartyMembers,
-  joinParty,
-  leaveParty,
-} from "../../hooks/party/partyService";
+import { usePartyStore } from "../../store/party/partyStore";
+import { useAuthStore } from "../../store/authStore";
 import { requestPayment } from "../../utils/paymentHandler";
-import { fetchCurrentUser } from "../../api/authApi";
 import LeavePartyWarningModal from "../../components/party/LeavePartyWarningModal";
 import UpdateOttModal from "../../components/party/UpdateOttModal";
+import { fetchPartyMembers, leaveParty } from "../../hooks/party/partyService";
 import {
   Eye,
   EyeOff,
-  Edit2,
   Users,
   Calendar,
   Crown,
   Shield,
-  CreditCard,
   ArrowLeft,
-  UserPlus,
-  UserMinus,
   Lock,
   Check,
 } from "lucide-react";
@@ -29,77 +21,52 @@ import {
 export default function PartyDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [party, setParty] = useState(null);
-  const [members, setMembers] = useState([]);
-  const [currentUser, setCurrentUser] = useState(null);
+  const { user } = useAuthStore();
 
-  // Modals state
+  // Zustand Store
+  const {
+    currentParty: party,
+    loading,
+    loadPartyDetail,
+  } = usePartyStore();
+
+  const [members, setMembers] = useState([]);
+
   const [isLeaveModalOpen, setIsLeaveModalOpen] = useState(false);
   const [isOttModalOpen, setIsOttModalOpen] = useState(false);
   const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
-
-  // OTT visibility state
   const [showOttInfo, setShowOttInfo] = useState(false);
 
   useEffect(() => {
-    loadData();
-    loadCurrentUser();
+    loadPartyDetail(id);
+    loadMembers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  const loadCurrentUser = async () => {
+  const loadMembers = async () => {
     try {
-      const userData = await fetchCurrentUser();
-      if (userData && userData.data) {
-        setCurrentUser(userData.data);
-      }
-    } catch (error) {
-      console.error("Failed to load current user", error);
-      setCurrentUser(null);
-    }
-  };
-
-  const loadData = async () => {
-    try {
-      const partyData = await fetchPartyDetail(id);
-      setParty(partyData);
-      const membersData = await fetchPartyMembers(id);
-      setMembers(membersData);
-    } catch (error) {
-      console.error("Failed to load party data", error);
+      const data = await fetchPartyMembers(id);
+      setMembers(data || []);
+    } catch (err) {
+      console.error(err);
     }
   };
 
   const handleJoin = async () => {
-    if (!currentUser) {
+    if (!user) {
       alert("로그인이 필요합니다.");
       return;
     }
-
     try {
-      // 1. 결제 정보 준비 (보증금 + 첫 달 구독료)
-      // monthlyFee는 이미 인당 금액으로 저장됨
       const perPersonFee = party.monthlyFee;
       const totalAmount = perPersonFee * 2;
 
-      // 2. localStorage에 결제 정보 저장 (결제 성공 후 사용)
-      localStorage.setItem(
-        "pendingPayment",
-        JSON.stringify({
-          type: "JOIN_PARTY",
-          partyId: id,
-        })
-      );
-
-      // 3. Toss Payments 결제 요청 (성공 시 /payment/success로 리다이렉트)
-      await requestPayment(
-        `${party.productName} 파티 가입`,
-        totalAmount,
-        currentUser.nickname
-      );
+      localStorage.setItem("pendingPayment", JSON.stringify({ type: "JOIN_PARTY", partyId: id }));
+      await requestPayment(`${party.productName} 파티 가입`, totalAmount, user.nickname);
     } catch (error) {
       console.error(error);
       localStorage.removeItem("pendingPayment");
-      alert(error.message || "파티 가입에 실패했습니다.");
+      alert(error.message || "가입에 실패했습니다.");
     }
   };
 
@@ -107,91 +74,46 @@ export default function PartyDetailPage() {
     try {
       await leaveParty(id);
       alert("파티에서 탈퇴했습니다.");
-      navigate("/my-parties"); // 목록으로 이동
+      navigate("/my-parties");
     } catch (error) {
       console.error(error);
-      alert("파티 탈퇴에 실패했습니다. (백엔드 미구현일 수 있음)");
+      alert("탈퇴 처리에 실패했습니다.");
     } finally {
       setIsLeaveModalOpen(false);
     }
   };
 
-  // 파티장 보증금 재결제
   const handleDepositRetry = async () => {
-    if (!currentUser) {
-      alert("로그인이 필요합니다.");
-      return;
-    }
-
+    if (!user) return;
     try {
       const amount = party.monthlyFee;
-
-      // localStorage에 결제 정보 저장 (결제 성공 후 사용)
-      localStorage.setItem(
-        "pendingPayment",
-        JSON.stringify({
-          type: "RETRY_DEPOSIT",
-          partyId: id,
-        })
-      );
-
-      // Toss Payments 결제 요청
-      await requestPayment(
-        `${party.productName} 파티 보증금 재결제`,
-        amount,
-        currentUser.nickname
-      );
+      localStorage.setItem("pendingPayment", JSON.stringify({ type: "RETRY_DEPOSIT", partyId: id }));
+      await requestPayment(`${party.productName} 보증금 재결제`, amount, user.nickname);
     } catch (error) {
-      console.error(error);
-      localStorage.removeItem("pendingPayment");
-      alert(error.message || "보증금 재결제에 실패했습니다.");
+      alert(error.message);
     }
   };
 
-  if (!party) {
+  if (loading || !party) {
     return (
-      <div className="min-h-screen bg-stone-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-16 w-16 border-4 border-[#ea580c] border-t-transparent"></div>
-          <p className="mt-4 text-lg text-stone-600 font-medium">
-            파티 정보 불러오는 중...
-          </p>
-        </div>
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
       </div>
     );
   }
 
-  const isMember = members.some((m) => m.userId === currentUser?.userId);
-  const isLeader = party.partyLeaderId === currentUser?.userId;
+  const isMember = members.some((m) => m.userId === user?.userId);
+  const isLeader = party.partyLeaderId === user?.userId;
   const isFull = party.currentMembers >= party.maxMembers;
-  // monthlyFee는 이미 인당 금액으로 저장됨
   const perPersonFee = party.monthlyFee;
-  const depositAmount = perPersonFee;
-  const firstPayment = perPersonFee * 2;
   const availableSlots = party.maxMembers - party.currentMembers;
 
   const getStatusBadge = (status) => {
     const badges = {
-      RECRUITING: {
-        bg: "bg-[#ffedd5] text-[#c2410c]",
-        text: "모집중",
-        icon: "✨",
-      },
-      ACTIVE: {
-        bg: "bg-emerald-100 text-emerald-700",
-        text: "진행중",
-        icon: "🚀",
-      },
-      PENDING_PAYMENT: {
-        bg: "bg-amber-100 text-amber-700",
-        text: "결제대기",
-        icon: "⏳",
-      },
-      CLOSED: {
-        bg: "bg-stone-100 text-stone-500",
-        text: "종료",
-        icon: "🔒",
-      },
+      RECRUITING: { bg: "bg-indigo-50 text-indigo-700 border-indigo-100", text: "모집중", icon: "✨" },
+      ACTIVE: { bg: "bg-emerald-50 text-emerald-700 border-emerald-100", text: "진행중", icon: "🚀" },
+      PENDING_PAYMENT: { bg: "bg-amber-50 text-amber-700 border-amber-100", text: "결제대기", icon: "⏳" },
+      CLOSED: { bg: "bg-slate-100 text-slate-500 border-slate-200", text: "마감", icon: "🔒" },
     };
     return badges[status] || badges.RECRUITING;
   };
@@ -199,77 +121,67 @@ export default function PartyDetailPage() {
   const badge = getStatusBadge(party.partyStatus);
 
   return (
-    <div className="min-h-screen bg-stone-50">
+    <div className="min-h-screen bg-slate-50 font-sans text-slate-900 pb-20">
       {/* Hero Header */}
-      <div className="bg-stone-900 text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-orange-950 to-stone-900 opacity-90"></div>
-        <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-[#fff7ed] rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
+      <div className="relative overflow-hidden bg-white border-b border-indigo-100">
+        <div className="absolute inset-0 bg-slate-50 opacity-50"></div>
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-indigo-50 rounded-full blur-[100px] pointer-events-none mix-blend-multiply"></div>
+
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          {/* Back Button */}
           <button
             onClick={() => navigate("/party")}
-            className="flex items-center gap-2 text-white/90 hover:text-white mb-6 transition-colors group"
+            className="flex items-center gap-2 text-slate-500 hover:text-indigo-600 mb-8 transition-colors group"
           >
             <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-            <span className="font-medium">파티 목록으로</span>
+            <span className="font-medium">목록으로</span>
           </button>
 
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-            <div className="flex-1">
-              <div className="flex items-center gap-3 mb-3 flex-wrap">
-                <span
-                  className={`inline-flex items-center gap-1 px-4 py-2 ${badge.bg} text-sm font-bold rounded-full shadow-lg`}
-                >
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+            <div className="flex-1 space-y-4">
+              <div className="flex items-center gap-3 flex-wrap">
+                <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-bold uppercase tracking-wide ${badge.bg}`}>
                   {badge.icon} {badge.text}
                 </span>
                 {isLeader && (
-                  <span className="inline-flex items-center gap-1 px-4 py-2 bg-gradient-to-r from-yellow-400 to-orange-400 text-white text-sm font-bold rounded-full shadow-lg">
-                    <Crown className="w-4 h-4" /> 파티장
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-yellow-50 text-yellow-700 border border-yellow-200 rounded-full text-xs font-bold uppercase tracking-wide">
+                    <Crown className="w-3.5 h-3.5" /> 방장
                   </span>
                 )}
                 {isMember && !isLeader && (
-                  <span className="inline-flex items-center gap-1 px-4 py-2 bg-white/20 backdrop-blur-sm text-white text-sm font-bold rounded-full">
-                    <Check className="w-4 h-4" /> 파티원
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-indigo-50 text-indigo-700 border border-indigo-200 rounded-full text-xs font-bold uppercase tracking-wide">
+                    <Check className="w-3.5 h-3.5" /> 파티원
                   </span>
                 )}
               </div>
-              <h1 className="text-4xl md:text-5xl font-black mb-3">
+
+              <h1 className="text-4xl md:text-6xl font-black text-slate-900 tracking-tight">
                 {party.productName}
               </h1>
-              <p className="text-xl text-[#ffedd5] font-medium">
-                방장: {party.leaderNickname}
-              </p>
+
+              <div className="flex items-center gap-3 text-slate-500">
+                <div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center ring-2 ring-white">
+                  <span className="text-xs font-bold">{party.leaderNickname?.[0]}</span>
+                </div>
+                <span className="font-medium">방장: <span className="text-slate-900 font-bold">{party.leaderNickname}</span></span>
+              </div>
             </div>
 
             {/* Pricing Card */}
-            <div className="bg-white/10 backdrop-blur-md rounded-3xl p-6 border border-white/20 shadow-2xl min-w-[280px]">
-              <p className="text-sm text-[#ffedd5] mb-2">인당 월 구독료</p>
-              <p className="text-4xl font-black mb-4">
-                {perPersonFee.toLocaleString()}
-                <span className="text-xl text-[#ffedd5] font-normal ml-2">
-                  원
-                </span>
-              </p>
-              <div className="bg-white/10 rounded-xl p-3 space-y-1 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-[#ffedd5]">보증금</span>
-                  <span className="font-bold">
-                    {depositAmount.toLocaleString()}원
-                  </span>
+            <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-xl shadow-slate-200/50 hover:border-indigo-200 transition-all min-w-[300px]">
+              <p className="text-sm text-slate-500 mb-1 font-medium">월 분담금</p>
+              <div className="flex items-baseline gap-1 mb-4">
+                <span className="text-4xl font-black text-slate-900 tracking-tight">{perPersonFee.toLocaleString()}</span>
+                <span className="text-lg text-slate-500">원</span>
+              </div>
+
+              <div className="space-y-3 pt-4 border-t border-slate-100">
+                <div className="flex justify-between text-sm">
+                  <span className="text-slate-500">보증금</span>
+                  <span className="font-mono text-slate-900 font-bold">{perPersonFee.toLocaleString()}</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-[#ffedd5]">첫 달 구독료</span>
-                  <span className="font-bold">
-                    {perPersonFee.toLocaleString()}원
-                  </span>
-                </div>
-                <div className="border-t border-white/20 pt-2 mt-2 flex justify-between">
-                  <span className="text-[#ffedd5] font-semibold">
-                    첫 결제 금액
-                  </span>
-                  <span className="font-black text-lg">
-                    {firstPayment.toLocaleString()}원
-                  </span>
+                <div className="flex justify-between text-sm">
+                  <span className="text-slate-500">첫 결제 총액</span>
+                  <span className="font-mono text-indigo-600 font-bold">{(perPersonFee * 2).toLocaleString()}</span>
                 </div>
               </div>
             </div>
@@ -277,273 +189,163 @@ export default function PartyDetailPage() {
         </div>
       </div>
 
-      {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left Column - Party Info & OTT */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Party Info Card */}
-            <div className="bg-white rounded-3xl shadow-lg p-8 hover:shadow-xl transition-shadow">
-              <h2 className="text-2xl font-black text-stone-900 mb-6 flex items-center gap-2">
-                <Shield className="w-7 h-7 text-[#ea580c]" />
+          {/* Left Column */}
+          <div className="lg:col-span-2 space-y-8">
+
+            {/* Party Info */}
+            <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm">
+              <h2 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+                <Shield className="w-5 h-5 text-indigo-500" />
                 파티 정보
               </h2>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Members Status */}
-                <div className="bg-stone-100 rounded-2xl p-6">
-                  <div className="flex items-center gap-2 text-stone-600 mb-3">
-                    <Users className="w-5 h-5" />
-                    <span className="font-semibold">참여 인원</span>
-                  </div>
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="flex -space-x-2">
-                      {[...Array(party.currentMembers)].map((_, i) => (
-                        <div
-                          key={i}
-                          className="w-10 h-10 rounded-full bg-stone-400 border-3 border-white flex items-center justify-center text-white text-sm font-bold shadow-md"
-                        >
-                          {i + 1}
-                        </div>
-                      ))}
-                      {[...Array(availableSlots)].map((_, i) => (
-                        <div
-                          key={`empty-${i}`}
-                          className="w-10 h-10 rounded-full bg-stone-200 border-3 border-white flex items-center justify-center shadow-md"
-                        >
-                          <span className="text-stone-400 text-sm">+</span>
-                        </div>
-                      ))}
-                    </div>
-                    <span className="text-2xl font-black text-stone-900">
-                      {party.currentMembers}/{party.maxMembers}
+                {/* Members Progress */}
+                <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200">
+                  <div className="flex justify-between items-center mb-4">
+                    <span className="text-slate-500 text-sm font-medium flex items-center gap-2">
+                      <Users className="w-4 h-4" /> 사용 인원
                     </span>
+                    <span className="text-slate-900 font-black">{party.currentMembers} / {party.maxMembers}</span>
                   </div>
-                  <div className="w-full bg-stone-200 rounded-full h-3 overflow-hidden">
-                    <div
-                      className="bg-[#fff7ed] h-3 rounded-full transition-all duration-500"
-                      style={{
-                        width: `${
-                          (party.currentMembers / party.maxMembers) * 100
-                        }%`,
-                      }}
-                    ></div>
+                  {/* Avatars */}
+                  <div className="flex -space-x-3 mb-4">
+                    {[...Array(party.currentMembers)].map((_, i) => (
+                      <div key={i} className="w-10 h-10 rounded-full bg-slate-200 border-2 border-white flex items-center justify-center text-xs font-bold text-slate-500">
+                        {i + 1}
+                      </div>
+                    ))}
+                    {[...Array(availableSlots)].map((_, i) => (
+                      <div key={`e-${i}`} className="w-10 h-10 rounded-full bg-white border-2 border-white border-dashed flex items-center justify-center shadow-sm">
+                        <span className="text-slate-400 text-xs">+</span>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="h-2 w-full bg-slate-200 rounded-full overflow-hidden">
+                    <div style={{ width: `${(party.currentMembers / party.maxMembers) * 100}%` }} className="h-full bg-indigo-500 rounded-full" />
                   </div>
                 </div>
 
-                {/* Start Date & End Date */}
-                <div className="bg-stone-100 rounded-2xl p-6">
-                  <div className="flex items-center gap-2 text-stone-600 mb-3">
-                    <Calendar className="w-5 h-5" />
-                    <span className="font-semibold">파티 기간</span>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-stone-500 w-16">
-                        시작일
-                      </span>
-                      <p className="text-2xl font-black text-stone-900">
-                        {party.startDate?.split("T")[0] ||
-                          party.startDate?.split(" ")[0] ||
-                          "-"}
-                      </p>
+                {/* Dates */}
+                <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200 space-y-4">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-white rounded-lg shadow-sm border border-slate-100">
+                      <Calendar className="w-5 h-5 text-indigo-500" />
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-stone-500 w-16">
-                        종료일
-                      </span>
-                      <p className="text-2xl font-black text-stone-900">
-                        {party.endDate
-                          ? party.endDate.split("T")[0] ||
-                            party.endDate.split(" ")[0]
-                          : "미정"}
-                      </p>
+                    <div>
+                      <p className="text-xs text-slate-500">시작일</p>
+                      <p className="font-bold text-slate-900">{party.startDate ? new Date(party.startDate).toLocaleDateString() : '-'}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-white rounded-lg shadow-sm border border-slate-100">
+                      <Calendar className="w-5 h-5 text-indigo-500" />
+                    </div>
+                    <div>
+                      <p className="text-xs text-slate-500">종료일</p>
+                      <p className="font-bold text-slate-900">{party.endDate ? new Date(party.endDate).toLocaleDateString() : '미정'}</p>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* OTT Account Info Card */}
+            {/* OTT Credentials (Light Style) */}
             {(isMember || isLeader) && (
-              <div className="bg-white rounded-3xl shadow-lg p-8 hover:shadow-xl transition-shadow">
-                <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-2xl font-black text-stone-900 flex items-center gap-2">
-                    <Lock className="w-7 h-7 text-[#ea580c]" />
-                    OTT 계정 정보
+              <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-3xl p-8 border border-indigo-100 relative overflow-hidden">
+                <div className="flex justify-between items-center mb-6 relative z-10">
+                  <h2 className="text-xl font-bold text-indigo-900 flex items-center gap-2">
+                    <Lock className="w-5 h-5 text-indigo-600" />
+                    계정 정보
                   </h2>
                   {isLeader && (
-                    <button
-                      onClick={() => setIsOttModalOpen(true)}
-                      className="flex items-center gap-2 px-4 py-2 bg-[#ea580c] text-white rounded-2xl font-bold hover:shadow-lg hover:-translate-y-1 transition-all duration-200"
-                    >
-                      <Edit2 className="w-4 h-4" />
+                    <button onClick={() => setIsOttModalOpen(true)} className="text-xs bg-white hover:bg-indigo-50 text-indigo-600 px-3 py-1.5 rounded-lg border border-indigo-200 transition font-bold shadow-sm">
                       수정
                     </button>
                   )}
                 </div>
 
-                <div className="space-y-4">
-                  <div className="bg-gradient-to-br from-slate-50 to-gray-50 rounded-2xl p-6 border border-gray-200">
-                    <div className="flex justify-between items-center mb-3">
-                      <span className="text-sm font-semibold text-gray-500">
-                        아이디
-                      </span>
-                      {!showOttInfo && (
-                        <Lock className="w-4 h-4 text-gray-400" />
-                      )}
-                    </div>
-                    <div className="font-mono text-lg font-bold text-gray-900">
-                      {showOttInfo ? (
-                        party.ottId || (
-                          <span className="text-gray-400 italic text-base font-normal">
-                            미등록
-                          </span>
-                        )
-                      ) : (
-                        <span className="blur-sm select-none">
-                          example@email.com
-                        </span>
-                      )}
+                <div className="grid gap-4 relative z-10">
+                  <div className="bg-white/80 p-5 rounded-2xl border border-indigo-100 flex justify-between items-center group shadow-sm">
+                    <span className="text-slate-500 text-sm font-medium">아이디</span>
+                    <div className="font-mono font-bold text-slate-900">
+                      {showOttInfo ? (party.ottId || <span className="text-slate-400 font-normal italic">미등록</span>) : <span className="blur-sm group-hover:blur-md transition-all text-slate-400">user@example.com</span>}
                     </div>
                   </div>
-
-                  <div className="bg-gradient-to-br from-slate-50 to-gray-50 rounded-2xl p-6 border border-gray-200">
-                    <div className="flex justify-between items-center mb-3">
-                      <span className="text-sm font-semibold text-gray-500">
-                        비밀번호
-                      </span>
-                      {!showOttInfo && (
-                        <Lock className="w-4 h-4 text-gray-400" />
-                      )}
-                    </div>
-                    <div className="font-mono text-lg font-bold text-gray-900">
-                      {showOttInfo ? (
-                        party.ottPassword || (
-                          <span className="text-gray-400 italic text-base font-normal">
-                            미등록
-                          </span>
-                        )
-                      ) : (
-                        <span className="blur-sm select-none">
-                          ••••••••••••
-                        </span>
-                      )}
+                  <div className="bg-white/80 p-5 rounded-2xl border border-indigo-100 flex justify-between items-center group shadow-sm">
+                    <span className="text-slate-500 text-sm font-medium">비밀번호</span>
+                    <div className="font-mono font-bold text-slate-900">
+                      {showOttInfo ? (party.ottPassword || <span className="text-slate-400 font-normal italic">미등록</span>) : <span className="blur-sm group-hover:blur-md transition-all text-slate-400">••••••••••</span>}
                     </div>
                   </div>
-
-                  <button
-                    onClick={() => setShowOttInfo(!showOttInfo)}
-                    className="w-full flex items-center justify-center gap-2 py-4 bg-[#ea580c] text-white rounded-2xl font-bold hover:shadow-lg hover:-translate-y-1 transition-all duration-200"
-                  >
-                    {showOttInfo ? (
-                      <>
-                        <EyeOff className="w-5 h-5" />
-                        정보 숨기기
-                      </>
-                    ) : (
-                      <>
-                        <Eye className="w-5 h-5" />
-                        정보 보기
-                      </>
-                    )}
-                  </button>
                 </div>
+
+                <button
+                  onClick={() => setShowOttInfo(!showOttInfo)}
+                  className="w-full mt-6 py-3 bg-white hover:bg-indigo-50 text-indigo-600 border border-indigo-200 rounded-xl font-bold transition-all shadow-sm relative z-10 flex items-center justify-center gap-2"
+                >
+                  {showOttInfo ? <><EyeOff className="w-4 h-4" /> 정보 숨기기</> : <><Eye className="w-4 h-4" /> 정보 보기</>}
+                </button>
               </div>
             )}
+
           </div>
 
-          {/* Right Column - Members List & Actions */}
+          {/* Right Column */}
           <div className="space-y-6">
-            {/* Members List Card (Leader Only) */}
+            {/* Members List (Leader) */}
             {isLeader && (
-              <div className="bg-white rounded-3xl shadow-lg p-8 hover:shadow-xl transition-shadow sticky top-6">
-                <h2 className="text-2xl font-black text-stone-900 mb-6 flex items-center gap-2">
-                  <Users className="w-7 h-7 text-[#ea580c]" />
-                  멤버 리스트
-                </h2>
-                <div className="space-y-3">
-                  {members.map((member, index) => (
-                    <div
-                      key={member.partyMemberId}
-                      className="flex items-center gap-3 p-4 bg-stone-100 rounded-xl hover:shadow-md transition-all duration-200"
-                    >
-                      <div className="w-12 h-12 bg-stone-400 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-md">
-                        {index + 1}
+              <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm">
+                <h3 className="text-slate-400 font-bold mb-4 flex items-center gap-2 text-sm uppercase tracking-wider">
+                  <Users className="w-4 h-4" /> 멤버 목록
+                </h3>
+                <div className="space-y-2">
+                  {members.map((m, i) => (
+                    <div key={m.partyMemberId} className="flex items-center gap-3 p-3 bg-slate-50 rounded-xl border border-slate-100">
+                      <div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold text-slate-500">
+                        {i + 1}
                       </div>
                       <div className="flex-1">
-                        <p className="font-bold text-stone-900">
-                          {member.nickname}
-                        </p>
-                        {member.role === "LEADER" && (
-                          <span className="inline-flex items-center gap-1 mt-1 text-xs bg-gradient-to-r from-yellow-400 to-orange-400 text-white px-2 py-1 rounded-full font-bold">
-                            <Crown className="w-3 h-3" />
-                            방장
-                          </span>
-                        )}
+                        <p className="text-sm font-bold text-slate-900">{m.nickname}</p>
+                        {m.role === 'LEADER' && <p className="text-[10px] text-yellow-600 font-bold">방장</p>}
                       </div>
                     </div>
                   ))}
-
-                  {/* Empty Slots */}
                   {[...Array(availableSlots)].map((_, i) => (
-                    <div
-                      key={`empty-slot-${i}`}
-                      className="flex items-center gap-3 p-4 bg-stone-50 rounded-xl border-2 border-dashed border-stone-300"
-                    >
-                      <div className="w-12 h-12 bg-stone-200 rounded-full flex items-center justify-center">
-                        <UserPlus className="w-6 h-6 text-stone-400" />
-                      </div>
-                      <p className="text-stone-400 font-medium">
-                        모집 대기중...
-                      </p>
+                    <div key={`e-${i}`} className="p-3 border border-dashed border-slate-200 rounded-xl flex items-center justify-center text-slate-400 text-xs">
+                      대기중...
                     </div>
                   ))}
                 </div>
               </div>
             )}
 
-            {/* Action Buttons */}
-            <div className="bg-white rounded-3xl shadow-lg p-8 space-y-4 sticky top-6">
-              {/* 파티장 보증금 재결제 버튼 (PENDING_PAYMENT 상태) */}
+            {/* Actions */}
+            <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm sticky top-24">
               {isLeader && party.partyStatus === "PENDING_PAYMENT" && (
-                <button
-                  onClick={handleDepositRetry}
-                  className="w-full flex items-center justify-center gap-2 py-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-2xl font-black text-lg hover:shadow-lg hover:-translate-y-1 transition-all duration-200 group"
-                >
-                  <CreditCard className="w-6 h-6 group-hover:rotate-12 transition-transform" />
+                <button onClick={handleDepositRetry} className="w-full py-4 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-bold shadow-lg shadow-amber-500/20 transition-all mb-2">
                   보증금 재결제
                 </button>
               )}
 
               {!isMember && !isLeader && !isFull && (
-                <button
-                  onClick={() => setIsJoinModalOpen(true)}
-                  className="w-full flex items-center justify-center gap-2 py-4 bg-[#ea580c] text-white rounded-2xl font-black text-lg hover:shadow-lg hover:-translate-y-1 transition-all duration-200 group"
-                >
-                  <CreditCard className="w-6 h-6 group-hover:rotate-12 transition-transform" />
+                <button onClick={() => setIsJoinModalOpen(true)} className="w-full py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold shadow-lg shadow-indigo-500/20 transition-all hover:-translate-y-1">
                   파티 가입하기
                 </button>
               )}
 
               {isMember && !isLeader && (
-                <button
-                  onClick={() => setIsLeaveModalOpen(true)}
-                  className="w-full flex items-center justify-center gap-2 py-4 bg-red-500 text-white rounded-2xl font-black text-lg hover:shadow-lg hover:-translate-y-1 transition-all duration-200 group"
-                >
-                  <UserMinus className="w-6 h-6 group-hover:rotate-12 transition-transform" />
+                <button onClick={() => setIsLeaveModalOpen(true)} className="w-full py-4 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 rounded-xl font-bold transition-all">
                   파티 탈퇴하기
                 </button>
               )}
 
               {isFull && !isMember && (
-                <button
-                  disabled
-                  className="w-full flex items-center justify-center gap-2 py-4 bg-stone-200 text-stone-400 rounded-2xl font-black text-lg cursor-not-allowed"
-                >
-                  <Lock className="w-6 h-6" />
+                <div className="w-full py-4 bg-slate-100 text-slate-400 rounded-xl font-bold text-center cursor-not-allowed">
                   모집 마감
-                </button>
+                </div>
               )}
             </div>
           </div>
@@ -559,85 +361,31 @@ export default function PartyDetailPage() {
 
       <UpdateOttModal
         isOpen={isOttModalOpen}
-        onClose={(success) => {
-          setIsOttModalOpen(false);
-          if (success) loadData();
-        }}
+        onClose={(success) => { setIsOttModalOpen(false); if (success) loadPartyDetail(id); }}
         partyId={id}
         currentOttId={party.ottId}
       />
 
-      {/* Join Confirmation Modal */}
       {isJoinModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <div className="bg-white rounded-3xl shadow-2xl max-w-lg w-full p-8 transform transition-all">
-            <div className="text-center mb-6">
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#fff7ed] mb-4">
-                <UserPlus className="w-8 h-8 text-[#ea580c]" />
-              </div>
-              <h3 className="text-2xl font-extrabold text-gray-900 mb-2">
-                파티 가입 안내
-              </h3>
-              <p className="text-stone-600">
-                파티 가입 시 다음 절차가 진행됩니다
-              </p>
-            </div>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/50 backdrop-blur-sm">
+          <div className="bg-white border border-slate-200 rounded-3xl p-8 max-w-md w-full shadow-2xl animate-in fade-in zoom-in-95 duration-200">
+            <h3 className="text-2xl font-black text-slate-900 mb-2 text-center">파티 가입 확인</h3>
+            <p className="text-slate-500 text-center mb-6">결제 정보를 확인해주세요</p>
 
-            <div className="bg-stone-50 rounded-2xl p-5 mb-6 space-y-3">
-              <div className="flex items-start gap-3">
-                <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#ea580c] text-white flex items-center justify-center text-sm font-bold">
-                  1
-                </div>
-                <div className="flex-1">
-                  <p className="font-bold text-gray-900">
-                    보증금 + 첫 달 구독료 결제
-                  </p>
-                  <p className="text-sm text-stone-600 mt-1">
-                    총 {firstPayment.toLocaleString()}원 (보증금{" "}
-                    {depositAmount.toLocaleString()}원 + 첫 달 구독료{" "}
-                    {perPersonFee.toLocaleString()}원)
-                  </p>
-                </div>
+            <div className="space-y-4 mb-8">
+              <div className="bg-slate-50 p-4 rounded-xl flex justify-between items-center border border-slate-100">
+                <span className="text-slate-500 text-sm">보증금 + 첫달 구독료</span>
+                <span className="font-bold text-indigo-600">{(perPersonFee * 2).toLocaleString()} 원</span>
               </div>
-
-              <div className="flex items-start gap-3">
-                <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#ea580c] text-white flex items-center justify-center text-sm font-bold">
-                  2
-                </div>
-                <div className="flex-1">
-                  <p className="font-bold text-gray-900">
-                    월 구독료 자동 결제 설정
-                  </p>
-                  <p className="text-sm text-stone-600 mt-1">
-                    매월 {party.paymentDay}일에 {perPersonFee.toLocaleString()}
-                    원이 자동 결제됩니다
-                  </p>
-                </div>
+              <div className="bg-slate-50 p-4 rounded-xl flex justify-between items-center border border-slate-100">
+                <span className="text-slate-500 text-sm">월 정기결제</span>
+                <span className="font-bold text-slate-900">{(perPersonFee).toLocaleString()} 원</span>
               </div>
-            </div>
-
-            <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-6">
-              <p className="text-sm text-amber-800 font-medium">
-                ℹ️ 보증금은 파티 탈퇴 시 환불됩니다
-              </p>
             </div>
 
             <div className="flex gap-3">
-              <button
-                onClick={() => setIsJoinModalOpen(false)}
-                className="flex-1 py-3 px-4 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-xl font-bold transition-colors"
-              >
-                취소
-              </button>
-              <button
-                onClick={() => {
-                  setIsJoinModalOpen(false);
-                  handleJoin();
-                }}
-                className="flex-1 py-3 px-4 bg-gradient-to-r from-[#ea580c] to-[#c2410c] hover:shadow-lg text-white rounded-xl font-bold transition-all"
-              >
-                가입하기
-              </button>
+              <button onClick={() => setIsJoinModalOpen(false)} className="flex-1 py-3 font-bold text-slate-400 hover:text-slate-600 transition-colors">취소</button>
+              <button onClick={() => { setIsJoinModalOpen(false); handleJoin(); }} className="flex-1 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold shadow-lg shadow-indigo-500/20">확인 및 가입</button>
             </div>
           </div>
         </div>

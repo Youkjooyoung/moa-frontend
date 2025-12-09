@@ -18,15 +18,23 @@ export default function LeavePartyWarningModal({ isOpen, onClose, onConfirm }) {
                         <DialogTitle>정말 탈퇴하시겠습니까?</DialogTitle>
                     </div>
                     <DialogDescription className="pt-2 text-base text-gray-700">
-                        파티를 중도에 탈퇴하실 경우, 납부하신 <strong>보증금은 환불되지 않으며</strong> 파티장에게 위로금으로 지급됩니다.
+                        파티 탈퇴 시 환불 정책에 따라 보증금이 처리됩니다.
                     </DialogDescription>
                 </DialogHeader>
+
+                <div className="bg-amber-50 p-4 rounded-lg border border-amber-100 text-sm text-amber-800 my-2">
+                    <p className="font-bold mb-2">환불 정책</p>
+                    <ul className="list-disc pl-4 space-y-1">
+                        <li><strong>파티 시작 2일 전까지:</strong> 전액 환불</li>
+                        <li><strong>파티 시작 1일 전부터:</strong> 환불 불가 (전액 몰수)</li>
+                    </ul>
+                </div>
 
                 <div className="bg-red-50 p-4 rounded-lg border border-red-100 text-sm text-red-700 my-2">
                     <p className="font-bold mb-1">주의사항</p>
                     <ul className="list-disc pl-4 space-y-1">
                         <li>탈퇴 즉시 파티 멤버 자격을 잃게 됩니다.</li>
-                        <li>보증금은 전액 파티장에게 귀속됩니다.</li>
+                        <li>몰수된 보증금은 파티장에게 귀속됩니다.</li>
                         <li>이 작업은 되돌릴 수 없습니다.</li>
                     </ul>
                 </div>

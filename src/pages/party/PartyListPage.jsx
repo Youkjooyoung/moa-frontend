@@ -1,56 +1,43 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { fetchPartyList, fetchMyParties } from "../../hooks/party/partyService";
+import { useNavigate } from "react-router-dom";
+import { usePartyStore } from "../../store/party/partyStore";
+import { useAuthStore } from "../../store/authStore";
 import {
   Sparkles,
-  Users,
-  Calendar,
-  TrendingUp,
   Search,
-  Eye,
+  ArrowRight,
+  ShieldCheck,
+  Calendar,
+  Clock
 } from "lucide-react";
-import { useAuthStore } from "../../store/authStore";
 
 export default function PartyListPage() {
   const navigate = useNavigate();
   const { user } = useAuthStore();
-  const [list, setList] = useState([]);
-  const [myPartyIds, setMyPartyIds] = useState([]);
-  const [loading, setLoading] = useState(true);
+
+  // Zustand Store
+  const {
+    parties: list,
+    myParties,
+    loading,
+    loadParties,
+    loadMyParties
+  } = usePartyStore();
+
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("");
+
+  const myPartyIds = Array.isArray(myParties) ? myParties.map(p => p.partyId) : [];
 
   useEffect(() => {
     loadParties();
     if (user) {
       loadMyParties();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
-  const loadMyParties = async () => {
-    try {
-      const data = await fetchMyParties();
-      if (data && Array.isArray(data)) {
-        setMyPartyIds(data.map((p) => p.partyId));
-      }
-    } catch (error) {
-      console.error("Failed to load my parties", error);
-    }
-  };
-
-  const loadParties = async () => {
-    try {
-      setLoading(true);
-      const data = await fetchPartyList();
-      setList(data || []);
-    } catch (error) {
-      console.error("Failed to load parties", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const filteredParties = list.filter((party) => {
+  const filteredParties = (list || []).filter((party) => {
     const matchesSearch = party.productName
       ?.toLowerCase()
       .includes(searchQuery.toLowerCase());
@@ -63,306 +50,227 @@ export default function PartyListPage() {
   const getStatusBadge = (status) => {
     const badges = {
       RECRUITING: {
-        bg: "bg-[#ffedd5] text-[#c2410c]",
+        bg: "bg-indigo-50 text-indigo-700 border-indigo-100",
         text: "모집중",
-        icon: "✨",
+        dot: "bg-indigo-500",
       },
       ACTIVE: {
-        bg: "bg-emerald-100 text-emerald-700",
+        bg: "bg-emerald-50 text-emerald-700 border-emerald-100",
         text: "진행중",
-        icon: "🚀",
+        dot: "bg-emerald-500",
       },
       PENDING_PAYMENT: {
-        bg: "bg-amber-100 text-amber-700",
+        bg: "bg-amber-50 text-amber-700 border-amber-100",
         text: "결제대기",
-        icon: "⏳",
+        dot: "bg-amber-500",
       },
       CLOSED: {
-        bg: "bg-stone-100 text-stone-500",
-        text: "종료",
-        icon: "🔒",
+        bg: "bg-slate-100 text-slate-500 border-slate-200",
+        text: "마감",
+        dot: "bg-slate-400",
       },
     };
     return badges[status] || badges.RECRUITING;
   };
 
-  if (loading) {
+  const formatDate = (dateString) => {
+    if (!dateString) return "-";
+    return new Date(dateString).toLocaleDateString("ko-KR", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+
+  if (loading && list.length === 0) {
     return (
-      <div className="min-h-screen bg-stone-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-16 w-16 border-4 border-[#ea580c] border-t-transparent"></div>
-          <p className="mt-4 text-lg text-stone-600 font-medium">
-            파티 불러오는 중...
-          </p>
-        </div>
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-stone-50">
-      {/* Hero Header */}
-      <div className="bg-stone-900 text-white relative overflow-hidden">
-        {/* Warm Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-orange-950 to-stone-900 opacity-90"></div>
-        {/* Blob Animations */}
-        <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-[#fff7ed] rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
-        <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-96 h-96 bg-rose-500 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
-
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className="text-center">
-            <h1 className="text-5xl md:text-6xl font-black mb-4 tracking-tight">
-              <span className="inline-block animate-pulse">🎉</span> 파티 찾기
-            </h1>
-            <p className="text-xl md:text-2xl text-[#ffedd5] font-medium mb-8">
-              함께 나누면 더 저렴해요. 지금 파티에 참여하세요!
-            </p>
-
-            {/* Search Bar */}
-            <div className="max-w-2xl mx-auto">
-              <div className="relative group">
-                <div className="absolute inset-0 bg-white rounded-2xl opacity-20 blur-xl group-hover:opacity-30 transition-opacity"></div>
-                <div className="relative bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-2 flex items-center gap-2">
-                  <Search className="w-6 h-6 text-stone-400 ml-3" />
-                  <input
-                    type="text"
-                    placeholder="서비스 이름으로 검색 (예: Netflix, YouTube Premium...)"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="flex-1 px-4 py-3 bg-transparent text-stone-900 placeholder-stone-500 outline-none text-lg"
-                  />
-                </div>
+    <div className="min-h-screen bg-slate-50 pb-20 font-sans text-slate-900">
+      {/* Header Section */}
+      <div className="relative overflow-hidden border-b border-indigo-100 bg-white/60 backdrop-blur-xl">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative z-10">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <span className="bg-indigo-50 text-indigo-700 border border-indigo-100 px-3 py-1 rounded-full text-xs font-bold tracking-wide uppercase shadow-sm">
+                  파티 찾기
+                </span>
+                <span className="flex items-center gap-1 text-slate-500 text-xs font-semibold">
+                  <ShieldCheck className="w-3.5 h-3.5 text-indigo-500" />
+                  안전한 매칭
+                </span>
               </div>
+              <h1 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight leading-tight">
+                나에게 맞는 <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">파티</span>를 찾아보세요
+              </h1>
+              <p className="mt-4 text-lg text-slate-500 font-medium max-w-xl leading-relaxed">
+                검증된 파티에 참여하여 프리미엄 구독 서비스를 이용하세요.<br className="hidden md:block" />
+                월 구독료를 최대 75%까지 절약할 수 있습니다.
+              </p>
+            </div>
+
+            <div className="w-full md:w-auto flex flex-col items-end gap-3">
+              <button
+                onClick={() => navigate("/party/create")}
+                className="bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-500/20 px-6 py-3.5 rounded-2xl font-bold transition-all flex items-center gap-2 hover:-translate-y-1 hover:shadow-indigo-500/30"
+              >
+                <Sparkles className="w-4 h-4 text-white" />
+                파티 만들기
+              </button>
             </div>
           </div>
         </div>
+
+        {/* Decorative Background Elements (Light Style) */}
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-indigo-50/50 rounded-full blur-[120px] -mr-40 -mt-40 pointer-events-none mix-blend-multiply"></div>
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-purple-50/50 rounded-full blur-[100px] -ml-20 -mb-20 pointer-events-none mix-blend-multiply"></div>
       </div>
 
-      {/* Filter Tabs */}
-      <div className="sticky top-0 z-10 bg-white/80 backdrop-blur-md border-b border-stone-200 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between py-4">
-            <div className="flex gap-2 overflow-x-auto">
-              {[
-                { value: "", label: "전체", emoji: "📋" },
-                { value: "RECRUITING", label: "모집중", emoji: "✨" },
-                { value: "ACTIVE", label: "진행중", emoji: "🚀" },
-              ].map((filter) => (
-                <button
-                  key={filter.value}
-                  onClick={() => setFilterStatus(filter.value)}
-                  className={`px-6 py-2.5 rounded-full font-semibold whitespace-nowrap transition-all duration-200 ${
-                    filterStatus === filter.value
-                      ? "bg-[#fff7ed] text-[#c2410c] border border-[#ffedd5] shadow-lg scale-105"
-                      : "bg-white text-stone-600 border border-stone-200 hover:bg-stone-50"
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-20">
+        {/* Search & Filter Bar */}
+        <div className="bg-white/80 backdrop-blur-xl rounded-3xl p-3 shadow-xl shadow-slate-200/50 border border-white/50 flex flex-col md:flex-row gap-4 items-center mb-12 ring-1 ring-slate-900/5">
+          <div className="relative w-full flex-1">
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <Search className="h-5 w-5 text-slate-400" />
+            </div>
+            <input
+              type="text"
+              className="block w-full pl-11 pr-4 py-3 border border-slate-200 rounded-2xl bg-slate-50 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all font-medium"
+              placeholder="서비스 검색 (예: 넷플릭스, 디즈니+)"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+
+          <div className="flex gap-2 w-full md:w-auto overflow-x-auto pb-2 md:pb-0 px-2 md:px-0 scrollbar-hide">
+            {[
+              { value: "", label: "전체" },
+              { value: "RECRUITING", label: "모집중" },
+              { value: "ACTIVE", label: "진행중" },
+            ].map((filter) => (
+              <button
+                key={filter.value}
+                onClick={() => setFilterStatus(filter.value)}
+                className={`px-5 py-2.5 rounded-xl text-sm font-bold transition-all whitespace-nowrap border ${filterStatus === filter.value
+                  ? "bg-indigo-50 text-indigo-700 border-indigo-100 shadow-sm"
+                  : "bg-white text-slate-500 border-slate-200 hover:bg-slate-50 hover:text-slate-700"
                   }`}
-                >
-                  <span className="mr-2">{filter.emoji}</span>
-                  {filter.label}
-                </button>
-              ))}
-            </div>
-            {/* 파티 만들기 버튼 - 필터 탭 오른쪽 */}
-            <button
-              onClick={() => navigate("/party/create")}
-              className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#ea580c] to-[#c2410c] text-white rounded-full font-semibold hover:shadow-lg hover:scale-105 transition-all duration-200"
-            >
-              <Sparkles className="w-4 h-4" />
-              파티 만들기
-            </button>
+              >
+                {filter.label}
+              </button>
+            ))}
           </div>
         </div>
-      </div>
 
-      {/* Parties Grid */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Parties Grid */}
         {filteredParties.length === 0 ? (
-          <div className="text-center py-20">
-            <div className="inline-block p-8 bg-white rounded-3xl shadow-xl">
-              <Sparkles className="w-16 h-16 text-stone-300 mx-auto mb-4" />
-              <p className="text-xl text-stone-600 font-medium mb-2">
-                {searchQuery
-                  ? "검색 결과가 없습니다"
-                  : "모집중인 파티가 없습니다"}
-              </p>
-              <p className="text-stone-500">
-                {searchQuery
-                  ? "다른 검색어로 시도해보세요"
-                  : "지금 바로 새로운 파티를 만들어보세요!"}
-              </p>
-              {!searchQuery && (
-                <button
-                  onClick={() => navigate("/party/create")}
-                  className="mt-6 px-8 py-3 bg-gradient-to-r from-[#ea580c] to-[#c2410c] text-white rounded-2xl font-bold hover:shadow-lg hover:-translate-y-1 transition-all duration-200"
-                >
-                  파티 만들기
-                </button>
-              )}
+          <div className="text-center py-32 bg-white rounded-[2.5rem] border border-dashed border-slate-200 shadow-sm">
+            <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6 ring-1 ring-slate-900/5">
+              <Search className="w-8 h-8 text-slate-400" />
             </div>
+            <p className="text-xl text-slate-900 font-bold mb-2">
+              파티를 찾을 수 없습니다
+            </p>
+            <p className="text-slate-500">
+              다른 검색어로 시도하거나 직접 파티를 만들어보세요.
+            </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {filteredParties.map((party) => {
               const badge = getStatusBadge(party.partyStatus);
-              // monthlyFee는 이미 인당 금액으로 저장됨
-              const perPersonFee = party.monthlyFee;
-              // 총 금액 계산 (인당 금액 * 최대 인원)
-              const totalFee = perPersonFee * party.maxMembers;
-              const isFull = party.currentMembers >= party.maxMembers;
-              const availableSlots = party.maxMembers - party.currentMembers;
-              // 내가 참여 중인 파티인지 확인
               const isMyParty = myPartyIds.includes(party.partyId);
+              const isLeader = user?.userId === party.partyLeaderId;
 
               return (
-                <Link
+                <div
                   key={party.partyId}
-                  to={`/party/${party.partyId}`}
-                  className="group relative"
+                  onClick={() => navigate(`/party/${party.partyId}`)}
+                  className="group relative bg-white rounded-[2rem] p-6 border border-slate-200 hover:border-indigo-300 transition-all duration-300 hover:shadow-xl hover:shadow-indigo-100 hover:-translate-y-1 cursor-pointer"
                 >
-                  {/* Card Container */}
-                  <div className="relative h-full bg-white rounded-3xl border border-stone-200 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group-hover:-translate-y-1">
-                    {/* Gradient Background */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-[#fff7ed] to-orange-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-
-                    {/* Content */}
-                    <div className="relative p-6">
-                      {/* Header */}
-                      <div className="flex items-start justify-between mb-4">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-2 flex-wrap">
-                            <span
-                              className={`inline-flex items-center gap-1 px-3 py-1 ${badge.bg} text-xs font-bold rounded-full`}
-                            >
-                              {badge.icon} {badge.text}
-                            </span>
-                            {party.currentMembers > 0 && (
-                              <span className="inline-flex items-center gap-1 px-3 py-1 bg-stone-100 text-stone-700 text-xs font-bold rounded-full">
-                                <TrendingUp className="w-3 h-3" />
-                                인기
-                              </span>
-                            )}
-                          </div>
-                          <h3 className="text-2xl font-black text-stone-900 group-hover:text-[#ea580c] transition-colors">
-                            {party.productName}
-                          </h3>
-                        </div>
-                      </div>
-
-                      {/* Stats */}
-                      <div className="space-y-3 mb-6">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2 text-stone-600">
-                            <Users className="w-5 h-5" />
-                            <span className="font-medium">인원</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <div className="flex -space-x-2">
-                              {[...Array(party.currentMembers)].map((_, i) => (
-                                <div
-                                  key={i}
-                                  className="w-7 h-7 rounded-full bg-stone-400 border-2 border-white flex items-center justify-center text-white text-xs font-bold"
-                                >
-                                  {i + 1}
-                                </div>
-                              ))}
-                              {[...Array(availableSlots)].map((_, i) => (
-                                <div
-                                  key={`empty-${i}`}
-                                  className="w-7 h-7 rounded-full bg-stone-200 border-2 border-white flex items-center justify-center"
-                                >
-                                  <span className="text-stone-400 text-xs">
-                                    +
-                                  </span>
-                                </div>
-                              ))}
-                            </div>
-                            <span className="font-bold text-stone-900">
-                              {party.currentMembers}/{party.maxMembers}
-                            </span>
-                          </div>
-                        </div>
-
-                        {party.startDate && (
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2 text-stone-600">
-                              <Calendar className="w-5 h-5" />
-                              <span className="font-medium">시작일</span>
-                            </div>
-                            <span className="font-semibold text-stone-900">
-                              {party.startDate}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Pricing */}
-                      <div className="bg-gradient-to-r from-stone-50 to-stone-100 rounded-2xl p-4 mb-4">
-                        <div className="flex items-end justify-between">
-                          <div>
-                            <p className="text-sm text-stone-600 mb-1">
-                              인당 월 구독료
-                            </p>
-                            <p className="text-3xl font-black text-stone-900">
-                              {perPersonFee.toLocaleString()}
-                              <span className="text-lg text-stone-600 font-normal ml-1">
-                                원
-                              </span>
-                            </p>
-                          </div>
-                          <div className="text-right">
-                            <p className="text-xs text-stone-500 line-through">
-                              {totalFee.toLocaleString()}원
-                            </p>
-                            <p className="text-sm font-bold text-[#ea580c]">
-                              {Math.round(
-                                ((totalFee - perPersonFee) / totalFee) * 100
-                              )}
-                              % 할인
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* CTA */}
-                      <button
-                        className={`w-full py-3 rounded-xl font-bold transition-all duration-200 flex items-center justify-center gap-2 ${
-                          isMyParty
-                            ? "bg-stone-700 text-white hover:bg-stone-800"
-                            : isFull
-                            ? "bg-stone-100 text-stone-400 cursor-not-allowed"
-                            : "bg-gradient-to-r from-[#ea580c] to-[#c2410c] text-white hover:shadow-lg hover:scale-[1.02]"
-                        }`}
-                        disabled={isFull && !isMyParty}
-                      >
-                        {isMyParty ? (
-                          <>
-                            <Eye className="w-4 h-4" />
-                            파티 보기
-                          </>
-                        ) : isFull ? (
-                          "모집 마감"
+                  <div className="flex flex-col h-full">
+                    {/* Top: Image & Status */}
+                    <div className="flex items-start justify-between mb-6">
+                      <div className="relative w-16 h-16 rounded-2xl overflow-hidden bg-slate-50 shadow-sm border border-slate-100 flex-shrink-0">
+                        {party.productImage ? (
+                          <img
+                            src={party.productImage}
+                            alt={party.productName}
+                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                          />
                         ) : (
-                          "파티 참여하기"
+                          <div className="w-full h-full flex items-center justify-center text-slate-400 bg-slate-100">
+                            No Img
+                          </div>
                         )}
-                      </button>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        {/* My Status Badge */}
+                        {(isLeader || isMyParty) && (
+                          <span className={`inline-flex items-center gap-1 px-2.5 py-1 text-[10px] font-bold rounded-full border ${isLeader
+                            ? "bg-yellow-50 text-yellow-700 border-yellow-200"
+                            : "bg-indigo-50 text-indigo-700 border-indigo-200"
+                            }`}>
+                            {isLeader ? "👑 방장" : "✅ 참여중"}
+                          </span>
+                        )}
+
+                        <div className={`px-3 py-1 rounded-full border flex items-center gap-1.5 ${badge.bg}`}>
+                          <div className={`w-1.5 h-1.5 rounded-full ${badge.dot}`}></div>
+                          <span className="text-[10px] font-bold uppercase tracking-wider">{badge.text}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Middle: Info */}
+                    <div className="flex-1 mb-6">
+                      <h3 className="text-xl font-bold mb-1 truncate text-slate-900 group-hover:text-indigo-600 transition-colors">
+                        {party.productName}
+                      </h3>
+                      <p className="text-sm text-slate-500 mb-4 font-medium">월 정기 구독</p>
+
+                      <div className="space-y-2.5">
+                        <div className="flex items-center justify-between text-sm group/date">
+                          <span className="text-slate-500 flex items-center gap-2 transition-colors group-hover/date:text-slate-600">
+                            <Calendar className="w-4 h-4 text-slate-400 group-hover/date:text-indigo-500" /> 시작
+                          </span>
+                          <span className="font-medium text-slate-700">{formatDate(party.startDate)}</span>
+                        </div>
+                        <div className="flex items-center justify-between text-sm group/date">
+                          <span className="text-slate-500 flex items-center gap-2 transition-colors group-hover/date:text-slate-600">
+                            <Clock className="w-4 h-4 text-slate-400 group-hover/date:text-indigo-500" /> 종료
+                          </span>
+                          <span className="font-medium text-slate-700">{formatDate(party.endDate)}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Bottom: Price & Action */}
+                    <div className="pt-5 border-t border-slate-100">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-xs text-slate-500 font-medium mb-0.5">월 분담금</p>
+                          <p className="text-lg font-black text-slate-900 tracking-tight">
+                            {party.monthlyFee?.toLocaleString()}원
+                          </p>
+                        </div>
+
+                        <button className="bg-slate-100 text-slate-600 rounded-xl p-3 group-hover:bg-indigo-600 group-hover:text-white transition-all shadow-sm group-hover:shadow-lg group-hover:shadow-indigo-500/20">
+                          <ArrowRight className="w-5 h-5" />
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </Link>
+                </div>
               );
             })}
-          </div>
-        )}
-
-        {/* 파티 리스트 하단 - 파티 만들기 버튼 */}
-        {filteredParties.length > 0 && (
-          <div className="flex justify-center mt-12 mb-8">
-            <button
-              onClick={() => navigate("/party/create")}
-              className="flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-[#ea580c] to-[#c2410c] text-white rounded-2xl font-bold text-lg hover:shadow-xl hover:scale-105 transition-all duration-200"
-            >
-              <Sparkles className="w-6 h-6" />
-              새로운 파티 만들기
-            </button>
           </div>
         )}
       </div>
