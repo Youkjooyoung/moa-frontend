@@ -15,19 +15,19 @@ export default function PartyListPage() {
   const navigate = useNavigate();
   const { user } = useAuthStore();
 
-  // Zustand Store
-  const {
-    parties: list,
-    myParties,
-    loading,
-    loadParties,
-    loadMyParties
-  } = usePartyStore();
+  // Zustand Store - Selector 패턴 사용
+  const list = usePartyStore((state) => state.parties);
+  const myParties = usePartyStore((state) => state.myParties);
+  const loadingParties = usePartyStore((state) => state.loading.parties);
+  const loadingMyParties = usePartyStore((state) => state.loading.myParties);
+  const loadParties = usePartyStore((state) => state.loadParties);
+  const loadMyParties = usePartyStore((state) => state.loadMyParties);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("");
 
   const myPartyIds = Array.isArray(myParties) ? myParties.map(p => p.partyId) : [];
+  const loading = loadingParties || loadingMyParties;
 
   useEffect(() => {
     loadParties();
@@ -218,7 +218,7 @@ export default function PartyListPage() {
                             ? "bg-yellow-50 text-yellow-700 border-yellow-200"
                             : "bg-indigo-50 text-indigo-700 border-indigo-200"
                             }`}>
-                            {isLeader ? "👑 방장" : "✅ 참여중"}
+                            {isLeader ? "👑 파티장" : "✅ 참여중"}
                           </span>
                         )}
 

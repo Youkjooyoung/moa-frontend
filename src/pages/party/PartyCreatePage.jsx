@@ -131,7 +131,7 @@ export default function PartyCreatePage() {
       await requestPayment(
         `${selectedProduct.productName} 보증금`,
         amount,
-        "방장"
+        "파티장"
       );
     } catch (error) {
       console.error(error);
@@ -320,10 +320,16 @@ export default function PartyCreatePage() {
 
                 {/* Duration Slider */}
                 <div>
-                  <label className="block text-sm font-bold text-slate-500 mb-4 flex justify-between">
-                    <span className="flex items-center gap-2"><Calendar className="w-4 h-4" /> 기간</span>
-                    <span className="text-white px-2 py-0.5 bg-indigo-500 rounded-md text-xs">{dates.months || 1} 개월</span>
+                  <label className="block text-sm font-bold text-slate-500 mb-2">
+                    <span className="flex items-center gap-2"><Calendar className="w-4 h-4" /> 기간 설정</span>
                   </label>
+
+                  <div className="text-center mb-6 py-4">
+                    <span className="text-5xl font-black text-indigo-600 tracking-tight">
+                      {dates.months || 1}
+                    </span>
+                    <span className="text-xl font-bold text-slate-400 ml-2">개월</span>
+                  </div>
                   <input
                     type="range"
                     min="1"

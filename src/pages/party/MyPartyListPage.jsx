@@ -108,7 +108,7 @@ export default function MyPartyListPage() {
         {/* Blob animations */}
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#fff7ed] rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
         <div className="absolute top-0 right-1/4 w-96 h-96 bg-rose-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
-        
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
             <div>
@@ -225,7 +225,7 @@ export default function MyPartyListPage() {
                 <div className="flex items-center gap-3 mb-6">
                   <Crown className="w-6 h-6 text-yellow-600" />
                   <h2 className="text-2xl font-black text-gray-900">
-                    내가 방장인 파티
+                    내가 파티장인 파티
                   </h2>
                   <span className="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm font-bold">
                     {stats.asLeader}
@@ -345,7 +345,7 @@ export default function MyPartyListPage() {
                                     {item.productName}
                                   </h3>
                                   <p className="text-sm text-stone-600 mt-1">
-                                    방장: {item.leaderNickname}
+                                    파티장: {item.leaderNickname}
                                   </p>
                                 </div>
                               </div>

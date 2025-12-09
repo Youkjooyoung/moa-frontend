@@ -12,94 +12,283 @@ import {
 } from '@/hooks/party/partyService';
 
 export const usePartyStore = create((set, get) => ({
+    // State
     parties: [],
     myParties: [],
     currentParty: null,
     products: [],
-    loading: false,
-    error: null,
+    
+    // Loading states (세분화)
+    loading: {
+        parties: false,
+        myParties: false,
+        detail: false,
+        create: false,
+        join: false,
+        leave: false,
+        products: false,
+    },
+    
+    // Error states
+    error: {
+        parties: null,
+        myParties: null,
+        detail: null,
+        create: null,
+        join: null,
+        leave: null,
+        products: null,
+    },
 
     // Actions
     loadParties: async (params) => {
-        set({ loading: true, error: null });
+        set((state) => ({
+            loading: { ...state.loading, parties: true },
+            error: { ...state.error, parties: null }
+        }));
         try {
             const data = await fetchPartyList(params);
-            set({ parties: data });
+            set({ parties: data || [] });
         } catch (error) {
-            set({ error: error.message });
+            set((state) => ({
+                error: { ...state.error, parties: error.message || '파티 목록을 불러오는데 실패했습니다.' }
+            }));
+            console.error("Failed to load parties:", error);
         } finally {
-            set({ loading: false });
+            set((state) => ({
+                loading: { ...state.loading, parties: false }
+            }));
         }
     },
 
     loadMyParties: async () => {
-        // Only load if not already loading to avoid race conditions if needed, 
-        // but for now simple allow multiple calls or just setLoading
-        // If we want to avoid global loading flicker, we might use separate loading states.
-        // For simplicity, reusing global loading is fine for full page loads.
+        set((state) => ({
+            loading: { ...state.loading, myParties: true },
+            error: { ...state.error, myParties: null }
+        }));
         try {
             const data = await fetchMyParties();
             set({ myParties: data || [] });
         } catch (error) {
-            console.error("Failed to load my parties", error);
-            // Don't set global error here to avoid breaking the main list view if just my parties fails
+            set((state) => ({
+                error: { ...state.error, myParties: error.message || '내 파티 목록을 불러오는데 실패했습니다.' }
+            }));
+            console.error("Failed to load my parties:", error);
+        } finally {
+            set((state) => ({
+                loading: { ...state.loading, myParties: false }
+            }));
         }
     },
 
     loadPartyDetail: async (id) => {
-        set({ loading: true, error: null, currentParty: null });
+        set((state) => ({
+            loading: { ...state.loading, detail: true },
+            error: { ...state.error, detail: null },
+            currentParty: null
+        }));
         try {
             const data = await fetchPartyDetail(id);
             set({ currentParty: data });
             return data;
         } catch (error) {
-            set({ error: error.message });
+            const errorMessage = error.message || '파티 상세 정보를 불러오는데 실패했습니다.';
+            set((state) => ({
+                error: { ...state.error, detail: errorMessage }
+            }));
+            console.error("Failed to load party detail:", error);
             throw error;
         } finally {
-            set({ loading: false });
+            set((state) => ({
+                loading: { ...state.loading, detail: false }
+            }));
         }
     },
 
     loadProducts: async () => {
+        set((state) => ({
+            loading: { ...state.loading, products: true },
+            error: { ...state.error, products: null }
+        }));
         try {
             const data = await fetchProducts();
             set({ products: data || [] });
         } catch (error) {
-            console.error("Failed to load products", error);
+            set((state) => ({
+                error: { ...state.error, products: error.message || '상품 목록을 불러오는데 실패했습니다.' }
+            }));
+            console.error("Failed to load products:", error);
+        } finally {
+            set((state) => ({
+                loading: { ...state.loading, products: false }
+            }));
         }
     },
 
     createNewParty: async (partyData) => {
-        set({ loading: true });
+        set((state) => ({
+            loading: { ...state.loading, create: true },
+            error: { ...state.error, create: null }
+        }));
         try {
             const data = await createParty(partyData);
-            // Optionally refresh lists
             return data;
         } catch (error) {
-            set({ error: error.message });
+            const errorMessage = error.message || '파티 생성에 실패했습니다.';
+            set((state) => ({
+                error: { ...state.error, create: errorMessage }
+            }));
+            console.error("Failed to create party:", error);
             throw error;
         } finally {
-            set({ loading: false });
+            set((state) => ({
+                loading: { ...state.loading, create: false }
+            }));
         }
     },
 
-    // Join/Leave/Update actions wrappers if needed for state updates
     joinPartyAction: async (partyId, paymentData) => {
-        set({ loading: true });
+        set((state) => ({
+            loading: { ...state.loading, join: true },
+            error: { ...state.error, join: null }
+        }));
         try {
             const res = await joinParty(partyId, paymentData);
-            // Refresh current party
+            // Refresh current party and my parties
             await get().loadPartyDetail(partyId);
-            // Refresh my parties
             get().loadMyParties();
             return res;
         } catch (error) {
+            const errorMessage = error.message || '파티 참여에 실패했습니다.';
+            set((state) => ({
+                error: { ...state.error, join: errorMessage }
+            }));
+            console.error("Failed to join party:", error);
             throw error;
         } finally {
-            set({ loading: false });
+            set((state) => ({
+                loading: { ...state.loading, join: false }
+            }));
         }
     },
 
-    // Clear error
-    clearError: () => set({ error: null })
+    leavePartyAction: async (partyId) => {
+        set((state) => ({
+            loading: { ...state.loading, leave: true },
+            error: { ...state.error, leave: null }
+        }));
+        try {
+            await leaveParty(partyId);
+            // Refresh my parties
+            get().loadMyParties();
+        } catch (error) {
+            const errorMessage = error.message || '파티 탈퇴에 실패했습니다.';
+            set((state) => ({
+                error: { ...state.error, leave: errorMessage }
+            }));
+            console.error("Failed to leave party:", error);
+            throw error;
+        } finally {
+            set((state) => ({
+                loading: { ...state.loading, leave: false }
+            }));
+        }
+    },
+
+    updateOttAccountAction: async (partyId, ottData) => {
+        set((state) => ({
+            loading: { ...state.loading, detail: true },
+            error: { ...state.error, detail: null }
+        }));
+        try {
+            await updateOttAccount(partyId, ottData);
+            // Refresh party detail
+            await get().loadPartyDetail(partyId);
+        } catch (error) {
+            const errorMessage = error.message || 'OTT 계정 정보 수정에 실패했습니다.';
+            set((state) => ({
+                error: { ...state.error, detail: errorMessage }
+            }));
+            console.error("Failed to update OTT account:", error);
+            throw error;
+        } finally {
+            set((state) => ({
+                loading: { ...state.loading, detail: false }
+            }));
+        }
+    },
+
+    processLeaderDepositAction: async (partyId, paymentData) => {
+        set((state) => ({
+            loading: { ...state.loading, detail: true },
+            error: { ...state.error, detail: null }
+        }));
+        try {
+            const result = await processLeaderDeposit(partyId, paymentData);
+            // Refresh party detail
+            await get().loadPartyDetail(partyId);
+            return result;
+        } catch (error) {
+            const errorMessage = error.message || '파티장 보증금 처리에 실패했습니다.';
+            set((state) => ({
+                error: { ...state.error, detail: errorMessage }
+            }));
+            console.error("Failed to process leader deposit:", error);
+            throw error;
+        } finally {
+            set((state) => ({
+                loading: { ...state.loading, detail: false }
+            }));
+        }
+    },
+
+    // Clear specific error
+    clearError: (key) => {
+        if (key) {
+            set((state) => ({
+                error: { ...state.error, [key]: null }
+            }));
+        } else {
+            // Clear all errors
+            set({
+                error: {
+                    parties: null,
+                    myParties: null,
+                    detail: null,
+                    create: null,
+                    join: null,
+                    leave: null,
+                    products: null,
+                }
+            });
+        }
+    },
+
+    // Reset store
+    reset: () => {
+        set({
+            parties: [],
+            myParties: [],
+            currentParty: null,
+            products: [],
+            loading: {
+                parties: false,
+                myParties: false,
+                detail: false,
+                create: false,
+                join: false,
+                leave: false,
+                products: false,
+            },
+            error: {
+                parties: null,
+                myParties: null,
+                detail: null,
+                create: null,
+                join: null,
+                leave: null,
+                products: null,
+            }
+        });
+    }
 }));

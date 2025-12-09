@@ -70,6 +70,12 @@ export default function PaymentSuccessPage() {
                     localStorage.setItem("afterBillingRedirect", `/party/${partyId}`);
                     localStorage.setItem("billingRegistrationReason", "party_join");
                     navigate("/payment/billing/register");
+                } else if (type === "RETRY_DEPOSIT") {
+                    await processLeaderDeposit(partyId, paymentData);
+                    localStorage.removeItem("pendingPayment");
+                    // 리더의 보증금 재결제이므로 파티 생성 완료 페이지(Step4) 또는 파티 상세로 이동
+                    // 보통 재결제는 상세 페이지에서 진입하므로 상세로 복귀
+                    navigate(`/party/${partyId}`);
                 } else {
                     throw new Error("알 수 없는 결제 유형입니다.");
                 }

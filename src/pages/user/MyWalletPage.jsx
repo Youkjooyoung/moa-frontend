@@ -25,14 +25,13 @@ export default function MyWalletPage() {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuthStore();
 
-  // Zustand Store
-  const {
-    deposits,
-    account,
-    card,
-    loading,
-    loadWalletData
-  } = useWalletStore();
+  // Zustand Store - Selector 패턴 사용
+  const deposits = useWalletStore((state) => state.deposits);
+  const account = useWalletStore((state) => state.account);
+  const card = useWalletStore((state) => state.card);
+  const loadingWallet = useWalletStore((state) => state.loading.wallet);
+  const loadWalletData = useWalletStore((state) => state.loadWalletData);
+  const getTotalDeposit = useWalletStore((state) => state.getTotalDeposit);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -47,11 +46,9 @@ export default function MyWalletPage() {
     }
   }, [user, loadWalletData]);
 
-  const totalDeposit = Array.isArray(deposits)
-    ? deposits
-      .filter((d) => d.depositStatus === "HELD")
-      .reduce((sum, d) => sum + (d.depositAmount || 0), 0)
-    : 0;
+  // 헬퍼 함수 사용
+  const totalDeposit = getTotalDeposit();
+  const loading = loadingWallet;
 
   const goHistory = (tab) => {
     navigate(`/user/financial-history?tab=${tab}`);
@@ -183,7 +180,8 @@ export default function MyWalletPage() {
                 <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mb-3 group-hover:bg-slate-200">
                   <Plus className="w-6 h-6" />
                 </div>
-                <span className="text-sm font-medium">계좌 등록하기</span>
+                <span className="text-sm font-medium">등록된 계좌 없음</span>
+                <span className="text-xs text-slate-400 mt-1">클릭하여 등록하기</span>
               </div>
             )}
           </div>
@@ -239,8 +237,11 @@ export default function MyWalletPage() {
                     **** **** **** {card.cardNumber?.slice(-4) || "****"}
                   </div>
                 </div>
-                <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-orange-50 group-hover:text-orange-600 transition-all">
-                  <Zap className="w-4 h-4 text-slate-400 group-hover:text-orange-500 fill-current" />
+                <div className="flex flex-col items-end gap-1">
+                  <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-orange-50 group-hover:text-orange-600 transition-all">
+                    <Zap className="w-4 h-4 text-slate-400 group-hover:text-orange-500 fill-current" />
+                  </div>
+                  <span className="text-[10px] text-slate-400 group-hover:text-orange-600 font-medium">변경</span>
                 </div>
               </div>
             ) : (
@@ -248,7 +249,8 @@ export default function MyWalletPage() {
                 <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mb-3 group-hover:bg-slate-200">
                   <Plus className="w-6 h-6" />
                 </div>
-                <span className="text-sm font-medium">카드 등록하기</span>
+                <span className="text-sm font-medium">등록된 카드 없음</span>
+                <span className="text-xs text-slate-400 mt-1">클릭하여 등록하기</span>
               </div>
             )}
           </div>

@@ -40,7 +40,7 @@ export default function PaymentHistoryList() {
                         <div className="flex justify-between items-start mb-2">
                             <div>
                                 <span className="text-xs font-medium text-gray-500 block mb-1">
-                                    {payment.paymentDate}
+                                    {payment.paymentDate?.split('T')[0] || payment.paymentDate}
                                 </span>
                                 <h3 className="text-lg font-bold text-gray-900">
                                     {payment.productName}

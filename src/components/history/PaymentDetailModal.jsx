@@ -16,7 +16,7 @@ export default function PaymentDetailModal({ isOpen, onClose, payment, onRetrySu
 
     const handleRetry = async () => {
         if (!payment.paymentId) return;
-        
+
         setIsRetrying(true);
         try {
             await retryPayment(payment.paymentId);
@@ -34,13 +34,13 @@ export default function PaymentDetailModal({ isOpen, onClose, payment, onRetrySu
     };
 
     // 재시도 가능 여부 확인
-    const canRetry = payment.paymentStatus === "FAILED" && 
-                     (payment.canRetry === true || 
-                      (payment.attemptNumber === undefined || payment.attemptNumber < 4));
-    
+    const canRetry = payment.paymentStatus === "FAILED" &&
+        (payment.canRetry === true ||
+            (payment.attemptNumber === undefined || payment.attemptNumber < 4));
+
     // 최대 재시도 횟수 초과 여부
-    const maxRetryExceeded = payment.paymentStatus === "FAILED" && 
-                             payment.attemptNumber >= 4;
+    const maxRetryExceeded = payment.paymentStatus === "FAILED" &&
+        payment.attemptNumber >= 4;
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
@@ -64,7 +64,7 @@ export default function PaymentDetailModal({ isOpen, onClose, payment, onRetrySu
                         </div>
                         <div className="flex justify-between">
                             <span className="text-gray-500">결제일시</span>
-                            <span>{payment.paymentDate}</span>
+                            <span>{payment.paymentDate?.replace('T', ' ').split('.')[0] || payment.paymentDate}</span>
                         </div>
                         <div className="flex justify-between">
                             <span className="text-gray-500">결제수단</span>

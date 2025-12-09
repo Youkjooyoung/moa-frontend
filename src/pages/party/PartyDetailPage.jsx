@@ -94,7 +94,7 @@ export default function PartyDetailPage() {
     }
   };
 
-  if (loading || !party) {
+  if (loading.detail || !party) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
@@ -144,7 +144,7 @@ export default function PartyDetailPage() {
                 </span>
                 {isLeader && (
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-yellow-50 text-yellow-700 border border-yellow-200 rounded-full text-xs font-bold uppercase tracking-wide">
-                    <Crown className="w-3.5 h-3.5" /> 방장
+                    <Crown className="w-3.5 h-3.5" /> 파티장
                   </span>
                 )}
                 {isMember && !isLeader && (
@@ -162,7 +162,7 @@ export default function PartyDetailPage() {
                 <div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center ring-2 ring-white">
                   <span className="text-xs font-bold">{party.leaderNickname?.[0]}</span>
                 </div>
-                <span className="font-medium">방장: <span className="text-slate-900 font-bold">{party.leaderNickname}</span></span>
+                <span className="font-medium">파티장: <span className="text-slate-900 font-bold">{party.leaderNickname}</span></span>
               </div>
             </div>
 
@@ -309,7 +309,7 @@ export default function PartyDetailPage() {
                       </div>
                       <div className="flex-1">
                         <p className="text-sm font-bold text-slate-900">{m.nickname}</p>
-                        {m.role === 'LEADER' && <p className="text-[10px] text-yellow-600 font-bold">방장</p>}
+                        {m.role === 'LEADER' && <p className="text-[10px] text-yellow-600 font-bold">파티장</p>}
                       </div>
                     </div>
                   ))}
@@ -330,7 +330,11 @@ export default function PartyDetailPage() {
                 </button>
               )}
 
-              {!isMember && !isLeader && !isFull && (
+              {party.memberStatus === 'INACTIVE' ? (
+                <div className="w-full py-4 bg-gray-100 text-gray-400 rounded-xl font-bold text-center cursor-not-allowed border border-gray-200">
+                  재가입이 불가능한 파티입니다
+                </div>
+              ) : !isMember && !isLeader && !isFull && (
                 <button onClick={() => setIsJoinModalOpen(true)} className="w-full py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold shadow-lg shadow-indigo-500/20 transition-all hover:-translate-y-1">
                   파티 가입하기
                 </button>

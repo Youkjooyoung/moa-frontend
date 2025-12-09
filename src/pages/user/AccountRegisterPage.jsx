@@ -56,6 +56,12 @@ export default function AccountRegisterPage() {
 
     // 오픈뱅킹 인증 시작
     const startAuth = async () => {
+        // 오픈뱅킹 API 추후 개발 예정
+        alert("오픈뱅킹 계좌 연결 기능은 추후 개발 예정입니다.\n\n현재는 테스트 계좌로 등록됩니다.");
+        setError("오픈뱅킹 API는 추후 개발 예정입니다.");
+
+        /* 
+        // 실제 오픈뱅킹 연동 시 사용할 코드
         setLoading(true);
         setError(null);
         try {
@@ -68,6 +74,7 @@ export default function AccountRegisterPage() {
             setError("오픈뱅킹 연결에 실패했습니다.");
             setLoading(false);
         }
+        */
     };
 
     // 1원 인증 발송
