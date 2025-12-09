@@ -29,6 +29,7 @@ import AddBlacklistPage from "./pages/admin/AddBlacklistPage";
 import AdminUserListPage from "@/pages/admin/AdminUserListPage";
 import AdminUserDetailPage from "@/pages/admin/AdminUserDetailPage";
 import AdminBlacklistDeletePage from "@/pages/admin/RemoveBlacklistPage";
+import AdminLoginHistoryPage from "@/pages/admin/AdminLoginHistoryPage";  
 import AdminDashboardPage from "@/pages/admin/AdminDashboardPage";
 
 import GetProductList from "./pages/product/GetProductList";
@@ -139,6 +140,10 @@ export default function App() {
           <Route
             path="/admin/blacklist/delete"
             element={<AdminBlacklistDeletePage />}
+          />
+          <Route
+            path="/admin/users/:userId/login-history"
+            element={<AdminLoginHistoryPage />}
           />
 
           {/* Product (Public) */}
