@@ -1,4 +1,3 @@
-// src/components/common/HeaderView.jsx
 import { Link } from "react-router-dom";
 import {
   Bell,
@@ -27,6 +26,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import NotificationPopover from "@/components/push/NotificationPopover";
 
 export default function HeaderView({
   user,
@@ -173,14 +173,7 @@ export default function HeaderView({
                 </div>
               )}
 
-              <Button
-                variant="ghost"
-                size="icon"
-                className="relative rounded-full w-11 h-11 text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-colors"
-              >
-                <Bell className="w-6 h-6" />
-                <span className="absolute top-2.5 right-2.5 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white shadow-sm" />
-              </Button>
+              <NotificationPopover />
 
               <Separator orientation="vertical" className="h-8 bg-slate-200" />
 
