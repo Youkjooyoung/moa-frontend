@@ -36,8 +36,15 @@ export default function MyPage() {
   const { state, actions } = useMyPage();
   const loginHistory = useLoginHistory(10);
 
-  const { user, isAdmin, shortId, marketingAgreed, googleConn, kakaoConn } =
-    state;
+  const {
+    user,
+    isAdmin,
+    shortId,
+    marketingAgreed,
+    googleConn,
+    kakaoConn,
+    loginProvider,
+  } = state;
 
   const otp = {
     enabled: useOtpStore((s) => s.enabled),
@@ -247,7 +254,7 @@ export default function MyPage() {
                 <InfoRow label="휴대폰" value={user.phone} />
                 <InfoRow
                   label="로그인 방식"
-                  value={user.loginProvider || "EMAIL"}
+                  value={loginProvider}
                   valueClass="uppercase font-semibold text-indigo-700"
                 />
 

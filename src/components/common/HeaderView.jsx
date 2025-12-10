@@ -39,7 +39,7 @@ export default function HeaderView({
   logout,
   handleAdminSwitch,
 }) {
-  const renderProviderBadge = (provider) => {
+  const renderProviderBadge = () => {
     if (isAdmin) {
       return (
         <Badge className="bg-emerald-50 text-emerald-700 border border-emerald-200 h-5 text-[10px] px-1.5">
@@ -47,6 +47,22 @@ export default function HeaderView({
         </Badge>
       );
     }
+
+    const raw =
+      user?.loginProvider ||
+      user?.provider ||
+      user?.lastLoginType ||
+      (user?.oauthConnections || []).find((c) => c.provider && !c.releaseDate)
+        ?.provider;
+
+    const p = (raw || "").toString().toLowerCase();
+
+    let provider = "email";
+    if (p === "kakao") provider = "kakao";
+    else if (p === "google") provider = "google";
+    else if (p === "password" || p === "local" || p === "email")
+      provider = "email";
+
     switch (provider) {
       case "kakao":
         return (
@@ -192,7 +208,7 @@ export default function HeaderView({
                   <span className="text-[15px] font-bold text-slate-900 leading-tight truncate">
                     {displayNickname}
                   </span>
-                  {renderProviderBadge(user.loginProvider || user.provider)}
+                  {renderProviderBadge()}
                 </div>
               </Link>
 

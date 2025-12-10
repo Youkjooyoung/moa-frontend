@@ -17,6 +17,24 @@ export const useMyPage = () => {
     useOtpStore();
 
   const otpActionHandlers = otpHandlers();
+  const getLoginProviderLabel = (user) => {
+    if (!user) return "EMAIL";
+
+    const raw =
+      user.loginProvider ||
+      user.provider ||
+      user.lastLoginType ||
+      (user.oauthConnections || []).find((c) => c.provider && !c.releaseDate)
+        ?.provider;
+
+    const p = (raw || "").toString().toLowerCase();
+
+    if (p === "kakao") return "KAKAO";
+    if (p === "google") return "GOOGLE";
+    if (p === "password" || p === "local" || p === "email") return "EMAIL";
+
+    return "EMAIL";
+  };
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -53,6 +71,8 @@ export const useMyPage = () => {
   const kakaoConn = user?.oauthConnections?.find(
     (c) => c.provider === "kakao" && !c.releaseDate
   );
+
+  const loginProviderLabel = getLoginProviderLabel(user);
 
   const isAdmin = user?.role === "ADMIN";
   const handlers = {
@@ -157,6 +177,7 @@ export const useMyPage = () => {
       marketingAgreed,
       googleConn,
       kakaoConn,
+      loginProvider: loginProviderLabel,
       otp: {
         enabled,
         modalOpen,
