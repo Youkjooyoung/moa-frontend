@@ -350,17 +350,17 @@ export default function PartyListPage() {
           </div>
         </div>
 
-        {/* Parties Grid - 3 columns max, vertical card layout */}
+        {/* Parties Grid - 3 columns max, vertical card layout with spacing */}
         {isInitialLoading ? (
           // Shimmer Loading
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
             {[...Array(6)].map((_, i) => (
-              <div key={i} className="bg-white border border-slate-100 rounded-xl overflow-hidden animate-pulse">
-                <div className="w-full h-80 bg-slate-200" />
-                <div className="p-2.5 space-y-1">
-                  <div className="h-3 bg-slate-200 rounded w-3/4" />
-                  <div className="h-2 bg-slate-200 rounded w-full" />
-                  <div className="h-3.5 bg-slate-200 rounded w-1/2" />
+              <div key={i} className="w-full max-w-sm bg-white border border-slate-100 rounded-xl overflow-hidden animate-pulse min-h-[320px]">
+                <div className="w-full h-48 bg-slate-200" />
+                <div className="p-4 space-y-2">
+                  <div className="h-4 bg-slate-200 rounded w-3/4" />
+                  <div className="h-3 bg-slate-200 rounded w-full" />
+                  <div className="h-5 bg-slate-200 rounded w-1/2" />
                 </div>
               </div>
             ))}
@@ -393,7 +393,7 @@ export default function PartyListPage() {
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center"
           >
             {getSortedParties(list).map((party) => {
               const badge = getStatusBadge(party);
@@ -406,10 +406,10 @@ export default function PartyListPage() {
                   variants={itemVariants}
                   whileHover={{ y: -4, transition: { duration: 0.3 } }}
                   onClick={() => navigate(`/party/${party.partyId}`)}
-                  className="group relative bg-white border border-slate-100 rounded-xl overflow-hidden cursor-pointer hover:border-slate-200 hover:shadow-lg transition-all duration-300"
+                  className="w-full max-w-sm group relative bg-white border border-slate-100 rounded-xl overflow-hidden cursor-pointer hover:border-slate-200 hover:shadow-lg transition-all duration-300 flex flex-col min-h-[320px]"
                 >
-                  {/* Large OTT Image - Top (80% of card) */}
-                  <div className="relative w-full h-80 bg-gradient-to-br from-slate-50 to-slate-100">
+                  {/* OTT Image - Top (60% of card) */}
+                  <div className="relative w-full h-48 bg-gradient-to-br from-slate-50 to-slate-100 flex-shrink-0">
                     {party.productImage ? (
                       <img
                         src={party.productImage}
@@ -445,28 +445,28 @@ export default function PartyListPage() {
                     )}
                   </div>
 
-                  {/* Content Below Image (20% of card) - Ultra Compact */}
-                  <div className="p-2.5">
+                  {/* Content Below Image (40% of card) */}
+                  <div className="p-4 flex flex-col flex-grow">
                     {/* Service Name */}
-                    <h3 className="text-sm font-bold text-slate-900 mb-1 group-hover:text-blue-600 transition-colors truncate">
+                    <h3 className="text-base font-bold text-slate-900 mb-2 group-hover:text-blue-600 transition-colors">
                       {party.productName}
                     </h3>
 
-                    {/* Dates - Ultra Minimal */}
-                    <div className="flex items-center gap-0.5 text-[10px] text-slate-400 mb-1.5">
-                      <Calendar className="w-2.5 h-2.5" />
+                    {/* Dates */}
+                    <div className="flex items-center gap-1.5 text-xs text-slate-500 mb-auto">
+                      <Calendar className="w-3.5 h-3.5" />
                       <span>{formatDate(party.startDate)}</span>
-                      <span className="text-slate-300">~</span>
+                      <span>~</span>
                       <span>{formatDate(party.endDate)}</span>
                     </div>
 
-                    {/* Price */}
-                    <div className="flex items-baseline gap-0.5">
-                      <span className="text-[11px] text-slate-500">월</span>
-                      <span className="text-base font-bold text-slate-900">
+                    {/* Price - Push to bottom */}
+                    <div className="flex items-baseline gap-1 mt-3 pt-3 border-t border-slate-100">
+                      <span className="text-sm text-slate-600 font-medium">월</span>
+                      <span className="text-xl font-bold text-slate-900">
                         {party.monthlyFee?.toLocaleString()}
                       </span>
-                      <span className="text-[11px] text-slate-500">원</span>
+                      <span className="text-sm text-slate-600 font-medium">원</span>
                     </div>
                   </div>
                 </motion.div>
