@@ -16,8 +16,13 @@ export const usePartyStore = create((set, get) => ({
     parties: [],
     myParties: [],
     currentParty: null,
-    products: [],
-    
+    products: [], // Service types (Netflix, Disney+, etc.)
+
+    // Pagination State
+    page: 1,
+    hasMore: true,
+    totalPages: 0,
+
     // Loading states (세분화)
     loading: {
         parties: false,
@@ -28,7 +33,7 @@ export const usePartyStore = create((set, get) => ({
         leave: false,
         products: false,
     },
-    
+
     // Error states
     error: {
         parties: null,
@@ -41,23 +46,50 @@ export const usePartyStore = create((set, get) => ({
     },
 
     // Actions
-    loadParties: async (params) => {
+    loadParties: async (params = {}, isInitial = false) => {
+        const state = get();
+
+        // 초기화 요청이거나 필터가 변경된 경우
+        if (isInitial) {
+            set({ parties: [], page: 1, hasMore: true });
+        }
+
+        // 더 로드할 데이터가 없으면 중단 (단, 초기화 제외)
+        if (!isInitial && !state.hasMore && state.parties.length > 0) return;
+
         set((state) => ({
             loading: { ...state.loading, parties: true },
             error: { ...state.error, parties: null }
         }));
+
         try {
-            const data = await fetchPartyList(params);
-            set({ parties: data || [] });
-        } catch (error) {
+            const currentPage = isInitial ? 1 : state.page;
+            const queryParams = {
+                page: currentPage,
+                size: 10, // 한 번에 가져올 개수
+                ...params
+            };
+
+            const data = await fetchPartyList(queryParams);
+
+            // 데이터가 없으면 더 이상 로드할 게 없음
+            if (!data || data.length === 0) {
+                set({ hasMore: false, loading: { ...state.loading, parties: false } });
+                return;
+            }
+
             set((state) => ({
-                error: { ...state.error, parties: error.message || '파티 목록을 불러오는데 실패했습니다.' }
-            }));
-            console.error("Failed to load parties:", error);
-        } finally {
-            set((state) => ({
+                parties: isInitial ? data : [...state.parties, ...data],
+                page: currentPage + 1,
+                hasMore: data.length === 10, // 가져온 데이터가 요청 사이즈보다 적으면 끝난 것
                 loading: { ...state.loading, parties: false }
             }));
+        } catch (error) {
+            set((state) => ({
+                error: { ...state.error, parties: error.message || '파티 목록을 불러오는데 실패했습니다.' },
+                loading: { ...state.loading, parties: false }
+            }));
+            console.error("Failed to load parties:", error);
         }
     },
 
@@ -271,6 +303,8 @@ export const usePartyStore = create((set, get) => ({
             myParties: [],
             currentParty: null,
             products: [],
+            page: 1,
+            hasMore: true,
             loading: {
                 parties: false,
                 myParties: false,
