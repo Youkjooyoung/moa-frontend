@@ -220,10 +220,9 @@ export default function MainPage() {
                 {highlightedParty ? (
                   <div className="space-y-4">
                     <div
-                      className={`p-4 rounded-2xl text-white bg-gradient-to-r ${
-                        SERVICE_COLORS[highlightedParty.serviceName] ??
+                      className={`p-4 rounded-2xl text-white bg-gradient-to-r ${SERVICE_COLORS[highlightedParty.serviceName] ??
                         "from-slate-700 via-slate-800 to-slate-900"
-                      }`}
+                        }`}
                     >
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-3">
@@ -372,10 +371,9 @@ export default function MainPage() {
                 <div className="flex items-start justify-between gap-3 mb-4">
                   <div className="flex items-center gap-3">
                     <div
-                      className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${
-                        SERVICE_COLORS[party.serviceName] ??
+                      className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${SERVICE_COLORS[party.serviceName] ??
                         "from-slate-200 via-slate-100 to-white"
-                      } text-slate-900 border border-white/70 shadow-inner flex items-center justify-center font-bold`}
+                        } text-slate-900 border border-white/70 shadow-inner flex items-center justify-center font-bold`}
                     >
                       {party.serviceName.slice(0, 2)}
                     </div>
