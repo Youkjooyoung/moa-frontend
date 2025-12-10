@@ -58,13 +58,20 @@ import Inquiry from "./pages/community/Inquiry";
 import InquiryAdmin from "./pages/community/InquiryAdmin";
 
 import ScrollToTop from "./components/common/ScrollToTop";
+import PineappleEasterEgg from "./components/common/PineappleEasterEgg";
+import { useAuthStore } from "./store/authStore";
 
 export default function App() {
   useGlobalLinkHandler();
+  const { user } = useAuthStore();
+
+  // 이스터 에그 대상 유저 확인
+  const showEasterEgg = user && (user.userId === 'usertest1' || user.userId === 'admintest');
 
   return (
     <div className="min-h-screen flex flex-col">
       <ScrollToTop />
+      {showEasterEgg && <PineappleEasterEgg />}
       <Header />
 
       <main className="flex-1 pt-20">
