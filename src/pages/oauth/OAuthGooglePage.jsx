@@ -86,7 +86,12 @@ export default function OAuthGooglePage() {
           });
 
           const meRes = await fetchCurrentUser();
-          if (meRes.success) setUser(meRes.data);
+          if (meRes.success) {
+            setUser({
+              ...meRes.data,
+              loginProvider: provider,
+            });
+          }
 
           navigate("/", { replace: true });
           return;

@@ -32,8 +32,13 @@ export default function OAuthKakaoPage() {
 
     const run = async () => {
       try {
+        const paramsObj = { code, mode };
+        if (mode === "login") {
+          paramsObj.redirectUri = redirectUri;
+        }
+
         const res = await httpClient.get("/oauth/kakao/callback", {
-          params: { code, mode, redirectUri },
+          params: paramsObj,
         });
 
         if (!res.success) {

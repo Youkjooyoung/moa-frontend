@@ -19,14 +19,14 @@ export const useOtpStore = create((set) => ({
 
   setField: (field, value) => set({ [field]: value }),
 
-  reset: () =>
-    set({
-      enabled: false,
+  reset: (options = {}) =>
+    set((state) => ({
+      enabled: options.resetEnabled ? false : state.enabled,
       modalOpen: false,
       qrUrl: null,
       secret: null,
       code: "",
       loading: false,
       mode: "enable",
-    }),
+    })),
 }));

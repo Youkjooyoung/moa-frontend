@@ -192,7 +192,7 @@ export default function HeaderView({
                   <span className="text-[15px] font-bold text-slate-900 leading-tight truncate">
                     {displayNickname}
                   </span>
-                  {renderProviderBadge(user.provider)}
+                  {renderProviderBadge(user.loginProvider || user.provider)}
                 </div>
               </Link>
 
