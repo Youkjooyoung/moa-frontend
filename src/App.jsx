@@ -33,6 +33,14 @@ import AdminLoginHistoryPage from "@/pages/admin/AdminLoginHistoryPage";
 import AdminDashboardPage from "@/pages/admin/AdminDashboardPage";
 import AddUserSocialPage from "@/pages/user/AddUserSocialPage";
 
+import LandingTestPage from "./pages/landing/LandingTestPage";
+import LandingPageA from "./pages/landing/LandingPageA";
+import LandingPageB from "./pages/landing/LandingPageB";
+import LandingPageC from "./pages/landing/LandingPageC";
+import LandingPageD from "./pages/landing/LandingPageD";
+import LandingPageE from "./pages/landing/LandingPageE";
+import LandingPageF from "./pages/landing/LandingPageF";
+
 import GetProductList from "./pages/product/GetProductList";
 import GetProduct from "./pages/product/GetProduct";
 
@@ -165,7 +173,7 @@ export default function App() {
           <Route
             path="/product/:id/delete"
             element={<ProtectedRoute element={<DeleteProduct />} />}
-            // TODO: Add role check for ADMIN
+          // TODO: Add role check for ADMIN
           />
 
           {/* Subscription (User) */}
@@ -219,6 +227,15 @@ export default function App() {
 
           <Route path="/community/inquiry" element={<Inquiry />} />
           <Route path="/community/inquiry/admin" element={<InquiryAdmin />} />
+
+          {/* Landing Page A/B Test Routes */}
+          <Route path="/landing-test" element={<LandingTestPage />} />
+          <Route path="/landing/a" element={<LandingPageA />} />
+          <Route path="/landing/b" element={<LandingPageB />} />
+          <Route path="/landing/c" element={<LandingPageC />} />
+          <Route path="/landing/d" element={<LandingPageD />} />
+          <Route path="/landing/e" element={<LandingPageE />} />
+          <Route path="/landing/f" element={<LandingPageF />} />
         </Routes>
       </main>
 
