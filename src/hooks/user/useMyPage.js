@@ -39,6 +39,7 @@ export const useMyPage = () => {
     return "EMAIL";
   };
 
+  // ?¬ìš©???•ë³´ ë¡œë”©
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -46,7 +47,7 @@ export const useMyPage = () => {
         const { success, data } = res;
 
         if (!success || !data) {
-          alert("ë¡œê·¸ì¸ì´ í•„ìš”í•©ë‹ˆë‹¤.");
+          alert("ë¡œê·¸?¸ì´ ?„ìš”?©ë‹ˆ??");
           navigate("/login", { replace: true });
           return;
         }
@@ -55,7 +56,7 @@ export const useMyPage = () => {
         setEnabled(!!data.otpEnabled);
       } catch (e) {
         console.error(e);
-        alert("ë¡œê·¸ì¸ì´ í•„ìš”í•©ë‹ˆë‹¤.");
+        alert("ë¡œê·¸?¸ì´ ?„ìš”?©ë‹ˆ??");
         navigate("/login", { replace: true });
       }
     };
@@ -96,40 +97,50 @@ export const useMyPage = () => {
     goDeleteUser: () => navigate("/mypage/delete"),
 
     oauthConnect: async (provider) => {
-      if (provider !== "kakao" && provider !== "google") return;
-
       try {
+        const redirectUri =
+          provider === "google"
+            ? import.meta.env.VITE_GOOGLE_CONNECT_REDIRECT_URI ||
+              import.meta.env.VITE_GOOGLE_REDIRECT_URI
+            : provider === "kakao"
+            ? import.meta.env.VITE_KAKAO_CONNECT_REDIRECT_URI ||
+              `${window.location.origin}/oauth/kakao`
+            : window.location.origin;
+
         const res = await httpClient.get(`/oauth/${provider}/auth`, {
-          params: { mode: "connect" },
+          params: { mode: "connect", redirectUri },
         });
 
-        if (!res.success) {
-          alert(
-            res.error?.message ||
-              `${provider.toUpperCase()} ì—°ë™ì„ ì‹œìž‘í•˜ì§€ ëª»í–ˆìŠµë‹ˆë‹¤.`
-          );
-          return;
+        const url =
+          res?.data?.url ||
+          res?.data?.data?.authUrl ||
+          res?.data?.data?.url ||
+          "";
+
+        if (!url) {
+          throw new Error("Missing auth redirect url");
         }
 
-        window.location.href = res.data.url;
-      } catch (e) {
-        console.error(e);
-        alert(`${provider.toUpperCase()} ì—°ë™ ì¤‘ ì˜¤ë¥˜ê°€ ë°œìƒí–ˆìŠµë‹ˆë‹¤.`);
+        window.location.href = url;
+      } catch (err) {
+        console.error("OAuth Connect Error:", err);
+        alert("¼Ò¼È °èÁ¤ ¿¬µ¿¿¡ ½ÇÆÐÇß½À´Ï´Ù. Àá½Ã ÈÄ ´Ù½Ã ½ÃµµÇØÁÖ¼¼¿ä.");
       }
     },
 
     oauthRelease: async (oauthId) => {
       try {
         const res = await httpClient.post("/oauth/release", { oauthId });
+
         if (res.success) {
-          alert("ì—°ë™ì´ í•´ì œë˜ì—ˆìŠµë‹ˆë‹¤.");
+          alert("?°ë™???´ì œ?˜ì—ˆ?µë‹ˆ??");
           window.location.reload();
         } else {
-          alert(res.error?.message || "ì—°ë™ í•´ì œì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.");
+          alert(res.error?.message || "?°ë™ ?´ì œ???¤íŒ¨?ˆìŠµ?ˆë‹¤.");
         }
       } catch (e) {
         console.error(e);
-        alert("ì—°ë™ í•´ì œ ì¤‘ ì˜¤ë¥˜ ë°œìƒ");
+        alert("?°ë™ ?´ì œ ?¤ë¥˜ê°€ ë°œìƒ?ˆìŠµ?ˆë‹¤.");
       }
     },
 
@@ -137,19 +148,13 @@ export const useMyPage = () => {
   };
 
   const handleGoogleClick = () => {
-    if (googleConn) {
-      handlers.oauthRelease(googleConn.oauthId);
-    } else {
-      handlers.oauthConnect("google");
-    }
+    if (googleConn) handlers.oauthRelease(googleConn.oauthId);
+    else handlers.oauthConnect("google");
   };
 
   const handleKakaoClick = () => {
-    if (kakaoConn) {
-      handlers.oauthRelease(kakaoConn.oauthId);
-    } else {
-      handlers.oauthConnect("kakao");
-    }
+    if (kakaoConn) handlers.oauthRelease(kakaoConn.oauthId);
+    else handlers.oauthConnect("kakao");
   };
 
   const handleOtpModalChange = (isOpen) => {
@@ -184,3 +189,4 @@ export const useMyPage = () => {
     },
   };
 };
+
