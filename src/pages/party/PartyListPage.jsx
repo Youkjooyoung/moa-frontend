@@ -237,6 +237,32 @@ export default function PartyListPage() {
     }
   };
 
+  // Scroll direction detection for Search Bar
+  const [showSearch, setShowSearch] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      // Hero section height buffer (approx 300px-400px)
+      // Only trigger hide logic if we've scrolled past the initial view
+      if (currentScrollY < 350) {
+        setShowSearch(true);
+      } else if (currentScrollY > lastScrollY) {
+        // Scrolling DOWN -> Hide
+        setShowSearch(false);
+      } else {
+        // Scrolling UP -> Show
+        setShowSearch(true);
+      }
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY]);
+
   return (
     <div className="min-h-screen bg-white pb-20">
       {/* Hero Section - Variant T Style */}
@@ -320,7 +346,12 @@ export default function PartyListPage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Search & Filter Bar */}
-        <div className="sticky top-20 z-30 my-6">
+        <div
+          className={`sticky top-20 z-30 my-6 transition-all duration-300 ease-in-out ${showSearch
+            ? "translate-y-0 opacity-100"
+            : "-translate-y-20 opacity-0 pointer-events-none"
+            }`}
+        >
           <div className="bg-white/80 backdrop-blur-xl rounded-2xl p-5 shadow-lg shadow-gray-200/50 border border-gray-100">
             {/* Search Input */}
             <div className="relative mb-4">
