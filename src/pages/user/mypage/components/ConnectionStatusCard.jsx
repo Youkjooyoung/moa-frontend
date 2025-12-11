@@ -1,6 +1,7 @@
 import { Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { formatPhone } from "@/utils/phoneUtils";
 import { InfoCard } from "./InfoCard";
 import { SocialButton } from "@/pages/user/shared/SocialButton";
 import { OtpSection } from "./OtpSection";
@@ -18,9 +19,9 @@ export function ConnectionStatusCard({
   return (
     <InfoCard title="CONNECTION STATUS" icon={<Zap className="w-4 h-4" />}>
       <div className="flex justify-between items-center py-1.5">
-        <span className="text-sm font-medium text-slate-500">?��???</span>
+        <span className="text-sm font-medium text-slate-500">전화번호</span>
         <span className="text-sm font-semibold text-slate-900">
-          {user.phone}
+          {formatPhone(user.phone)}
         </span>
       </div>
       <div className="flex justify-between items-center py-1.5">
