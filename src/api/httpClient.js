@@ -41,7 +41,7 @@ httpClient.interceptors.request.use(
     const isAuthInit =
       url.includes("/oauth/google/auth") || url.includes("/oauth/kakao/auth");
 
-    // °ø°³ ¿£µåÆ÷ÀÎÆ®´Â ÅäÅ« ¾øÀÌ Åë°ú
+    // ê³µê°œ ì—”ë“œí¬ì¸íŠ¸ëŠ” í† í° ì—†ì´ í†µê³¼
     if (noAuthNeeded.some((path) => url.startsWith(path)) || isAuthInit) {
       return config;
     }
@@ -105,7 +105,7 @@ httpClient.interceptors.response.use(
         if (!apiRes.success) {
           clearAuth();
           processQueue(
-            new Error(apiRes.error?.message || "»õ ÅäÅ« ¹ß±Ş¿¡ ½ÇÆĞÇß½À´Ï´Ù."),
+            new Error(apiRes.error?.message || "ìƒˆ í† í° ë°œê¸‰ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤."),
             null
           );
           return Promise.reject(error);

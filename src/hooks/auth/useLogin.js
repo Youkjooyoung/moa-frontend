@@ -88,20 +88,20 @@ export const useLoginPageLogic = () => {
     const trimmedEmail = email.trim();
 
     if (!trimmedEmail) {
-      setErrors((prev) => ({ ...prev, email: "?�메?�을 ?�력?�주?�요." }));
+      setErrors((prev) => ({ ...prev, email: "?´ë©”?¼ì„ ?…ë ¥?´ì£¼?¸ìš”." }));
       return;
     }
 
     try {
       const IMP = await loadIamport();
       if (!IMP) {
-        alert("본인?�증 모듈 로드 ?�패");
+        alert("ë³¸ì¸?¸ì¦ ëª¨ë“ˆ ë¡œë“œ ?¤íŒ¨");
         return;
       }
 
       const startRes = await startPassAuth();
       if (!startRes.success) {
-        alert(startRes.error?.message || "본인?�증 ?�작 ?�패");
+        alert(startRes.error?.message || "ë³¸ì¸?¸ì¦ ?œìž‘ ?¤íŒ¨");
         return;
       }
 
@@ -110,7 +110,7 @@ export const useLoginPageLogic = () => {
 
       IMP.certification({ merchant_uid: merchantUid }, async (rsp) => {
         if (!rsp.success) {
-          alert("본인?�증??취소?�었거나 ?�패?�습?�다.");
+          alert("ë³¸ì¸?¸ì¦??ì·¨ì†Œ?˜ì—ˆê±°ë‚˜ ?¤íŒ¨?ˆìŠµ?ˆë‹¤.");
           return;
         }
 
@@ -121,19 +121,19 @@ export const useLoginPageLogic = () => {
           });
 
           if (!verifyRes.success) {
-            alert(verifyRes.error?.message || "본인?�증 검�??�패");
+            alert(verifyRes.error?.message || "ë³¸ì¸?¸ì¦ ê²€ì¦??¤íŒ¨");
             return;
           }
 
-          alert("본인?�증 ?�료! 계정 ?�금???�제?�었?�니??");
+          alert("ë³¸ì¸?¸ì¦ ?„ë£Œ! ê³„ì • ? ê¸ˆ???´ì œ?˜ì—ˆ?µë‹ˆ??");
         } catch (e) {
           console.error(e);
-          alert("본인?�증 검�?과정?�서 ?�류가 발생?�습?�다.");
+          alert("ë³¸ì¸?¸ì¦ ê²€ì¦?ê³¼ì •?ì„œ ?¤ë¥˜ê°€ ë°œìƒ?ˆìŠµ?ˆë‹¤.");
         }
       });
     } catch (e) {
       console.error(e);
-      alert("본인?�증 진행 �??�류가 발생?�습?�다.");
+      alert("ë³¸ì¸?¸ì¦ ì§„í–‰ ì¤??¤ë¥˜ê°€ ë°œìƒ?ˆìŠµ?ˆë‹¤.");
     }
   }, [email, setErrors]);
 
@@ -142,8 +142,8 @@ export const useLoginPageLogic = () => {
     const trimmedPassword = password.trim();
     const nextErrors = { email: "", password: "", otp: "" };
 
-    if (!trimmedEmail) nextErrors.email = "?�메?�을 ?�력?�주?�요.";
-    if (!trimmedPassword) nextErrors.password = "비�?번호�??�력?�주?�요.";
+    if (!trimmedEmail) nextErrors.email = "?´ë©”?¼ì„ ?…ë ¥?´ì£¼?¸ìš”.";
+    if (!trimmedPassword) nextErrors.password = "ë¹„ë?ë²ˆí˜¸ë¥??…ë ¥?´ì£¼?¸ìš”.";
 
     setErrors(nextErrors);
     if (nextErrors.email || nextErrors.password) return;
@@ -157,7 +157,7 @@ export const useLoginPageLogic = () => {
       });
 
       if (!response.success) {
-        alert(response.error?.message || "로그?�에 ?�패?�습?�다.");
+        alert(response.error?.message || "ë¡œê·¸?¸ì— ?¤íŒ¨?ˆìŠµ?ˆë‹¤.");
         return;
       }
 
@@ -174,8 +174,12 @@ export const useLoginPageLogic = () => {
 
       const { accessToken, refreshToken, accessTokenExpiresIn } = data;
 
-      if (accessToken && refreshToken) {
-        setTokens({ accessToken, refreshToken, accessTokenExpiresIn });
+      setTokens({ accessToken, refreshToken, accessTokenExpiresIn });
+
+      const me = await httpClient.get("/users/me");
+
+      if (me?.success) {
+        useAuthStore.getState().setUser(me.data);
       }
 
       applyRememberEmail(localStorage, trimmedEmail, remember);
@@ -190,11 +194,11 @@ export const useLoginPageLogic = () => {
 
       const apiError = error?.response?.data?.error;
       const code = apiError?.code;
-      const message = apiError?.message || "로그??�??�류가 발생?�습?�다.";
+      const message = apiError?.message || "ë¡œê·¸??ì¤??¤ë¥˜ê°€ ë°œìƒ?ˆìŠµ?ˆë‹¤.";
 
-      if (code === "E403" && message.includes("로그??5???�패")) {
+      if (code === "E403" && message.includes("ë¡œê·¸??5???¤íŒ¨")) {
         const start = window.confirm(
-          "로그??5???�패�?계정???�금 처리?�었?�니??\n본인?�증?�로 즉시 ?�금???�제?�시겠습?�까?"
+          "ë¡œê·¸??5???¤íŒ¨ë¡?ê³„ì •??? ê¸ˆ ì²˜ë¦¬?˜ì—ˆ?µë‹ˆ??\në³¸ì¸?¸ì¦?¼ë¡œ ì¦‰ì‹œ ? ê¸ˆ???´ì œ?˜ì‹œê² ìŠµ?ˆê¹Œ?"
         );
         if (start) {
           await handleUnlockByCertification();
@@ -235,7 +239,7 @@ export const useLoginPageLogic = () => {
       if (!otpCode || otpCode.length !== 6) {
         setErrors((prev) => ({
           ...prev,
-          otp: "6?�리 OTP 코드�??�력?�주?�요.",
+          otp: "6?ë¦¬ OTP ì½”ë“œë¥??…ë ¥?´ì£¼?¸ìš”.",
         }));
         return;
       }
@@ -243,7 +247,7 @@ export const useLoginPageLogic = () => {
       if (!otpCode) {
         setErrors((prev) => ({
           ...prev,
-          otp: "백업 코드�??�력?�주?�요.",
+          otp: "ë°±ì—… ì½”ë“œë¥??…ë ¥?´ì£¼?¸ìš”.",
         }));
         return;
       }
@@ -267,8 +271,8 @@ export const useLoginPageLogic = () => {
         const code = apiError?.code;
         const defaultMessage =
           otpMode === "otp"
-            ? "OTP ?�증???�패?�습?�다."
-            : "백업 코드 ?�증???�패?�습?�다.";
+            ? "OTP ?¸ì¦???¤íŒ¨?ˆìŠµ?ˆë‹¤."
+            : "ë°±ì—… ì½”ë“œ ?¸ì¦???¤íŒ¨?ˆìŠµ?ˆë‹¤.";
         const message = apiError?.message || defaultMessage;
         alert(code ? `[${code}] ${message}` : message);
         return;
@@ -276,8 +280,12 @@ export const useLoginPageLogic = () => {
 
       const { accessToken, refreshToken, accessTokenExpiresIn } = res.data;
 
-      if (accessToken && refreshToken) {
-        setTokens({ accessToken, refreshToken, accessTokenExpiresIn });
+      setTokens({ accessToken, refreshToken, accessTokenExpiresIn });
+
+      const me = await httpClient.get("/users/me");
+
+      if (me?.success) {
+        useAuthStore.getState().setUser(me.data);
       }
 
       resetOtp();
@@ -289,8 +297,8 @@ export const useLoginPageLogic = () => {
       const code = apiError?.code;
       const defaultMessage =
         otpMode === "otp"
-          ? "OTP ?�증 처리 �??�류가 발생?�습?�다."
-          : "백업 코드 ?�증 처리 �??�류가 발생?�습?�다.";
+          ? "OTP ?¸ì¦ ì²˜ë¦¬ ì¤??¤ë¥˜ê°€ ë°œìƒ?ˆìŠµ?ˆë‹¤."
+          : "ë°±ì—… ì½”ë“œ ?¸ì¦ ì²˜ë¦¬ ì¤??¤ë¥˜ê°€ ë°œìƒ?ˆìŠµ?ˆë‹¤.";
       const message = apiError?.message || defaultMessage;
       alert(code ? `[${code}] ${message}` : message);
     } finally {
@@ -328,7 +336,7 @@ export const useLoginPageLogic = () => {
     const redirectUri = import.meta.env.VITE_KAKAO_REDIRECT_URI;
 
     if (!window.Kakao) {
-      alert("카카??SDK 로드 ?�패");
+      alert("ì¹´ì¹´??SDK ë¡œë“œ ?¤íŒ¨");
       return;
     }
 
@@ -357,14 +365,14 @@ export const useLoginPageLogic = () => {
       });
 
       if (!res.success) {
-        alert(res.error?.message || "구�? 로그???�청???�패?�습?�다.");
+        alert(res.error?.message || "êµ¬ê? ë¡œê·¸???”ì²­???¤íŒ¨?ˆìŠµ?ˆë‹¤.");
         return;
       }
 
       window.location.href = res.data.url;
     } catch (e) {
       console.error(e);
-      alert("구�? 로그??처리 �??�류가 발생?�습?�다.");
+      alert("êµ¬ê? ë¡œê·¸??ì²˜ë¦¬ ì¤??¤ë¥˜ê°€ ë°œìƒ?ˆìŠµ?ˆë‹¤.");
     } finally {
       setGoogleLoading(false);
     }
@@ -380,7 +388,7 @@ export const useLoginPageLogic = () => {
     if (window.Kakao && !window.Kakao.isInitialized()) {
       window.Kakao.init(import.meta.env.VITE_KAKAO_JAVASCRIPT_KEY);
     }
-    // 초기 진입 ??민감 �?모두 초기??
+    // ì´ˆê¸° ì§„ìž… ??ë¯¼ê° ê°?ëª¨ë‘ ì´ˆê¸°??
     setField("password", "");
     setField("otpCode", "");
     resetOtp();
@@ -447,5 +455,3 @@ export const useLoginPageLogic = () => {
     handlePasswordChange,
   };
 };
-
-
