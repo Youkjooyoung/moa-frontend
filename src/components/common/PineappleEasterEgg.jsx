@@ -3,12 +3,14 @@ import { useEffect, useRef, useState } from 'react';
 const PineappleEasterEgg = () => {
     const containerRef = useRef(null);
     const [pineapples, setPineapples] = useState([]);
+    const [clickCount, setClickCount] = useState(0);
+    const [isEnabled, setIsEnabled] = useState(true); // Toggle effect
     const requestRef = useRef();
 
     // Initialize pineapples
     useEffect(() => {
-        const count = 3; // Number of pineapples
-        const speed = 3; // Constant speed
+        const count = 3;
+        const speed = 3;
         const initialPineapples = Array.from({ length: count }).map(() => ({
             id: Math.random(),
             x: Math.random() * (window.innerWidth - 50),
@@ -16,9 +18,10 @@ const PineappleEasterEgg = () => {
             vx: (Math.random() - 0.5) * speed * 2,
             vy: (Math.random() - 0.5) * speed * 2,
             size: 20 + Math.random() * 30,
-            status: 'active', // active, exploding, hidden
+            status: 'active',
             scale: 1,
             opacity: 1,
+            isSpecial: false,
         }));
         setPineapples(initialPineapples);
 
@@ -31,9 +34,24 @@ const PineappleEasterEgg = () => {
     }, []);
 
     const handlePineappleClick = (id) => {
-        setPineapples((prev) =>
-            prev.map(p => p.id === id ? { ...p, status: 'exploding', explosionStart: Date.now() } : p)
-        );
+        const newCount = clickCount + 1;
+        setClickCount(newCount);
+
+        setPineapples((prev) => {
+            return prev.map((p) => {
+                if (p.id === id) {
+                    const isSpecialRound = newCount % 10 === 0;
+                    return {
+                        ...p,
+                        status: 'exploding',
+                        explosionStart: Date.now(),
+                        isSpecial: isSpecialRound,
+                        hue: isSpecialRound ? Math.random() * 360 : 0,
+                    };
+                }
+                return p;
+            });
+        });
     };
 
     // Animation Loop
@@ -60,7 +78,7 @@ const PineappleEasterEgg = () => {
                                 status: 'active',
                                 x: Math.random() * (window.innerWidth - 50),
                                 y: Math.random() * (window.innerHeight - 50),
-                                vx: (Math.random() - 0.5) * 6, // New random velocity
+                                vx: (Math.random() - 0.5) * 6,
                                 vy: (Math.random() - 0.5) * 6,
                                 scale: 1,
                                 opacity: 1,
@@ -73,7 +91,7 @@ const PineappleEasterEgg = () => {
                     if (p.status === 'exploding') {
                         const progress = (now - p.explosionStart) / 300; // 300ms explosion
                         if (progress >= 1) {
-                            return { ...p, status: 'hidden', respawnTime: now + 10000 }; // 100s respawn
+                            return { ...p, status: 'hidden', respawnTime: now + 10000 }; // 10s respawn
                         }
                         return { ...p, scale: 1 + progress * 2, opacity: 1 - progress };
                     }
@@ -133,44 +151,72 @@ const PineappleEasterEgg = () => {
     }, []);
 
     return (
-        <div
-            ref={containerRef}
-            style={{
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                width: '100vw',
-                height: '100vh',
-                pointerEvents: 'none',
-                zIndex: 9999,
-                overflow: 'hidden',
-            }}
-        >
-            {pineapples.map((p) => (
+        <>
+            {/* Toggle Button */}
+            <button
+                onClick={() => setIsEnabled(!isEnabled)}
+                style={{
+                    position: 'fixed',
+                    bottom: '20px',
+                    left: '20px',
+                    zIndex: 10000,
+                    background: isEnabled ? 'rgba(255, 255, 255, 0.8)' : 'rgba(0, 0, 0, 0.5)',
+                    border: 'none',
+                    borderRadius: '50%',
+                    width: '40px',
+                    height: '40px',
+                    fontSize: '20px',
+                    cursor: 'pointer',
+                    boxShadow: '0 2px 10px rgba(0,0,0,0.2)',
+                    transition: 'all 0.3s ease',
+                }}
+                title={isEnabled ? "파인애플 숨기기" : "파인애플 보이기"}
+            >
+                {isEnabled ? '🍍' : '🚫'}
+            </button>
+
+            {/* Pineapple Container */}
+            {isEnabled && (
                 <div
-                    key={p.id}
-                    onMouseDown={(e) => {
-                        // Prevent click from propagating if needed, though pointerEvents: none on parent handles most
-                        e.stopPropagation();
-                        handlePineappleClick(p.id);
-                    }}
+                    ref={containerRef}
                     style={{
-                        position: 'absolute',
-                        transform: `translate(${p.x}px, ${p.y}px) scale(${p.scale})`,
-                        opacity: p.opacity,
-                        fontSize: `${p.size}px`,
-                        userSelect: 'none',
-                        willChange: 'transform, opacity',
-                        pointerEvents: p.status === 'active' ? 'auto' : 'none', // Enable click
-                        cursor: 'pointer',
-                        display: p.status === 'hidden' ? 'none' : 'block',
-                        transition: p.status === 'exploding' ? 'none' : 'transform 0.1s linear', // Smooth movement
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        width: '100vw',
+                        height: '100vh',
+                        pointerEvents: 'none',
+                        zIndex: 9999,
+                        overflow: 'hidden',
                     }}
                 >
-                    🍍
+                    {pineapples.map((p) => (
+                        <div
+                            key={p.id}
+                            onMouseDown={(e) => {
+                                e.stopPropagation();
+                                handlePineappleClick(p.id);
+                            }}
+                            style={{
+                                position: 'absolute',
+                                transform: `translate(${p.x}px, ${p.y}px) scale(${p.scale})`,
+                                opacity: p.opacity,
+                                fontSize: `${p.size}px`,
+                                userSelect: 'none',
+                                willChange: 'transform, opacity',
+                                pointerEvents: p.status === 'active' ? 'auto' : 'none',
+                                cursor: 'pointer',
+                                display: p.status === 'hidden' ? 'none' : 'block',
+                                transition: p.status === 'exploding' ? 'none' : 'transform 0.1s linear',
+                                filter: p.isSpecial ? `hue-rotate(${p.hue}deg) drop-shadow(0 0 10px rgba(255,255,255,0.8))` : 'none',
+                            }}
+                        >
+                            🍍
+                        </div>
+                    ))}
                 </div>
-            ))}
-        </div>
+            )}
+        </>
     );
 };
 
