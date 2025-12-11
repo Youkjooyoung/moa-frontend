@@ -100,22 +100,15 @@ export const useMyPage = () => {
       try {
         const redirectUri =
           provider === "google"
-            ? import.meta.env.VITE_GOOGLE_CONNECT_REDIRECT_URI ||
-              import.meta.env.VITE_GOOGLE_REDIRECT_URI
-            : provider === "kakao"
-            ? import.meta.env.VITE_KAKAO_CONNECT_REDIRECT_URI ||
-              `${window.location.origin}/oauth/kakao`
-            : window.location.origin;
+            ? import.meta.env.VITE_GOOGLE_REDIRECT_URI
+            : import.meta.env.VITE_KAKAO_REDIRECT_URI; 
 
         const res = await httpClient.get(`/oauth/${provider}/auth`, {
           params: { mode: "connect", redirectUri },
         });
 
         const url =
-          res?.data?.url ||
-          res?.data?.data?.authUrl ||
-          res?.data?.data?.url ||
-          "";
+          res?.data?.url || res?.data?.data?.url || res?.data?.data?.authUrl || "";
 
         if (!url) {
           throw new Error("Missing auth redirect url");
@@ -189,4 +182,11 @@ export const useMyPage = () => {
     },
   };
 };
+
+
+
+
+
+
+
 

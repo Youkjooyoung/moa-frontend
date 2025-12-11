@@ -25,14 +25,32 @@ export default function OAuthGooglePage() {
         });
 
         if (!res.success) {
-          alert(res.error?.message || "구글 로그인 실패");
+          alert(res.error?.message || "구글 로그인에 실패했습니다.");
           navigate("/login", { replace: true });
           return;
         }
 
-        const data = res.data;
+        const data = res.data || {};
+        const { status, accessToken, refreshToken, accessTokenExpiresIn } = data;
 
-        if (data.status === "NEED_REGISTER") {
+        if (status === "LOGIN") {
+          if (accessToken) {
+            setTokens({ accessToken, refreshToken, accessTokenExpiresIn });
+            const me = await httpClient.get("/users/me");
+            if (me.success) setUser(me.data);
+          }
+          navigate("/", { replace: true });
+          return;
+        }
+
+        if (status === "NEED_REGISTER") {
+          if (state === "connect") {
+            alert(
+              "해당 소셜 계정으로 가입 이력이 없어 현재 계정과 연결할 수 없습니다."
+            );
+            navigate("/mypage", { replace: true });
+            return;
+          }
           navigate("/register/social", {
             state: {
               provider: "google",
@@ -42,24 +60,24 @@ export default function OAuthGooglePage() {
           return;
         }
 
-        if (data.status === "CONNECT") {
-          alert("구글 계정이 정상적으로 연결되었습니다.");
+        if (status === "CONNECT") {
+          alert("구글 계정 연동이 완료되었습니다.");
           navigate("/mypage", { replace: true });
           return;
         }
 
-        if (data.status === "LOGIN") {
-          const { accessToken, refreshToken, accessTokenExpiresIn } = data;
-
-          setTokens({ accessToken, refreshToken, accessTokenExpiresIn });
-
-          const me = await httpClient.get("/users/me");
-          if (me.success) {
-            setUser(me.data);
-          }
-
-          navigate("/", { replace: true });
+        if (status === "NEED_TRANSFER") {
+          const { fromUserId, toUserId } = data;
+          alert(
+            "계정 이관이 필요합니다. 고객센터로 문의해주세요.\n" +
+              `fromUserId: ${fromUserId || ""}, toUserId: ${toUserId || ""}`
+          );
+          navigate("/mypage", { replace: true });
+          return;
         }
+
+        alert("알 수 없는 상태입니다. 다시 시도해주세요.");
+        navigate("/login", { replace: true });
       } catch (err) {
         console.error(err);
         alert("Google 인증 처리 중 오류가 발생했습니다.");

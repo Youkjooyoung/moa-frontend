@@ -26,15 +26,31 @@ const processQueue = (error, token = null) => {
 
 httpClient.interceptors.request.use(
   async (config) => {
+    const url = config.url || "";
+
+    const noAuthNeeded = [
+      "/auth/login",
+      "/auth/register",
+      "/auth/refresh",
+      "/auth/logout",
+      "/users",
+      "/oauth/kakao/auth",
+      "/oauth/google/auth",
+    ];
+
+    const isAuthInit =
+      url.includes("/oauth/google/auth") || url.includes("/oauth/kakao/auth");
+
+    // °ø°³ ¿£µåÆ÷ÀÎÆ®´Â ÅäÅ« ¾øÀÌ Åë°ú
+    if (noAuthNeeded.some((path) => url.startsWith(path)) || isAuthInit) {
+      return config;
+    }
+
     const { accessToken } = useAuthStore.getState();
 
     if (accessToken) {
-      if (!config.headers) {
-        config.headers = {};
-      }
+      config.headers = config.headers || {};
       config.headers.Authorization = `Bearer ${accessToken}`;
-    } else {
-      console.warn("No access token found.");
     }
 
     return config;
@@ -89,7 +105,7 @@ httpClient.interceptors.response.use(
         if (!apiRes.success) {
           clearAuth();
           processQueue(
-            new Error(apiRes.error?.message || "í† í° ê°±ì‹ ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤."),
+            new Error(apiRes.error?.message || "»õ ÅäÅ« ¹ß±Ş¿¡ ½ÇÆĞÇß½À´Ï´Ù."),
             null
           );
           return Promise.reject(error);

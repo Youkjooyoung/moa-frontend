@@ -88,20 +88,20 @@ export const useLoginPageLogic = () => {
     const trimmedEmail = email.trim();
 
     if (!trimmedEmail) {
-      setErrors((prev) => ({ ...prev, email: "이메일을 입력해주세요." }));
+      setErrors((prev) => ({ ...prev, email: "?�메?�을 ?�력?�주?�요." }));
       return;
     }
 
     try {
       const IMP = await loadIamport();
       if (!IMP) {
-        alert("본인인증 모듈 로드 실패");
+        alert("본인?�증 모듈 로드 ?�패");
         return;
       }
 
       const startRes = await startPassAuth();
       if (!startRes.success) {
-        alert(startRes.error?.message || "본인인증 시작 실패");
+        alert(startRes.error?.message || "본인?�증 ?�작 ?�패");
         return;
       }
 
@@ -110,7 +110,7 @@ export const useLoginPageLogic = () => {
 
       IMP.certification({ merchant_uid: merchantUid }, async (rsp) => {
         if (!rsp.success) {
-          alert("본인인증이 취소되었거나 실패했습니다.");
+          alert("본인?�증??취소?�었거나 ?�패?�습?�다.");
           return;
         }
 
@@ -121,19 +121,19 @@ export const useLoginPageLogic = () => {
           });
 
           if (!verifyRes.success) {
-            alert(verifyRes.error?.message || "본인인증 검증 실패");
+            alert(verifyRes.error?.message || "본인?�증 검�??�패");
             return;
           }
 
-          alert("본인인증 완료! 계정 잠금이 해제되었습니다.");
+          alert("본인?�증 ?�료! 계정 ?�금???�제?�었?�니??");
         } catch (e) {
           console.error(e);
-          alert("본인인증 검증 과정에서 오류가 발생했습니다.");
+          alert("본인?�증 검�?과정?�서 ?�류가 발생?�습?�다.");
         }
       });
     } catch (e) {
       console.error(e);
-      alert("본인인증 진행 중 오류가 발생했습니다.");
+      alert("본인?�증 진행 �??�류가 발생?�습?�다.");
     }
   }, [email, setErrors]);
 
@@ -142,8 +142,8 @@ export const useLoginPageLogic = () => {
     const trimmedPassword = password.trim();
     const nextErrors = { email: "", password: "", otp: "" };
 
-    if (!trimmedEmail) nextErrors.email = "이메일을 입력해주세요.";
-    if (!trimmedPassword) nextErrors.password = "비밀번호를 입력해주세요.";
+    if (!trimmedEmail) nextErrors.email = "?�메?�을 ?�력?�주?�요.";
+    if (!trimmedPassword) nextErrors.password = "비�?번호�??�력?�주?�요.";
 
     setErrors(nextErrors);
     if (nextErrors.email || nextErrors.password) return;
@@ -157,7 +157,7 @@ export const useLoginPageLogic = () => {
       });
 
       if (!response.success) {
-        alert(response.error?.message || "로그인에 실패했습니다.");
+        alert(response.error?.message || "로그?�에 ?�패?�습?�다.");
         return;
       }
 
@@ -194,11 +194,11 @@ export const useLoginPageLogic = () => {
 
       const apiError = error?.response?.data?.error;
       const code = apiError?.code;
-      const message = apiError?.message || "로그인 중 오류가 발생했습니다.";
+      const message = apiError?.message || "로그??�??�류가 발생?�습?�다.";
 
-      if (code === "E403" && message.includes("로그인 5회 실패")) {
+      if (code === "E403" && message.includes("로그??5???�패")) {
         const start = window.confirm(
-          "로그인 5회 실패로 계정이 잠금 처리되었습니다.\n본인인증으로 즉시 잠금을 해제하시겠습니까?"
+          "로그??5???�패�?계정???�금 처리?�었?�니??\n본인?�증?�로 즉시 ?�금???�제?�시겠습?�까?"
         );
         if (start) {
           await handleUnlockByCertification();
@@ -239,7 +239,7 @@ export const useLoginPageLogic = () => {
       if (!otpCode || otpCode.length !== 6) {
         setErrors((prev) => ({
           ...prev,
-          otp: "6자리 OTP 코드를 입력해주세요.",
+          otp: "6?�리 OTP 코드�??�력?�주?�요.",
         }));
         return;
       }
@@ -247,7 +247,7 @@ export const useLoginPageLogic = () => {
       if (!otpCode) {
         setErrors((prev) => ({
           ...prev,
-          otp: "백업 코드를 입력해주세요.",
+          otp: "백업 코드�??�력?�주?�요.",
         }));
         return;
       }
@@ -271,8 +271,8 @@ export const useLoginPageLogic = () => {
         const code = apiError?.code;
         const defaultMessage =
           otpMode === "otp"
-            ? "OTP 인증에 실패했습니다."
-            : "백업 코드 인증에 실패했습니다.";
+            ? "OTP ?�증???�패?�습?�다."
+            : "백업 코드 ?�증???�패?�습?�다.";
         const message = apiError?.message || defaultMessage;
         alert(code ? `[${code}] ${message}` : message);
         return;
@@ -297,8 +297,8 @@ export const useLoginPageLogic = () => {
       const code = apiError?.code;
       const defaultMessage =
         otpMode === "otp"
-          ? "OTP 인증 처리 중 오류가 발생했습니다."
-          : "백업 코드 인증 처리 중 오류가 발생했습니다.";
+          ? "OTP ?�증 처리 �??�류가 발생?�습?�다."
+          : "백업 코드 ?�증 처리 �??�류가 발생?�습?�다.";
       const message = apiError?.message || defaultMessage;
       alert(code ? `[${code}] ${message}` : message);
     } finally {
@@ -333,11 +333,10 @@ export const useLoginPageLogic = () => {
   }, [handleEmailLogin, handleOtpConfirm]);
 
   const handleKakaoLogin = () => {
-    const origin = window.location.origin;
-    const redirectUri = `${origin}/oauth/kakao`;
+    const redirectUri = import.meta.env.VITE_KAKAO_REDIRECT_URI;
 
     if (!window.Kakao) {
-      alert("카카오 SDK 로드 실패");
+      alert("카카??SDK 로드 ?�패");
       return;
     }
 
@@ -366,14 +365,14 @@ export const useLoginPageLogic = () => {
       });
 
       if (!res.success) {
-        alert(res.error?.message || "구글 로그인 요청에 실패했습니다.");
+        alert(res.error?.message || "구�? 로그???�청???�패?�습?�다.");
         return;
       }
 
       window.location.href = res.data.url;
     } catch (e) {
       console.error(e);
-      alert("구글 로그인 처리 중 오류가 발생했습니다.");
+      alert("구�? 로그??처리 �??�류가 발생?�습?�다.");
     } finally {
       setGoogleLoading(false);
     }
@@ -389,7 +388,7 @@ export const useLoginPageLogic = () => {
     if (window.Kakao && !window.Kakao.isInitialized()) {
       window.Kakao.init(import.meta.env.VITE_KAKAO_JAVASCRIPT_KEY);
     }
-    // 초기 진입 시 민감 값 모두 초기화
+    // 초기 진입 ??민감 �?모두 초기??
     setField("password", "");
     setField("otpCode", "");
     resetOtp();
@@ -456,3 +455,5 @@ export const useLoginPageLogic = () => {
     handlePasswordChange,
   };
 };
+
+
