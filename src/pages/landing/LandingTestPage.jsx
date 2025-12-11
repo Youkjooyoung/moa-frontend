@@ -180,6 +180,59 @@ export default function LandingTestPage() {
                         <span className="bg-gradient-to-r from-[#635bff] to-[#00d4ff] bg-clip-text text-transparent">Variant T</span><br />
                         <span className="text-sm font-normal text-gray-500">Notion + Figma + Stripe (프리미엄 SaaS)</span>
                     </Link>
+
+                    <Link
+                        to="/landing/u"
+                        className="block w-full py-6 px-6 bg-white hover:bg-purple-50 text-gray-900 font-bold rounded-lg shadow-md border border-purple-200 transition duration-200"
+                    >
+                        <span className="bg-gradient-to-r from-violet-600 to-fuchsia-600 bg-clip-text text-transparent">Variant U</span><br />
+                        <span className="text-sm font-normal text-gray-400">KWANGYA 119 Style (화이트 + 파스텔 블롭)</span>
+                    </Link>
+
+                    <Link
+                        to="/landing/v"
+                        className="block w-full py-6 px-6 bg-white hover:bg-gray-50 text-gray-900 font-black rounded-lg shadow-md border-2 border-black transition duration-200"
+                    >
+                        Variant V <span className="text-xs font-normal bg-black text-white px-2 py-0.5 rounded-full ml-1">NEW</span><br />
+                        <span className="text-sm font-normal text-gray-400">Dropbox Style (극단적 미니멀)</span>
+                    </Link>
+
+                    <Link
+                        to="/landing/w"
+                        className="block w-full py-6 px-6 bg-[#0B1120] hover:bg-[#1E293B] text-white font-bold rounded-lg shadow-md border border-gray-700 transition duration-200"
+                    >
+                        <span className="bg-gradient-to-r from-[#635bff] to-[#00d4ff] bg-clip-text text-transparent">Variant W</span>
+                        <span className="text-pink-500 ml-1"> DARK</span><br />
+                        <span className="text-sm font-normal text-gray-400">Premium Dark SaaS (Variant T의 다크모드)</span>
+                    </Link>
+
+                    <Link
+                        to="/landing/x"
+                        className="block w-full py-6 px-6 bg-[#0a0a0b] hover:bg-[#151518] text-white font-bold rounded-lg shadow-md border border-purple-500/30 transition duration-200"
+                        style={{ boxShadow: '0 0 30px rgba(139, 92, 246, 0.2)' }}
+                    >
+                        <span className="bg-gradient-to-r from-violet-400 via-purple-400 to-fuchsia-400 bg-clip-text text-transparent">Variant X</span>
+                        <span className="text-xs font-normal bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white px-2 py-0.5 rounded-full ml-2">NEW</span><br />
+                        <span className="text-sm font-normal text-gray-400">Linear/Cursor Style (다크 + 바이브런트)</span>
+                    </Link>
+
+                    <Link
+                        to="/landing/y"
+                        className="block w-full py-6 px-6 bg-white hover:bg-gray-50 text-gray-900 font-semibold rounded-lg shadow-md border border-gray-200 transition duration-200"
+                    >
+                        <span className="text-[#0071e3]">Variant Y</span>
+                        <span className="text-xs font-normal bg-[#0071e3] text-white px-2 py-0.5 rounded-full ml-2">NEW</span><br />
+                        <span className="text-sm font-normal text-gray-400">Apple Style (프리미엄 미니멀)</span>
+                    </Link>
+
+                    <Link
+                        to="/landing/z"
+                        className="block w-full py-6 px-6 bg-gradient-to-r from-violet-500 via-purple-500 to-fuchsia-500 hover:from-violet-600 hover:via-purple-600 hover:to-fuchsia-600 text-white font-bold rounded-lg shadow-md transition duration-200"
+                    >
+                        <span>Variant Z</span>
+                        <span className="text-xs font-normal bg-white/20 px-2 py-0.5 rounded-full ml-2">NEW</span><br />
+                        <span className="text-sm font-normal text-white/80">Framer Style (인터랙티브 플레이풀)</span>
+                    </Link>
                 </div>
             </div>
         </div>
