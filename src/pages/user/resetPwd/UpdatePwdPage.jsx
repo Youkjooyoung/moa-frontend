@@ -26,37 +26,59 @@ export default function UpdatePwdPage() {
     modalOpen,
     stepVerified,
     error,
-    setField,
     setModal,
+    resetAll,
+    openModal,
   } = useUpdatePwdStore();
 
-  const logic = useUpdatePwdLogic();
+  const { verify, update, handleChange, loading } = useUpdatePwdLogic();
+  const isVerifyDisabled = loading || !currentPassword.trim();
+  const isUpdateDisabled =
+    loading || !newPassword.trim() || !newPasswordConfirm.trim();
 
-  const closeModal = () => {
-    setModal(false);
+  const closeAndExit = () => {
+    resetAll();
     window.history.back();
   };
+
+  useEffect(() => {
+    openModal();
+    return () => resetAll();
+  }, [openModal, resetAll]);
 
   useEffect(() => {
     const handleEnter = (e) => {
       if (e.key !== "Enter") return;
 
       if (!stepVerified) {
-        logic.verify();
+        verify();
       } else {
-        logic.update();
+        update();
       }
     };
 
     window.addEventListener("keydown", handleEnter);
     return () => window.removeEventListener("keydown", handleEnter);
-  }, [stepVerified, logic]);
+  }, [stepVerified, update, verify]);
+
+  const handleDialogChange = (open) => {
+    if (open) {
+      openModal();
+      return;
+    }
+
+    if (stepVerified) {
+      setModal(false);
+      return;
+    }
+
+    closeAndExit();
+  };
 
   return (
     <div className="w-full min-h-screen bg-slate-50 text-slate-900">
       <section className="bg-gradient-to-r from-indigo-500 via-purple-500 to-blue-500 text-white py-20 px-4">
         <div className="max-w-4xl mx-auto flex flex-col lg:flex-row items-center gap-10">
-          {/* 왼쪽 설명 영역 */}
           <div className="flex-1 text-center lg:text-left">
             <div className="inline-flex items-center rounded-full border border-white/40 bg-white/10 px-4 py-1.5 text-xs sm:text-sm font-semibold mb-4 backdrop-blur">
               <span className="flex h-2 w-2 rounded-full bg-emerald-300 mr-2" />
@@ -67,20 +89,35 @@ export default function UpdatePwdPage() {
               비밀번호 변경
             </h2>
             <p className="text-sm sm:text-base text-indigo-50/90 leading-relaxed max-w-md mx-auto lg:mx-0">
-              안전한 계정 사용을 위해 주기적으로 비밀번호를 변경해 주세요. 현재
-              비밀번호 확인 후, 새 비밀번호를 설정할 수 있습니다.
+              안전하게 사용하려면 현재 비밀번호를 확인하고 새 비밀번호를 설정해 주세요.
+              잘못된 비밀번호를 입력하면 재인증이 필요할 수 있습니다.
             </p>
           </div>
 
-          {/* 오른쪽 카드 영역 */}
           <div className="flex-1 w-full max-w-md">
             <Card className="bg-white border border-gray-100 shadow-2xl rounded-3xl">
               <CardContent className="p-7 space-y-6">
+                <div className="flex items-center justify-between text-xs font-semibold text-slate-600 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3">
+                  <span className="flex items-center gap-2">
+                    <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-indigo-100 text-indigo-700 font-bold">
+                      1
+                    </span>
+                    현재 비밀번호 확인
+                  </span>
+                  <span
+                    className={`text-xs font-semibold ${
+                      stepVerified ? "text-emerald-600" : "text-slate-400"
+                    }`}
+                  >
+                    {stepVerified ? "완료" : "진행 중"}
+                  </span>
+                </div>
+
                 {!stepVerified && (
                   <div className="text-center py-6 text-sm text-slate-500">
-                    먼저 팝업에서 현재 비밀번호를 한 번 확인하면,
-                    <br className="hidden sm:block" />새 비밀번호를 설정할 수
-                    있어요.
+                    먼저 팝업에서 현재 비밀번호를 입력해 본인 인증을 해주세요.
+                    <br className="hidden sm:block" />
+                    인증이 끝나면 새 비밀번호로 전환할 수 있습니다.
                   </div>
                 )}
 
@@ -94,10 +131,10 @@ export default function UpdatePwdPage() {
                         type="password"
                         value={newPassword}
                         onChange={(e) =>
-                          setField("newPassword", e.target.value)
+                          handleChange("newPassword", e.target.value)
                         }
                         className="mt-1 bg-white border border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-indigo-500 focus-visible:border-indigo-500"
-                        placeholder="영문+숫자+특수문자 포함 8~20자"
+                        placeholder="영문·숫자·특수문자 포함 8~20자 입력"
                       />
                       {error.rule && (
                         <p className="text-red-500 text-xs mt-1">
@@ -114,10 +151,10 @@ export default function UpdatePwdPage() {
                         type="password"
                         value={newPasswordConfirm}
                         onChange={(e) =>
-                          setField("newPasswordConfirm", e.target.value)
+                          handleChange("newPasswordConfirm", e.target.value)
                         }
                         className="mt-1 bg-white border border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-indigo-500 focus-visible:border-indigo-500"
-                        placeholder="한번 더 입력해 주세요"
+                        placeholder="다시 한 번 입력해주세요"
                       />
                       {error.confirm && (
                         <p className="text-red-500 text-xs mt-1">
@@ -128,7 +165,8 @@ export default function UpdatePwdPage() {
 
                     <Button
                       className="w-full mt-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold h-11 rounded-xl"
-                      onClick={logic.update}
+                      onClick={update}
+                      disabled={isUpdateDisabled}
                     >
                       비밀번호 변경
                     </Button>
@@ -140,8 +178,7 @@ export default function UpdatePwdPage() {
         </div>
       </section>
 
-      {/* 현재 비밀번호 확인 모달 */}
-      <Dialog open={modalOpen} onOpenChange={closeModal}>
+      <Dialog open={modalOpen} onOpenChange={handleDialogChange}>
         <DialogContent className="max-w-sm bg-white border border-slate-200 rounded-2xl">
           <DialogHeader>
             <DialogTitle className="text-slate-900 flex items-center gap-2">
@@ -149,7 +186,7 @@ export default function UpdatePwdPage() {
               현재 비밀번호 확인
             </DialogTitle>
             <DialogDescription className="text-slate-600 text-sm">
-              본인 확인을 위해 현재 사용 중인 비밀번호를 입력해 주세요.
+              본인 인증을 위해 현재 사용 중인 비밀번호를 입력해주세요.
             </DialogDescription>
           </DialogHeader>
 
@@ -158,7 +195,7 @@ export default function UpdatePwdPage() {
             <Input
               type="password"
               value={currentPassword}
-              onChange={(e) => setField("currentPassword", e.target.value)}
+              onChange={(e) => handleChange("currentPassword", e.target.value)}
               className="bg-white border border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-indigo-500 focus-visible:border-indigo-500"
             />
             {error.current && (
@@ -167,7 +204,8 @@ export default function UpdatePwdPage() {
 
             <Button
               className="w-full mt-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold h-10 rounded-xl"
-              onClick={logic.verify}
+              onClick={verify}
+              disabled={isVerifyDisabled}
             >
               확인
             </Button>

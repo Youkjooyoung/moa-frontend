@@ -5,26 +5,26 @@ import Footer from "./components/common/Footer";
 import { useGlobalLinkHandler } from "@/hooks/common/useGlobalLinkHandler";
 
 import ProtectedRoute from "@/routes/ProtectedRoute";
-import OAuthGooglePage from "./pages/oauth/OAuthGooglePage";
 import OAuthKakaoPage from "./pages/oauth/OAuthKakaoPage";
+import OAuthGooglePage from "./pages/oauth/OAuthGooglePage";
 import MainPage from "./pages/main/MainPage";
 import PartyListPage from "./pages/party/PartyListPage";
 import PartyCreatePage from "./pages/party/PartyCreatePage";
 import PartyDetailPage from "./pages/party/PartyDetailPage";
 import PartyListPageO from "./pages/party/PartyListPageO";
 
-import AddUserPage from "./pages/user/AddUserPage";
-import LoginPage from "./pages/user/LoginPage";
-import FindIdPage from "./pages/user/FindIdPage";
-import ResetPwdPage from "./pages/user/ResetPwdPage";
-import UpdatePwdPage from "./pages/user/UpdatePwdPage";
-import DeleteUserPage from "./pages/user/DeleteUserPage";
-import MyPage from "./pages/user/MyPage";
-import EmailVerifiedPage from "./pages/user/EmailVerifiedPage";
-import UpdateUserPage from "./pages/user/UpdateUserPage";
+import AddUserPage from "./pages/user/register/AddUserPage";
+import LoginPage from "./pages/user/login/LoginPage";
+import FindIdPage from "./pages/user/findId/FindIdPage";
+import ResetPwdPage from "./pages/user/resetPwd/ResetPwdPage";
+import UpdatePwdPage from "./pages/user/resetPwd/UpdatePwdPage";
+import DeleteUserPage from "./pages/user/register/DeleteUserPage";
+import MyPage from "./pages/user/mypage/MyPage";
+import EmailVerifiedPage from "./pages/user/register/EmailVerifiedPage";
+import UpdateUserPage from "./pages/user/mypage/UpdateUserPage";
 import FinancialHistoryPage from "./pages/user/FinancialHistoryPage";
 import MyWalletPage from "./pages/user/MyWalletPage";
-import AccountRegisterPage from "./pages/user/AccountRegisterPage";
+import AccountRegisterPage from "./pages/user/register/AccountRegisterPage";
 import MyPartyListPage from "./pages/party/MyPartyListPage";
 import AddBlacklistPage from "./pages/admin/AddBlacklistPage";
 import AdminUserListPage from "@/pages/admin/AdminUserListPage";
@@ -32,7 +32,7 @@ import AdminUserDetailPage from "@/pages/admin/AdminUserDetailPage";
 import AdminBlacklistDeletePage from "@/pages/admin/RemoveBlacklistPage";
 import AdminLoginHistoryPage from "@/pages/admin/AdminLoginHistoryPage";
 import AdminDashboardPage from "@/pages/admin/AdminDashboardPage";
-import AddUserSocialPage from "@/pages/user/AddUserSocialPage";
+import AddUserSocialPage from "@/pages/user/register/AddUserSocialPage";
 
 import LandingTestPage from "./pages/landing/LandingTestPage";
 import LandingPageA from "./pages/landing/LandingPageA";
@@ -94,8 +94,9 @@ export default function App() {
   useGlobalLinkHandler();
   const { user } = useAuthStore();
 
-  // 이스터 에그 대상 유저 확인
-  const showEasterEgg = user && (user.userId === 'usertest1' || user.userId === 'admintest');
+  // ?�스???�그 ?�???��? ?�인
+  const showEasterEgg =
+    user && (user.userId === "usertest1" || user.userId === "admintest");
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -105,7 +106,7 @@ export default function App() {
 
       <main className="flex-1 pt-20">
         <Routes>
-          {/* 메인/파티 */}
+          {/* 메인/?�티 */}
           <Route path="/" element={<MainPage />} />
           <Route path="/party" element={<PartyListPage />} />
           <Route path="/party/create" element={<PartyCreatePage />} />
@@ -116,7 +117,7 @@ export default function App() {
           <Route path="/oauth/kakao" element={<OAuthKakaoPage />} />
           <Route path="/oauth/google" element={<OAuthGooglePage />} />
 
-          {/* User 도메인 (Public) */}
+          {/* User ?�메??(Public) */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<AddUserPage />} />
           <Route path="/find-email" element={<FindIdPage />} />
@@ -124,7 +125,7 @@ export default function App() {
           <Route path="/email-verified" element={<EmailVerifiedPage />} />
           <Route path="/signup/social" element={<AddUserSocialPage />} />
 
-          {/* User 도메인 (Private - ProtectedRoute 적용) */}
+          {/* User ?�메??(Private - ProtectedRoute ?�용) */}
           <Route
             path="/mypage"
             element={<ProtectedRoute element={<MyPage />} />}
@@ -162,7 +163,7 @@ export default function App() {
             element={<ProtectedRoute element={<MyPartyListPage />} />}
           />
 
-          {/* ✅ [수정 2] 복잡한 조건부 렌더링을 ProtectedRoute로 통일 */}
+          {/* ??[?�정 2] 복잡??조건부 ?�더링을 ProtectedRoute�??�일 */}
           <Route
             path="/mypage/edit"
             element={<ProtectedRoute element={<UpdateUserPage />} />}
@@ -191,11 +192,10 @@ export default function App() {
           <Route path="/product" element={<GetProductList />} />
           <Route path="/product/:id" element={<GetProduct />} />
 
-
           <Route
             path="/product/:id/delete"
             element={<ProtectedRoute element={<DeleteProduct />} />}
-          // TODO: Add role check for ADMIN
+            // TODO: Add role check for ADMIN
           />
 
           {/* Subscription (User) */}
@@ -220,7 +220,7 @@ export default function App() {
             element={<ProtectedRoute element={<CancelSubscription />} />}
           />
 
-          {/* 고객센터/커뮤니티 & 기타 */}
+          {/* 고객?�터/커�??�티 & 기�? */}
           <Route path="/subscriptions" element={<GetProductList />} />
           <Route path="/my/subscriptions" element={<UserSubscriptionList />} />
           <Route path="/payment/success" element={<PaymentSuccessPage />} />
@@ -285,3 +285,5 @@ export default function App() {
     </div>
   );
 }
+
+

@@ -1,17 +1,19 @@
 // src/store/user/updatePwdStore.js
 import { create } from "zustand";
 
-export const useUpdatePwdStore = create((set) => ({
+const defaultFields = {
   currentPassword: "",
   newPassword: "",
   newPasswordConfirm: "",
-  modalOpen: true,
+};
+
+const defaultErrors = { current: "", rule: "", confirm: "" };
+
+export const useUpdatePwdStore = create((set) => ({
+  ...defaultFields,
+  modalOpen: false,
   stepVerified: false,
-  error: {
-    current: "",
-    rule: "",
-    confirm: "",
-  },
+  error: { ...defaultErrors },
 
   setField: (key, value) => set({ [key]: value }),
 
@@ -23,6 +25,21 @@ export const useUpdatePwdStore = create((set) => ({
       },
     })),
 
+  clearErrors: () => set({ error: { ...defaultErrors } }),
   setModal: (v) => set({ modalOpen: v }),
   setVerified: (v) => set({ stepVerified: v }),
+  openModal: () =>
+    set({
+      ...defaultFields,
+      error: { ...defaultErrors },
+      modalOpen: true,
+      stepVerified: false,
+    }),
+  resetAll: () =>
+    set({
+      ...defaultFields,
+      error: { ...defaultErrors },
+      modalOpen: false,
+      stepVerified: false,
+    }),
 }));
