@@ -11,6 +11,7 @@ import MainPage from "./pages/main/MainPage";
 import PartyListPage from "./pages/party/PartyListPage";
 import PartyCreatePage from "./pages/party/PartyCreatePage";
 import PartyDetailPage from "./pages/party/PartyDetailPage";
+import PartyListPageO from "./pages/party/PartyListPageO";
 
 import AddUserPage from "./pages/user/register/AddUserPage";
 import LoginPage from "./pages/user/login/LoginPage";
@@ -54,6 +55,12 @@ import LandingPageQ from "./pages/landing/LandingPageQ";
 import LandingPageR from "./pages/landing/LandingPageR";
 import LandingPageS from "./pages/landing/LandingPageS";
 import LandingPageT from "./pages/landing/LandingPageT";
+import LandingPageU from "./pages/landing/LandingPageU";
+import LandingPageV from "./pages/landing/LandingPageV";
+import LandingPageW from "./pages/landing/LandingPageW";
+import LandingPageX from "./pages/landing/LandingPageX";
+import LandingPageY from "./pages/landing/LandingPageY";
+import LandingPageZ from "./pages/landing/LandingPageZ";
 
 import GetProductList from "./pages/product/GetProductList";
 import GetProduct from "./pages/product/GetProduct";
@@ -104,6 +111,7 @@ export default function App() {
           <Route path="/party" element={<PartyListPage />} />
           <Route path="/party/create" element={<PartyCreatePage />} />
           <Route path="/party/:id" element={<PartyDetailPage />} />
+          <Route path="/party-test/o" element={<PartyListPageO />} />
 
           {/* ===== OAuth 콜백 MUST BE PUBLIC ===== */}
           <Route path="/oauth/kakao" element={<OAuthKakaoPage />} />
@@ -264,6 +272,12 @@ export default function App() {
           <Route path="/landing/r" element={<LandingPageR />} />
           <Route path="/landing/s" element={<LandingPageS />} />
           <Route path="/landing/t" element={<LandingPageT />} />
+          <Route path="/landing/u" element={<LandingPageU />} />
+          <Route path="/landing/v" element={<LandingPageV />} />
+          <Route path="/landing/w" element={<LandingPageW />} />
+          <Route path="/landing/x" element={<LandingPageX />} />
+          <Route path="/landing/y" element={<LandingPageY />} />
+          <Route path="/landing/z" element={<LandingPageZ />} />
         </Routes>
       </main>
 
