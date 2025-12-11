@@ -29,6 +29,11 @@ export default function Footer() {
                 고객센터
               </Link>
             </li>
+            <li>
+              <Link to="/landing-test" className="hover:text-blue-600">
+                Landing Page Test
+              </Link>
+            </li>
             <li>이용약관</li>
             <li>개인정보처리방침</li>
           </ul>

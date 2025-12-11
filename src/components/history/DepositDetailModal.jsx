@@ -1,89 +1,172 @@
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-} from "@/components/ui/dialog";
+import { motion, AnimatePresence } from "framer-motion";
+import { X, ShieldCheck, Calendar, CheckCircle, AlertCircle } from "lucide-react";
 
 export default function DepositDetailModal({ isOpen, onClose, deposit }) {
-    if (!deposit) return null;
+  if (!deposit) return null;
 
-    const getStatusLabel = (status) => {
-        switch (status) {
-            case "PAID": return "보관중";
-            case "REFUNDED": return "환불완료";
-            case "FORFEITED": return "몰수";
-            default: return "처리중";
-        }
-    };
+  const getStatusLabel = (status) => {
+    switch (status) {
+      case "PAID":
+        return "보관중";
+      case "REFUNDED":
+        return "환불완료";
+      case "FORFEITED":
+        return "몰수";
+      default:
+        return "처리중";
+    }
+  };
 
-    const getStatusColor = (status) => {
-        switch (status) {
-            case "PAID": return "text-blue-600";
-            case "REFUNDED": return "text-gray-600";
-            case "FORFEITED": return "text-red-600";
-            default: return "text-yellow-600";
-        }
-    };
+  const getStatusStyle = (status) => {
+    switch (status) {
+      case "PAID":
+        return "bg-blue-500 text-white";
+      case "REFUNDED":
+        return "bg-slate-500 text-white";
+      case "FORFEITED":
+        return "bg-red-500 text-white";
+      default:
+        return "bg-amber-500 text-white";
+    }
+  };
 
-    return (
-        <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="sm:max-w-md">
-                <DialogHeader>
-                    <DialogTitle>보증금 상세 정보</DialogTitle>
-                    <DialogDescription>보증금 내역의 상세 정보입니다.</DialogDescription>
-                </DialogHeader>
-                <div className="space-y-4">
-                    <div className="flex justify-between items-center border-b pb-4">
-                        <div className="text-sm text-gray-500">보증금 금액</div>
-                        <div className="text-xl font-bold">
-                            {(deposit.depositAmount || deposit.amount || 0).toLocaleString()}원
-                        </div>
-                    </div>
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <>
+          {/* Backdrop */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
+          />
 
-                    <div className="space-y-3 text-sm">
-                        <div className="flex justify-between">
-                            <span className="text-gray-500">상품명</span>
-                            <span className="font-medium">{deposit.productName || deposit.partyTitle || "-"}</span>
-                        </div>
-                        <div className="flex justify-between">
-                            <span className="text-gray-500">처리일자</span>
-                            <span>{deposit.paymentDate || deposit.createdAt || "-"}</span>
-                        </div>
-                        <div className="flex justify-between">
-                            <span className="text-gray-500">상태</span>
-                            <span className={`font-bold ${getStatusColor(deposit.depositStatus || deposit.status)}`}>
-                                {getStatusLabel(deposit.depositStatus || deposit.status)}
-                            </span>
-                        </div>
-                        {deposit.refundDate && (
-                            <div className="flex justify-between">
-                                <span className="text-gray-500">환불일자</span>
-                                <span>{deposit.refundDate}</span>
-                            </div>
-                        )}
-                        {deposit.refundAmount && (
-                            <div className="flex justify-between">
-                                <span className="text-gray-500">환불금액</span>
-                                <span>{deposit.refundAmount.toLocaleString()}원</span>
-                            </div>
-                        )}
-                    </div>
-
-                    {(deposit.depositStatus === "REFUNDED" || deposit.status === "REFUNDED") && (
-                        <div className="bg-gray-50 p-3 rounded-lg text-xs text-gray-600">
-                            <p>환불이 완료된 보증금입니다. 등록된 정산 계좌로 입금되었습니다.</p>
-                        </div>
-                    )}
-
-                    {(deposit.depositStatus === "FORFEITED" || deposit.status === "FORFEITED") && (
-                        <div className="bg-red-50 p-3 rounded-lg text-xs text-red-600">
-                            <p>몰수된 보증금입니다. 파티 시작 후 탈퇴로 인해 방장에게 정산됩니다.</p>
-                        </div>
-                    )}
+          {/* Modal */}
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto"
+            >
+              {/* Header */}
+              <div className="flex items-center justify-between p-6 border-b border-slate-200">
+                <div>
+                  <h2 className="text-xl font-bold text-slate-900">보증금 상세</h2>
+                  <p className="text-sm text-slate-500 mt-1">보증금 내역의 상세 정보입니다</p>
                 </div>
-            </DialogContent>
-        </Dialog>
-    );
+                <button
+                  onClick={onClose}
+                  className="w-8 h-8 rounded-lg hover:bg-slate-100 flex items-center justify-center transition-colors"
+                >
+                  <X className="w-5 h-5 text-slate-500" />
+                </button>
+              </div>
+
+              {/* Content */}
+              <div className="p-6 space-y-6">
+                {/* Amount */}
+                <div className="text-center py-6 bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl">
+                  <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mx-auto mb-3">
+                    <ShieldCheck className="w-6 h-6 text-blue-600" />
+                  </div>
+                  <p className="text-sm text-slate-600 mb-2">보증금 금액</p>
+                  <p className="text-3xl font-bold text-slate-900">
+                    {(deposit.depositAmount || deposit.amount || 0).toLocaleString()}
+                    <span className="text-lg text-slate-500 ml-1">원</span>
+                  </p>
+                </div>
+
+                {/* Details */}
+                <div className="space-y-4">
+                  <div className="flex items-start gap-3 p-4 bg-slate-50 rounded-xl">
+                    <ShieldCheck className="w-5 h-5 text-blue-600 mt-0.5" />
+                    <div className="flex-1">
+                      <p className="text-xs text-slate-500 mb-1">상품명</p>
+                      <p className="font-semibold text-slate-900">
+                        {deposit.productName || deposit.partyTitle || "-"}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3 p-4 bg-slate-50 rounded-xl">
+                    <Calendar className="w-5 h-5 text-purple-600 mt-0.5" />
+                    <div className="flex-1">
+                      <p className="text-xs text-slate-500 mb-1">처리일자</p>
+                      <p className="font-semibold text-slate-900">
+                        {deposit.paymentDate || deposit.createdAt || "-"}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
+                    <span className="text-slate-600 font-medium">상태</span>
+                    <span
+                      className={`flex items-center gap-1.5 px-3 py-1 rounded-lg font-bold text-sm ${getStatusStyle(
+                        deposit.depositStatus || deposit.status
+                      )}`}
+                    >
+                      {(deposit.depositStatus || deposit.status) === "PAID" && (
+                        <CheckCircle className="w-4 h-4" />
+                      )}
+                      {getStatusLabel(deposit.depositStatus || deposit.status)}
+                    </span>
+                  </div>
+
+                  {deposit.refundDate && (
+                    <div className="flex items-start gap-3 p-4 bg-slate-50 rounded-xl">
+                      <Calendar className="w-5 h-5 text-slate-600 mt-0.5" />
+                      <div className="flex-1">
+                        <p className="text-xs text-slate-500 mb-1">환불일자</p>
+                        <p className="font-semibold text-slate-900">{deposit.refundDate}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {deposit.refundAmount && (
+                    <div className="flex items-center justify-between p-4 bg-emerald-50 rounded-xl border border-emerald-100">
+                      <span className="text-slate-600 font-medium">환불금액</span>
+                      <span className="font-bold text-emerald-600">
+                        {deposit.refundAmount.toLocaleString()}원
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Info Messages */}
+                {(deposit.depositStatus === "REFUNDED" || deposit.status === "REFUNDED") && (
+                  <div className="bg-emerald-50 p-4 rounded-xl border border-emerald-100 flex items-start gap-3">
+                    <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                    <p className="text-sm text-emerald-700">
+                      환불이 완료된 보증금입니다. 등록된 정산 계좌로 입금되었습니다.
+                    </p>
+                  </div>
+                )}
+
+                {(deposit.depositStatus === "FORFEITED" || deposit.status === "FORFEITED") && (
+                  <div className="bg-red-50 p-4 rounded-xl border border-red-100 flex items-start gap-3">
+                    <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                    <p className="text-sm text-red-700">
+                      몰수된 보증금입니다. 파티 시작 후 탈퇴로 인해 방장에게 정산됩니다.
+                    </p>
+                  </div>
+                )}
+
+                {(deposit.depositStatus === "PAID" || deposit.status === "PAID") && (
+                  <div className="bg-blue-50 p-4 rounded-xl border border-blue-100 flex items-start gap-3">
+                    <ShieldCheck className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                    <p className="text-sm text-blue-700">
+                      안전하게 보관중인 보증금입니다. 파티 종료 시 전액 환불됩니다.
+                    </p>
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          </div>
+        </>
+      )}
+    </AnimatePresence>
+  );
 }

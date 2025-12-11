@@ -1,161 +1,208 @@
 import { useState } from "react";
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-} from "@/components/ui/dialog";
-import { retryPayment } from "@/api/paymentApi";
-import { RefreshCw, Phone, AlertCircle } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { X, RefreshCw, Phone, AlertCircle, CreditCard, Calendar, CheckCircle } from "lucide-react";
+import { retryPayment } from "../../api/paymentApi";
 
 export default function PaymentDetailModal({ isOpen, onClose, payment, onRetrySuccess }) {
-    const [isRetrying, setIsRetrying] = useState(false);
+  const [isRetrying, setIsRetrying] = useState(false);
 
-    if (!payment) return null;
+  if (!payment) return null;
 
-    const handleRetry = async () => {
-        if (!payment.paymentId) return;
+  const handleRetry = async () => {
+    if (!payment.paymentId) return;
 
-        setIsRetrying(true);
-        try {
-            await retryPayment(payment.paymentId);
-            alert("결제가 성공적으로 완료되었습니다!");
-            if (onRetrySuccess) {
-                onRetrySuccess();
-            }
-            onClose();
-        } catch (error) {
-            const errorMessage = error.response?.data?.message || "결제 재시도에 실패했습니다.";
-            alert(errorMessage);
-        } finally {
-            setIsRetrying(false);
-        }
-    };
+    setIsRetrying(true);
+    try {
+      await retryPayment(payment.paymentId);
+      alert("결제가 성공적으로 완료되었습니다!");
+      if (onRetrySuccess) {
+        onRetrySuccess();
+      }
+      onClose();
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || "결제 재시도에 실패했습니다.";
+      alert(errorMessage);
+    } finally {
+      setIsRetrying(false);
+    }
+  };
 
-    // 재시도 가능 여부 확인
-    const canRetry = payment.paymentStatus === "FAILED" &&
-        (payment.canRetry === true ||
-            (payment.attemptNumber === undefined || payment.attemptNumber < 4));
+  // 재시도 가능 여부 확인
+  const canRetry =
+    payment.paymentStatus === "FAILED" &&
+    (payment.canRetry === true || payment.attemptNumber === undefined || payment.attemptNumber < 4);
 
-    // 최대 재시도 횟수 초과 여부
-    const maxRetryExceeded = payment.paymentStatus === "FAILED" &&
-        payment.attemptNumber >= 4;
+  // 최대 재시도 횟수 초과 여부
+  const maxRetryExceeded = payment.paymentStatus === "FAILED" && payment.attemptNumber >= 4;
 
-    return (
-        <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="sm:max-w-md">
-                <DialogHeader>
-                    <DialogTitle>결제 상세 정보</DialogTitle>
-                    <DialogDescription>결제 내역의 상세 정보입니다.</DialogDescription>
-                </DialogHeader>
-                <div className="space-y-4">
-                    <div className="flex justify-between items-center border-b pb-4">
-                        <div className="text-sm text-gray-500">결제 금액</div>
-                        <div className="text-xl font-bold">
-                            {payment.paymentAmount?.toLocaleString()}원
-                        </div>
-                    </div>
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <>
+          {/* Backdrop */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
+          />
 
-                    <div className="space-y-3 text-sm">
-                        <div className="flex justify-between">
-                            <span className="text-gray-500">상품명</span>
-                            <span className="font-medium">{payment.productName}</span>
-                        </div>
-                        <div className="flex justify-between">
-                            <span className="text-gray-500">결제일시</span>
-                            <span>{payment.paymentDate?.replace('T', ' ').split('.')[0] || payment.paymentDate}</span>
-                        </div>
-                        <div className="flex justify-between">
-                            <span className="text-gray-500">결제수단</span>
-                            <span>{payment.paymentMethod}</span>
-                        </div>
-                        <div className="flex justify-between">
-                            <span className="text-gray-500">카드정보</span>
-                            <span>
-                                {payment.cardCompany} {payment.cardNumber}
-                            </span>
-                        </div>
-                        <div className="flex justify-between">
-                            <span className="text-gray-500">상태</span>
-                            <span
-                                className={
-                                    payment.paymentStatus === "COMPLETED"
-                                        ? "text-green-600 font-bold"
-                                        : payment.paymentStatus === "FAILED"
-                                            ? "text-red-600 font-bold"
-                                            : "text-yellow-600 font-bold"
-                                }
-                            >
-                                {payment.paymentStatus === "COMPLETED" ? "결제완료"
-                                    : payment.paymentStatus === "FAILED" ? "결제실패"
-                                        : "처리중"}
-                            </span>
-                        </div>
-                    </div>
-
-                    {/* 재시도 정보가 있다면 표시 */}
-                    {payment.retryStatus && (
-                        <div className="bg-red-50 p-3 rounded-lg border border-red-100 mt-4">
-                            <h4 className="text-red-700 font-bold mb-2 text-sm">
-                                재시도 정보
-                            </h4>
-                            <div className="space-y-1 text-xs text-red-600">
-                                <div className="flex justify-between">
-                                    <span>시도 횟수</span>
-                                    <span>{payment.attemptNumber}회 / 4회</span>
-                                </div>
-                                {payment.nextRetryDate && (
-                                    <div className="flex justify-between">
-                                        <span>다음 예정일</span>
-                                        <span>{payment.nextRetryDate}</span>
-                                    </div>
-                                )}
-                                <div className="mt-1 pt-1 border-t border-red-200">
-                                    <span className="block mb-1">실패 사유:</span>
-                                    <span>{payment.retryReason || payment.errorMessage}</span>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* 결제 재시도 버튼 (FAILED 상태이고 재시도 가능한 경우) */}
-                    {canRetry && (
-                        <button
-                            onClick={handleRetry}
-                            disabled={isRetrying}
-                            className="w-full flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-[#ea580c] to-[#c2410c] text-white rounded-xl font-bold hover:shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                            <RefreshCw className={`w-5 h-5 ${isRetrying ? 'animate-spin' : ''}`} />
-                            {isRetrying ? "결제 처리 중..." : "결제 재시도"}
-                        </button>
-                    )}
-
-                    {/* 최대 재시도 횟수 초과 시 고객센터 안내 */}
-                    {maxRetryExceeded && (
-                        <div className="bg-amber-50 p-4 rounded-lg border border-amber-200">
-                            <div className="flex items-start gap-3">
-                                <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
-                                <div>
-                                    <p className="text-sm font-bold text-amber-800 mb-1">
-                                        최대 재시도 횟수를 초과했습니다
-                                    </p>
-                                    <p className="text-xs text-amber-700 mb-3">
-                                        결제 문제가 지속되면 고객센터로 문의해주세요.
-                                    </p>
-                                    <a
-                                        href="tel:1588-0000"
-                                        className="inline-flex items-center gap-2 px-4 py-2 bg-amber-600 text-white rounded-lg text-sm font-semibold hover:bg-amber-700 transition-colors"
-                                    >
-                                        <Phone className="w-4 h-4" />
-                                        고객센터 연결
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    )}
+          {/* Modal */}
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto"
+            >
+              {/* Header */}
+              <div className="flex items-center justify-between p-6 border-b border-slate-200">
+                <div>
+                  <h2 className="text-xl font-bold text-slate-900">결제 상세</h2>
+                  <p className="text-sm text-slate-500 mt-1">결제 내역의 상세 정보입니다</p>
                 </div>
-            </DialogContent>
-        </Dialog>
-    );
+                <button
+                  onClick={onClose}
+                  className="w-8 h-8 rounded-lg hover:bg-slate-100 flex items-center justify-center transition-colors"
+                >
+                  <X className="w-5 h-5 text-slate-500" />
+                </button>
+              </div>
+
+              {/* Content */}
+              <div className="p-6 space-y-6">
+                {/* Amount */}
+                <div className="text-center py-6 bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl">
+                  <p className="text-sm text-slate-600 mb-2">결제 금액</p>
+                  <p className="text-3xl font-bold text-slate-900">
+                    {payment.paymentAmount?.toLocaleString()}
+                    <span className="text-lg text-slate-500 ml-1">원</span>
+                  </p>
+                </div>
+
+                {/* Details */}
+                <div className="space-y-4">
+                  <div className="flex items-start gap-3 p-4 bg-slate-50 rounded-xl">
+                    <CreditCard className="w-5 h-5 text-blue-600 mt-0.5" />
+                    <div className="flex-1">
+                      <p className="text-xs text-slate-500 mb-1">상품명</p>
+                      <p className="font-semibold text-slate-900">{payment.productName}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3 p-4 bg-slate-50 rounded-xl">
+                    <Calendar className="w-5 h-5 text-purple-600 mt-0.5" />
+                    <div className="flex-1">
+                      <p className="text-xs text-slate-500 mb-1">결제일시</p>
+                      <p className="font-semibold text-slate-900">
+                        {payment.paymentDate?.replace("T", " ").split(".")[0] || payment.paymentDate}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="p-4 bg-slate-50 rounded-xl">
+                      <p className="text-xs text-slate-500 mb-1">결제수단</p>
+                      <p className="font-semibold text-slate-900 text-sm">{payment.paymentMethod}</p>
+                    </div>
+                    <div className="p-4 bg-slate-50 rounded-xl">
+                      <p className="text-xs text-slate-500 mb-1">카드정보</p>
+                      <p className="font-semibold text-slate-900 text-sm">
+                        {payment.cardCompany} {payment.cardNumber}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
+                    <span className="text-slate-600 font-medium">상태</span>
+                    <span
+                      className={`flex items-center gap-1.5 px-3 py-1 rounded-lg font-bold text-sm ${
+                        payment.paymentStatus === "COMPLETED"
+                          ? "bg-emerald-500 text-white"
+                          : payment.paymentStatus === "FAILED"
+                          ? "bg-red-500 text-white"
+                          : "bg-amber-500 text-white"
+                      }`}
+                    >
+                      {payment.paymentStatus === "COMPLETED" && <CheckCircle className="w-4 h-4" />}
+                      {payment.paymentStatus === "COMPLETED"
+                        ? "결제완료"
+                        : payment.paymentStatus === "FAILED"
+                        ? "결제실패"
+                        : "처리중"}
+                    </span>
+                  </div>
+                </div>
+
+                {/* 재시도 정보가 있다면 표시 */}
+                {payment.retryStatus && (
+                  <div className="bg-red-50 p-4 rounded-xl border border-red-100">
+                    <div className="flex items-start gap-2 mb-3">
+                      <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                      <h4 className="text-red-700 font-bold text-sm">재시도 정보</h4>
+                    </div>
+                    <div className="space-y-2 text-sm">
+                      <div className="flex justify-between text-red-600">
+                        <span>시도 횟수</span>
+                        <span className="font-semibold">
+                          {payment.attemptNumber}회 / 4회
+                        </span>
+                      </div>
+                      {payment.nextRetryDate && (
+                        <div className="flex justify-between text-red-600">
+                          <span>다음 예정일</span>
+                          <span className="font-semibold">{payment.nextRetryDate}</span>
+                        </div>
+                      )}
+                      <div className="mt-2 pt-2 border-t border-red-200 text-red-700">
+                        <span className="block text-xs mb-1 font-semibold">실패 사유:</span>
+                        <span className="text-xs">{payment.retryReason || payment.errorMessage}</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* 결제 재시도 버튼 */}
+                {canRetry && (
+                  <button
+                    onClick={handleRetry}
+                    disabled={isRetrying}
+                    className="w-full flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-bold hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <RefreshCw className={`w-5 h-5 ${isRetrying ? "animate-spin" : ""}`} />
+                    {isRetrying ? "결제 처리 중..." : "결제 재시도"}
+                  </button>
+                )}
+
+                {/* 최대 재시도 횟수 초과 시 고객센터 안내 */}
+                {maxRetryExceeded && (
+                  <div className="bg-amber-50 p-4 rounded-xl border border-amber-200">
+                    <div className="flex items-start gap-3">
+                      <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                      <div>
+                        <p className="text-sm font-bold text-amber-800 mb-1">
+                          최대 재시도 횟수를 초과했습니다
+                        </p>
+                        <p className="text-xs text-amber-700 mb-3">
+                          결제 문제가 지속되면 고객센터로 문의해주세요.
+                        </p>
+                        <a
+                          href="tel:1588-0000"
+                          className="inline-flex items-center gap-2 px-4 py-2 bg-amber-600 text-white rounded-lg text-sm font-semibold hover:bg-amber-700 transition-colors"
+                        >
+                          <Phone className="w-4 h-4" />
+                          고객센터 연결
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          </div>
+        </>
+      )}
+    </AnimatePresence>
+  );
 }
