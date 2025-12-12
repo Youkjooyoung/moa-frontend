@@ -26,31 +26,15 @@ const processQueue = (error, token = null) => {
 
 httpClient.interceptors.request.use(
   async (config) => {
-    const url = config.url || "";
-
-    const noAuthNeeded = [
-      "/auth/login",
-      "/auth/register",
-      "/auth/refresh",
-      "/auth/logout",
-      "/users",
-      "/oauth/kakao/auth",
-      "/oauth/google/auth",
-    ];
-
-    const isAuthInit =
-      url.includes("/oauth/google/auth") || url.includes("/oauth/kakao/auth");
-
-    // 공개 엔드포인트는 토큰 없이 통과
-    if (noAuthNeeded.some((path) => url.startsWith(path)) || isAuthInit) {
-      return config;
-    }
-
     const { accessToken } = useAuthStore.getState();
 
     if (accessToken) {
-      config.headers = config.headers || {};
+      if (!config.headers) {
+        config.headers = {};
+      }
       config.headers.Authorization = `Bearer ${accessToken}`;
+    } else {
+      console.warn("No access token found.");
     }
 
     return config;
@@ -105,7 +89,7 @@ httpClient.interceptors.response.use(
         if (!apiRes.success) {
           clearAuth();
           processQueue(
-            new Error(apiRes.error?.message || "새 토큰 발급에 실패했습니다."),
+            new Error(apiRes.error?.message || "토큰 갱신에 실패했습니다."),
             null
           );
           return Promise.reject(error);
