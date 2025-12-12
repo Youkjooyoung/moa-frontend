@@ -1,7 +1,7 @@
 import { setupOtp, verifyOtp, disableOtpVerify } from "@/api/authApi";
-import httpClient from "@/api/httpClient";
 import { useOtpStore } from "@/store/user/otpStore";
 import { useMyPageStore } from "@/store/user/myPageStore";
+import { useAuthStore } from "@/store/authStore";
 
 export function otpHandlers() {
   const openSetup = async () => {
@@ -63,8 +63,9 @@ export function otpHandlers() {
         }
       }
 
-      const me = await httpClient.get("/users/me");
-      if (me.success) useMyPageStore.getState().setUser(me.data);
+      await useAuthStore.getState().fetchSession();
+      const authedUser = useAuthStore.getState().user;
+      if (authedUser) useMyPageStore.getState().setUser(authedUser);
 
       alert(mode === "enable" ? "OTP 활성화 완료" : "OTP 해제 완료");
 
