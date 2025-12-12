@@ -1,92 +1,123 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import httpClient from "@/api/httpClient";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuthStore } from "@/store/authStore";
+import {
+  fetchCurrentUser,
+  oauthGoogleCallback,
+  oauthTransfer,
+} from "@/api/authApi";
 
 export default function OAuthGooglePage() {
+  const [params] = useSearchParams();
+  const code = params.get("code");
+  const rawState = params.get("state") || "login";
   const navigate = useNavigate();
-  const { setTokens, setUser } = useAuthStore();
+  const { setTokens, setUser, clearAuth } = useAuthStore();
 
   useEffect(() => {
+    if (!code) {
+      alert("Google 인증 코드가 존재하지 않습니다.");
+      navigate("/login", { replace: true });
+      return;
+    }
+
     const run = async () => {
       try {
-        const params = new URLSearchParams(window.location.search);
-        const code = params.get("code");
-        const state = params.get("state") || "login";
-
-        if (!code) {
-          alert("Google 인증 코드가 존재하지 않습니다.");
-          navigate("/login", { replace: true });
-          return;
+        const res = await oauthGoogleCallback({ code, mode: rawState });
+        if (!res?.success) {
+          throw new Error(res?.error?.message || "Google 로그인에 실패했습니다.");
         }
 
-        const res = await httpClient.get("/oauth/google/callback", {
-          params: { code, mode: state },
-        });
+        const {
+          status,
+          accessToken,
+          refreshToken,
+          accessTokenExpiresIn,
+          expiresIn,
+          provider,
+          providerUserId,
+          email,
+        } = res.data || {};
 
-        if (!res.success) {
-          alert(res.error?.message || "구글 로그인에 실패했습니다.");
-          navigate("/login", { replace: true });
-          return;
-        }
-
-        const data = res.data || {};
-        const { status, accessToken, refreshToken, accessTokenExpiresIn } = data;
-
-        if (status === "LOGIN") {
-          if (accessToken) {
-            setTokens({ accessToken, refreshToken, accessTokenExpiresIn });
-            const me = await httpClient.get("/users/me");
-            if (me.success) setUser(me.data);
+        if (status === "SUCCESS") {
+          if (accessToken && refreshToken) {
+            setTokens({
+              accessToken,
+              refreshToken,
+              accessTokenExpiresIn: accessTokenExpiresIn ?? expiresIn,
+            });
+            try {
+              const meRes = await fetchCurrentUser();
+              if (meRes?.success && meRes.data) {
+                setUser(meRes.data);
+              }
+            } catch {
+              clearAuth();
+            }
           }
           navigate("/", { replace: true });
           return;
         }
 
         if (status === "NEED_REGISTER") {
-          if (state === "connect") {
-            alert(
-              "해당 소셜 계정으로 가입 이력이 없어 현재 계정과 연결할 수 없습니다."
-            );
-            navigate("/mypage", { replace: true });
-            return;
-          }
           navigate("/register/social", {
-            state: {
-              provider: "google",
-              providerUserId: data.providerUserId,
-            },
+            replace: true,
+            state: { provider, providerUserId, email },
           });
           return;
         }
 
-        if (status === "CONNECT") {
-          alert("구글 계정 연동이 완료되었습니다.");
-          navigate("/mypage", { replace: true });
+        if (status === "NEED_PHONE_CONNECT") {
+          navigate("/oauth/phone-connect", {
+            replace: true,
+            state: { provider, providerUserId },
+          });
           return;
         }
 
         if (status === "NEED_TRANSFER") {
-          const { fromUserId, toUserId } = data;
-          alert(
-            "계정 이관이 필요합니다. 고객센터로 문의해주세요.\n" +
-              `fromUserId: ${fromUserId || ""}, toUserId: ${toUserId || ""}`
+          const ok = window.confirm(
+            "이미 다른 계정에 연결된 소셜 계정입니다. 이전하시겠습니까?"
           );
-          navigate("/mypage", { replace: true });
-          return;
+          if (ok) {
+            try {
+              const transferRes = await oauthTransfer({
+                provider,
+                providerUserId,
+              });
+              if (!transferRes?.success) {
+                throw new Error(
+                  transferRes?.error?.message || "계정 이전에 실패했습니다."
+                );
+              }
+              navigate("/", { replace: true });
+              return;
+            } catch (err) {
+              const message =
+                err?.message ||
+                err?.response?.data?.message ||
+                "계정 이전에 실패했습니다.";
+              alert(message);
+              navigate("/login", { replace: true });
+              return;
+            }
+          } else {
+            navigate("/login", { replace: true });
+            return;
+          }
         }
 
-        alert("알 수 없는 상태입니다. 다시 시도해주세요.");
+        alert("지원하지 않는 상태입니다. 다시 시도해주세요.");
         navigate("/login", { replace: true });
       } catch (err) {
         console.error(err);
-        alert("Google 인증 처리 중 오류가 발생했습니다.");
+        alert(err?.message || "Google 인증 처리 중 오류가 발생했습니다.");
         navigate("/login", { replace: true });
       }
     };
 
     run();
-  }, [navigate, setTokens, setUser]);
+  }, [code, rawState, navigate, setTokens, setUser, clearAuth]);
 
   return (
     <div className="w-full h-screen flex items-center justify-center text-lg">

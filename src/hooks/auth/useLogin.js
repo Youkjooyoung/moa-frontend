@@ -34,14 +34,13 @@ export const PASSWORD_STORAGE_KEYS = [
 ];
 
 export const purgeLoginPasswordKeys = (primaryStorage, secondaryStorage) => {
-  const targets = PASSWORD_STORAGE_KEYS;
   const storages = [primaryStorage, secondaryStorage].filter(Boolean);
   storages.forEach((storage) => {
-    targets.forEach((key) => {
+    PASSWORD_STORAGE_KEYS.forEach((key) => {
       try {
         storage.removeItem(key);
-      } catch (e) {
-        // ignore
+      } catch {
+        /* ignore */
       }
     });
   });
@@ -55,7 +54,7 @@ export const applyRememberEmail = (storage, email, remember) => {
       storage.removeItem("login-email");
     }
   } catch (e) {
-    console.warn("Remember email storage failed", e);
+    console.warn("이메일 저장 실패", e);
   }
 };
 
@@ -88,20 +87,23 @@ export const useLoginPageLogic = () => {
     const trimmedEmail = email.trim();
 
     if (!trimmedEmail) {
-      setErrors((prev) => ({ ...prev, email: "?´ë©”?¼ì„ ?…ë ¥?´ì£¼?¸ìš”." }));
+      setErrors((prev) => ({
+        ...prev,
+        email: "이메일을 입력해주세요.",
+      }));
       return;
     }
 
     try {
       const IMP = await loadIamport();
       if (!IMP) {
-        alert("ë³¸ì¸?¸ì¦ ëª¨ë“ˆ ë¡œë“œ ?¤íŒ¨");
+        alert("본인인증 모듈 로드 실패");
         return;
       }
 
       const startRes = await startPassAuth();
       if (!startRes.success) {
-        alert(startRes.error?.message || "ë³¸ì¸?¸ì¦ ?œìž‘ ?¤íŒ¨");
+        alert(startRes.error?.message || "본인인증 시작 실패");
         return;
       }
 
@@ -110,7 +112,7 @@ export const useLoginPageLogic = () => {
 
       IMP.certification({ merchant_uid: merchantUid }, async (rsp) => {
         if (!rsp.success) {
-          alert("ë³¸ì¸?¸ì¦??ì·¨ì†Œ?˜ì—ˆê±°ë‚˜ ?¤íŒ¨?ˆìŠµ?ˆë‹¤.");
+          alert("본인인증이 취소되었거나 실패했습니다.");
           return;
         }
 
@@ -121,29 +123,29 @@ export const useLoginPageLogic = () => {
           });
 
           if (!verifyRes.success) {
-            alert(verifyRes.error?.message || "ë³¸ì¸?¸ì¦ ê²€ì¦??¤íŒ¨");
+            alert(verifyRes.error?.message || "본인인증 검증 실패");
             return;
           }
 
-          alert("ë³¸ì¸?¸ì¦ ?„ë£Œ! ê³„ì • ? ê¸ˆ???´ì œ?˜ì—ˆ?µë‹ˆ??");
+          alert("본인인증 완료! 계정 잠금이 해제되었습니다.");
         } catch (e) {
           console.error(e);
-          alert("ë³¸ì¸?¸ì¦ ê²€ì¦?ê³¼ì •?ì„œ ?¤ë¥˜ê°€ ë°œìƒ?ˆìŠµ?ˆë‹¤.");
+          alert("본인인증 검증 중 오류가 발생했습니다.");
         }
       });
     } catch (e) {
       console.error(e);
-      alert("ë³¸ì¸?¸ì¦ ì§„í–‰ ì¤??¤ë¥˜ê°€ ë°œìƒ?ˆìŠµ?ˆë‹¤.");
+      alert("본인인증 진행 중 오류가 발생했습니다.");
     }
-  }, [email, setErrors]);
+  }, [email]);
 
   const handleEmailLogin = useCallback(async () => {
     const trimmedEmail = email.trim();
     const trimmedPassword = password.trim();
     const nextErrors = { email: "", password: "", otp: "" };
 
-    if (!trimmedEmail) nextErrors.email = "?´ë©”?¼ì„ ?…ë ¥?´ì£¼?¸ìš”.";
-    if (!trimmedPassword) nextErrors.password = "ë¹„ë?ë²ˆí˜¸ë¥??…ë ¥?´ì£¼?¸ìš”.";
+    if (!trimmedEmail) nextErrors.email = "이메일을 입력해주세요.";
+    if (!trimmedPassword) nextErrors.password = "비밀번호를 입력해주세요.";
 
     setErrors(nextErrors);
     if (nextErrors.email || nextErrors.password) return;
@@ -157,11 +159,12 @@ export const useLoginPageLogic = () => {
       });
 
       if (!response.success) {
-        alert(response.error?.message || "ë¡œê·¸?¸ì— ?¤íŒ¨?ˆìŠµ?ˆë‹¤.");
+        alert(response.error?.message || "로그인에 실패했습니다.");
         return;
       }
 
       const data = response.data;
+
       if (data.otpRequired) {
         setField("otpRequired", true);
         setField("otpModalOpen", true);
@@ -173,11 +176,9 @@ export const useLoginPageLogic = () => {
       }
 
       const { accessToken, refreshToken, accessTokenExpiresIn } = data;
-
       setTokens({ accessToken, refreshToken, accessTokenExpiresIn });
 
       const me = await httpClient.get("/users/me");
-
       if (me?.success) {
         useAuthStore.getState().setUser(me.data);
       }
@@ -185,20 +186,18 @@ export const useLoginPageLogic = () => {
       applyRememberEmail(localStorage, trimmedEmail, remember);
       purgeLoginPasswordKeys(localStorage, sessionStorage);
       setField("password", "");
-      setField("otpCode", "");
       resetOtp();
       localStorage.setItem("remember", remember ? "true" : "false");
+
       navigate("/", { replace: true });
     } catch (error) {
-      console.error(error);
-
       const apiError = error?.response?.data?.error;
       const code = apiError?.code;
-      const message = apiError?.message || "ë¡œê·¸??ì¤??¤ë¥˜ê°€ ë°œìƒ?ˆìŠµ?ˆë‹¤.";
+      const message = apiError?.message || "로그인 중 오류가 발생했습니다.";
 
-      if (code === "E403" && message.includes("ë¡œê·¸??5???¤íŒ¨")) {
+      if (code === "E403" && message.includes("로그인 5회 실패")) {
         const start = window.confirm(
-          "ë¡œê·¸??5???¤íŒ¨ë¡?ê³„ì •??? ê¸ˆ ì²˜ë¦¬?˜ì—ˆ?µë‹ˆ??\në³¸ì¸?¸ì¦?¼ë¡œ ì¦‰ì‹œ ? ê¸ˆ???´ì œ?˜ì‹œê² ìŠµ?ˆê¹Œ?"
+          "로그인 5회 실패로 계정이 잠겼습니다.\n본인인증으로 즉시 해제하시겠습니까?"
         );
         if (start) {
           await handleUnlockByCertification();
@@ -213,48 +212,29 @@ export const useLoginPageLogic = () => {
   }, [
     email,
     password,
-    navigate,
-    setTokens,
-    setField,
-    handleUnlockByCertification,
     remember,
     loginLoading,
+    navigate,
+    setField,
+    setTokens,
     resetOtp,
+    handleUnlockByCertification,
   ]);
-
-  const handleOtpChange = (value) => {
-    setErrors((prev) => ({ ...prev, otp: "" }));
-    if (otpMode === "otp") {
-      const onlyNumber = value.replace(/\D/g, "").slice(0, 6);
-      setField("otpCode", onlyNumber);
-    } else {
-      setField("otpCode", value.trim().toUpperCase());
-    }
-  };
 
   const handleOtpConfirm = useCallback(async () => {
     if (otpLoading) return;
 
-    if (otpMode === "otp") {
-      if (!otpCode || otpCode.length !== 6) {
-        setErrors((prev) => ({
-          ...prev,
-          otp: "6?ë¦¬ OTP ì½”ë“œë¥??…ë ¥?´ì£¼?¸ìš”.",
-        }));
-        return;
-      }
-    } else {
-      if (!otpCode) {
-        setErrors((prev) => ({
-          ...prev,
-          otp: "ë°±ì—… ì½”ë“œë¥??…ë ¥?´ì£¼?¸ìš”.",
-        }));
-        return;
-      }
+    if (otpMode === "otp" && (!otpCode || otpCode.length !== 6)) {
+      setErrors((prev) => ({
+        ...prev,
+        otp: "6자리 OTP 코드를 입력해주세요.",
+      }));
+      return;
     }
 
     try {
       setOtpLoading(true);
+
       const url =
         otpMode === "otp"
           ? "/auth/login/otp-verify"
@@ -267,40 +247,23 @@ export const useLoginPageLogic = () => {
       });
 
       if (!res.success) {
-        const apiError = res.error;
-        const code = apiError?.code;
-        const defaultMessage =
-          otpMode === "otp"
-            ? "OTP ?¸ì¦???¤íŒ¨?ˆìŠµ?ˆë‹¤."
-            : "ë°±ì—… ì½”ë“œ ?¸ì¦???¤íŒ¨?ˆìŠµ?ˆë‹¤.";
-        const message = apiError?.message || defaultMessage;
-        alert(code ? `[${code}] ${message}` : message);
+        alert(res.error?.message || "OTP 인증 실패");
         return;
       }
 
       const { accessToken, refreshToken, accessTokenExpiresIn } = res.data;
-
       setTokens({ accessToken, refreshToken, accessTokenExpiresIn });
 
       const me = await httpClient.get("/users/me");
-
       if (me?.success) {
         useAuthStore.getState().setUser(me.data);
       }
 
       resetOtp();
-      setOtpMode("otp");
       navigate("/", { replace: true });
-    } catch (error) {
-      console.error(error);
-      const apiError = error?.response?.data?.error;
-      const code = apiError?.code;
-      const defaultMessage =
-        otpMode === "otp"
-          ? "OTP ?¸ì¦ ì²˜ë¦¬ ì¤??¤ë¥˜ê°€ ë°œìƒ?ˆìŠµ?ˆë‹¤."
-          : "ë°±ì—… ì½”ë“œ ?¸ì¦ ì²˜ë¦¬ ì¤??¤ë¥˜ê°€ ë°œìƒ?ˆìŠµ?ˆë‹¤.";
-      const message = apiError?.message || defaultMessage;
-      alert(code ? `[${code}] ${message}` : message);
+    } catch (e) {
+      console.error(e);
+      alert("OTP 인증 처리 중 오류가 발생했습니다.");
     } finally {
       setOtpLoading(false);
     }
@@ -308,87 +271,14 @@ export const useLoginPageLogic = () => {
     otpCode,
     otpToken,
     otpMode,
-    navigate,
-    resetOtp,
-    setTokens,
-    setErrors,
     otpLoading,
     email,
+    resetOtp,
+    setTokens,
+    navigate,
   ]);
 
   useEffect(() => {
-    const handler = (e) => {
-      if (e.key !== "Enter") return;
-
-      const state = useLoginStore.getState();
-      if (state.otpModalOpen) {
-        handleOtpConfirm();
-      } else {
-        handleEmailLogin();
-      }
-    };
-
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
-  }, [handleEmailLogin, handleOtpConfirm]);
-
-  const handleKakaoLogin = () => {
-    const redirectUri = import.meta.env.VITE_KAKAO_REDIRECT_URI;
-
-    if (!window.Kakao) {
-      alert("ì¹´ì¹´??SDK ë¡œë“œ ?¤íŒ¨");
-      return;
-    }
-
-    if (!window.Kakao.isInitialized()) {
-      window.Kakao.init(import.meta.env.VITE_KAKAO_JAVASCRIPT_KEY);
-    }
-
-    window.Kakao.Auth.authorize({
-      redirectUri,
-      state: "login",
-    });
-  };
-
-  const handleGoogleLogin = useCallback(async () => {
-    if (googleLoading) return;
-    try {
-      setGoogleLoading(true);
-
-      const redirectUri = import.meta.env.VITE_GOOGLE_REDIRECT_URI;
-
-      const res = await httpClient.get("/oauth/google/auth", {
-        params: {
-          mode: "login",
-          redirectUri: redirectUri,
-        },
-      });
-
-      if (!res.success) {
-        alert(res.error?.message || "êµ¬ê? ë¡œê·¸???”ì²­???¤íŒ¨?ˆìŠµ?ˆë‹¤.");
-        return;
-      }
-
-      window.location.href = res.data.url;
-    } catch (e) {
-      console.error(e);
-      alert("êµ¬ê? ë¡œê·¸??ì²˜ë¦¬ ì¤??¤ë¥˜ê°€ ë°œìƒ?ˆìŠµ?ˆë‹¤.");
-    } finally {
-      setGoogleLoading(false);
-    }
-  }, [googleLoading]);
-
-  const closeOtpModal = () => {
-    resetOtp();
-    setOtpMode("otp");
-    setErrors((prev) => ({ ...prev, otp: "" }));
-  };
-
-  useEffect(() => {
-    if (window.Kakao && !window.Kakao.isInitialized()) {
-      window.Kakao.init(import.meta.env.VITE_KAKAO_JAVASCRIPT_KEY);
-    }
-    // ì´ˆê¸° ì§„ìž… ??ë¯¼ê° ê°?ëª¨ë‘ ì´ˆê¸°??
     setField("password", "");
     setField("otpCode", "");
     resetOtp();
@@ -405,30 +295,9 @@ export const useLoginPageLogic = () => {
       setField("email", "");
       setField("remember", false);
     }
+
     purgeLoginPasswordKeys(localStorage, sessionStorage);
-  }, [setField]);
-
-  const switchToOtpMode = () => {
-    setOtpMode("otp");
-    setField("otpCode", "");
-    setErrors((prev) => ({ ...prev, otp: "" }));
-  };
-
-  const switchToBackupMode = () => {
-    setOtpMode("backup");
-    setField("otpCode", "");
-    setErrors((prev) => ({ ...prev, otp: "" }));
-  };
-
-  const handleEmailChange = (value) => {
-    setErrors((prev) => ({ ...prev, email: "" }));
-    setField("email", value);
-  };
-
-  const handlePasswordChange = (value) => {
-    setErrors((prev) => ({ ...prev, password: "" }));
-    setField("password", value);
-  };
+  }, [setField, resetOtp]);
 
   return {
     email,
@@ -438,20 +307,73 @@ export const useLoginPageLogic = () => {
     otpModalOpen,
     otpCode,
     otpMode,
-    setField,
-    handleEmailLogin,
-    handleKakaoLogin,
-    handleGoogleLogin,
-    handleOtpChange,
-    handleOtpConfirm,
-    closeOtpModal,
-    handleUnlockByCertification,
-    switchToOtpMode,
-    switchToBackupMode,
     loginLoading,
     otpLoading,
     errors,
-    handleEmailChange,
-    handlePasswordChange,
+
+    setField,
+
+    handleEmailLogin,
+    handleOtpConfirm,
+    handleUnlockByCertification,
+
+    handleEmailChange: (value) => {
+      setErrors((prev) => ({ ...prev, email: "" }));
+      setField("email", value);
+    },
+
+    handlePasswordChange: (value) => {
+      setErrors((prev) => ({ ...prev, password: "" }));
+      setField("password", value);
+    },
+
+    handleKakaoLogin: () => {
+      const redirectUri = import.meta.env.VITE_KAKAO_REDIRECT_URI;
+      if (!window.Kakao) {
+        alert("카카오 SDK 로드 실패");
+        return;
+      }
+      if (!window.Kakao.isInitialized()) {
+        window.Kakao.init(import.meta.env.VITE_KAKAO_JAVASCRIPT_KEY);
+      }
+      window.Kakao.Auth.authorize({
+        redirectUri,
+        state: "login",
+      });
+    },
+
+    handleGoogleLogin: async () => {
+      const redirectUri = import.meta.env.VITE_GOOGLE_REDIRECT_URI;
+      const res = await httpClient.get("/oauth/google/auth", {
+        params: { mode: "login", redirectUri },
+      });
+      if (res.success) {
+        window.location.href = res.data.url;
+      }
+    },
+
+    handleOtpChange: (value) => {
+      setErrors((prev) => ({ ...prev, otp: "" }));
+      if (otpMode === "otp") {
+        setField("otpCode", value.replace(/\D/g, "").slice(0, 6));
+      } else {
+        setField("otpCode", value.trim().toUpperCase());
+      }
+    },
+
+    closeOtpModal: () => {
+      resetOtp();
+      setErrors((prev) => ({ ...prev, otp: "" }));
+    },
+
+    switchToOtpMode: () => {
+      setField("otpCode", "");
+      setErrors((prev) => ({ ...prev, otp: "" }));
+    },
+
+    switchToBackupMode: () => {
+      setField("otpCode", "");
+      setErrors((prev) => ({ ...prev, otp: "" }));
+    },
   };
 };

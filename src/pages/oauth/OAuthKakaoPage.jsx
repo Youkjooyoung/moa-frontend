@@ -1,8 +1,11 @@
 import { useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import httpClient from "@/api/httpClient";
 import { useAuthStore } from "@/store/authStore";
-import { fetchCurrentUser } from "@/api/authApi";
+import {
+  fetchCurrentUser,
+  oauthKakaoCallback,
+  oauthTransfer,
+} from "@/api/authApi";
 
 export default function OAuthKakaoPage() {
   const [params] = useSearchParams();
@@ -26,14 +29,9 @@ export default function OAuthKakaoPage() {
 
     const run = async () => {
       try {
-        const res = await httpClient.get("/oauth/kakao/callback", {
-          params: { code, mode },
-        });
-
-        if (!res.success) {
-          alert(res.error?.message || "카카오 인증에 실패했습니다.");
-          navigate("/login", { replace: true });
-          return;
+        const res = await oauthKakaoCallback({ code, mode });
+        if (!res?.success) {
+          throw new Error(res?.error?.message || "카카오 인증에 실패했습니다.");
         }
 
         const {
@@ -41,25 +39,25 @@ export default function OAuthKakaoPage() {
           accessToken,
           refreshToken,
           accessTokenExpiresIn,
+          expiresIn,
           provider,
           providerUserId,
-          fromUserId,
-          toUserId,
+          email,
         } = res.data || {};
 
-        if (status === "LOGIN") {
-          if (accessToken) {
+        if (status === "SUCCESS") {
+          if (accessToken && refreshToken) {
             setTokens({
               accessToken,
               refreshToken,
-              accessTokenExpiresIn,
+              accessTokenExpiresIn: accessTokenExpiresIn ?? expiresIn,
             });
-
             try {
               const meRes = await fetchCurrentUser();
-              if (meRes.success) setUser(meRes.data);
-            } catch (e) {
-              console.error(e);
+              if (meRes?.success && meRes.data) {
+                setUser(meRes.data);
+              }
+            } catch {
               clearAuth();
             }
           }
@@ -67,89 +65,59 @@ export default function OAuthKakaoPage() {
           return;
         }
 
-        if (status === "NEED_REGISTER" && provider && providerUserId) {
-          if (mode === "connect") {
-            alert(
-              "해당 소셜 계정으로 가입 이력이 없어 현재 계정과 연결할 수 없습니다."
-            );
-            navigate("/mypage", { replace: true });
-            return;
-          }
+        if (status === "NEED_REGISTER") {
           navigate("/register/social", {
+            replace: true,
+            state: { provider, providerUserId, email },
+          });
+          return;
+        }
+
+        if (status === "NEED_PHONE_CONNECT") {
+          navigate("/oauth/phone-connect", {
             replace: true,
             state: { provider, providerUserId },
           });
           return;
         }
 
-        if (status === "CONNECT") {
-          alert("카카오 계정 연동이 완료되었습니다.");
-          navigate("/mypage", { replace: true });
-          return;
-        }
-
-        if (
-          status === "NEED_TRANSFER" &&
-          provider &&
-          providerUserId &&
-          fromUserId
-        ) {
+        if (status === "NEED_TRANSFER") {
           const ok = window.confirm(
-            "이 카카오 계정은 이미 다른 아이디에 연결되어 있습니다.\n계정 이전을 진행하시겠습니까?"
+            "이미 다른 계정에 연결된 소셜 계정입니다. 이전하시겠습니까?"
           );
-
           if (ok) {
             try {
-              const transferRes = await httpClient.post("/oauth/transfer", {
+              const transferRes = await oauthTransfer({
                 provider,
                 providerUserId,
-                fromUserId,
               });
-
-              if (!transferRes.success) {
-                alert(
-                  transferRes.error?.message || "계정 이전에 실패했습니다."
+              if (!transferRes?.success) {
+                throw new Error(
+                  transferRes?.error?.message || "계정 이전에 실패했습니다."
                 );
-                navigate("/mypage", { replace: true });
-                return;
               }
-
-              try {
-                const meRes = await fetchCurrentUser();
-                if (meRes.success) setUser(meRes.data);
-              } catch (e) {
-                console.error(e);
-                clearAuth();
-              }
-
-              alert("계정 이전이 완료되었습니다.");
-              navigate("/mypage", { replace: true });
+              navigate("/", { replace: true });
               return;
-            } catch (e) {
-              console.error(e);
-              alert(
-                e.response?.data?.error?.message ||
-                  e.response?.data?.message ||
-                  "계정 이전 처리 중 오류가 발생했습니다."
-              );
-              navigate("/mypage", { replace: true });
+            } catch (err) {
+              const message =
+                err?.message ||
+                err?.response?.data?.message ||
+                "계정 이전에 실패했습니다.";
+              alert(message);
+              navigate("/login", { replace: true });
               return;
             }
           } else {
-            navigate("/mypage", { replace: true });
+            navigate("/login", { replace: true });
             return;
           }
         }
 
-        alert("알 수 없는 상태입니다. 다시 시도해주세요.");
+        alert("지원하지 않는 상태입니다. 다시 시도해주세요.");
         navigate("/login", { replace: true });
       } catch (err) {
         console.error(err);
-        alert(
-          err.response?.data?.error?.message ||
-            err.response?.data?.message ||
-            "카카오 인증 처리 중 오류가 발생했습니다."
-        );
+        alert(err?.message || "카카오 인증 처리 중 오류가 발생했습니다.");
         navigate("/login", { replace: true });
       }
     };
@@ -164,7 +132,7 @@ export default function OAuthKakaoPage() {
           카카오 인증 처리 중...
         </div>
         <div className="text-sm text-slate-400">
-          잠시만 기다려 주세요. MoA와 연동을 준비하고 있습니다.
+          잠시만 기다려주세요. MoA가 동행을 준비하고 있습니다.
         </div>
       </div>
     </div>

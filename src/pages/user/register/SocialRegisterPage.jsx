@@ -1,19 +1,26 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import AddUserPage from "./AddUserPage";
 
 export default function SocialRegisterPage() {
   const location = useLocation();
   const navigate = useNavigate();
+  const [params] = useSearchParams();
 
-  const provider = location.state?.provider || "";
-  const providerUserId = location.state?.providerUserId || "";
+  const provider = location.state?.provider || params.get("provider");
+  const providerUserId =
+    location.state?.providerUserId || params.get("providerUserId");
+  const email = location.state?.email || params.get("email");
+
+  useEffect(() => {
+    if (!provider || !providerUserId) {
+      navigate("/login", { replace: true });
+    }
+  }, [provider, providerUserId, navigate]);
 
   if (!provider || !providerUserId) {
-    // 상태 정보가 없으면 일반 회원가입으로 돌립니다.
-    navigate("/signup", { replace: true });
     return null;
   }
 
-  // 기존 AddUserPage를 재사용해 소셜 회원가입으로 안내합니다.
-  return <AddUserPage socialInfo={{ provider, providerUserId }} />;
+  return <AddUserPage socialInfo={{ provider, providerUserId, email }} />;
 }

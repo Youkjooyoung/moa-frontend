@@ -38,8 +38,6 @@ export const useMyPage = () => {
 
     return "EMAIL";
   };
-
-  // ?�용???�보 로딩
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -47,7 +45,7 @@ export const useMyPage = () => {
         const { success, data } = res;
 
         if (!success || !data) {
-          alert("로그?�이 ?�요?�니??");
+          alert("로그인이 필요합니다");
           navigate("/login", { replace: true });
           return;
         }
@@ -56,7 +54,7 @@ export const useMyPage = () => {
         setEnabled(!!data.otpEnabled);
       } catch (e) {
         console.error(e);
-        alert("로그?�이 ?�요?�니??");
+        alert("로그인이 필요합니다");
         navigate("/login", { replace: true });
       }
     };
@@ -101,14 +99,17 @@ export const useMyPage = () => {
         const redirectUri =
           provider === "google"
             ? import.meta.env.VITE_GOOGLE_REDIRECT_URI
-            : import.meta.env.VITE_KAKAO_REDIRECT_URI; 
+            : import.meta.env.VITE_KAKAO_REDIRECT_URI;
 
         const res = await httpClient.get(`/oauth/${provider}/auth`, {
           params: { mode: "connect", redirectUri },
         });
 
         const url =
-          res?.data?.url || res?.data?.data?.url || res?.data?.data?.authUrl || "";
+          res?.data?.url ||
+          res?.data?.data?.url ||
+          res?.data?.data?.authUrl ||
+          "";
 
         if (!url) {
           throw new Error("Missing auth redirect url");
@@ -117,7 +118,9 @@ export const useMyPage = () => {
         window.location.href = url;
       } catch (err) {
         console.error("OAuth Connect Error:", err);
-        alert("�Ҽ� ���� ������ �����߽��ϴ�. ��� �� �ٽ� �õ����ּ���.");
+        alert(
+          "소셜 계정 연동 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요"
+        );
       }
     },
 
@@ -126,14 +129,14 @@ export const useMyPage = () => {
         const res = await httpClient.post("/oauth/release", { oauthId });
 
         if (res.success) {
-          alert("?�동???�제?�었?�니??");
+          alert("연동이 해제되었습니다");
           window.location.reload();
         } else {
-          alert(res.error?.message || "?�동 ?�제???�패?�습?�다.");
+          alert(res.error?.message || "연동 해제에 실패했습니다");
         }
       } catch (e) {
         console.error(e);
-        alert("?�동 ?�제 ?�류가 발생?�습?�다.");
+        alert("연동 해제 중 오류가 발생했습니다");
       }
     },
 
@@ -182,11 +185,3 @@ export const useMyPage = () => {
     },
   };
 };
-
-
-
-
-
-
-
-

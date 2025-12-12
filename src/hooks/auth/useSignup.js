@@ -1,31 +1,15 @@
-import { useEffect, useRef } from "react";
+﻿import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import httpClient from "@/api/httpClient";
 import { useSignupStore } from "@/store/user/addUserStore";
-import { signup, checkCommon, checkPhone } from "@/api/authApi";
+import { signup, checkCommon, checkPhone, fetchCurrentUser } from "@/api/authApi";
+import { useAuthStore } from "@/store/authStore";
 
-const BAD_WORDS = [
-  "fuck",
-  "shit",
-  "bitch",
-  "asshole",
-  "개새",
-  "개새끼",
-  "씨발",
-  "시발",
-  "좆",
-  "병신",
-  "썅",
-  "새끼",
-  "니미",
-  "염병",
-  "지랄",
-  "닥쳐",
-];
+const BAD_WORDS = ["fuck", "shit", "bitch", "asshole", "ssibal", "jiral"];
 
 const REGEX = {
   EMAIL: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-  NICKNAME: /^[A-Za-z0-9가-힣]{2,10}$/,
+  NICKNAME: /^[A-Za-z0-9\uAC00-\uD7A3]{2,10}$/,
   PASSWORD:
     /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()])[A-Za-z\d!@#$%^&*()]{8,20}$/,
 };
@@ -38,10 +22,11 @@ const toBase64 = (file) =>
     r.readAsDataURL(file);
   });
 
-export const useSignup = () => {
+export const useSignup = ({ mode = "normal", socialInfo } = {}) => {
   const navigate = useNavigate();
   const { form, errors, setField, setErrorMessage, reset } = useSignupStore();
-
+  const isSocial = mode === "social";
+  const { setTokens, setUser, clearAuth } = useAuthStore();
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
   const passwordCheckRef = useRef(null);
@@ -72,32 +57,30 @@ export const useSignup = () => {
   const handleBlur = () => {};
 
   /* ==============================
-      이메일 중복/형식 체크
+      ?대찓??以묐났/?뺤떇 泥댄겕
      ============================== */
   useEffect(() => {
+    if (isSocial) return;
+
     const checkEmail = async () => {
       if (!form.email) return setErrorMessage("email", "", false);
 
       if (!REGEX.EMAIL.test(form.email)) {
-        return setErrorMessage(
-          "email",
-          "이메일 형식이 올바르지 않습니다.",
-          true
-        );
+        return setErrorMessage("email", "?대찓???뺤떇???щ컮瑜댁? ?딆뒿?덈떎.", true);
       }
 
-      setErrorMessage("email", "확인 중...", false);
+      setErrorMessage("email", "?뺤씤 以?..", false);
 
       try {
         const res = await checkCommon({ type: "email", value: form.email });
         const available = res.data?.available ?? res.data?.data?.available;
         setErrorMessage(
           "email",
-          available ? "사용 가능한 이메일입니다." : "이미 사용 중입니다.",
+          available ? "?ъ슜 媛?ν븳 ?대찓?쇱엯?덈떎." : "?대? ?ъ슜 以묒엯?덈떎.",
           !available
         );
       } catch {
-        setErrorMessage("email", "중복 확인 불가 (서버 오류)", false);
+        setErrorMessage("email", "以묐났 ?뺤씤 ?ㅽ뙣 (?쒕쾭 ?ㅻ쪟)", false);
       }
     };
 
@@ -106,38 +89,39 @@ export const useSignup = () => {
   }, [form.email]);
 
   /* ==============================
-      비밀번호 규칙 검사
-     ============================== */
+      鍮꾨?踰덊샇 洹쒖튃 寃利?     ============================== */
   useEffect(() => {
+    if (isSocial) return;
+
     if (!form.password) return setErrorMessage("password", "", false);
 
     if (!REGEX.PASSWORD.test(form.password)) {
       setErrorMessage(
         "password",
-        "영문+숫자+특수문자 포함 8~20자로 입력하세요.",
+        "?곷Ц+?レ옄+?뱀닔臾몄옄 ?ы븿 8~20?먮줈 ?낅젰?댁＜?몄슂.",
         true
       );
     } else {
-      setErrorMessage("password", "사용 가능한 비밀번호입니다.", false);
+      setErrorMessage("password", "?ъ슜 媛?ν븳 鍮꾨?踰덊샇?낅땲??", false);
     }
   }, [form.password]);
 
   /* ==============================
-      비밀번호 일치 검사
-     ============================== */
+      鍮꾨?踰덊샇 ?쇱튂 寃利?     ============================== */
   useEffect(() => {
+    if (isSocial) return;
+
     if (!form.passwordCheck) return setErrorMessage("passwordCheck", "", false);
 
     if (form.password !== form.passwordCheck) {
-      setErrorMessage("passwordCheck", "비밀번호가 일치하지 않습니다.", true);
+      setErrorMessage("passwordCheck", "鍮꾨?踰덊샇媛 ?쇱튂?섏? ?딆뒿?덈떎.", true);
     } else {
-      setErrorMessage("passwordCheck", "비밀번호가 일치합니다.", false);
+      setErrorMessage("passwordCheck", "鍮꾨?踰덊샇媛 ?쇱튂?⑸땲??", false);
     }
   }, [form.passwordCheck, form.password]);
 
   /* ==============================
-      닉네임 검사 + 금칙어 검사
-     ============================== */
+      ?됰꽕?꾧?利? 湲덉튃?닿?利?     ============================== */
   useEffect(() => {
     const checkNickname = async () => {
       if (!form.nickname) return setErrorMessage("nickname", "", false);
@@ -145,7 +129,7 @@ export const useSignup = () => {
       if (!REGEX.NICKNAME.test(form.nickname)) {
         return setErrorMessage(
           "nickname",
-          "닉네임은 2~10자, 한글/영문/숫자만 가능합니다.",
+          "?됰꽕?꾩? 2~10?먯쓽 ?쒓?/?곷Ц/?レ옄留?媛?ν빀?덈떎.",
           true
         );
       }
@@ -153,12 +137,12 @@ export const useSignup = () => {
       if (BAD_WORDS.some((bad) => form.nickname.toLowerCase().includes(bad))) {
         return setErrorMessage(
           "nickname",
-          "부적절한 단어가 포함될 수 없습니다.",
+          "遺?곸젅???⑥뼱媛 ?ы븿?섏뼱 ?덉뒿?덈떎.",
           true
         );
       }
 
-      setErrorMessage("nickname", "확인 중...", false);
+      setErrorMessage("nickname", "?뺤씤 以?..", false);
 
       try {
         const res = await checkCommon({
@@ -168,11 +152,11 @@ export const useSignup = () => {
         const available = res.data?.available ?? res.data?.data?.available;
         setErrorMessage(
           "nickname",
-          available ? "사용 가능한 닉네임입니다." : "이미 사용 중입니다.",
+          available ? "?ъ슜 媛?ν븳 ?됰꽕?꾩엯?덈떎." : "?대? ?ъ슜 以묒엯?덈떎.",
           !available
         );
       } catch {
-        setErrorMessage("nickname", "중복 확인 불가 (서버 오류)", false);
+        setErrorMessage("nickname", "以묐났 ?뺤씤 ?ㅽ뙣 (?쒕쾭 ?ㅻ쪟)", false);
       }
     };
 
@@ -181,16 +165,17 @@ export const useSignup = () => {
   }, [form.nickname]);
 
   /* ==============================
-      PASS 본인인증
+      PASS 蹂몄씤?몄쬆
      ============================== */
   const handlePassAuth = async () => {
     try {
       const start = await httpClient.get("/users/pass/start");
-      if (!start?.success) throw new Error(start?.error?.message || "본인인증 시작 실패");
+      if (!start?.success)
+        throw new Error(start?.error?.message || "蹂몄씤?몄쬆 ?쒖옉 ?ㅽ뙣");
 
       const { impCode, merchantUid } = start.data;
 
-      if (!window.IMP) return alert("인증 모듈 로드 실패");
+      if (!window.IMP) return alert("?몄쬆 紐⑤뱢 濡쒕뱶 ?ㅽ뙣");
 
       window.IMP.init(impCode);
       window.IMP.certification({ merchant_uid: merchantUid }, async (rsp) => {
@@ -202,21 +187,24 @@ export const useSignup = () => {
           });
 
           if (!verify?.success) {
-            throw new Error(verify?.error?.message || "본인인증 실패");
+            throw new Error(verify?.error?.message || "蹂몄씤?몄쬆 ?ㅽ뙣");
           }
 
           const { phone, ci } = verify.data;
 
-          // 휴대폰 중복 체크
+          // ?대??곗쨷蹂?泥댄겕
           const phoneCheck = await checkPhone(phone);
-          const available = phoneCheck?.data?.available ?? phoneCheck?.data?.data?.available;
+          const available =
+            phoneCheck?.data?.available ?? phoneCheck?.data?.data?.available;
           if (!phoneCheck?.success || available === false) {
-            throw new Error(phoneCheck?.error?.message || "이미 등록된 번호입니다.");
+            throw new Error(
+              phoneCheck?.error?.message || "?대? ?깅줉??踰덊샇?낅땲??"
+            );
           }
 
           setField("phone", phone);
           sessionStorage.setItem("PASS_CI", ci);
-          setErrorMessage("phone", "본인인증 성공!", false);
+          setErrorMessage("phone", "蹂몄씤?몄쬆 ?깃났!", false);
         } catch (err) {
           sessionStorage.removeItem("PASS_CI");
           setField("phone", "");
@@ -224,64 +212,109 @@ export const useSignup = () => {
             err?.message ||
             err?.response?.data?.error?.message ||
             err?.response?.data?.message ||
-            "본인인증 실패";
+            "蹂몄씤?몄쬆 ?ㅽ뙣";
           setErrorMessage("phone", message, true);
           alert(message);
         }
       });
     } catch {
-      alert("본인인증 오류");
+      alert("蹂몄씤?몄쬆 ?ㅻ쪟");
     }
   };
 
   /* ==============================
-      최종 회원가입 제출
+      理쒖쥌 ?뚯썝媛???쒖텧
      ============================== */
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!form.email || errors.email.isError)
-      return alert("이메일을 확인해주세요.");
+    if (!isSocial) {
+      if (!form.email || errors.email.isError)
+        return alert("?대찓?쇱쓣 ?뺤씤?댁＜?몄슂.");
 
-    if (!form.password || errors.password.isError)
-      return alert("비밀번호를 확인해주세요.");
+      if (!form.password || errors.password.isError)
+        return alert("鍮꾨?踰덊샇瑜??뺤씤?댁＜?몄슂.");
 
-    if (!form.passwordCheck || errors.passwordCheck.isError)
-      return alert("비밀번호 일치 여부를 확인해주세요.");
+      if (!form.passwordCheck || errors.passwordCheck.isError)
+        return alert("鍮꾨?踰덊샇 ?쇱튂瑜??뺤씤?댁＜?몄슂.");
+    }
 
     if (!form.nickname || errors.nickname.isError)
-      return alert("닉네임을 확인해주세요.");
+      return alert("?됰꽕?꾩쓣 ?뺤씤?댁＜?몄슂.");
 
-    if (!form.phone) return alert("본인인증을 진행해주세요.");
-    if (errors.phone.isError) return alert(errors.phone.message || "휴대폰 번호를 확인해주세요.");
+    if (!form.phone) return alert("蹂몄씤?몄쬆??吏꾪뻾?댁＜?몄슂.");
+    if (errors.phone.isError)
+      return alert(errors.phone.message || "?대???踰덊샇瑜??뺤씤?댁＜?몄슂.");
 
     const ci = sessionStorage.getItem("PASS_CI");
-    if (!ci) return alert("본인인증 정보를 찾을 수 없습니다.");
+    if (!ci) return alert("蹂몄씤?몄쬆 ?뺣낫瑜?李얠쓣 ???놁뒿?덈떎.");
+
+    const socialEmail = socialInfo?.email || form.email;
+    if (isSocial && !socialEmail) {
+      return alert("?뚯뀥 ?대찓???뺣낫瑜??뺤씤?????놁뒿?덈떎.");
+    }
 
     let base64 = null;
     if (form.profileImage) base64 = await toBase64(form.profileImage);
 
-    const payload = {
-      userId: form.email,
-      password: form.password,
-      passwordConfirm: form.passwordCheck,
-      nickname: form.nickname,
-      phone: form.phone,
-      agreeMarketing: form.agreeMarketing,
-      profileImageBase64: base64,
-      ci,
-    };
+    const payload = isSocial
+      ? {
+          provider: socialInfo.provider,
+          providerUserId: socialInfo.providerUserId,
+          userId: socialEmail,
+          nickname: form.nickname,
+          phone: form.phone,
+          agreeMarketing: form.agreeMarketing,
+          ci,
+        }
+      : {
+          userId: form.email,
+          password: form.password,
+          passwordConfirm: form.passwordCheck,
+          nickname: form.nickname,
+          phone: form.phone,
+          agreeMarketing: form.agreeMarketing,
+          profileImageBase64: base64,
+          ci,
+        };
 
     try {
       const res = await signup(payload);
       if (!res?.success) {
-        throw new Error(res?.error?.message || "회원가입 실패");
+        throw new Error(res?.error?.message || "?뚯썝媛???ㅽ뙣");
       }
 
-      alert("인증 이메일이 발송되었습니다.\n이메일을 확인해주세요.");
-      navigate("/login");
+      const {
+        accessToken,
+        refreshToken,
+        accessTokenExpiresIn,
+        expiresIn,
+      } = res.data || {};
+
+      if (accessToken && refreshToken) {
+        setTokens({
+          accessToken,
+          refreshToken,
+          accessTokenExpiresIn: accessTokenExpiresIn ?? expiresIn,
+        });
+
+        try {
+          const meRes = await fetchCurrentUser();
+          if (meRes?.success && meRes.data) {
+            setUser(meRes.data);
+          }
+        } catch {
+          clearAuth();
+        }
+
+        navigate("/", { replace: true });
+        return;
+      }
+
+      alert("?몄쬆 硫붿씪??諛쒖넚?섏뿀?듬땲?? ?대찓?쇱쓣 ?뺤씤?댁＜?몄슂.");
+      navigate("/", { replace: true });
     } catch (err) {
-      alert(err?.message || err?.response?.data?.message || "회원가입 실패");
+      alert(err?.message || err?.response?.data?.message || "?뚯썝媛???ㅽ뙣");
     }
   };
 

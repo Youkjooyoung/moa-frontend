@@ -9,6 +9,17 @@ export const logout = () => httpClient.post("/auth/logout");
 
 export const signup = (data) => httpClient.post("/users/add", data);
 
+export const oauthKakaoCallback = (params) =>
+  httpClient.get("/oauth/kakao/callback", { params });
+
+export const oauthGoogleCallback = (params) =>
+  httpClient.get("/oauth/google/callback", { params });
+
+export const oauthTransfer = (data) => httpClient.post("/oauth/transfer", data);
+
+export const oauthConnectByPhone = (data) =>
+  httpClient.post("/oauth/connect-by-phone", data);
+
 export const verifyEmail = (token) =>
   httpClient.post(`/auth/verify-email?token=${token}`);
 

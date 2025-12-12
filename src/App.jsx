@@ -7,6 +7,7 @@ import { useGlobalLinkHandler } from "@/hooks/common/useGlobalLinkHandler";
 import ProtectedRoute from "@/routes/ProtectedRoute";
 import OAuthKakaoPage from "./pages/oauth/OAuthKakaoPage";
 import OAuthGooglePage from "./pages/oauth/OAuthGooglePage";
+import PhoneConnectPage from "./pages/oauth/PhoneConnectPage";
 import SocialRegisterPage from "@/pages/user/register/SocialRegisterPage";
 import MainPage from "./pages/main/MainPage";
 import PartyListPage from "./pages/party/PartyListPage";
@@ -33,7 +34,6 @@ import AdminUserDetailPage from "@/pages/admin/AdminUserDetailPage";
 import AdminBlacklistDeletePage from "@/pages/admin/RemoveBlacklistPage";
 import AdminLoginHistoryPage from "@/pages/admin/AdminLoginHistoryPage";
 import AdminDashboardPage from "@/pages/admin/AdminDashboardPage";
-import AddUserSocialPage from "@/pages/user/register/AddUserSocialPage";
 
 import LandingTestPage from "./pages/landing/LandingTestPage";
 import LandingPageA from "./pages/landing/LandingPageA";
@@ -94,8 +94,6 @@ import { useAuthStore } from "./store/authStore";
 export default function App() {
   useGlobalLinkHandler();
   const { user } = useAuthStore();
-
-  // ?�스???�그 ?�???��? ?�인
   const showEasterEgg =
     user && (user.userId === "usertest1" || user.userId === "admintest");
 
@@ -107,27 +105,21 @@ export default function App() {
 
       <main className="flex-1 pt-20">
         <Routes>
-          {/* 메인/?�티 */}
           <Route path="/" element={<MainPage />} />
           <Route path="/party" element={<PartyListPage />} />
           <Route path="/party/create" element={<PartyCreatePage />} />
           <Route path="/party/:id" element={<PartyDetailPage />} />
           <Route path="/party-test/o" element={<PartyListPageO />} />
 
-          {/* ===== OAuth 콜백 MUST BE PUBLIC ===== */}
           <Route path="/oauth/kakao" element={<OAuthKakaoPage />} />
           <Route path="/oauth/google" element={<OAuthGooglePage />} />
-
-          {/* User ?�메??(Public) */}
+          <Route path="/oauth/phone-connect" element={<PhoneConnectPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<AddUserPage />} />
           <Route path="/find-email" element={<FindIdPage />} />
           <Route path="/register/social" element={<SocialRegisterPage />} />
           <Route path="/reset-password" element={<ResetPwdPage />} />
           <Route path="/email-verified" element={<EmailVerifiedPage />} />
-          <Route path="/signup/social" element={<AddUserSocialPage />} />
-
-          {/* User ?�메??(Private - ProtectedRoute ?�용) */}
           <Route
             path="/mypage"
             element={<ProtectedRoute element={<MyPage />} />}
@@ -164,13 +156,10 @@ export default function App() {
             path="/my-parties"
             element={<ProtectedRoute element={<MyPartyListPage />} />}
           />
-
-          {/* ??[?�정 2] 복잡??조건부 ?�더링을 ProtectedRoute�??�일 */}
           <Route
             path="/mypage/edit"
             element={<ProtectedRoute element={<UpdateUserPage />} />}
           />
-
           <Route
             path="/admin/blacklist/add"
             element={<ProtectedRoute element={<AddBlacklistPage />} />}
@@ -189,18 +178,13 @@ export default function App() {
             path="/admin/users/:userId/login-history"
             element={<AdminLoginHistoryPage />}
           />
-
-          {/* Product (Public) */}
           <Route path="/product" element={<GetProductList />} />
           <Route path="/product/:id" element={<GetProduct />} />
 
           <Route
             path="/product/:id/delete"
             element={<ProtectedRoute element={<DeleteProduct />} />}
-            // TODO: Add role check for ADMIN
           />
-
-          {/* Subscription (User) */}
           <Route
             path="/subscription/add/:productId"
             element={<ProtectedRoute element={<AddSubscription />} />}
@@ -221,8 +205,6 @@ export default function App() {
             path="/subscription/:id/cancel"
             element={<ProtectedRoute element={<CancelSubscription />} />}
           />
-
-          {/* 고객?�터/커�??�티 & 기�? */}
           <Route path="/subscriptions" element={<GetProductList />} />
           <Route path="/my/subscriptions" element={<UserSubscriptionList />} />
           <Route path="/payment/success" element={<PaymentSuccessPage />} />
@@ -252,7 +234,6 @@ export default function App() {
           <Route path="/community/inquiry" element={<Inquiry />} />
           <Route path="/community/inquiry/admin" element={<InquiryAdmin />} />
 
-          {/* Landing Page A/B Test Routes */}
           <Route path="/landing-test" element={<LandingTestPage />} />
           <Route path="/landing/a" element={<LandingPageA />} />
           <Route path="/landing/b" element={<LandingPageB />} />
