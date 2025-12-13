@@ -82,6 +82,8 @@ import LandingPageZChat from "./pages/landing/LandingPageZChat";
 import LandingPageZLinear from "./pages/landing/LandingPageZLinear";
 import LandingPageZGlassLight from "./pages/landing/LandingPageZGlassLight";
 import LandingPageZParallax from "./pages/landing/LandingPageZParallax";
+import LandingPageZPortrait from "./pages/landing/LandingPageZPortrait";
+import LandingPageYSa01 from "./pages/landing/LandingPageYSa01";
 
 import GetProductList from "./pages/product/GetProductList";
 import GetProduct from "./pages/product/GetProduct";
@@ -327,6 +329,8 @@ export default function App() {
             element={<LandingPageZGlassLight />}
           />
           <Route path="/landing/parallax" element={<LandingPageZParallax />} />
+          <Route path="/landing/portrait" element={<LandingPageZPortrait />} />
+          <Route path="/landing/ysa01" element={<LandingPageYSa01 />} />
         </Routes>
       </main>
 

@@ -459,6 +459,19 @@ export default function LandingTestPage() {
                                         </span>
                                     </div>
                                 </Link>
+<Link                                    to="/landing/portrait"                                    className="group block w-full py-8 px-6 bg-[#FDF8F3] hover:bg-white text-[#4a4a4a] rounded-2xl shadow-lg border border-[#f0e6dc] transition-all hover:shadow-xl hover:-translate-y-1 relative overflow-hidden"                                >                                    {/* Decorative pastel blobs */}                                    <div className="absolute top-0 left-0 w-24 h-24 bg-[#FFD4DC]/50 rounded-full blur-2xl -ml-8 -mt-8 transition-transform group-hover:translate-x-2 group-hover:translate-y-2" />                                    <div className="absolute bottom-0 right-0 w-20 h-20 bg-[#D4E4FF]/50 rounded-full blur-2xl -mr-6 -mb-6 transition-transform group-hover:-translate-x-2 group-hover:-translate-y-2" />                                    <div className="absolute top-1/2 right-1/4 w-16 h-16 bg-[#E4D4FF]/40 rounded-full blur-xl" />                                    <div className="relative z-10">                                        <div className="flex items-center justify-between mb-2">                                            <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#FFB5C5] via-[#C5B5FF] to-[#B5D4FF]">Portrait Style</span>                                            <span className="bg-gradient-to-r from-[#FFB5C5] to-[#C5B5FF] text-white text-xs px-2 py-1 rounded-full shadow-sm">NEW</span>                                        </div>                                        <span className="block text-sm text-[#888] font-medium">                                            아기자기 파스텔+패럴랙스(파스텔/그라데이션/스크롤카드슝)                                        </span>                                    </div>                                </Link>
+<Link to="/landing/ysa01" className="group block w-full py-8 px-6 bg-slate-50 hover:bg-white text-black rounded-2xl shadow-lg border-4 border-black transition-all hover:shadow-xl hover:-translate-y-1 relative overflow-hidden" style={{ boxShadow: "8px_8px_0px_0px_rgba(0,0,0,1)" }}>
+                                    <div className="absolute top-0 right-0 w-24 h-24 bg-cyan-400/40 rounded-full blur-2xl -mr-8 -mt-8" />
+                                    <div className="absolute bottom-0 left-0 w-20 h-20 bg-pink-500/40 rounded-full blur-2xl -ml-6 -mb-6" />
+                                    <div className="absolute top-1/3 left-1/3 w-16 h-16 bg-lime-400/30 rounded-full blur-xl" />
+                                    <div className="relative z-10">
+                                        <div className="flex items-center justify-between mb-2">
+                                            <span className="text-2xl font-black"><span className="text-cyan-400">YSa</span><span className="text-pink-500">01</span></span>
+                                            <span className="bg-lime-400 text-black text-xs px-2 py-1 rounded-full font-black border-2 border-black">NEW</span>
+                                        </div>
+                                        <span className="block text-sm text-gray-600 font-bold">패럴랙스+네오브루탈리즘(띠용때용, 롤링텍스트, 스크롤카드슝)</span>
+                                    </div>
+                                </Link>
                             </div>
                         </div>
                     </div>
