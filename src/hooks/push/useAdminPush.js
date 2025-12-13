@@ -2,20 +2,18 @@ import { useState, useEffect, useCallback } from "react";
 import adminPushApi from "@/api/adminPushApi";
 import { useAuthStore } from "@/store/authStore";
 
-// localStorage 키
 const HISTORY_PAGE_SIZE_KEY = "admin_push_history_page_size";
 
 export const useAdminPush = () => {
-  // ===== 공통 상태 =====
+  const accessToken = useAuthStore((state) => state.accessToken);
+
   const [activeTab, setActiveTab] = useState("templates");
   const [isLoading, setIsLoading] = useState(false);
 
-  // ===== 템플릿 관리 상태 =====
   const [templates, setTemplates] = useState([]);
   const [editingTemplate, setEditingTemplate] = useState(null);
   const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
 
-  // ===== 발송 내역 상태 =====
   const [history, setHistory] = useState([]);
   const [historyPage, setHistoryPage] = useState(1);
   const [historyTotalPages, setHistoryTotalPages] = useState(1);
@@ -31,7 +29,6 @@ export const useAdminPush = () => {
     endDate: "",
   });
 
-  // ===== 수동 발송 상태 =====
   const [users, setUsers] = useState([]);
   const [usersTotalCount, setUsersTotalCount] = useState(0);
   const [usersPage, setUsersPage] = useState(1);
@@ -45,8 +42,6 @@ export const useAdminPush = () => {
     content: "",
     params: {},
   });
-
-  // ===== 템플릿 관리 =====
 
   const fetchTemplates = useCallback(async () => {
     setIsLoading(true);
@@ -116,8 +111,6 @@ export const useAdminPush = () => {
     }
   }, [fetchTemplates]);
 
-  // ===== 발송 내역 =====
-
   const fetchHistory = useCallback(async (page = 1, pageSize = historyPageSize) => {
     setIsLoading(true);
     try {
@@ -152,8 +145,6 @@ export const useAdminPush = () => {
     fetchHistory(1, size);
   }, [fetchHistory]);
 
-  // ===== 수동 발송 - 유저 목록 =====
-
   const fetchUsers = useCallback(async (page = 1, keyword = "") => {
     setIsLoading(true);
     try {
@@ -182,8 +173,6 @@ export const useAdminPush = () => {
     setUsersPage(page);
     fetchUsers(page, userSearchKeyword);
   }, [fetchUsers, userSearchKeyword]);
-
-  // ===== 수동 발송 - 유저 선택 =====
 
   const handleSelectUser = useCallback((user) => {
     setSelectedUsers(prev => {
@@ -216,8 +205,6 @@ export const useAdminPush = () => {
     setSelectedUsers([]);
   }, []);
 
-  // ===== 수동 발송 - 폼 & 발송 =====
-
   const handleSendFormChange = useCallback((key, value) => {
     setSendForm(prev => ({ ...prev, [key]: value }));
   }, []);
@@ -228,27 +215,18 @@ export const useAdminPush = () => {
       return { success: false };
     }
 
-    if (sendForm.sendType === "CUSTOM") {
-      if (!sendForm.title || !sendForm.content) {
-        alert("제목과 내용을 입력해주세요.");
-        return { success: false };
-      }
-    } else {
-      if (!sendForm.pushCode) {
-        alert("템플릿을 선택해주세요.");
-        return { success: false };
-      }
+    if (!sendForm.title || !sendForm.content) {
+      alert("제목과 내용을 입력해주세요.");
+      return { success: false };
     }
 
     setIsLoading(true);
     try {
       const requestData = {
-        sendType: sendForm.sendType,
+        sendType: "CUSTOM",
         receiverIds: selectedUsers.map(u => u.userId),
-        pushCode: sendForm.pushCode,
         title: sendForm.title,
         content: sendForm.content,
-        params: sendForm.params,
       };
 
       const response = await adminPushApi.sendAdminPush(requestData);
@@ -273,25 +251,19 @@ export const useAdminPush = () => {
     }
   }, [selectedUsers, sendForm]);
 
-  // ===== 탭 변경 시 데이터 로드 =====
-
-    useEffect(() => {
-    const { accessToken } = useAuthStore.getState();
-    
-    // 토큰 없으면 로드 안 함
+  useEffect(() => {
     if (!accessToken) {
-        console.log("No token, skipping fetch");
-        return;
+      return;
     }
 
     if (activeTab === "templates") {
-        fetchTemplates();
+      fetchTemplates();
     } else if (activeTab === "history") {
-        fetchHistory(1, historyPageSize);
+      fetchHistory(1, historyPageSize);
     } else if (activeTab === "send") {
-        fetchUsers(1, "");
+      fetchUsers(1, "");
     }
-    }, [activeTab, fetchTemplates, fetchHistory, fetchUsers, historyPageSize]);
+  }, [activeTab, accessToken, fetchTemplates, fetchHistory, fetchUsers, historyPageSize]);
 
   return {
     activeTab,

@@ -41,7 +41,6 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import useAdminPush from "@/hooks/push/useAdminPush";
 
-// ===== 날짜 포맷 =====
 const formatDate = (dateString) => {
   if (!dateString) return "-";
   const date = new Date(dateString);
@@ -54,16 +53,18 @@ const formatDate = (dateString) => {
   });
 };
 
-// ===== localStorage 키 =====
 const HISTORY_PAGE_SIZE_KEY = "admin_push_history_page_size";
 
-// ===== 메인 모달 =====
 export default function AdminPushModal({ isOpen, onClose }) {
+  if (!isOpen) return null;
+  return <AdminPushModalContent onClose={onClose} />;
+}
+
+function AdminPushModalContent({ onClose }) {
   const {
     activeTab,
     setActiveTab,
     isLoading,
-    // 템플릿
     templates,
     editingTemplate,
     isTemplateModalOpen,
@@ -73,7 +74,6 @@ export default function AdminPushModal({ isOpen, onClose }) {
     handleSaveTemplate,
     handleDeleteTemplate,
     setEditingTemplate,
-    // 발송 내역
     history,
     historyPage,
     historyTotalPages,
@@ -83,7 +83,6 @@ export default function AdminPushModal({ isOpen, onClose }) {
     handleHistorySearch,
     handleHistoryPageChange,
     handleHistoryPageSizeChange,
-    // 수동 발송
     users,
     usersTotalCount,
     usersPage,
@@ -101,13 +100,11 @@ export default function AdminPushModal({ isOpen, onClose }) {
     handleSendPush,
   } = useAdminPush();
 
-  // 페이지 사이즈 상태 (localStorage에서 복원)
   const [pageSize, setPageSize] = useState(() => {
     const saved = localStorage.getItem(HISTORY_PAGE_SIZE_KEY);
     return saved ? parseInt(saved, 10) : 20;
   });
 
-  // 페이지 사이즈 변경 핸들러
   const handlePageSizeChange = (newSize) => {
     const size = parseInt(newSize, 10);
     setPageSize(size);
@@ -118,9 +115,8 @@ export default function AdminPushModal({ isOpen, onClose }) {
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={true} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl h-[85vh] p-0 gap-0 bg-white rounded-2xl overflow-hidden">
-        {/* 헤더 */}
         <DialogHeader className="px-6 py-4 border-b border-slate-200 bg-gradient-to-r from-indigo-50 to-purple-50">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -139,7 +135,6 @@ export default function AdminPushModal({ isOpen, onClose }) {
           </div>
         </DialogHeader>
 
-        {/* 탭 네비게이션 */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col overflow-hidden">
           <TabsList className="w-full justify-start gap-1 px-6 py-3 bg-slate-50 border-b border-slate-200 rounded-none h-auto flex-shrink-0">
             <TabsTrigger
@@ -165,7 +160,6 @@ export default function AdminPushModal({ isOpen, onClose }) {
             </TabsTrigger>
           </TabsList>
 
-          {/* 탭 콘텐츠 */}
           <div className="flex-1 overflow-hidden">
             <TabsContent value="templates" className="h-full m-0">
               <TemplatesTab
@@ -217,7 +211,6 @@ export default function AdminPushModal({ isOpen, onClose }) {
           </div>
         </Tabs>
 
-        {/* 템플릿 편집 모달 */}
         <TemplateEditModal
           isOpen={isTemplateModalOpen}
           onClose={() => {
@@ -233,7 +226,6 @@ export default function AdminPushModal({ isOpen, onClose }) {
   );
 }
 
-// ===== 템플릿 관리 탭 (아코디언 방식) =====
 function TemplatesTab({ templates, isLoading, onAdd, onEdit, onDelete }) {
   const [expandedId, setExpandedId] = useState("");
 
@@ -277,22 +269,18 @@ function TemplatesTab({ templates, isLoading, onAdd, onEdit, onDelete }) {
                     isExpanded ? "bg-slate-50" : "bg-white hover:bg-slate-50"
                   }`}
                 >
-                  {/* 헤더 영역 */}
                   <div
                     className="flex items-center w-full px-4 py-3 cursor-pointer"
                     onClick={() => setExpandedId(isExpanded ? "" : template.pushCodeId.toString())}
                   >
-                    {/* 코드 뱃지 */}
                     <Badge variant="outline" className="font-mono text-xs flex-shrink-0 w-40 justify-center bg-white">
                       {template.codeName}
                     </Badge>
                     
-                    {/* 제목 */}
                     <span className="font-medium text-slate-900 truncate flex-1 ml-3">
                       {template.titleTemplate}
                     </span>
                     
-                    {/* 수정/삭제 버튼 */}
                     <div className="flex items-center gap-1 ml-3 flex-shrink-0">
                       <Button
                         variant="ghost"
@@ -319,7 +307,6 @@ function TemplatesTab({ templates, isLoading, onAdd, onEdit, onDelete }) {
                     </div>
                   </div>
 
-                  {/* 펼친 상태: 내용 */}
                   <AccordionContent className="px-4 pb-4 pt-0">
                     <div className="bg-white border border-slate-200 rounded-lg p-3">
                       <p className="text-xs text-slate-500 mb-1">내용 템플릿</p>
@@ -338,7 +325,6 @@ function TemplatesTab({ templates, isLoading, onAdd, onEdit, onDelete }) {
   );
 }
 
-// ===== 템플릿 편집 모달 =====
 function TemplateEditModal({ isOpen, onClose, template, onSave, isLoading }) {
   const [form, setForm] = useState({
     codeName: "",
@@ -346,8 +332,6 @@ function TemplateEditModal({ isOpen, onClose, template, onSave, isLoading }) {
     contentTemplate: "",
   });
 
-  // template이 변경되면 form 초기화
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (template) {
       setForm({
@@ -439,7 +423,6 @@ function TemplateEditModal({ isOpen, onClose, template, onSave, isLoading }) {
   );
 }
 
-// ===== 발송 내역 탭 =====
 function HistoryTab({
   history,
   isLoading,
@@ -458,7 +441,6 @@ function HistoryTab({
 
   return (
     <div className="h-full flex flex-col">
-      {/* 필터 */}
       <div className="px-6 py-3 border-b border-slate-100 flex flex-wrap items-center gap-3 flex-shrink-0">
         <Select
           value={filters.pushCode || "all"}
@@ -504,7 +486,6 @@ function HistoryTab({
         </Button>
       </div>
 
-      {/* 목록 */}
       <ScrollArea className="flex-1">
         {isLoading ? (
           <div className="flex items-center justify-center py-12">
@@ -557,9 +538,7 @@ function HistoryTab({
         )}
       </ScrollArea>
 
-      {/* 하단: 페이지 사이즈 선택 + 페이지네이션 */}
       <div className="px-6 py-3 border-t border-slate-100 flex items-center justify-between flex-shrink-0">
-        {/* 페이지 사이즈 선택 */}
         <div className="flex items-center gap-2">
           <span className="text-sm text-slate-500">표시 개수:</span>
           <Select value={pageSize.toString()} onValueChange={onPageSizeChange}>
@@ -581,7 +560,6 @@ function HistoryTab({
           )}
         </div>
 
-        {/* 페이지네이션 */}
         {totalPages > 1 && (
           <div className="flex items-center gap-2">
             <Button
@@ -612,7 +590,6 @@ function HistoryTab({
   );
 }
 
-// ===== 수동 발송 탭 =====
 function SendTab({
   users,
   usersTotalCount,
@@ -631,16 +608,13 @@ function SendTab({
   onFormChange,
   onSend,
 }) {
-  // 현재 페이지의 모든 유저가 선택되었는지 확인
   const isAllCurrentPageSelected = users.length > 0 && users.every(
     (user) => selectedUsers.some((u) => u.userId === user.userId)
   );
 
   return (
     <div className="h-full flex">
-      {/* 왼쪽: 수신자 선택 */}
       <div className="w-1/2 border-r border-slate-200 flex flex-col">
-        {/* 검색 */}
         <div className="px-4 py-3 border-b border-slate-100 flex-shrink-0">
           <p className="text-sm font-medium text-slate-700 mb-2">수신자 선택</p>
           <div className="relative">
@@ -654,7 +628,6 @@ function SendTab({
           </div>
         </div>
 
-        {/* 전체 선택 헤더 */}
         <div className="px-4 py-2 border-b border-slate-100 flex items-center justify-between bg-slate-50 flex-shrink-0">
           <div className="flex items-center gap-2">
             <Checkbox
@@ -670,7 +643,6 @@ function SendTab({
           </span>
         </div>
 
-        {/* 유저 리스트 */}
         <ScrollArea className="flex-1">
           <div className="p-2">
             {isLoading ? (
@@ -712,7 +684,6 @@ function SendTab({
           </div>
         </ScrollArea>
 
-        {/* 페이지네이션 */}
         {usersTotalPages > 1 && (
           <div className="px-4 py-2 border-t border-slate-100 flex items-center justify-center gap-2 flex-shrink-0">
             <Button
@@ -739,7 +710,6 @@ function SendTab({
           </div>
         )}
 
-        {/* 선택된 수신자 */}
         {selectedUsers.length > 0 && (
           <div className="px-4 py-3 border-t border-slate-100 flex-shrink-0">
             <div className="flex items-center justify-between mb-2">
@@ -774,7 +744,6 @@ function SendTab({
         )}
       </div>
 
-      {/* 오른쪽: 메시지 작성 */}
       <div className="w-1/2 flex flex-col">
         <div className="px-4 py-3 border-b border-slate-100 flex-shrink-0">
           <p className="text-sm font-medium text-slate-700">메시지 작성</p>
@@ -782,7 +751,6 @@ function SendTab({
 
         <ScrollArea className="flex-1">
           <div className="p-4 space-y-4">
-            {/* 제목 */}
             <div>
               <label className="text-sm font-medium text-slate-700 mb-1.5 block">
                 제목
@@ -794,7 +762,6 @@ function SendTab({
               />
             </div>
 
-            {/* 내용 */}
             <div>
               <label className="text-sm font-medium text-slate-700 mb-1.5 block">
                 내용
@@ -807,7 +774,6 @@ function SendTab({
               />
             </div>
 
-            {/* 안내 문구 */}
             <div className="p-3 bg-amber-50 rounded-lg border border-amber-200">
               <p className="text-xs text-amber-700">
                 💡 선택한 모든 수신자에게 동일한 메시지가 발송됩니다.
@@ -816,7 +782,6 @@ function SendTab({
           </div>
         </ScrollArea>
 
-        {/* 발송 버튼 */}
         <div className="px-4 py-3 border-t border-slate-100 flex-shrink-0">
           <Button
             onClick={onSend}
