@@ -24,48 +24,20 @@ import {
   getBankTheme,
   getCardTheme,
 } from "../../utils/logoHelper";
-
-// Animated gradient background component for Variant T
-function AnimatedGradient() {
-  return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      <motion.div
-        className="absolute -top-1/2 -left-1/2 w-full h-full rounded-full opacity-30"
-        style={{
-          background: "radial-gradient(circle, rgba(99,91,255,0.15) 0%, transparent 70%)",
-        }}
-        animate={{
-          x: [0, 100, 0],
-          y: [0, 50, 0],
-        }}
-        transition={{
-          duration: 20,
-          repeat: Infinity,
-          ease: "linear",
-        }}
-      />
-      <motion.div
-        className="absolute -bottom-1/2 -right-1/2 w-full h-full rounded-full opacity-30"
-        style={{
-          background: "radial-gradient(circle, rgba(0,212,255,0.15) 0%, transparent 70%)",
-        }}
-        animate={{
-          x: [0, -100, 0],
-          y: [0, -50, 0],
-        }}
-        transition={{
-          duration: 25,
-          repeat: Infinity,
-          ease: "linear",
-        }}
-      />
-    </div>
-  );
-}
+import {
+  useTheme,
+  ThemeSwitcher,
+  ThemeBackground,
+  ThemeMarquee,
+  themeConfig
+} from "../../config/themeConfig";
 
 export default function MyWalletPage() {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuthStore();
+
+  // Theme
+  const { theme, setTheme, currentTheme } = useTheme("appTheme");
 
   // Zustand Store - Selector 패턴 사용
   const deposits = useWalletStore((state) => state.deposits);
@@ -121,14 +93,22 @@ export default function MyWalletPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#fafafa] pb-20">
-      {/* Hero Header - Variant T Style */}
-      <div className="relative overflow-hidden bg-white border-b border-gray-100">
-        <AnimatedGradient />
+    <div className={`min-h-screen ${theme === "dark" ? "bg-[#0B1120]" : "bg-[#fafafa]"} pb-20 transition-colors duration-300`}>
+      {/* Theme Switcher */}
+      <ThemeSwitcher theme={theme} onThemeChange={setTheme} />
+
+      {/* Pop Theme Marquee */}
+      <ThemeMarquee theme={theme} />
+
+      {/* Hero Header */}
+      <div className={`relative overflow-hidden border-b ${theme === "dark" ? "bg-[#0B1120] border-gray-800" : theme === "pop" ? "bg-slate-50 border-4 border-black" : "bg-white border-gray-100"
+        }`}>
+        <ThemeBackground theme={theme} />
         <div className="max-w-md mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10">
           <button
             onClick={() => navigate(-1)}
-            className="flex items-center gap-2 text-gray-400 hover:text-[#635bff] mb-6 transition-colors group"
+            className={`flex items-center gap-2 mb-6 transition-colors group ${theme === "dark" ? "text-gray-400 hover:text-[#635bff]" : "text-gray-400 hover:text-[#635bff]"
+              }`}
           >
             <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
             <span className="font-semibold">뒤로가기</span>
@@ -139,15 +119,16 @@ export default function MyWalletPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <span className="inline-flex items-center gap-2 px-4 py-2 bg-[#635bff]/10 text-[#635bff] rounded-full text-sm font-medium mb-4">
+            <span className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium mb-4 ${theme === "pop" ? "bg-pink-400 text-black border-2 border-black" : theme === "dark" ? "bg-[#635bff]/20 text-[#635bff]" : "bg-[#635bff]/10 text-[#635bff]"
+              }`}>
               <Sparkles className="w-4 h-4" />
               금융 관리
             </span>
-            <h1 className="text-4xl font-bold text-gray-900 mb-2 tracking-tight flex items-center gap-3">
-              <Wallet className="w-8 h-8 text-[#635bff]" />
+            <h1 className={`text-4xl font-bold mb-2 tracking-tight flex items-center gap-3 ${currentTheme.text}`}>
+              <Wallet className={`w-8 h-8 ${theme === "pop" ? "text-pink-500" : "text-[#635bff]"}`} />
               내 지갑
             </h1>
-            <p className="text-gray-500">나의 금융 정보를 관리하세요</p>
+            <p className={currentTheme.subtext}>나의 금융 정보를 관리하세요</p>
           </motion.div>
         </div>
       </div>

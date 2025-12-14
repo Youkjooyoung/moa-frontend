@@ -15,6 +15,10 @@ import {
   Shield,
   Zap,
   Filter,
+  Sun,
+  Moon,
+  Palette,
+  Star,
 } from "lucide-react";
 
 
@@ -51,18 +55,128 @@ const AnimatedGradient = () => (
 );
 
 // Grid Pattern Background
-const GridPattern = () => (
-  <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-[0.02]">
+const GridPattern = ({ dark = false }) => (
+  <div className={`absolute inset-0 overflow-hidden pointer-events-none ${dark ? "opacity-[0.1]" : "opacity-[0.02]"}`}>
     <svg width="100%" height="100%">
       <defs>
         <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
-          <path d="M 60 0 L 0 0 0 60" fill="none" stroke="currentColor" strokeWidth="1" />
+          <path d="M 60 0 L 0 0 0 60" fill="none" stroke="currentColor" strokeWidth="1" className={dark ? "text-gray-500" : ""} />
         </pattern>
       </defs>
       <rect width="100%" height="100%" fill="url(#grid)" />
     </svg>
   </div>
 );
+
+// Dark Theme Gradient (Variant W)
+const DarkGradient = () => (
+  <div className="absolute inset-0 overflow-hidden pointer-events-none">
+    <motion.div
+      className="absolute w-[800px] h-[800px] rounded-full"
+      style={{
+        background: "radial-gradient(circle, rgba(99, 91, 255, 0.15) 0%, transparent 70%)",
+        top: "-200px",
+        right: "-200px",
+      }}
+      animate={{ scale: [1, 1.1, 1], opacity: [0.5, 0.7, 0.5] }}
+      transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+    />
+    <motion.div
+      className="absolute w-[600px] h-[600px] rounded-full"
+      style={{
+        background: "radial-gradient(circle, rgba(79, 209, 197, 0.1) 0%, transparent 70%)",
+        bottom: "100px",
+        left: "-100px",
+      }}
+      animate={{ scale: [1, 1.15, 1], opacity: [0.4, 0.6, 0.4] }}
+      transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+    />
+  </div>
+);
+
+// O3 Sticker Component
+const Sticker = ({ children, color = "bg-white", rotate = 0, className = "" }) => (
+  <motion.div
+    whileHover={{ scale: 1.1, rotate: rotate + 5 }}
+    whileTap={{ scale: 0.95 }}
+    className={`${color} border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[3px] hover:translate-y-[3px] transition-all duration-200 ${className}`}
+    style={{ transform: `rotate(${rotate}deg)` }}
+  >
+    {children}
+  </motion.div>
+);
+
+// O3 Marquee Component
+const Marquee = ({ children, direction = "left", speed = 20 }) => (
+  <div className="overflow-hidden whitespace-nowrap">
+    <motion.div
+      animate={{ x: direction === "left" ? ["0%", "-50%"] : ["-50%", "0%"] }}
+      transition={{ duration: speed, repeat: Infinity, ease: "linear" }}
+      className="inline-flex"
+    >
+      {children}
+      {children}
+    </motion.div>
+  </div>
+);
+
+// Theme Styles Configuration
+const themeConfig = {
+  classic: {
+    name: "Classic",
+    icon: Sun,
+    bg: "bg-white",
+    heroBg: "bg-white",
+    text: "text-gray-900",
+    subtext: "text-gray-600",
+    card: "bg-white border-gray-100 hover:border-gray-200",
+    cardText: "text-gray-900",
+    cardSubtext: "text-gray-500",
+    accent: "#635bff",
+    filterBg: "bg-white/80",
+    filterBorder: "border-gray-100",
+    inputBg: "bg-white",
+    inputBorder: "border-gray-200",
+    buttonActive: "bg-[#635bff] text-white",
+    buttonInactive: "bg-gray-100 text-gray-600 hover:bg-gray-200",
+  },
+  dark: {
+    name: "Dark",
+    icon: Moon,
+    bg: "bg-[#0B1120]",
+    heroBg: "bg-[#0B1120]",
+    text: "text-white",
+    subtext: "text-gray-400",
+    card: "bg-[#1E293B] border-gray-700 hover:border-gray-600",
+    cardText: "text-white",
+    cardSubtext: "text-gray-400",
+    accent: "#635bff",
+    filterBg: "bg-[#1E293B]/80",
+    filterBorder: "border-gray-700",
+    inputBg: "bg-[#0F172A]",
+    inputBorder: "border-gray-700",
+    buttonActive: "bg-[#635bff] text-white",
+    buttonInactive: "bg-[#1E293B] text-gray-400 hover:bg-[#334155]",
+  },
+  pop: {
+    name: "Pop",
+    icon: Palette,
+    bg: "bg-slate-50",
+    heroBg: "bg-slate-50",
+    text: "text-black",
+    subtext: "text-gray-600",
+    card: "bg-white border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]",
+    cardText: "text-black",
+    cardSubtext: "text-gray-600",
+    accent: "#ec4899",
+    filterBg: "bg-white",
+    filterBorder: "border-4 border-black",
+    inputBg: "bg-white",
+    inputBorder: "border-2 border-black",
+    buttonActive: "bg-pink-500 text-white border-2 border-black",
+    buttonInactive: "bg-white text-black border-2 border-black hover:bg-pink-100",
+  },
+};
 
 export default function PartyListPage() {
   const navigate = useNavigate();
@@ -87,6 +201,22 @@ export default function PartyListPage() {
   const [selectedProductId, setSelectedProductId] = useState(null);
   const [startDate, setStartDate] = useState("");
   const [sortBy, setSortBy] = useState("latest");
+
+  // Theme State with localStorage persistence
+  const [theme, setTheme] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("partyListTheme") || "classic";
+    }
+    return "classic";
+  });
+
+  const currentTheme = themeConfig[theme] || themeConfig.classic;
+
+  // Theme change handler
+  const handleThemeChange = (newTheme) => {
+    setTheme(newTheme);
+    localStorage.setItem("partyListTheme", newTheme);
+  };
 
   const myPartyIds = Array.isArray(myParties) ? myParties.map(p => p.partyId) : [];
   const isInitialLoading = loadingParties && list.length === 0;
@@ -264,39 +394,111 @@ export default function PartyListPage() {
   }, [lastScrollY]);
 
   return (
-    <div className="min-h-screen bg-white pb-20">
-      {/* Hero Section - Variant T Style */}
-      <section className="relative overflow-hidden bg-white">
-        <AnimatedGradient />
-        <GridPattern />
+    <div className={`min-h-screen ${currentTheme.bg} pb-20 transition-colors duration-300`}>
+      {/* Theme Switcher - Fixed Position */}
+      <div className="fixed top-24 right-4 z-50 flex flex-col gap-2">
+        {Object.entries(themeConfig).map(([key, config]) => {
+          const IconComponent = config.icon;
+          return (
+            <motion.button
+              key={key}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => handleThemeChange(key)}
+              className={`p-2.5 rounded-full shadow-lg transition-all duration-200 ${theme === key
+                ? key === "pop"
+                  ? "bg-pink-500 text-white border-2 border-black"
+                  : "bg-[#635bff] text-white"
+                : key === "dark"
+                  ? "bg-gray-800 text-gray-300 hover:bg-gray-700"
+                  : "bg-white text-gray-700 hover:bg-gray-100 border border-gray-200"
+                }`}
+              title={config.name}
+            >
+              <IconComponent className="w-4 h-4" />
+            </motion.button>
+          );
+        })}
+      </div>
+
+      {/* Pop Theme Marquee */}
+      {theme === "pop" && (
+        <div className="bg-black text-white py-3 border-y-4 border-black">
+          <Marquee speed={25}>
+            <div className="flex items-center gap-8 px-4">
+              {[...Array(6)].map((_, i) => (
+                <span key={i} className="flex items-center gap-4 text-lg font-black uppercase tracking-wider">
+                  <Star className="w-5 h-5 text-pink-400 fill-pink-400" />
+                  Netflix
+                  <Star className="w-5 h-5 text-cyan-400 fill-cyan-400" />
+                  Disney+
+                  <Star className="w-5 h-5 text-lime-400 fill-lime-400" />
+                  Wavve
+                  <Star className="w-5 h-5 text-pink-400 fill-pink-400" />
+                  Tving
+                </span>
+              ))}
+            </div>
+          </Marquee>
+        </div>
+      )}
+
+      {/* Hero Section */}
+      <section className={`relative overflow-hidden ${currentTheme.heroBg}`}>
+        {theme === "dark" ? <DarkGradient /> : theme === "classic" && <AnimatedGradient />}
+        <GridPattern dark={theme === "dark"} />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
           <div className="text-center max-w-3xl mx-auto">
             {/* Badge */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-[#635bff]/10 rounded-full mb-6"
-            >
-              <Sparkles className="w-4 h-4 text-[#635bff]" />
-              <span className="text-sm font-semibold text-[#635bff]">
-                OTT 구독 비용, 최대 75% 절약
-              </span>
-            </motion.div>
+            {theme === "pop" ? (
+              <motion.div
+                initial={{ opacity: 0, y: 20, rotate: -3 }}
+                animate={{ opacity: 1, y: 0, rotate: -3 }}
+                transition={{ duration: 0.5 }}
+              >
+                <Sticker color="bg-cyan-400" rotate={-3} className="inline-block px-5 py-2 rounded-xl mb-6">
+                  <span className="text-sm font-black">OTT 구독 비용, 최대 75% 절약 🔥</span>
+                </Sticker>
+              </motion.div>
+            ) : (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className={`inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6 ${theme === "dark" ? "bg-[#635bff]/20 border border-[#635bff]/30" : "bg-[#635bff]/10"
+                  }`}
+              >
+                <Sparkles className="w-4 h-4" style={{ color: currentTheme.accent }} />
+                <span className="text-sm font-semibold" style={{ color: currentTheme.accent }}>
+                  OTT 구독 비용, 최대 75% 절약
+                </span>
+              </motion.div>
+            )}
 
             {/* Main Title */}
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
-              className="text-4xl sm:text-5xl md:text-6xl font-black text-gray-900 mb-6 tracking-tight leading-[1.1]"
+              className={`text-4xl sm:text-5xl md:text-6xl font-black mb-6 tracking-tight leading-[1.1] ${currentTheme.text}`}
             >
-              함께 나누면
-              <br />
-              <span className="bg-gradient-to-r from-[#635bff] to-[#00d4ff] bg-clip-text text-transparent">
-                더 저렴하게
-              </span>
+              {theme === "pop" ? (
+                <>
+                  <span className="block transform -rotate-1">SHARE YOUR</span>
+                  <span className="block transform rotate-1 text-pink-500 drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]">
+                    OTT! 🍿
+                  </span>
+                </>
+              ) : (
+                <>
+                  함께 나누면
+                  <br />
+                  <span className={`bg-gradient-to-r ${theme === "dark" ? "from-[#635bff] via-[#00d4ff] to-[#00d4ff]" : "from-[#635bff] to-[#00d4ff]"} bg-clip-text text-transparent`}>
+                    더 저렴하게
+                  </span>
+                </>
+              )}
             </motion.h1>
 
             {/* Subheadline */}
@@ -304,7 +506,7 @@ export default function PartyListPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="text-lg text-gray-600 mb-8 max-w-xl mx-auto"
+              className={`text-lg mb-8 max-w-xl mx-auto ${currentTheme.subtext}`}
             >
               Netflix, Disney+, Wavve 등 프리미엄 OTT 서비스를
               <br className="hidden sm:block" />
@@ -318,18 +520,35 @@ export default function PartyListPage() {
               transition={{ duration: 0.5, delay: 0.3 }}
               className="flex flex-col sm:flex-row items-center justify-center gap-4"
             >
-              <motion.button
-                whileHover={{ scale: 1.02, y: -1 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => navigate("/party/create")}
-                className="inline-flex items-center gap-2 px-6 py-3 bg-[#635bff] hover:bg-[#5851e8] text-white font-semibold rounded-full shadow-lg shadow-[#635bff]/25 transition-colors duration-200"
-              >
-                <Sparkles className="w-4 h-4" />
-                파티 만들기
-                <ArrowRight className="w-4 h-4" />
-              </motion.button>
+              {theme === "pop" ? (
+                <Sticker
+                  color="bg-pink-500"
+                  rotate={2}
+                  className="px-8 py-4 rounded-2xl cursor-pointer"
+                  onClick={() => navigate("/party/create")}
+                >
+                  <span className="flex items-center gap-2 text-white font-black text-xl">
+                    파티 만들기
+                    <ArrowRight className="w-5 h-5" />
+                  </span>
+                </Sticker>
+              ) : (
+                <motion.button
+                  whileHover={{ scale: 1.02, y: -1 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => navigate("/party/create")}
+                  className={`inline-flex items-center gap-2 px-6 py-3 font-semibold rounded-full shadow-lg transition-colors duration-200 ${theme === "dark"
+                    ? "bg-[#635bff] hover:bg-[#5851e8] text-white shadow-[#635bff]/25"
+                    : "bg-[#635bff] hover:bg-[#5851e8] text-white shadow-[#635bff]/25"
+                    }`}
+                >
+                  <Sparkles className="w-4 h-4" />
+                  파티 만들기
+                  <ArrowRight className="w-4 h-4" />
+                </motion.button>
+              )}
 
-              <div className="flex items-center gap-4 text-sm text-gray-500">
+              <div className={`flex items-center gap-4 text-sm ${currentTheme.subtext}`}>
                 <div className="flex items-center gap-1.5">
                   <Shield className="w-4 h-4 text-green-500" />
                   <span>안전한 결제</span>
@@ -352,15 +571,25 @@ export default function PartyListPage() {
             : "-translate-y-20 opacity-0 pointer-events-none"
             }`}
         >
-          <div className="bg-white/80 backdrop-blur-xl rounded-2xl p-5 shadow-lg shadow-gray-200/50 border border-gray-100">
+          <div className={`backdrop-blur-xl p-5 shadow-lg transition-colors duration-300 ${theme === "pop"
+            ? "bg-white rounded-3xl border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]"
+            : theme === "dark"
+              ? "bg-[#1E293B]/80 rounded-2xl border border-gray-700"
+              : "bg-white/80 rounded-2xl shadow-gray-200/50 border border-gray-100"
+            }`}>
             {/* Search Input */}
             <div className="relative mb-4">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <Search className="h-5 w-5 text-gray-400" />
+                <Search className={`h-5 w-5 ${theme === "dark" ? "text-gray-500" : "text-gray-400"}`} />
               </div>
               <input
                 type="text"
-                className="block w-full pl-12 pr-10 py-3.5 border border-gray-200 rounded-xl bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#635bff]/20 focus:border-[#635bff] transition-all duration-200"
+                className={`block w-full pl-12 pr-10 py-3.5 rounded-xl transition-all duration-200 ${theme === "pop"
+                  ? "border-2 border-black bg-white text-black placeholder-gray-500 focus:ring-2 focus:ring-pink-500/20"
+                  : theme === "dark"
+                    ? "border border-gray-700 bg-[#0F172A] text-white placeholder-gray-500 focus:ring-2 focus:ring-[#635bff]/20 focus:border-[#635bff]"
+                    : "border border-gray-200 bg-white text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-[#635bff]/20 focus:border-[#635bff]"
+                  }`}
                 placeholder="파티 이름, 방장 닉네임 검색"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -379,7 +608,7 @@ export default function PartyListPage() {
             <div className="flex flex-col gap-4">
               {/* Status Filters */}
               <div className="flex items-center gap-2 flex-wrap">
-                <Filter className="w-4 h-4 text-gray-400 mr-1" />
+                <Filter className={`w-4 h-4 mr-1 ${theme === "dark" ? "text-gray-500" : "text-gray-400"}`} />
                 {[
                   { value: "", label: "전체" },
                   { value: "RECRUITING", label: "모집중" },
@@ -389,9 +618,17 @@ export default function PartyListPage() {
                   <button
                     key={filter.value}
                     onClick={() => setSelectedStatus(filter.value)}
-                    className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${selectedStatus === filter.value
-                      ? "bg-[#635bff] text-white shadow-md shadow-[#635bff]/25"
-                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                    className={`px-4 py-2 text-sm font-semibold transition-all duration-200 ${theme === "pop"
+                      ? selectedStatus === filter.value
+                        ? "bg-pink-500 text-white border-2 border-black rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+                        : "bg-white text-black border-2 border-black rounded-xl hover:bg-pink-100"
+                      : theme === "dark"
+                        ? selectedStatus === filter.value
+                          ? "bg-[#635bff] text-white rounded-full shadow-md shadow-[#635bff]/25"
+                          : "bg-[#1E293B] text-gray-400 rounded-full hover:bg-[#334155]"
+                        : selectedStatus === filter.value
+                          ? "bg-[#635bff] text-white rounded-full shadow-md shadow-[#635bff]/25"
+                          : "bg-gray-100 text-gray-600 rounded-full hover:bg-gray-200"
                       }`}
                   >
                     {filter.label}
@@ -499,7 +736,7 @@ export default function PartyListPage() {
                 <motion.div
                   key={party.partyId}
                   variants={itemVariants}
-                  whileHover={{ y: -6, transition: { duration: 0.2 } }}
+                  whileHover={theme === "pop" ? { y: -10, rotate: 2 } : { y: -6, transition: { duration: 0.2 } }}
                   onClick={() => {
                     if (!user) {
                       if (window.confirm("로그인이 필요한 서비스입니다.\n로그인 페이지로 이동하시겠습니까?")) {
@@ -509,7 +746,12 @@ export default function PartyListPage() {
                     }
                     navigate(`/party/${party.partyId}`);
                   }}
-                  className="group relative bg-white border border-gray-100 rounded-2xl overflow-hidden cursor-pointer hover:shadow-2xl hover:border-gray-200 transition-all duration-300"
+                  className={`group relative overflow-hidden cursor-pointer transition-all duration-300 ${theme === "pop"
+                    ? "bg-white border-4 border-black rounded-3xl shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[4px] hover:translate-y-[4px]"
+                    : theme === "dark"
+                      ? "bg-[#1E293B] border border-gray-700 rounded-2xl hover:shadow-2xl hover:border-gray-600"
+                      : "bg-white border border-gray-100 rounded-2xl hover:shadow-2xl hover:border-gray-200"
+                    }`}
                 >
                   {/* Service Banner */}
                   <div className="relative h-40 bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
@@ -552,18 +794,28 @@ export default function PartyListPage() {
                   <div className="p-5">
                     {/* Service Badge */}
                     <div className="flex items-center gap-2 mb-3">
-                      <span className="text-xs font-semibold text-[#635bff] bg-[#635bff]/10 px-2.5 py-1 rounded-full">
+                      <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${theme === "pop"
+                          ? "text-pink-600 bg-pink-100 border-2 border-pink-300"
+                          : theme === "dark"
+                            ? "text-[#635bff] bg-[#635bff]/20"
+                            : "text-[#635bff] bg-[#635bff]/10"
+                        }`}>
                         {party.productName}
                       </span>
                     </div>
 
                     {/* Title */}
-                    <h3 className="font-bold text-gray-900 mb-3 line-clamp-1 group-hover:text-[#635bff] transition-colors">
+                    <h3 className={`font-bold mb-3 line-clamp-1 transition-colors ${theme === "pop"
+                        ? "text-black group-hover:text-pink-500"
+                        : theme === "dark"
+                          ? "text-white group-hover:text-[#635bff]"
+                          : "text-gray-900 group-hover:text-[#635bff]"
+                      }`}>
                       {party.title || `${party.productName} 파티`}
                     </h3>
 
                     {/* Info Row */}
-                    <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
+                    <div className={`flex items-center justify-between text-sm mb-4 ${currentTheme.cardSubtext}`}>
                       <div className="flex items-center gap-1.5">
                         <Calendar className="w-4 h-4" />
                         <span>{formatDate(party.startDate)}</span>
@@ -580,10 +832,11 @@ export default function PartyListPage() {
                     </div>
 
                     {/* Price */}
-                    <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                      <span className="text-sm text-gray-500">월 구독료</span>
+                    <div className={`flex items-center justify-between pt-4 border-t ${theme === "pop" ? "border-2 border-black" : theme === "dark" ? "border-gray-700" : "border-gray-100"
+                      }`}>
+                      <span className={`text-sm ${currentTheme.cardSubtext}`}>월 구독료</span>
                       <div className="text-right">
-                        <span className="text-xl font-black text-gray-900">
+                        <span className={`text-xl font-black ${currentTheme.cardText}`}>
                           {party.monthlyFee?.toLocaleString()}
                         </span>
                         <span className="text-sm text-gray-500 ml-1">원</span>
