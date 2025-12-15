@@ -35,6 +35,7 @@ import AdminUserDetailPage from "@/pages/admin/AdminUserDetailPage";
 import AdminBlacklistDeletePage from "@/pages/admin/RemoveBlacklistPage";
 import AdminLoginHistoryPage from "@/pages/admin/AdminLoginHistoryPage";
 import AdminDashboardPage from "@/pages/admin/AdminDashboardPage";
+import ChartComparisonPage from "@/pages/admin/ChartComparisonPage";
 
 import LandingTestPage from "./pages/landing/LandingTestPage";
 import LandingPageA from "./pages/landing/LandingPageA";
@@ -205,6 +206,7 @@ export default function App() {
           />
           <Route path="/admin/users" element={<AdminUserListPage />} />
           <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
+          <Route path="/admin/chart-comparison" element={<ChartComparisonPage />} />
           <Route
             path="/admin/users/:userId"
             element={<AdminUserDetailPage />}
@@ -223,7 +225,7 @@ export default function App() {
           <Route
             path="/product/:id/delete"
             element={<ProtectedRoute element={<DeleteProduct />} />}
-            // TODO: Add role check for ADMIN
+          // TODO: Add role check for ADMIN
           />
           <Route
             path="/subscription/add/:productId"
