@@ -73,7 +73,7 @@ const TiltCard = ({ children, className = "" }) => {
 const BouncyButton = ({ children, variant = "primary", className = "", ...props }) => {
     const variants = {
         primary: "bg-black text-white hover:bg-gray-800",
-        secondary: "bg-white text-black border-2 border-black hover:bg-gray-50",
+        secondary: "bg-white text-black border border-gray-200 hover:bg-gray-50",
         gradient: "bg-gradient-to-r from-violet-500 via-purple-500 to-fuchsia-500 text-white",
     };
 

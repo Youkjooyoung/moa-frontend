@@ -26,7 +26,7 @@ const NoticeForm = ({ formData, setFormData, onSubmit, submitText, cancelPath })
                     value={formData.title}
                     onChange={handleChange}
                     placeholder="제목을 입력하세요"
-                    className="w-full px-4 py-3 border-4 border-black rounded-xl font-bold focus:outline-none focus:ring-2 focus:ring-cyan-400 placeholder-gray-400"
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl font-bold focus:outline-none focus:ring-2 focus:ring-cyan-400 placeholder-gray-400"
                 />
             </div>
 
@@ -41,7 +41,7 @@ const NoticeForm = ({ formData, setFormData, onSubmit, submitText, cancelPath })
                     onChange={handleChange}
                     placeholder="내용을 입력하세요"
                     rows={12}
-                    className="w-full px-4 py-3 border-4 border-black rounded-xl font-bold focus:outline-none focus:ring-2 focus:ring-cyan-400 placeholder-gray-400 resize-none"
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl font-bold focus:outline-none focus:ring-2 focus:ring-cyan-400 placeholder-gray-400 resize-none"
                 />
             </div>
 

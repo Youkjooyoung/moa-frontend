@@ -32,7 +32,7 @@ const InquiryAnswerModalContent = ({ inquiry, onClose, onAnswerSubmit }) => {
             <div className="space-y-6">
                 {/* Meta Info */}
                 <div className="flex flex-wrap items-center gap-3">
-                    <span className="px-3 py-1 text-xs font-black rounded-lg bg-cyan-400 text-black border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                    <span className="px-3 py-1 text-xs font-black rounded-lg bg-cyan-400 text-black border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]">
                         {getCategoryName(inquiry.communityCodeId)}
                     </span>
                     <span className="text-sm font-bold text-gray-500">
@@ -65,7 +65,7 @@ const InquiryAnswerModalContent = ({ inquiry, onClose, onAnswerSubmit }) => {
                         <img
                             src={`/api/community/inquiry/image/${inquiry.fileUuid}`}
                             alt={inquiry.fileOriginal}
-                            className="max-w-full max-h-64 rounded-xl border-4 border-black object-contain shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+                            className="max-w-full max-h-64 rounded-xl border border-gray-200 object-contain shadow-[4px_4px_12px_rgba(0,0,0,0.08)]"
                         />
                         <p className="text-xs font-bold text-gray-500 mt-2">{inquiry.fileOriginal}</p>
                     </div>
@@ -81,7 +81,7 @@ const InquiryAnswerModalContent = ({ inquiry, onClose, onAnswerSubmit }) => {
                         onChange={(e) => setAnswerContent(e.target.value)}
                         placeholder="답변 내용을 입력하세요"
                         rows={8}
-                        className="w-full px-4 py-3 border-4 border-black rounded-xl font-bold focus:outline-none focus:ring-2 focus:ring-cyan-400 placeholder-gray-400 resize-none"
+                        className="w-full px-4 py-3 border border-gray-200 rounded-xl font-bold focus:outline-none focus:ring-2 focus:ring-cyan-400 placeholder-gray-400 resize-none"
                     />
                 </div>
             </div>
@@ -111,7 +111,7 @@ const InquiryAnswerModal = ({ isOpen, onClose, inquiry, onAnswerSubmit }) => {
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto border-4 border-black rounded-2xl shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+            <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto border border-gray-200 rounded-2xl shadow-[4px_4px_12px_rgba(0,0,0,0.08)]">
                 <InquiryAnswerModalContent
                     key={inquiry.communityId}
                     inquiry={inquiry}

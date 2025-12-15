@@ -1,9 +1,9 @@
 const CARD_CLASS =
-  "bg-white border-4 border-black rounded-3xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]";
+  "bg-white border border-gray-200 rounded-3xl shadow-[4px_4px_12px_rgba(0,0,0,0.08)]";
 const INPUT_CLASS =
-  "w-full border-4 border-black rounded-2xl shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] p-3 text-slate-900 placeholder:text-slate-400 focus-visible:ring-0 focus:outline-none";
+  "w-full border border-gray-200 rounded-2xl shadow-[4px_4px_12px_rgba(0,0,0,0.08)] p-3 text-slate-900 placeholder:text-slate-400 focus-visible:ring-0 focus:outline-none";
 const BTN_CLASS =
-  "w-full bg-white text-black border-4 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] font-black py-3 text-lg active:translate-x-[2px] active:translate-y-[2px] active:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]";
+  "w-full bg-white text-black border border-gray-200 rounded-2xl shadow-[4px_4px_12px_rgba(0,0,0,0.08)] font-black py-3 text-lg active:translate-x-[2px] active:translate-y-[2px] active:shadow-[4px_4px_12px_rgba(0,0,0,0.08)]";
 
 export function ResetPwdForm() {
   return (

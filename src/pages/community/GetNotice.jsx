@@ -74,15 +74,15 @@ const GetNotice = () => {
     return (
         <CommunityLayout>
             <div className="max-w-3xl mx-auto pt-8">
-                <div className="border-b-4 border-black pb-6 mb-6">
+                <div className="border-b border-gray-200 pb-6 mb-6">
                     <h2 className="text-xl font-black text-black mb-4">
                         {notice.title}
                     </h2>
                     <div className="flex items-center gap-4">
-                        <span className="px-3 py-1 bg-lime-400 border-2 border-black rounded-lg text-sm font-black">
+                        <span className="px-3 py-1 bg-lime-400 border border-gray-200 rounded-lg text-sm font-black">
                             등록일: {formatDate(notice.createdAt)}
                         </span>
-                        <span className="px-3 py-1 bg-cyan-400 border-2 border-black rounded-lg text-sm font-black">
+                        <span className="px-3 py-1 bg-cyan-400 border border-gray-200 rounded-lg text-sm font-black">
                             조회수: {notice.viewCount || 0}
                         </span>
                     </div>
@@ -92,15 +92,15 @@ const GetNotice = () => {
                     {notice.content}
                 </div>
 
-                <div className="flex items-center justify-end mt-10 pt-6 border-t-4 border-black gap-3">
+                <div className="flex items-center justify-end mt-10 pt-6 border-t border-gray-200 gap-3">
                     {isAdmin && (
                         <button
                             onClick={() => navigate(`/community/notice/update/${noticeId}`)}
                             className="px-6 py-2 text-sm font-black text-black bg-cyan-400
-                                border-4 border-black rounded-xl
-                                shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
-                                hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]
-                                hover:translate-x-[2px] hover:translate-y-[2px]
+                                border border-gray-200 rounded-xl
+                                shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
+                                hover:shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
+                                
                                 transition-all"
                         >
                             수정
@@ -109,10 +109,10 @@ const GetNotice = () => {
                     <button
                         onClick={() => navigate('/community/notice')}
                         className="px-6 py-2 text-sm font-black text-black bg-white
-                            border-4 border-black rounded-xl
-                            shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
-                            hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]
-                            hover:translate-x-[2px] hover:translate-y-[2px]
+                            border border-gray-200 rounded-xl
+                            shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
+                            hover:shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
+                            
                             transition-all"
                     >
                         목록

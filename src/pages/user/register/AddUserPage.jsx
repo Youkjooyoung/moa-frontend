@@ -19,8 +19,8 @@ function Sticker({ children, rotate = 0, className = "" }) {
       whileHover={{ scale: 1.05, rotate: rotate + 3 }}
       className={`
         bg-white
-        border-4 border-black
-        shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]
+        border border-gray-200
+        shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
         rounded-2xl
         ${className}
       `}
@@ -84,7 +84,7 @@ export default function AddUserPage({ socialInfo }) {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <Card className="border-4 border-black shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] rounded-3xl">
+          <Card className="border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] rounded-3xl">
             <CardHeader>
               <CardTitle className="text-2xl font-black">
                 기본 정보 입력
@@ -102,7 +102,7 @@ export default function AddUserPage({ socialInfo }) {
                   <Input
                     value={socialEmail}
                     readOnly
-                    className="bg-gray-100 border-2 border-black"
+                    className="bg-gray-100 border border-gray-200"
                   />
                 </div>
               )}
@@ -116,7 +116,7 @@ export default function AddUserPage({ socialInfo }) {
                     value={form.email}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    className="border-2 border-black"
+                    className="border border-gray-200"
                   />
                   <p className={`text-xs mt-1 ${errors.email.isError ? "text-red-500" : "text-green-600"}`}>
                     {errors.email.message}
@@ -134,7 +134,7 @@ export default function AddUserPage({ socialInfo }) {
                       name="password"
                       value={form.password}
                       onChange={handleChange}
-                      className="border-2 border-black"
+                      className="border border-gray-200"
                     />
                     <p className={`text-xs mt-1 ${errors.password.isError ? "text-red-500" : "text-green-600"}`}>
                       {errors.password.message}
@@ -148,7 +148,7 @@ export default function AddUserPage({ socialInfo }) {
                       name="passwordCheck"
                       value={form.passwordCheck}
                       onChange={handleChange}
-                      className="border-2 border-black"
+                      className="border border-gray-200"
                     />
                     <p className={`text-xs mt-1 ${errors.passwordCheck.isError ? "text-red-500" : "text-green-600"}`}>
                       {errors.passwordCheck.message}
@@ -166,7 +166,7 @@ export default function AddUserPage({ socialInfo }) {
                   value={form.nickname}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  className="border-2 border-black"
+                  className="border border-gray-200"
                 />
                 <p className={`text-xs mt-1 ${errors.nickname.isError ? "text-red-500" : "text-green-600"}`}>
                   {errors.nickname.message}
@@ -181,7 +181,7 @@ export default function AddUserPage({ socialInfo }) {
                     readOnly
                     value={form.phone}
                     placeholder="본인인증 후 자동 입력"
-                    className="flex-1 bg-gray-100 border-2 border-black"
+                    className="flex-1 bg-gray-100 border border-gray-200"
                   />
                   <Button type="button" onClick={handlePassAuth}>
                     본인인증

@@ -46,7 +46,7 @@ export default function LandingTestPage() {
 
                     <Link
                         to="/landing/d"
-                        className="block w-full py-6 px-6 bg-yellow-400 hover:bg-yellow-300 text-black font-black rounded-lg shadow-md border-2 border-black transition duration-200"
+                        className="block w-full py-6 px-6 bg-yellow-400 hover:bg-yellow-300 text-black font-black rounded-lg shadow-md border border-gray-200 transition duration-200"
                     >
                         Variant D<br />
                         <span className="text-sm font-normal opacity-70">팝 & 바이브런트</span>
@@ -134,8 +134,8 @@ export default function LandingTestPage() {
 
                     <Link
                         to="/landing/o"
-                        className="block w-full py-6 px-6 bg-yellow-400 hover:bg-yellow-300 text-black font-black rounded-lg shadow-md border-4 border-black transition duration-200"
-                        style={{ boxShadow: '6px 6px 0px 0px rgba(0,0,0,1)' }}
+                        className="block w-full py-6 px-6 bg-yellow-400 hover:bg-yellow-300 text-black font-black rounded-lg shadow-md border border-gray-200 transition duration-200"
+                        style={{ boxShadow: '4px 4px 12px rgba(0,0,0,0.08)' }}
                     >
                         Variant O<br />
                         <span className="text-sm font-normal">Neo-Brutalist Pop (팝 & 바이브런트 개선)</span>
@@ -191,7 +191,7 @@ export default function LandingTestPage() {
 
                     <Link
                         to="/landing/v"
-                        className="block w-full py-6 px-6 bg-white hover:bg-gray-50 text-gray-900 font-black rounded-lg shadow-md border-2 border-black transition duration-200"
+                        className="block w-full py-6 px-6 bg-white hover:bg-gray-50 text-gray-900 font-black rounded-lg shadow-md border border-gray-200 transition duration-200"
                     >
                         Variant V <span className="text-xs font-normal bg-black text-white px-2 py-0.5 rounded-full ml-1">NEW</span><br />
                         <span className="text-sm font-normal text-gray-400">Dropbox Style (극단적 미니멀)</span>
@@ -259,8 +259,8 @@ export default function LandingTestPage() {
 
                     <Link
                         to="/landing/o3"
-                        className="block w-full py-6 px-6 bg-slate-50 hover:bg-white text-black font-black rounded-lg shadow-md border-4 border-black transition duration-200"
-                        style={{ boxShadow: '6px 6px 0px 0px rgba(0,0,0,1)' }}
+                        className="block w-full py-6 px-6 bg-slate-50 hover:bg-white text-black font-black rounded-lg shadow-md border border-gray-200 transition duration-200"
+                        style={{ boxShadow: '4px 4px 12px rgba(0,0,0,0.08)' }}
                     >
                         <span className="text-pink-500">Variant O3</span>
                         <span className="text-xs font-normal bg-pink-500 text-white px-2 py-0.5 rounded-full ml-2">NEW</span><br />
@@ -269,8 +269,8 @@ export default function LandingTestPage() {
 
                     <Link
                         to="/landing/memphis"
-                        className="block w-full py-6 px-6 bg-[#FFF5E6] hover:bg-white text-black font-black rounded-lg shadow-md border-4 border-black transition duration-200"
-                        style={{ boxShadow: '6px 6px 0px 0px rgba(0,0,0,1)' }}
+                        className="block w-full py-6 px-6 bg-[#FFF5E6] hover:bg-white text-black font-black rounded-lg shadow-md border border-gray-200 transition duration-200"
+                        style={{ boxShadow: '4px 4px 12px rgba(0,0,0,0.08)' }}
                     >
                         <span className="text-[#FF6B6B]">Memphis</span>
                         <span className="text-xs font-normal bg-[#4ECDC4] text-black px-2 py-0.5 rounded-full ml-2">NEW</span><br />
@@ -342,7 +342,7 @@ export default function LandingTestPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 col-span-1 md:col-span-2 mt-8 border-t pt-8">
                         <Link
                             to="/landing/swiss"
-                            className="block w-full py-8 px-6 bg-white hover:bg-gray-50 text-black font-black text-2xl border-4 border-black transition-transform hover:-translate-y-1"
+                            className="block w-full py-8 px-6 bg-white hover:bg-gray-50 text-black font-black text-2xl border border-gray-200 transition-transform hover:-translate-y-1"
                         >
                             Variant T
                             <span className="block text-sm font-normal text-gray-500 mt-2 font-mono uppercase tracking-widest">
@@ -460,14 +460,14 @@ export default function LandingTestPage() {
                                     </div>
                                 </Link>
 <Link                                    to="/landing/portrait"                                    className="group block w-full py-8 px-6 bg-[#FDF8F3] hover:bg-white text-[#4a4a4a] rounded-2xl shadow-lg border border-[#f0e6dc] transition-all hover:shadow-xl hover:-translate-y-1 relative overflow-hidden"                                >                                    {/* Decorative pastel blobs */}                                    <div className="absolute top-0 left-0 w-24 h-24 bg-[#FFD4DC]/50 rounded-full blur-2xl -ml-8 -mt-8 transition-transform group-hover:translate-x-2 group-hover:translate-y-2" />                                    <div className="absolute bottom-0 right-0 w-20 h-20 bg-[#D4E4FF]/50 rounded-full blur-2xl -mr-6 -mb-6 transition-transform group-hover:-translate-x-2 group-hover:-translate-y-2" />                                    <div className="absolute top-1/2 right-1/4 w-16 h-16 bg-[#E4D4FF]/40 rounded-full blur-xl" />                                    <div className="relative z-10">                                        <div className="flex items-center justify-between mb-2">                                            <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#FFB5C5] via-[#C5B5FF] to-[#B5D4FF]">Portrait Style</span>                                            <span className="bg-gradient-to-r from-[#FFB5C5] to-[#C5B5FF] text-white text-xs px-2 py-1 rounded-full shadow-sm">NEW</span>                                        </div>                                        <span className="block text-sm text-[#888] font-medium">                                            아기자기 파스텔+패럴랙스(파스텔/그라데이션/스크롤카드슝)                                        </span>                                    </div>                                </Link>
-<Link to="/landing/ysa01" className="group block w-full py-8 px-6 bg-slate-50 hover:bg-white text-black rounded-2xl shadow-lg border-4 border-black transition-all hover:shadow-xl hover:-translate-y-1 relative overflow-hidden" style={{ boxShadow: "8px_8px_0px_0px_rgba(0,0,0,1)" }}>
+<Link to="/landing/ysa01" className="group block w-full py-8 px-6 bg-slate-50 hover:bg-white text-black rounded-2xl shadow-lg border border-gray-200 transition-all hover:shadow-xl hover:-translate-y-1 relative overflow-hidden" style={{ boxShadow: "4px 4px 12px rgba(0,0,0,0.08)" }}>
                                     <div className="absolute top-0 right-0 w-24 h-24 bg-cyan-400/40 rounded-full blur-2xl -mr-8 -mt-8" />
                                     <div className="absolute bottom-0 left-0 w-20 h-20 bg-pink-500/40 rounded-full blur-2xl -ml-6 -mb-6" />
                                     <div className="absolute top-1/3 left-1/3 w-16 h-16 bg-lime-400/30 rounded-full blur-xl" />
                                     <div className="relative z-10">
                                         <div className="flex items-center justify-between mb-2">
                                             <span className="text-2xl font-black"><span className="text-cyan-400">YSa</span><span className="text-pink-500">01</span></span>
-                                            <span className="bg-lime-400 text-black text-xs px-2 py-1 rounded-full font-black border-2 border-black">NEW</span>
+                                            <span className="bg-lime-400 text-black text-xs px-2 py-1 rounded-full font-black border border-gray-200">NEW</span>
                                         </div>
                                         <span className="block text-sm text-gray-600 font-bold">패럴랙스+네오브루탈리즘(띠용때용, 롤링텍스트, 스크롤카드슝)</span>
                                     </div>

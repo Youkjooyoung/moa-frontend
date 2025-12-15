@@ -58,7 +58,7 @@ const Confetti = () => {
       {confettiPieces.map((piece, index) => (
         <motion.div
           key={index}
-          className={`absolute ${piece.color} ${piece.size} rounded-sm border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]`}
+          className={`absolute ${piece.color} ${piece.size} rounded-sm border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]`}
           style={{ left: piece.left, top: -20 }}
           animate={{
             y: ["0vh", "110vh"],
@@ -126,7 +126,7 @@ const Navigation = () => {
         </motion.div>
 
         <div className="hidden md:flex items-center gap-6">
-          <Link to="/party" className="px-4 py-2 font-bold text-black hover:bg-black hover:text-white rounded-xl transition-colors border border-gray-200">
+          <Link to="/party" className="px-4 py-2 font-bold text-black hover:bg-black hover:text-white rounded-xl transition-colors border-2 border-black">
             파티 찾기
           </Link>
           <a href="#pricing" className="font-bold text-gray-600 hover:text-black transition-colors">요금</a>
@@ -330,8 +330,8 @@ const ParallaxHero = () => {
                   className="absolute"
                 >
                   {/* O3 스타일 카드 */}
-                  <div className="w-[150px] md:w-[170px] bg-white border border-gray-200 rounded-2xl p-4 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]">
-                    <div className={`w-10 h-10 ${card.bgColor} rounded-xl border border-gray-200 flex items-center justify-center mb-3 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]`}>
+                  <div className="w-[150px] md:w-[170px] bg-white border-4 border-black rounded-2xl p-4 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+                    <div className={`w-10 h-10 ${card.bgColor} rounded-xl border-2 border-black flex items-center justify-center mb-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]`}>
                       <span className="text-white font-black text-lg">{card.emoji}</span>
                     </div>
                     <h3 className="font-black text-black text-sm mb-1">{card.name}</h3>
@@ -341,7 +341,7 @@ const ParallaxHero = () => {
                         <p className="text-lg font-black text-pink-500">{card.price}</p>
                         <p className="text-[10px] text-gray-400 font-bold">월 비용</p>
                       </div>
-                      <div className="flex items-center gap-1 text-xs font-bold text-black bg-lime-400 px-2 py-1 rounded-full border border-gray-200">
+                      <div className="flex items-center gap-1 text-xs font-bold text-black bg-lime-400 px-2 py-1 rounded-full border-2 border-black">
                         <Users size={12} />
                         <span>{card.members}</span>
                       </div>
@@ -490,13 +490,13 @@ const ComparisonSection = () => {
         <div className="grid md:grid-cols-2 gap-6">
           {/* 혼자 결제 */}
           <BouncyCard className="p-8 text-center" delay={0.1}>
-            <div className="w-20 h-20 bg-gray-200 rounded-2xl border border-gray-200 flex items-center justify-center mx-auto mb-6 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]">
+            <div className="w-20 h-20 bg-gray-200 rounded-2xl border-4 border-black flex items-center justify-center mx-auto mb-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
               <span className="text-4xl">😢</span>
             </div>
             <h3 className="text-xl font-black mb-2">혼자 결제하면</h3>
             <p className="text-gray-500 font-bold mb-6">정가 그대로, 매달 부담</p>
             <div className="flex justify-center mb-4">
-              <div className="w-14 h-14 rounded-full bg-gray-300 border border-gray-200" />
+              <div className="w-14 h-14 rounded-full bg-gray-300 border-3 border-black" />
             </div>
             <p className="text-4xl font-black text-red-500">월 17,000원</p>
             <p className="text-sm text-gray-400 font-bold mt-2">넷플릭스 프리미엄 기준</p>
@@ -504,7 +504,7 @@ const ComparisonSection = () => {
 
           {/* 모아에서 */}
           <BouncyCard className="p-8 text-center bg-gradient-to-br from-pink-50 to-cyan-50" delay={0.2}>
-            <div className="w-20 h-20 bg-pink-500 rounded-2xl border border-gray-200 flex items-center justify-center mx-auto mb-6 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]">
+            <div className="w-20 h-20 bg-pink-500 rounded-2xl border-4 border-black flex items-center justify-center mx-auto mb-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
               <span className="text-4xl">🎉</span>
             </div>
             <h3 className="text-xl font-black mb-2">모아에서 나누면</h3>
@@ -513,13 +513,13 @@ const ComparisonSection = () => {
               {['bg-red-500', 'bg-blue-500', 'bg-lime-400', 'bg-cyan-400'].map((color, i) => (
                 <div
                   key={i}
-                  className={`w-14 h-14 rounded-full ${color} border border-gray-200 shadow-sm`}
+                  className={`w-14 h-14 rounded-full ${color} border-3 border-black shadow-sm`}
                 />
               ))}
             </div>
             <p className="text-4xl font-black text-pink-500">월 4,250원</p>
             <p className="text-sm font-bold mt-2">
-              <span className="text-lime-500 bg-lime-100 px-2 py-1 rounded-full border border-gray-200">-75% 절약!</span>
+              <span className="text-lime-500 bg-lime-100 px-2 py-1 rounded-full border-2 border-black">-75% 절약!</span>
             </p>
           </BouncyCard>
         </div>
@@ -568,7 +568,7 @@ const HowItWorksSection = () => {
               <motion.div
                 whileHover={{ scale: 1.1, rotate: 10 }}
                 transition={{ type: "spring", stiffness: 200, damping: 15 }}
-                className={`w-28 h-28 ${step.color} rounded-3xl border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] mx-auto mb-6 flex items-center justify-center`}
+                className={`w-28 h-28 ${step.color} rounded-3xl border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] mx-auto mb-6 flex items-center justify-center`}
               >
                 <span className="text-5xl">{step.emoji}</span>
               </motion.div>
@@ -636,7 +636,7 @@ const FeaturesSection = () => {
         <div className="grid md:grid-cols-3 gap-6">
           {features.map((feature, index) => (
             <BouncyCard key={feature.title} className="p-6 text-center" delay={index * 0.1}>
-              <div className={`w-16 h-16 ${feature.color} rounded-2xl border border-gray-200 flex items-center justify-center mx-auto mb-4 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]`}>
+              <div className={`w-16 h-16 ${feature.color} rounded-2xl border-4 border-black flex items-center justify-center mx-auto mb-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]`}>
                 <span className="text-3xl">{feature.emoji}</span>
               </div>
               <h3 className="text-xl font-black mb-2">{feature.title}</h3>
@@ -691,7 +691,7 @@ const PricingSection = () => {
               <div className="flex items-center gap-3">
                 <span className="text-gray-400 line-through text-sm font-bold">₩{service.original}</span>
                 <span className="font-black text-lg">₩{service.party}</span>
-                <span className="text-xs font-black text-white bg-lime-500 px-2 py-1 rounded-full border border-gray-200">
+                <span className="text-xs font-black text-white bg-lime-500 px-2 py-1 rounded-full border-2 border-black">
                   -{service.save}
                 </span>
               </div>
@@ -716,7 +716,7 @@ const FAQItem = ({ question, answer, isOpen, onClick }) => {
       <button onClick={onClick} className="w-full py-5 flex items-center justify-between text-left">
         <span className="font-black text-black pr-8">{question}</span>
         <motion.div animate={{ rotate: isOpen ? 45 : 0 }} transition={{ duration: 0.2 }} className="flex-shrink-0">
-          <div className="w-8 h-8 bg-pink-500 rounded-lg border border-gray-200 flex items-center justify-center shadow-[4px_4px_12px_rgba(0,0,0,0.08)]">
+          <div className="w-8 h-8 bg-pink-500 rounded-lg border-3 border-black flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
             <Plus size={18} className="text-white" />
           </div>
         </motion.div>

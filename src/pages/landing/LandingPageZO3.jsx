@@ -35,10 +35,10 @@ function Sticker({ children, color = "bg-white", rotate = 0, className = "" }) {
       whileTap={{ scale: 0.95 }}
       className={`
         ${color}
-        border-4 border-black
-        shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]
-        hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]
-        hover:translate-x-[3px] hover:translate-y-[3px]
+        border border-gray-200
+        shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
+        hover:shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
+       
         transition-all duration-200
         ${className}
       `}
@@ -59,9 +59,9 @@ function PopButton({ children, color = "bg-pink-500", className = "", ...props }
         ${color}
         px-8 py-4
         font-black text-xl
-        border-4 border-black
-        shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]
-        hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
+        border border-gray-200
+        shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
+        hover:shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
         hover:translate-x-[4px] hover:translate-y-[4px]
         transition-all duration-200
         rounded-2xl
@@ -101,8 +101,8 @@ function BouncyCard({ children, className = "", delay = 0 }) {
       whileHover={{ y: -10, rotate: 2 }}
       className={`
         bg-white
-        border-4 border-black
-        shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]
+        border border-gray-200
+        shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
         rounded-3xl
         overflow-hidden
         ${className}
@@ -176,7 +176,7 @@ export default function LandingPageO3() {
           >
             <Link
               to="/party"
-              className="hidden md:block px-4 py-2 font-bold text-black hover:bg-black hover:text-white rounded-xl transition-colors border-2 border-black"
+              className="hidden md:block px-4 py-2 font-bold text-black hover:bg-black hover:text-white rounded-xl transition-colors border border-gray-200"
             >
               파티 찾기
             </Link>
@@ -290,9 +290,9 @@ export default function LandingPageO3() {
 
                 <div className="space-y-4 mb-6">
                   {ottLogos.slice(0, 3).map((ott, i) => (
-                    <div key={i} className="flex items-center justify-between p-3 bg-slate-100 rounded-xl border-2 border-black">
+                    <div key={i} className="flex items-center justify-between p-3 bg-slate-100 rounded-xl border border-gray-200">
                       <div className="flex items-center gap-3">
-                        <div className={`w-10 h-10 ${ott.color} rounded-lg flex items-center justify-center text-white font-bold text-sm border-2 border-black`}>
+                        <div className={`w-10 h-10 ${ott.color} rounded-lg flex items-center justify-center text-white font-bold text-sm border border-gray-200`}>
                           {ott.letter}
                         </div>
                         <span className="font-bold">{ott.name}</span>
@@ -309,8 +309,8 @@ export default function LandingPageO3() {
               </Sticker>
 
               {/* Background decorative cards */}
-              <div className="absolute -top-4 -left-4 w-full max-w-sm h-full bg-cyan-400 rounded-3xl border-4 border-black -z-10 transform -rotate-6" />
-              <div className="absolute -top-8 -left-8 w-full max-w-sm h-full bg-pink-400 rounded-3xl border-4 border-black -z-20 transform -rotate-12" />
+              <div className="absolute -top-4 -left-4 w-full max-w-sm h-full bg-cyan-400 rounded-3xl border border-gray-200 -z-10 transform -rotate-6" />
+              <div className="absolute -top-8 -left-8 w-full max-w-sm h-full bg-pink-400 rounded-3xl border border-gray-200 -z-20 transform -rotate-12" />
             </motion.div>
           </div>
         </div>
@@ -363,7 +363,7 @@ export default function LandingPageO3() {
                 transition={{ delay: i * 0.1, type: "spring" }}
               >
                 <BouncyCard className="p-8 h-full" delay={i * 0.1}>
-                  <div className={`w-20 h-20 ${feature.color} rounded-2xl border-4 border-black flex items-center justify-center mb-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]`}>
+                  <div className={`w-20 h-20 ${feature.color} rounded-2xl border border-gray-200 flex items-center justify-center mb-6 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]`}>
                     <span className="text-4xl">{feature.emoji}</span>
                   </div>
                   <h3 className="text-2xl font-black mb-3">{feature.title}</h3>
@@ -477,7 +477,7 @@ export default function LandingPageO3() {
               >
                 <motion.div
                   whileHover={{ scale: 1.1, rotate: 10 }}
-                  className={`w-28 h-28 ${step.color} rounded-3xl border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] mx-auto mb-6 flex items-center justify-center`}
+                  className={`w-28 h-28 ${step.color} rounded-3xl border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] mx-auto mb-6 flex items-center justify-center`}
                 >
                   <span className="text-5xl">{step.emoji}</span>
                 </motion.div>

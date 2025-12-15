@@ -41,10 +41,10 @@ function Sticker({ children, color = "bg-white", rotate = 0, className = "" }) {
       whileTap={{ scale: 0.95 }}
       className={`
         ${color}
-        border-4 border-black
-        shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]
-        hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]
-        hover:translate-x-[3px] hover:translate-y-[3px]
+        border border-gray-200
+        shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
+        hover:shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
+       
         transition-all duration-200
         ${className}
       `}
@@ -65,10 +65,10 @@ function PopButton({ children, color = "bg-pink-500", className = "", ...props }
         ${color}
         px-6 py-3
         font-black text-lg
-        border-4 border-black
-        shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]
-        hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]
-        hover:translate-x-[3px] hover:translate-y-[3px]
+        border border-gray-200
+        shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
+        hover:shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
+       
         transition-all duration-200
         rounded-xl
         ${className}
@@ -107,9 +107,9 @@ function BouncyCard({ children, className = "", delay = 0 }) {
       whileHover={{ y: -8, rotate: 1 }}
       className={`
         bg-white
-        border-4 border-black
-        shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]
-        hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
+        border border-gray-200
+        shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
+        hover:shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
         hover:translate-x-[4px] hover:translate-y-[4px]
         rounded-2xl
         overflow-hidden
@@ -426,7 +426,7 @@ export default function PartyListPageZO3() {
               </div>
               <input
                 type="text"
-                className="block w-full pl-14 pr-12 py-4 border-4 border-black rounded-xl bg-slate-50 text-black placeholder-gray-400 focus:outline-none focus:bg-white font-semibold text-lg transition-colors"
+                className="block w-full pl-14 pr-12 py-4 border border-gray-200 rounded-xl bg-slate-50 text-black placeholder-gray-400 focus:outline-none focus:bg-white font-semibold text-lg transition-colors"
                 placeholder="파티 이름, 방장 닉네임 검색 🔍"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -457,9 +457,9 @@ export default function PartyListPageZO3() {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => setSelectedStatus(filter.value)}
-                    className={`px-4 py-2 rounded-xl text-sm font-bold border-3 border-black transition-all duration-200 ${
+                    className={`px-4 py-2 rounded-xl text-sm font-bold border border-gray-200 transition-all duration-200 ${
                       selectedStatus === filter.value
-                        ? "bg-pink-500 text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]"
+                        ? "bg-pink-500 text-white shadow-[4px_4px_12px_rgba(0,0,0,0.08)]"
                         : "bg-slate-100 text-gray-700 hover:bg-slate-200"
                     }`}
                   >
@@ -480,7 +480,7 @@ export default function PartyListPageZO3() {
                     type="date"
                     value={startDate}
                     onChange={(e) => setStartDate(e.target.value)}
-                    className="appearance-none bg-slate-100 border-3 border-black text-gray-700 text-sm font-bold rounded-xl pl-4 pr-4 py-2.5 focus:outline-none focus:bg-white transition-colors cursor-pointer"
+                    className="appearance-none bg-slate-100 border border-gray-200 text-gray-700 text-sm font-bold rounded-xl pl-4 pr-4 py-2.5 focus:outline-none focus:bg-white transition-colors cursor-pointer"
                   />
                 </div>
 
@@ -489,7 +489,7 @@ export default function PartyListPageZO3() {
                   <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
-                    className="appearance-none bg-white border-3 border-black rounded-xl pl-4 pr-10 py-2.5 text-sm font-bold text-gray-700 hover:bg-slate-50 focus:outline-none cursor-pointer transition-colors"
+                    className="appearance-none bg-white border border-gray-200 rounded-xl pl-4 pr-10 py-2.5 text-sm font-bold text-gray-700 hover:bg-slate-50 focus:outline-none cursor-pointer transition-colors"
                   >
                     <option value="latest">최신순</option>
                     <option value="start_date_asc">시작 빠른순</option>
@@ -511,7 +511,7 @@ export default function PartyListPageZO3() {
             {[...Array(8)].map((_, i) => (
               <div
                 key={i}
-                className="bg-white border-4 border-black rounded-2xl overflow-hidden shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]"
+                className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-[4px_4px_12px_rgba(0,0,0,0.08)]"
               >
                 <div className="h-36 bg-gradient-to-br from-slate-200 to-slate-100 animate-pulse" />
                 <div className="p-5 space-y-3">
@@ -631,7 +631,7 @@ export default function PartyListPageZO3() {
                     {/* Content */}
                     <div className="p-5">
                       {/* Service Tag */}
-                      <div className="inline-block bg-slate-100 border-2 border-black px-3 py-1 rounded-lg mb-3">
+                      <div className="inline-block bg-slate-100 border border-gray-200 px-3 py-1 rounded-lg mb-3">
                         <span className="text-xs font-bold">{party.productName}</span>
                       </div>
 
@@ -682,7 +682,7 @@ export default function PartyListPageZO3() {
           {loadingParties && !isInitialLoading && (
             <Sticker color="bg-cyan-400" rotate={-2} className="px-6 py-3 rounded-xl">
               <span className="flex items-center gap-3 font-bold">
-                <div className="w-5 h-5 border-3 border-black border-t-transparent rounded-full animate-spin" />
+                <div className="w-5 h-5 border border-gray-200 border-t-transparent rounded-full animate-spin" />
                 더 불러오는 중...
               </span>
             </Sticker>

@@ -1,11 +1,11 @@
 import React from "react";
 
 const CARD =
-  "bg-white border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-3xl";
+  "bg-white border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] rounded-3xl";
 const BTN =
-  "px-4 py-2 rounded-2xl border-2 border-black bg-white text-black font-black text-sm hover:bg-slate-50 active:translate-y-[1px]";
+  "px-4 py-2 rounded-2xl border border-gray-200 bg-white text-black font-black text-sm hover:bg-slate-50 active:translate-y-[1px]";
 const BTN_DANGER =
-  "px-4 py-2 rounded-2xl border-2 border-black bg-white text-red-600 font-black text-sm hover:bg-slate-50 active:translate-y-[1px]";
+  "px-4 py-2 rounded-2xl border border-gray-200 bg-white text-red-600 font-black text-sm hover:bg-slate-50 active:translate-y-[1px]";
 
 export function ProfileCard({
   user,
@@ -50,7 +50,7 @@ export function ProfileCard({
   return (
     <div className={`${CARD} p-6`}>
       <div className="flex items-center gap-4">
-          <div className="w-16 h-16 rounded-full border-4 border-black bg-slate-100 flex items-center justify-center overflow-hidden">
+          <div className="w-16 h-16 rounded-full border border-gray-200 bg-slate-100 flex items-center justify-center overflow-hidden">
             {displayImageUrl ? (
               <img
                 src={displayImageUrl}
@@ -65,7 +65,7 @@ export function ProfileCard({
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
             <p className="font-black text-lg leading-none">{name}</p>
-            <span className="px-2 py-0.5 rounded-full border-2 border-black text-xs font-black bg-white">
+            <span className="px-2 py-0.5 rounded-full border border-gray-200 text-xs font-black bg-white">
               {isAdmin ? "ADMIN" : "MEMBER"}
             </span>
           </div>

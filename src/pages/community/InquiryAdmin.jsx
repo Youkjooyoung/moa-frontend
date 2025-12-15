@@ -131,7 +131,7 @@ const InquiryAdmin = () => {
                     className="rounded-2xl overflow-hidden"
                 >
                     {/* 테이블 헤더 */}
-                    <div className="bg-slate-100 border-b-4 border-black">
+                    <div className="bg-slate-100 border-b border-gray-200">
                         <div className="grid gap-4 py-3 px-4 text-sm font-black text-black" style={{ gridTemplateColumns: 'repeat(19, minmax(0, 1fr))' }}>
                             <div className="col-span-1 text-center">번호</div>
                             <div className="col-span-1 text-center" style={{ whiteSpace: 'nowrap' }}>카테고리</div>
@@ -152,14 +152,14 @@ const InquiryAdmin = () => {
                             <div
                                 key={inquiry.communityId}
                                 onClick={() => handleTitleClick(inquiry)}
-                                className="grid gap-4 py-4 px-4 border-b-2 border-black last:border-b-0 hover:bg-slate-50 items-center text-sm cursor-pointer transition-colors"
+                                className="grid gap-4 py-4 px-4 border-b border-gray-200 last:border-b-0 hover:bg-slate-50 items-center text-sm cursor-pointer transition-colors"
                                 style={{ gridTemplateColumns: 'repeat(19, minmax(0, 1fr))' }}
                             >
                                 <div className="col-span-1 text-center font-bold text-gray-600">
                                     {(currentPage - 1) * pageSize + index + 1}
                                 </div>
                                 <div className="col-span-1 flex justify-center">
-                                    <span className="px-2 py-1 text-xs font-black rounded-lg bg-cyan-400 border-2 border-black" style={{ whiteSpace: 'nowrap' }}>
+                                    <span className="px-2 py-1 text-xs font-black rounded-lg bg-cyan-400 border border-gray-200" style={{ whiteSpace: 'nowrap' }}>
                                         {getCategoryName(inquiry.communityCodeId)}
                                     </span>
                                 </div>
@@ -184,10 +184,10 @@ const InquiryAdmin = () => {
                                             e.stopPropagation();
                                             handleAnswerClick(inquiry);
                                         }}
-                                        className={`px-3 py-1.5 text-xs font-black rounded-lg border-2 border-black
-                                            shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]
-                                            hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]
-                                            hover:translate-x-[1px] hover:translate-y-[1px]
+                                        className={`px-3 py-1.5 text-xs font-black rounded-lg border border-gray-200
+                                            shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
+                                            hover:shadow-[6px_6px_16px_rgba(0,0,0,0.12)]
+                                            
                                             transition-all
                                             ${inquiry.answerStatus === '답변완료'
                                                 ? 'bg-white text-black'
@@ -204,7 +204,7 @@ const InquiryAdmin = () => {
 
                     {/* 페이지네이션 */}
                     {totalPages > 0 && (
-                        <div className="py-6 border-t-4 border-black">
+                        <div className="py-6 border-t border-gray-200">
                             <NeoPagination
                                 currentPage={currentPage}
                                 totalPages={totalPages}

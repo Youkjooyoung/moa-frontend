@@ -85,7 +85,7 @@ const FaqItem = ({ faq, index, isAdmin, onUpdate, getCategoryFromTitle, isOpen, 
                     onClick={handleToggle}
                     className="flex items-center p-5 cursor-pointer hover:bg-slate-50 transition-colors"
                 >
-                    <span className="px-3 py-1 text-sm font-black bg-pink-500 text-white rounded-lg border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] mr-4">
+                    <span className="px-3 py-1 text-sm font-black bg-pink-500 text-white rounded-lg border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] mr-4">
                         {category}
                     </span>
                     <span className="flex-1 font-bold text-black">
@@ -98,7 +98,7 @@ const FaqItem = ({ faq, index, isAdmin, onUpdate, getCategoryFromTitle, isOpen, 
 
                 {/* Answer Content */}
                 {isOpen && (
-                    <div className="border-t-4 border-black p-5 bg-slate-50">
+                    <div className="border-t border-gray-200 p-5 bg-slate-50">
                         {isEditing ? (
                             <div className="space-y-4">
                                 {/* 카테고리 + 제목 한 줄 */}
@@ -106,7 +106,7 @@ const FaqItem = ({ faq, index, isAdmin, onUpdate, getCategoryFromTitle, isOpen, 
                                     <select
                                         value={editCategory}
                                         onChange={(e) => setEditCategory(e.target.value)}
-                                        className="px-3 py-2 border-4 border-black rounded-xl font-black bg-white
+                                        className="px-3 py-2 border border-gray-200 rounded-xl font-black bg-white
                                             focus:outline-none focus:ring-2 focus:ring-cyan-400"
                                     >
                                         {categories.map((cat) => (
@@ -117,7 +117,7 @@ const FaqItem = ({ faq, index, isAdmin, onUpdate, getCategoryFromTitle, isOpen, 
                                         value={editFormData.title}
                                         onChange={(e) => handleEditChange('title', e.target.value)}
                                         placeholder="질문 제목"
-                                        className="flex-1 px-4 py-2 border-4 border-black rounded-xl font-bold
+                                        className="flex-1 px-4 py-2 border border-gray-200 rounded-xl font-bold
                                             focus:outline-none focus:ring-2 focus:ring-cyan-400"
                                     />
                                 </div>
@@ -127,7 +127,7 @@ const FaqItem = ({ faq, index, isAdmin, onUpdate, getCategoryFromTitle, isOpen, 
                                     onChange={(e) => handleEditChange('content', e.target.value)}
                                     rows={6}
                                     placeholder="답변 내용"
-                                    className="w-full px-4 py-3 border-4 border-black rounded-xl font-bold resize-none
+                                    className="w-full px-4 py-3 border border-gray-200 rounded-xl font-bold resize-none
                                         focus:outline-none focus:ring-2 focus:ring-cyan-400"
                                 />
                                 <div className="flex gap-3 justify-end">

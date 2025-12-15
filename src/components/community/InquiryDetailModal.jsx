@@ -14,7 +14,7 @@ const InquiryDetailModal = ({ isOpen, onClose, inquiry }) => {
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto border-4 border-black rounded-2xl shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+            <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto border border-gray-200 rounded-2xl shadow-[4px_4px_12px_rgba(0,0,0,0.08)]">
                 <DialogHeader>
                     <DialogTitle className="text-2xl font-black text-black">문의 상세</DialogTitle>
                 </DialogHeader>
@@ -22,7 +22,7 @@ const InquiryDetailModal = ({ isOpen, onClose, inquiry }) => {
                 <div className="space-y-6">
                     {/* Meta Info */}
                     <div className="flex flex-wrap items-center gap-3">
-                        <span className="px-3 py-1 text-xs font-black rounded-lg bg-cyan-400 text-black border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                        <span className="px-3 py-1 text-xs font-black rounded-lg bg-cyan-400 text-black border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]">
                             {getCategoryName(inquiry.communityCodeId)}
                         </span>
                         <InquiryStatusBadge status={inquiry.answerStatus} />
@@ -55,7 +55,7 @@ const InquiryDetailModal = ({ isOpen, onClose, inquiry }) => {
                             <img
                                 src={`/api/community/inquiry/image/${inquiry.fileUuid}`}
                                 alt={inquiry.fileOriginal}
-                                className="max-w-full max-h-64 rounded-xl border-4 border-black object-contain shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+                                className="max-w-full max-h-64 rounded-xl border border-gray-200 object-contain shadow-[4px_4px_12px_rgba(0,0,0,0.08)]"
                             />
                             <p className="text-xs font-bold text-gray-500 mt-2">{inquiry.fileOriginal}</p>
                         </div>

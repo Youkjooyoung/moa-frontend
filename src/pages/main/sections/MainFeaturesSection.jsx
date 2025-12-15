@@ -5,14 +5,13 @@ import { Users, Shield, Zap } from "lucide-react";
 function Sticker({ children, color = "bg-white", rotate = 0, className = "" }) {
   return (
     <motion.div
-      whileHover={{ scale: 1.05 }}
+      whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
       className={`
         ${color}
-        border-4 border-black
-        shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]
-        hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]
-        hover:translate-x-[3px] hover:translate-y-[3px]
+        border border-gray-200
+        shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
+        hover:shadow-[6px_6px_16px_rgba(0,0,0,0.12)]
         transition-all duration-200
         ${className}
       `}
@@ -33,8 +32,8 @@ function BouncyCard({ children, className = "", delay = 0 }) {
       whileHover={{ y: -8, rotate: 1 }}
       className={`
         bg-white
-        border-4 border-black
-        shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]
+        border border-gray-200
+        shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
         rounded-3xl
         overflow-hidden
         ${className}
@@ -71,7 +70,7 @@ export default function MainFeaturesSection() {
   ];
 
   return (
-    <section className="relative px-6 md:px-12 py-20 bg-white border-b-4 border-black">
+    <section className="relative px-6 md:px-12 py-20 bg-white border-b border-gray-200">
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -95,7 +94,7 @@ export default function MainFeaturesSection() {
           {features.map((f, i) => (
             <BouncyCard key={f.title} className="p-8 h-full" delay={i * 0.08}>
               <div
-                className={`w-20 h-20 ${f.color} rounded-2xl border-4 border-black flex items-center justify-center mb-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]`}
+                className={`w-20 h-20 ${f.color} rounded-2xl border border-gray-200 flex items-center justify-center mb-6 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]`}
               >
                 <span className="text-4xl">{f.emoji}</span>
               </div>

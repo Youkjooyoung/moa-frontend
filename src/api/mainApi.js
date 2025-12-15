@@ -29,24 +29,19 @@ const safeGet = async (path, config = {}) => {
   }
 };
 
+// 상품 목록 조회 - /product 엔드포인트 사용 (permitAll)
 export const fetchMainSubscriptionProducts = async () => {
-  const payload = await safeGet("/subscriptions/products");
+  const payload = await safeGet("/product");
   if (payload?.__error) return payload;
   return normalizeList(payload);
 };
 
+// 파티 목록 조회 - /parties 엔드포인트 직접 사용 (permitAll)
 export const fetchMainTrendingParties = async () => {
-  const payload = await safeGet("/parties/trending");
-  if (payload?.__error) {
-    if (payload.status === 404) {
-      const fallback = await safeGet("/parties", {
-        params: { sort: "TRENDING", limit: 8 },
-      });
-      if (fallback?.__error) return fallback;
-      return normalizeList(fallback);
-    }
-    return payload;
-  }
+  const payload = await safeGet("/parties", {
+    params: { sort: "latest", size: 8 },
+  });
+  if (payload?.__error) return payload;
   return normalizeList(payload);
 };
 

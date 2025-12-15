@@ -35,10 +35,10 @@ function Sticker({ children, color = "bg-white", rotate = 0, className = "" }) {
             whileTap={{ scale: 0.95 }}
             className={`
                 ${color}
-                border-4 border-black
-                shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]
-                hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]
-                hover:translate-x-[3px] hover:translate-y-[3px]
+                border border-gray-200
+                shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
+                hover:shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
+               
                 transition-all duration-200
                 ${className}
             `}
@@ -59,10 +59,10 @@ function PopButton({ children, color = "bg-pink-500", className = "", ...props }
                 ${color}
                 px-6 py-3
                 font-black text-lg
-                border-4 border-black
-                shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]
-                hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]
-                hover:translate-x-[3px] hover:translate-y-[3px]
+                border border-gray-200
+                shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
+                hover:shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
+               
                 transition-all duration-200
                 rounded-xl
                 ${className}
@@ -114,7 +114,7 @@ function PartyCard({ party, badge, isMyParty, isLeader, remainingSlots, onClick,
             onClick={onClick}
             className="cursor-pointer"
         >
-            <div className="bg-white border-4 border-black rounded-3xl overflow-hidden shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[4px] hover:translate-y-[4px] transition-all duration-200">
+            <div className="bg-white border border-gray-200 rounded-3xl overflow-hidden shadow-[4px_4px_12px_rgba(0,0,0,0.08)] hover:shadow-[4px_4px_12px_rgba(0,0,0,0.08)] hover:translate-x-[4px] hover:translate-y-[4px] transition-all duration-200">
                 {/* Service Banner */}
                 <div className={`relative h-36 ${getServiceColor(party.productName)} flex items-center justify-center`}>
                     {party.productImage ? (
@@ -449,7 +449,7 @@ export default function PartyListPageO() {
                             </div>
                             <input
                                 type="text"
-                                className="block w-full pl-14 pr-12 py-4 border-4 border-black rounded-2xl bg-yellow-100 text-black placeholder-gray-600 font-bold focus:outline-none focus:bg-yellow-50 transition-colors"
+                                className="block w-full pl-14 pr-12 py-4 border border-gray-200 rounded-2xl bg-yellow-100 text-black placeholder-gray-600 font-bold focus:outline-none focus:bg-yellow-50 transition-colors"
                                 placeholder="파티 이름, 방장 닉네임 검색 🔍"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -479,10 +479,10 @@ export default function PartyListPageO() {
                                     onClick={() => setSelectedStatus(filter.value)}
                                     className={`
                                         px-5 py-2.5 rounded-xl font-black text-sm
-                                        border-3 border-black
+                                        border border-gray-200
                                         transition-all duration-200
                                         ${selectedStatus === filter.value
-                                            ? `${filter.color} shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]`
+                                            ? `${filter.color} shadow-[4px_4px_12px_rgba(0,0,0,0.08)]`
                                             : "bg-white hover:bg-gray-100"
                                         }
                                     `}
@@ -504,7 +504,7 @@ export default function PartyListPageO() {
                                 type="date"
                                 value={startDate}
                                 onChange={(e) => setStartDate(e.target.value)}
-                                className="bg-yellow-100 border-3 border-black rounded-xl px-4 py-2.5 font-bold text-sm focus:outline-none focus:bg-yellow-50 cursor-pointer"
+                                className="bg-yellow-100 border border-gray-200 rounded-xl px-4 py-2.5 font-bold text-sm focus:outline-none focus:bg-yellow-50 cursor-pointer"
                                 style={{ borderWidth: '3px' }}
                             />
 
@@ -513,7 +513,7 @@ export default function PartyListPageO() {
                                 <select
                                     value={sortBy}
                                     onChange={(e) => setSortBy(e.target.value)}
-                                    className="appearance-none bg-black text-white border-3 border-black rounded-xl pl-4 pr-10 py-2.5 font-bold text-sm cursor-pointer"
+                                    className="appearance-none bg-black text-white border border-gray-200 rounded-xl pl-4 pr-10 py-2.5 font-bold text-sm cursor-pointer"
                                     style={{ borderWidth: '3px' }}
                                 >
                                     <option value="latest">최신순</option>
@@ -535,7 +535,7 @@ export default function PartyListPageO() {
                         {[...Array(6)].map((_, i) => (
                             <div
                                 key={i}
-                                className="bg-white border-4 border-black rounded-3xl overflow-hidden shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] animate-pulse"
+                                className="bg-white border border-gray-200 rounded-3xl overflow-hidden shadow-[4px_4px_12px_rgba(0,0,0,0.08)] animate-pulse"
                             >
                                 <div className="h-36 bg-gray-300" />
                                 <div className="p-5 space-y-3">

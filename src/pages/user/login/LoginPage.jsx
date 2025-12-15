@@ -12,7 +12,7 @@ import { SocialLoginButtons } from "./components/SocialLoginButtons";
 import { LoginOtpDialog } from "./components/LoginOtpDialog";
 
 const CARD_STYLE =
-  "bg-white border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] rounded-[32px] overflow-hidden";
+  "bg-white border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] rounded-[32px] overflow-hidden";
 
 export default function LoginPage() {
   const {

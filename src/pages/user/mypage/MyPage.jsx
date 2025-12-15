@@ -19,7 +19,7 @@ import { BackupCodeDialog } from "./components/BackupCodeDialog";
 const HERO_WRAPPER = "relative mt-10 overflow-hidden";
 
 const PANE_WRAPPER =
-  "bg-white border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-3xl";
+  "bg-white border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] rounded-3xl";
 
 export default function MyPage() {
   const { state, actions } = useMyPage();
@@ -82,7 +82,7 @@ export default function MyPage() {
     <div className="min-h-screen bg-white text-slate-900 font-sans pb-20">
       <section className={HERO_WRAPPER}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10">
-          <div className="bg-white border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-[32px] min-h-[320px] flex items-center">
+          <div className="bg-white border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] rounded-[32px] min-h-[320px] flex items-center">
             <div className="w-full flex flex-col lg:flex-row items-center justify-between gap-10 px-6 lg:px-10 py-10">
               <div className="text-center lg:text-left max-w-2xl">
                 <h2 className="text-3xl sm:text-4xl md:text-5xl font-black leading-tight mb-3">

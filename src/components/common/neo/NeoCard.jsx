@@ -14,8 +14,8 @@ const NeoCard = React.forwardRef(
   ({ children, color = "bg-white", rotate = 0, hoverable = true, className, ...props }, ref) => {
     const Component = hoverable ? motion.div : "div";
     const motionProps = hoverable ? {
-      whileHover: { scale: 1.1, rotate: rotate + 5 },
-      whileTap: { scale: 0.95 }
+      whileHover: { scale: 1.02 },
+      whileTap: { scale: 0.98 }
     } : {};
 
     return (
@@ -24,10 +24,9 @@ const NeoCard = React.forwardRef(
         {...motionProps}
         className={cn(
           color,
-          "border-4 border-black",
-          "shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]",
-          hoverable && "hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]",
-          hoverable && "hover:translate-x-[3px] hover:translate-y-[3px]",
+          "border border-gray-200",
+          "shadow-[4px_4px_12px_rgba(0,0,0,0.08)]",
+          hoverable && "hover:shadow-[6px_6px_16px_rgba(0,0,0,0.12)]",
           hoverable && "transition-all duration-200",
           className
         )}

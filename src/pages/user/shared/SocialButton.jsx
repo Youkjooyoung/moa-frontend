@@ -4,9 +4,9 @@ export function SocialButton({ provider, isConnected, onClick }) {
   const isGoogle = provider === "google";
 
   const baseNeo =
-    "h-9 px-4 text-xs font-black border-2 border-black rounded-xl " +
-    "shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] " +
-    "hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] " +
+    "h-9 px-4 text-xs font-black border border-gray-200 rounded-xl " +
+    "shadow-[4px_4px_12px_rgba(0,0,0,0.08)] " +
+    "hover:shadow-[6px_6px_16px_rgba(0,0,0,0.12)] " +
     "hover:translate-x-[1px] hover:translate-y-[1px] " +
     "transition-all";
 

@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 export default function StatusBadge({ status, blacklisted }) {
   if (blacklisted) {
     return (
-      <Badge className="bg-red-500 hover:bg-red-500 text-xs font-black border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] rounded-full">
+      <Badge className="bg-red-500 hover:bg-red-500 text-xs font-black border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] rounded-full">
         블랙리스트
       </Badge>
     );
@@ -25,7 +25,7 @@ export default function StatusBadge({ status, blacklisted }) {
 
   return (
     <Badge
-      className={`${styles[key]} hover:${styles[key]} text-xs font-black border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] rounded-full`}
+      className={`${styles[key]} hover:${styles[key]} text-xs font-black border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] rounded-full`}
     >
       {labels[key]}
     </Badge>
