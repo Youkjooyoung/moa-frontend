@@ -1,12 +1,35 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sun, Moon, Palette, Sparkles, TreePine } from "lucide-react";
+import { Sun, Moon, Palette, Sparkles, TreePine, Circle } from "lucide-react";
 import { useThemeStore } from "@/store/themeStore";
 
 // ============================================
 // Page Theme Configuration
 // ============================================
 export const themeConfig = {
+  default: {
+    name: "Default",
+    icon: Circle,
+    bg: "bg-slate-50",
+    heroBg: "bg-slate-50",
+    text: "text-slate-900",
+    subtext: "text-gray-600",
+    card: "bg-white border-gray-200 hover:border-gray-300 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]",
+    cardText: "text-slate-900",
+    cardSubtext: "text-gray-500",
+    accent: "#334155",
+    accentBg: "bg-slate-700",
+    accentText: "text-slate-700",
+    filterBg: "bg-white/80",
+    filterBorder: "border-gray-200",
+    inputBg: "bg-white",
+    inputBorder: "border-gray-200",
+    inputText: "text-gray-900",
+    buttonActive: "bg-slate-900 text-white",
+    buttonInactive: "bg-gray-100 text-gray-600 hover:bg-gray-200",
+    sectionBg: "bg-gray-50",
+    gradientText: "text-slate-900",
+  },
   classic: {
     name: "Classic",
     icon: Sun,
@@ -129,6 +152,48 @@ export const themeConfig = {
 // Header Theme Configuration
 // ============================================
 export const headerThemes = {
+  default: {
+    // Header container - original slate style
+    bg: "bg-slate-50/95 backdrop-blur-xl",
+    border: "border-gray-200/80",
+    borderWidth: "border-b",
+    // Text colors
+    text: "text-slate-900",
+    subtext: "text-gray-600",
+    // Logo
+    logoBg: "bg-white",
+    logoBorder: "border border-gray-200",
+    logoShadow: "shadow-sm hover:shadow-md",
+    logoText: "text-slate-900",
+    // Sticker/Card components
+    stickerBg: "bg-white",
+    stickerBorder: "border border-gray-200",
+    stickerShadow: "shadow-sm hover:shadow-md",
+    stickerText: "text-slate-900",
+    // Menu button
+    menuBg: "bg-slate-900",
+    menuText: "text-white",
+    menuBorder: "",
+    // Dropdown
+    dropdownBg: "bg-white",
+    dropdownBorder: "border border-gray-200",
+    dropdownShadow: "shadow-xl",
+    dropdownItemBg: "bg-gray-50",
+    dropdownItemHover: "hover:bg-gray-100",
+    dropdownItemText: "text-slate-900",
+    dropdownItemSubtext: "text-gray-600",
+    // Accent
+    accent: "#334155",
+    accentBg: "bg-slate-700",
+    accentText: "text-white",
+    // Separator
+    separatorColor: "bg-gray-200",
+    // Switch
+    switchChecked: "data-[state=checked]:bg-slate-900 data-[state=unchecked]:bg-slate-300",
+    // Avatar
+    avatarBorder: "border-2 border-slate-300 bg-slate-50",
+    avatarFallback: "bg-slate-400 text-white",
+  },
   classic: {
     // Header container
     bg: "bg-white/95 backdrop-blur-xl",

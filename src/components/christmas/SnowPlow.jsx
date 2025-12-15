@@ -64,8 +64,8 @@ export const SnowPlowProvider = ({ children }) => {
     const interval = setInterval(() => {
       setAccumulation(prev => {
         if (prev >= 100) return 100;
-        // Accumulate faster initially, then slower
-        return prev + (prev < 50 ? 0.5 : 0.2);
+        // Accumulate faster initially, then slower (2x speed)
+        return prev + (prev < 50 ? 1.0 : 0.5);
       });
     }, 100);
 
@@ -260,13 +260,13 @@ export const ClearableSnowPile = () => {
           <motion.div
             className="absolute z-50"
             initial={{ left: "-80px" }}
-            animate={{ left: "calc(100% + 40px)" }}
+            animate={{ left: "calc(100% - 100px)" }}
             exit={{ opacity: 0 }}
             transition={{ duration: 2.5, ease: "linear" }}
             style={{
               top: "-15px"
               // Removed scaleX(-1) so it faces Right by default (assuming emoji faces left? No, usually tractor faces left. Check)
-              // Tractor Emoji 🚜 usually faces Left. To make it face Right, we need scaleX(-1). 
+              // Tractor Emoji 🚜 usually faces Left. To make it face Right, we need scaleX(-1).
               // Wait, if I want it to move L->R, it should face Right.
               // So I DO need scaleX(-1).
             }}

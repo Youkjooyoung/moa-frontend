@@ -6,7 +6,7 @@ export const useThemeStore = create(
   persist(
     (set, get) => ({
       // Current theme: 'classic' | 'dark' | 'pop' | 'portrait' | 'christmas'
-      theme: "pop",
+      theme: "christmas",
 
       // Set theme
       setTheme: (theme) => {
@@ -29,13 +29,12 @@ export const useThemeStore = create(
     {
       name: "app-theme-storage",
       storage: createJSONStorage(() => localStorage),
-      // Migrate from legacy localStorage key
+      // Force christmas theme on rehydration
       onRehydrateStorage: () => (state) => {
         if (state) {
-          const legacyTheme = localStorage.getItem("partyListTheme");
-          if (legacyTheme && legacyTheme !== state.theme) {
-            state.setTheme(legacyTheme);
-          }
+          // Force set to christmas theme
+          state.theme = "christmas";
+          localStorage.setItem("partyListTheme", "christmas");
         }
       },
     }

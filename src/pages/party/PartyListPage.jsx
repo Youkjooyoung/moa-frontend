@@ -252,7 +252,7 @@ export default function PartyListPage() {
 
       {/* Snow Plow Button - Christmas theme only */}
       {theme === "christmas" && (
-        <div className="fixed top-56 right-4 z-50">
+        <div className="fixed bottom-8 left-8 z-50">
           <SnowPlowButton />
         </div>
       )}
