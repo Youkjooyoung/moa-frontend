@@ -19,13 +19,13 @@ import { KeyRound } from "lucide-react";
 
 const PAGE_BG = "min-h-screen bg-white text-slate-900";
 const CARD =
-  "bg-white border-4 border-black rounded-3xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]";
+  "bg-white border border-gray-200 rounded-3xl shadow-[4px_4px_12px_rgba(0,0,0,0.08)]";
 const SECTION =
-  "bg-white border-4 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6";
+  "bg-white border border-gray-200 rounded-2xl shadow-[4px_4px_12px_rgba(0,0,0,0.08)] p-6";
 const INPUT_CLASS =
-  "bg-white border-4 border-black rounded-2xl shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] text-slate-900 placeholder:text-slate-400 focus-visible:ring-0 focus:outline-none";
+  "bg-white border border-gray-200 rounded-2xl shadow-[4px_4px_12px_rgba(0,0,0,0.08)] text-slate-900 placeholder:text-slate-400 focus-visible:ring-0 focus:outline-none";
 const BTN_PRIMARY =
-  "w-full bg-white text-black border-4 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] font-black h-11 active:translate-x-[2px] active:translate-y-[2px] active:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]";
+  "w-full bg-white text-black border border-gray-200 rounded-2xl shadow-[4px_4px_12px_rgba(0,0,0,0.08)] font-black h-11 active:translate-x-[2px] active:translate-y-[2px] active:shadow-[4px_4px_12px_rgba(0,0,0,0.08)]";
 
 export default function UpdatePwdPage() {
   const { currentPassword, newPassword, newPasswordConfirm, modalOpen, stepVerified, error, setModal, resetAll, openModal } =
@@ -81,7 +81,7 @@ export default function UpdatePwdPage() {
         <div className="grid lg:grid-cols-[1fr_1.1fr] gap-8 items-start">
           <div className={`${CARD} p-8 space-y-4`}>
             <div className="flex items-center gap-3">
-              <span className="px-4 py-1 rounded-xl border-2 border-black bg-white text-xs font-black tracking-wide">
+              <span className="px-4 py-1 rounded-xl border border-gray-200 bg-white text-xs font-black tracking-wide">
                 MoA 계정 보안 · 비밀번호 재설정
               </span>
             </div>
@@ -95,7 +95,7 @@ export default function UpdatePwdPage() {
           </div>
 
           <div className={`${CARD} p-8 space-y-6`}>
-            <div className="flex items-center justify-between text-xs font-semibold text-slate-700 bg-white border-4 border-black rounded-2xl px-4 py-3 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+            <div className="flex items-center justify-between text-xs font-semibold text-slate-700 bg-white border border-gray-200 rounded-2xl px-4 py-3 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]">
               <span className="flex items-center gap-2">
                 <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-black text-white font-bold">
                   1
@@ -181,7 +181,7 @@ export default function UpdatePwdPage() {
       </div>
 
       <Dialog open={modalOpen} onOpenChange={handleDialogChange}>
-        <DialogContent className="max-w-sm bg-white border-4 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        <DialogContent className="max-w-sm bg-white border border-gray-200 rounded-2xl shadow-[4px_4px_12px_rgba(0,0,0,0.08)]">
           <DialogHeader>
             <DialogTitle className="text-slate-900 flex items-center gap-2">
               <KeyRound className="w-5 h-5 text-black" />

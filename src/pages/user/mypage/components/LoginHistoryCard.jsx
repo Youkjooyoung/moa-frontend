@@ -1,7 +1,7 @@
 import React from "react";
 
 const BTN =
-  "px-4 py-2 rounded-2xl border-2 border-black bg-white text-black font-black text-sm hover:bg-slate-50 active:translate-y-[1px]";
+  "px-4 py-2 rounded-2xl border border-gray-200 bg-white text-black font-black text-sm hover:bg-slate-50 active:translate-y-[1px]";
 
 export function LoginHistoryCard({ loginHistory, onBack }) {
   const items =
@@ -30,7 +30,7 @@ export function LoginHistoryCard({ loginHistory, onBack }) {
         최근 로그인 이력 {total ?? 0}건
       </p>
 
-      <div className="mt-4 border-2 border-black rounded-2xl overflow-hidden">
+      <div className="mt-4 border border-gray-200 rounded-2xl overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-white">
             <tr className="border-b-2 border-black">

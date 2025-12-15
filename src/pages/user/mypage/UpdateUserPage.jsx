@@ -29,8 +29,8 @@ function Sticker({
       style={{ rotate }}
       className={`
         ${color}
-        border-4 border-black
-        ${withShadow ? "shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]" : ""}
+        border border-gray-200
+        ${withShadow ? "shadow-[4px_4px_12px_rgba(0,0,0,0.08)]" : ""}
         transition-all duration-200
         ${className}
       `}
@@ -53,8 +53,8 @@ function PopButton({
       className={`
         ${color}
         font-black
-        border-4 border-black
-        shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]
+        border border-gray-200
+        shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
         transition-all duration-200
         rounded-2xl
         ${className}
@@ -219,7 +219,7 @@ export default function UpdateUserPage() {
                     className="relative group cursor-pointer"
                     onClick={openFilePicker}
                   >
-                    <div className="rounded-full border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+                    <div className="rounded-full border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]">
                       <Avatar className="w-24 h-24 bg-slate-100">
                         <AvatarImage
                           src={displayImage}
@@ -231,7 +231,7 @@ export default function UpdateUserPage() {
                       </Avatar>
                     </div>
                     <div className="absolute inset-0 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                      <div className="w-24 h-24 rounded-full bg-black/35 flex items-center justify-center border-4 border-black">
+                      <div className="w-24 h-24 rounded-full bg-black/35 flex items-center justify-center border border-gray-200">
                         <Upload className="w-6 h-6 text-white" />
                       </div>
                     </div>
@@ -272,7 +272,7 @@ export default function UpdateUserPage() {
                   <Input
                     readOnly
                     value={email || ""}
-                    className="bg-slate-100 border-4 border-black rounded-2xl font-bold text-gray-700 focus-visible:ring-0 cursor-not-allowed shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+                    className="bg-slate-100 border border-gray-200 rounded-2xl font-bold text-gray-700 focus-visible:ring-0 cursor-not-allowed shadow-[4px_4px_12px_rgba(0,0,0,0.08)]"
                   />
                 </div>
 
@@ -293,7 +293,7 @@ export default function UpdateUserPage() {
                     onChange={(e) => onNicknameChange(e.target.value)}
                     onBlur={onNicknameBlur}
                     placeholder="변경할 닉네임 입력"
-                    className="bg-white border-4 border-black rounded-2xl font-bold placeholder:text-gray-400 focus-visible:ring-0 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+                    className="bg-white border border-gray-200 rounded-2xl font-bold placeholder:text-gray-400 focus-visible:ring-0 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]"
                   />
                   {nickMsg.text && (
                     <Sticker
@@ -330,7 +330,7 @@ export default function UpdateUserPage() {
                     <Input
                       value={phone || ""}
                       readOnly
-                      className="flex-1 bg-slate-100 border-4 border-black rounded-2xl font-bold text-gray-800 focus-visible:ring-0 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+                      className="flex-1 bg-slate-100 border border-gray-200 rounded-2xl font-bold text-gray-800 focus-visible:ring-0 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]"
                     />
                     <PopButton
                       type="button"
@@ -343,7 +343,7 @@ export default function UpdateUserPage() {
                   </div>
                 </div>
 
-                <div className="border-4 border-black rounded-3xl p-5 bg-slate-100 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+                <div className="border border-gray-200 rounded-3xl p-5 bg-slate-100 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]">
                   <div className="flex items-start justify-between gap-4">
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">

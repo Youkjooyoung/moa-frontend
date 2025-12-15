@@ -6,7 +6,7 @@ const InquiryItem = ({ inquiry, onClick }) => {
     return (
         <div
             onClick={() => onClick(inquiry)}
-            className="py-4 border-b-4 border-black last:border-b-0 cursor-pointer hover:bg-slate-50 transition-colors"
+            className="py-4 border-b border-gray-200 last:border-b-0 cursor-pointer hover:bg-slate-50 transition-colors"
         >
             <div className="flex items-start justify-between mb-2">
                 <h4 className="font-bold text-black flex-1 truncate pr-3">
@@ -16,7 +16,7 @@ const InquiryItem = ({ inquiry, onClick }) => {
             </div>
             <div className="flex items-center gap-3 text-sm">
                 <span className="font-bold text-gray-500">{formatDate(inquiry.createdAt)}</span>
-                <span className="px-2 py-0.5 bg-cyan-400 rounded-md border-2 border-black text-xs font-black">
+                <span className="px-2 py-0.5 bg-cyan-400 rounded-md border border-gray-200 text-xs font-black">
                     {getCategoryName(inquiry.communityCodeId)}
                 </span>
             </div>

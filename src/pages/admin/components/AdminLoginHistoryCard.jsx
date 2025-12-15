@@ -10,10 +10,10 @@ export default function AdminLoginHistoryCard({ loginHistory }) {
   } = loginHistory;
 
   return (
-    <Card className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] rounded-3xl overflow-hidden">
+    <Card className="bg-white border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] rounded-3xl overflow-hidden">
       <CardHeader className="pb-6 border-b-4 border-black bg-slate-50">
         <CardTitle className="text-sm font-black uppercase tracking-[0.18em] flex items-center gap-3 text-black">
-          <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-cyan-400 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+          <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-cyan-400 border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]">
             <KeyRound className="w-4 h-4 text-black" />
           </span>
           LOGIN HISTORY
@@ -41,7 +41,7 @@ export default function AdminLoginHistoryCard({ loginHistory }) {
 
         {!loading && items.length > 0 && (
           <>
-            <div className="overflow-x-auto rounded-2xl border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+            <div className="overflow-x-auto rounded-2xl border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]">
               <table className="w-full text-sm bg-white">
                 <thead>
                   <tr className="border-b-4 border-black bg-slate-100">
@@ -97,7 +97,7 @@ export default function AdminLoginHistoryCard({ loginHistory }) {
               <Button
                 variant="outline"
                 size="icon"
-                className="h-10 w-10 text-xs font-black bg-white border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-xl hover:brightness-95"
+                className="h-10 w-10 text-xs font-black bg-white border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] rounded-xl hover:brightness-95"
                 onClick={goFirst}
                 disabled={page <= 1}
               >
@@ -106,7 +106,7 @@ export default function AdminLoginHistoryCard({ loginHistory }) {
               <Button
                 variant="outline"
                 size="icon"
-                className="h-10 w-10 text-xs font-black bg-white border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-xl hover:brightness-95"
+                className="h-10 w-10 text-xs font-black bg-white border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] rounded-xl hover:brightness-95"
                 onClick={goPrev}
                 disabled={page <= 1}
               >
@@ -117,7 +117,7 @@ export default function AdminLoginHistoryCard({ loginHistory }) {
                 <Button
                   key={p}
                   variant={p === page ? "default" : "outline"}
-                  className={`h-10 min-w-[2.5rem] text-xs font-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-xl hover:brightness-95 ${
+                  className={`h-10 min-w-[2.5rem] text-xs font-black border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] rounded-xl hover:brightness-95 ${
                     p === page
                       ? "bg-pink-500 text-white"
                       : "bg-white text-black"
@@ -131,7 +131,7 @@ export default function AdminLoginHistoryCard({ loginHistory }) {
               <Button
                 variant="outline"
                 size="icon"
-                className="h-10 w-10 text-xs font-black bg-white border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-xl hover:brightness-95"
+                className="h-10 w-10 text-xs font-black bg-white border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] rounded-xl hover:brightness-95"
                 onClick={goNextBlock}
                 disabled={page >= pageCount}
               >
@@ -140,7 +140,7 @@ export default function AdminLoginHistoryCard({ loginHistory }) {
               <Button
                 variant="outline"
                 size="icon"
-                className="h-10 w-10 text-xs font-black bg-white border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-xl hover:brightness-95"
+                className="h-10 w-10 text-xs font-black bg-white border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] rounded-xl hover:brightness-95"
                 onClick={goLast}
                 disabled={page >= pageCount}
               >

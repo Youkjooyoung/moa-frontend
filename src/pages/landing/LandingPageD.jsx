@@ -22,14 +22,14 @@ export default function LandingPageD() {
                             <span className="text-white">CORN</span> &<br />
                             CHILL.
                         </h1>
-                        <p className="text-2xl font-bold text-black mb-8 transform rotate-1 bg-white inline-block px-4 py-2 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                        <p className="text-2xl font-bold text-black mb-8 transform rotate-1 bg-white inline-block px-4 py-2 border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]">
                             구독료 걱정은 이제 그만! 🍿
                         </p>
 
                         <div className="flex flex-col sm:flex-row gap-6 justify-center md:justify-start mt-8">
                             <Link
                                 to="/party"
-                                className="px-10 py-4 bg-pink-500 hover:bg-pink-400 text-white font-black text-xl border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[4px] hover:translate-y-[4px] transition-all rounded-xl"
+                                className="px-10 py-4 bg-pink-500 hover:bg-pink-400 text-white font-black text-xl border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] hover:shadow-[4px_4px_12px_rgba(0,0,0,0.08)] hover:translate-x-[4px] hover:translate-y-[4px] transition-all rounded-xl"
                             >
                                 파티 시작 🔥
                             </Link>
@@ -37,7 +37,7 @@ export default function LandingPageD() {
                     </div>
 
                     <div className="flex-1 w-full max-w-md">
-                        <div className="bg-white border-4 border-black p-6 rounded-3xl shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] transform rotate-3 hover:rotate-0 transition-all duration-300">
+                        <div className="bg-white border border-gray-200 p-6 rounded-3xl shadow-[4px_4px_12px_rgba(0,0,0,0.08)] transform rotate-3 hover:rotate-0 transition-all duration-300">
                             <div className="flex items-center gap-4 mb-4 border-b-2 border-dashed border-gray-300 pb-4">
                                 <div className="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center text-white font-bold text-xs">N</div>
                                 <div>

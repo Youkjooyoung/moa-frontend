@@ -30,7 +30,7 @@ const NoticeItem = ({ notice, index, formatDate, onClick }) => {
 
                     {/* 조회수 */}
                     <div className="col-span-2 flex justify-center">
-                        <span className="px-3 py-1 bg-lime-400 rounded-lg border-2 border-black text-sm font-black">
+                        <span className="px-3 py-1 bg-lime-400 rounded-lg border border-gray-200 text-sm font-black">
                             {notice.viewCount || 0}
                         </span>
                     </div>

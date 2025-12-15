@@ -9,7 +9,7 @@ export default function UserListHero({ totalCount }) {
         <div className="grid lg:grid-cols-2 gap-10 items-start">
           <div className="text-center lg:text-left">
             <Sticker className="inline-flex items-center gap-2 px-5 py-2 mb-6">
-              <span className="inline-flex h-3 w-3 rounded-full bg-lime-400 border-2 border-black" />
+              <span className="inline-flex h-3 w-3 rounded-full bg-lime-400 border border-gray-200" />
               <span className="font-black tracking-tight">
                 MOA 관리자 · 회원 관리 센터
               </span>
@@ -22,13 +22,13 @@ export default function UserListHero({ totalCount }) {
 
           <div className="flex justify-center lg:justify-end">
             <div className="relative w-full max-w-md">
-              <div className="absolute -top-4 -left-4 w-full h-full bg-cyan-400 rounded-3xl border-4 border-black -z-10" />
-              <div className="absolute -top-8 -left-8 w-full h-full bg-pink-400 rounded-3xl border-4 border-black -z-20" />
+              <div className="absolute -top-4 -left-4 w-full h-full bg-cyan-400 rounded-3xl border border-gray-200 -z-10" />
+              <div className="absolute -top-8 -left-8 w-full h-full bg-pink-400 rounded-3xl border border-gray-200 -z-20" />
 
-              <Card className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] rounded-3xl overflow-hidden">
+              <Card className="bg-white border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] rounded-3xl overflow-hidden">
                 <CardContent className="p-6 space-y-4">
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-2xl bg-lime-400 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex items-center justify-center">
+                    <div className="w-12 h-12 rounded-2xl bg-lime-400 border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] flex items-center justify-center">
                       <LayoutDashboard className="w-6 h-6 text-black" />
                     </div>
                     <div>

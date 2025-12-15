@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { NeoCard, NeoButton } from '@/components/common/neo';
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 const ALLOWED_TYPES = ['image/jpeg', 'image/png'];
 
 const InquiryForm = ({ formData, setFormData, imagePreview, setImageFile, setImagePreview, onSubmit }) => {
+    const fileInputRef = useRef(null);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -41,15 +42,18 @@ const InquiryForm = ({ formData, setFormData, imagePreview, setImageFile, setIma
     const handleRemoveImage = () => {
         setImageFile(null);
         setImagePreview(null);
+        if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+        }
     };
 
     return (
         <NeoCard
             color="bg-white"
             hoverable={false}
-            className="rounded-2xl p-6"
+            className="rounded-2xl p-6 h-[687px] flex flex-col"
         >
-            <div className="space-y-6">
+            <div className="space-y-6 flex-1 overflow-y-auto">
                 {/* Category */}
                 <div>
                     <label className="block text-sm font-black text-black mb-2">
@@ -59,7 +63,7 @@ const InquiryForm = ({ formData, setFormData, imagePreview, setImageFile, setIma
                         name="communityCodeId"
                         value={formData.communityCodeId}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 border-4 border-black rounded-xl font-bold bg-white focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                        className="w-full px-4 py-3 border border-gray-200 rounded-xl font-bold bg-white focus:outline-none focus:ring-2 focus:ring-cyan-400"
                     >
                         <option value="1">회원</option>
                         <option value="2">결제</option>
@@ -78,7 +82,7 @@ const InquiryForm = ({ formData, setFormData, imagePreview, setImageFile, setIma
                         value={formData.title}
                         onChange={handleChange}
                         placeholder="문의 제목을 입력하세요"
-                        className="w-full px-4 py-3 border-4 border-black rounded-xl font-bold focus:outline-none focus:ring-2 focus:ring-cyan-400 placeholder-gray-400"
+                        className="w-full px-4 py-3 border border-gray-200 rounded-xl font-bold focus:outline-none focus:ring-2 focus:ring-cyan-400 placeholder-gray-400"
                     />
                 </div>
 
@@ -93,7 +97,7 @@ const InquiryForm = ({ formData, setFormData, imagePreview, setImageFile, setIma
                         onChange={handleChange}
                         placeholder="문의 내용을 입력하세요"
                         rows={6}
-                        className="w-full px-4 py-3 border-4 border-black rounded-xl font-bold focus:outline-none focus:ring-2 focus:ring-cyan-400 placeholder-gray-400 resize-none"
+                        className="w-full px-4 py-3 border border-gray-200 rounded-xl font-bold focus:outline-none focus:ring-2 focus:ring-cyan-400 placeholder-gray-400 resize-none"
                     />
                 </div>
 
@@ -104,17 +108,18 @@ const InquiryForm = ({ formData, setFormData, imagePreview, setImageFile, setIma
                     </label>
                     <p className="text-xs font-bold text-gray-500 mb-3">JPG, PNG 파일만 가능 (최대 10MB)</p>
                     <input
+                        ref={fileInputRef}
                         type="file"
                         accept=".jpg,.jpeg,.png"
                         onChange={handleImageChange}
                         className="w-full text-sm font-bold text-gray-600
                             file:mr-4 file:py-2 file:px-4
-                            file:rounded-lg file:border-2 file:border-black
+                            file:rounded-lg file:border-0
                             file:text-sm file:font-black
                             file:bg-lime-400 file:text-black
-                            file:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]
-                            file:hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]
-                            file:hover:translate-x-[1px] file:hover:translate-y-[1px]
+                            file:shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
+                            file:hover:shadow-[6px_6px_16px_rgba(0,0,0,0.12)]
+                            
                             file:transition-all file:cursor-pointer"
                     />
                     {imagePreview && (
@@ -122,12 +127,12 @@ const InquiryForm = ({ formData, setFormData, imagePreview, setImageFile, setIma
                             <img
                                 src={imagePreview}
                                 alt="미리보기"
-                                className="max-w-full h-auto rounded-xl border-4 border-black max-h-40 object-contain shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+                                className="max-w-[120px] h-auto rounded-xl border border-gray-200 max-h-20 object-contain shadow-[4px_4px_12px_rgba(0,0,0,0.08)]"
                             />
                             <button
                                 type="button"
                                 onClick={handleRemoveImage}
-                                className="absolute -top-2 -right-2 w-8 h-8 bg-pink-500 text-white rounded-full font-black text-sm border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:bg-pink-600 transition-colors"
+                                className="absolute -top-1 -right-1 w-6 h-6 bg-pink-500 text-white rounded-full font-black text-xs border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] hover:bg-pink-600 transition-colors flex items-center justify-center"
                             >
                                 ✕
                             </button>
@@ -135,11 +140,15 @@ const InquiryForm = ({ formData, setFormData, imagePreview, setImageFile, setIma
                     )}
                 </div>
 
-                {/* Submit Button */}
+                </div>
+
+            {/* Submit Button - 항상 하단 고정 */}
+            <div className="pt-4 mt-auto">
                 <NeoButton
                     color="bg-pink-500 text-white"
+                    size="xs"
                     onClick={onSubmit}
-                    className="w-full"
+                    className="w-full justify-center"
                 >
                     문의 등록
                 </NeoButton>

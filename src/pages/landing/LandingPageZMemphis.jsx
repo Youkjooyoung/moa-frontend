@@ -29,7 +29,7 @@ import { MOCK_PARTIES } from "@/constants/constants";
 function Circle({ size = 60, color = "#FF6B6B", className = "", style = {} }) {
   return (
     <motion.div
-      className={`rounded-full border-4 border-black ${className}`}
+      className={`rounded-full border border-gray-200 ${className}`}
       style={{ width: size, height: size, backgroundColor: color, ...style }}
       animate={{ rotate: 360 }}
       transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
@@ -40,7 +40,7 @@ function Circle({ size = 60, color = "#FF6B6B", className = "", style = {} }) {
 function Triangle({ size = 60, color = "#4ECDC4", rotation = 0, className = "" }) {
   return (
     <motion.div
-      className={`border-4 border-black ${className}`}
+      className={`border border-gray-200 ${className}`}
       style={{
         width: 0,
         height: 0,
@@ -106,11 +106,11 @@ function Cross({ size = 40, color = "#C44DFF", className = "" }) {
   return (
     <div className={`relative ${className}`} style={{ width: size, height: size }}>
       <div
-        className="absolute top-1/2 left-0 -translate-y-1/2 border-2 border-black"
+        className="absolute top-1/2 left-0 -translate-y-1/2 border border-gray-200"
         style={{ width: size, height: size / 4, backgroundColor: color }}
       />
       <div
-        className="absolute top-0 left-1/2 -translate-x-1/2 border-2 border-black"
+        className="absolute top-0 left-1/2 -translate-x-1/2 border border-gray-200"
         style={{ width: size / 4, height: size, backgroundColor: color }}
       />
     </div>
@@ -160,10 +160,10 @@ function MemphisButton({ children, color = "bg-[#FF6B6B]", className = "", ...pr
         ${color}
         px-8 py-4
         font-black text-xl text-black
-        border-4 border-black
-        shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]
-        hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]
-        hover:translate-x-[3px] hover:translate-y-[3px]
+        border border-gray-200
+        shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
+        hover:shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
+       
         transition-all duration-200
         ${className}
       `}
@@ -185,8 +185,8 @@ function MemphisCard({ children, color = "bg-white", rotate = 0, className = "" 
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
       className={`
         ${color}
-        border-4 border-black
-        shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]
+        border border-gray-200
+        shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
         ${className}
       `}
     >
@@ -259,8 +259,8 @@ export default function LandingPageMemphis() {
             animate={{ opacity: 1, x: 0 }}
           >
             <div className="flex items-center gap-2">
-              <div className="w-10 h-10 bg-[#FF6B6B] border-4 border-black rounded-full" />
-              <div className="w-6 h-6 bg-[#4ECDC4] border-3 border-black rotate-45" />
+              <div className="w-10 h-10 bg-[#FF6B6B] border border-gray-200 rounded-full" />
+              <div className="w-6 h-6 bg-[#4ECDC4] border border-gray-200 rotate-45" />
               <span className="text-3xl font-black tracking-tight ml-2">MoA</span>
             </div>
           </motion.div>
@@ -272,7 +272,7 @@ export default function LandingPageMemphis() {
           >
             <Link
               to="/party"
-              className="hidden md:block px-4 py-2 font-bold hover:bg-[#FFE66D] border-2 border-black transition-colors"
+              className="hidden md:block px-4 py-2 font-bold hover:bg-[#FFE66D] border border-gray-200 transition-colors"
             >
               파티 찾기
             </Link>
@@ -302,7 +302,7 @@ export default function LandingPageMemphis() {
                 <motion.div
                   animate={{ rotate: [0, 360] }}
                   transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-                  className="w-8 h-8 bg-[#FFE66D] border-3 border-black"
+                  className="w-8 h-8 bg-[#FFE66D] border border-gray-200"
                 />
               </div>
 
@@ -321,7 +321,7 @@ export default function LandingPageMemphis() {
                 </span>
                 <span className="block">
                   새로운
-                  <span className="inline-block ml-3 px-4 py-1 bg-[#FFE66D] border-4 border-black -rotate-3">
+                  <span className="inline-block ml-3 px-4 py-1 bg-[#FFE66D] border border-gray-200 -rotate-3">
                     시대
                   </span>
                 </span>
@@ -334,7 +334,7 @@ export default function LandingPageMemphis() {
                 className="text-xl md:text-2xl font-bold mb-8 flex items-center gap-3 justify-center lg:justify-start flex-wrap"
               >
                 구독료
-                <span className="inline-block px-3 py-1 bg-[#C44DFF] text-white border-3 border-black">
+                <span className="inline-block px-3 py-1 bg-[#C44DFF] text-white border border-gray-200">
                   75%
                 </span>
                 절약하고 함께 즐기자!
@@ -379,8 +379,8 @@ export default function LandingPageMemphis() {
                 className="w-full max-w-sm p-6 rounded-none"
               >
                 <div className="flex items-center gap-2 mb-4">
-                  <div className="w-6 h-6 bg-[#FF6B6B] border-2 border-black rounded-full" />
-                  <div className="w-4 h-4 bg-[#4ECDC4] border-2 border-black" />
+                  <div className="w-6 h-6 bg-[#FF6B6B] border border-gray-200 rounded-full" />
+                  <div className="w-4 h-4 bg-[#4ECDC4] border border-gray-200" />
                   <span className="font-black text-lg">이번 달 절약</span>
                 </div>
 
@@ -388,12 +388,12 @@ export default function LandingPageMemphis() {
                   {ottServices.map((ott, i) => (
                     <div
                       key={i}
-                      className="flex items-center justify-between p-3 border-3 border-black"
+                      className="flex items-center justify-between p-3 border border-gray-200"
                       style={{ backgroundColor: i % 2 === 0 ? "#FFE66D" : "#4ECDC4" }}
                     >
                       <div className="flex items-center gap-3">
                         <div
-                          className="w-10 h-10 flex items-center justify-center text-white font-black border-2 border-black"
+                          className="w-10 h-10 flex items-center justify-center text-white font-black border border-gray-200"
                           style={{ backgroundColor: ott.color }}
                         >
                           {ott.letter}
@@ -405,16 +405,16 @@ export default function LandingPageMemphis() {
                   ))}
                 </div>
 
-                <div className="bg-black text-white p-4 border-4 border-black relative">
-                  <div className="absolute -top-3 -right-3 w-8 h-8 bg-[#FF6B6B] border-2 border-black rounded-full" />
+                <div className="bg-black text-white p-4 border border-gray-200 relative">
+                  <div className="absolute -top-3 -right-3 w-8 h-8 bg-[#FF6B6B] border border-gray-200 rounded-full" />
                   <p className="text-sm mb-1">매달 절약 금액</p>
                   <p className="text-4xl font-black">₩32,500</p>
                 </div>
               </MemphisCard>
 
               {/* 배경 장식 카드들 */}
-              <div className="absolute -top-4 -left-4 w-full max-w-sm h-full bg-[#4ECDC4] border-4 border-black -z-10 -rotate-6" />
-              <div className="absolute -top-8 -left-8 w-full max-w-sm h-full bg-[#FFE66D] border-4 border-black -z-20 -rotate-12" />
+              <div className="absolute -top-4 -left-4 w-full max-w-sm h-full bg-[#4ECDC4] border border-gray-200 -z-10 -rotate-6" />
+              <div className="absolute -top-8 -left-8 w-full max-w-sm h-full bg-[#FFE66D] border border-gray-200 -z-20 -rotate-12" />
 
               {/* 추가 장식 */}
               <div className="absolute -top-6 right-10">
@@ -459,15 +459,15 @@ export default function LandingPageMemphis() {
             className="text-center mb-16"
           >
             <div className="inline-flex items-center gap-3 mb-4">
-              <div className="w-8 h-8 bg-[#FF6B6B] border-3 border-black rounded-full" />
-              <div className="w-6 h-6 bg-[#FFE66D] border-3 border-black rotate-45" />
-              <div className="w-4 h-4 bg-[#4ECDC4] border-2 border-black" />
+              <div className="w-8 h-8 bg-[#FF6B6B] border border-gray-200 rounded-full" />
+              <div className="w-6 h-6 bg-[#FFE66D] border border-gray-200 rotate-45" />
+              <div className="w-4 h-4 bg-[#4ECDC4] border border-gray-200" />
             </div>
             <h2 className="text-4xl md:text-6xl font-black">
               왜{" "}
               <span className="relative inline-block">
                 MoA
-                <div className="absolute -bottom-2 left-0 w-full h-3 bg-[#FFE66D] border-2 border-black -z-10" />
+                <div className="absolute -bottom-2 left-0 w-full h-3 bg-[#FFE66D] border border-gray-200 -z-10" />
               </span>
               인가요?
             </h2>
@@ -487,7 +487,7 @@ export default function LandingPageMemphis() {
                   rotate={i % 2 === 0 ? -2 : 2}
                   className="p-8 h-full"
                 >
-                  <div className="w-20 h-20 bg-white border-4 border-black flex items-center justify-center mb-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                  <div className="w-20 h-20 bg-white border border-gray-200 flex items-center justify-center mb-6 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]">
                     <span className="text-5xl">{feature.icon}</span>
                   </div>
                   <h3 className="text-2xl font-black mb-3">{feature.title}</h3>
@@ -533,7 +533,7 @@ export default function LandingPageMemphis() {
             className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12"
           >
             <div>
-              <div className="inline-block px-4 py-2 bg-[#FF6B6B] border-4 border-black mb-4 -rotate-2">
+              <div className="inline-block px-4 py-2 bg-[#FF6B6B] border border-gray-200 mb-4 -rotate-2">
                 <span className="font-black text-white">HOT!</span>
               </div>
               <h2 className="text-4xl md:text-5xl font-black">지금 뜨는 파티</h2>
@@ -560,7 +560,7 @@ export default function LandingPageMemphis() {
                   }}
                 >
                   <span className="text-6xl font-black text-white/30">{party.platform}</span>
-                  <div className="absolute top-3 left-3 px-2 py-1 bg-white border-2 border-black font-bold text-sm">
+                  <div className="absolute top-3 left-3 px-2 py-1 bg-white border border-gray-200 font-bold text-sm">
                     모집중
                   </div>
                 </div>
@@ -612,11 +612,11 @@ export default function LandingPageMemphis() {
               >
                 <motion.div
                   whileHover={{ scale: 1.1, rotate: 10 }}
-                  className={`w-28 h-28 ${step.color} border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] mx-auto mb-6 flex items-center justify-center`}
+                  className={`w-28 h-28 ${step.color} border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] mx-auto mb-6 flex items-center justify-center`}
                 >
                   <span className="text-5xl">{step.emoji}</span>
                 </motion.div>
-                <div className="inline-block bg-black text-white px-4 py-1 border-2 border-black font-black mb-4">
+                <div className="inline-block bg-black text-white px-4 py-1 border border-gray-200 font-black mb-4">
                   STEP {step.num}
                 </div>
                 <h3 className="text-2xl font-black text-white mb-2">{step.title}</h3>
@@ -647,7 +647,7 @@ export default function LandingPageMemphis() {
                 <Circle size={30} color="#FF6B6B" />
               </div>
               <div className="absolute top-4 right-4">
-                <div className="w-8 h-8 bg-[#4ECDC4] border-3 border-black rotate-45" />
+                <div className="w-8 h-8 bg-[#4ECDC4] border border-gray-200 rotate-45" />
               </div>
               <div className="absolute bottom-4 left-4">
                 <Cross size={30} color="#FFE66D" />
@@ -668,7 +668,7 @@ export default function LandingPageMemphis() {
                 <br />
                 <span className="relative inline-block">
                   <span className="text-[#FF6B6B]">시작</span>
-                  <div className="absolute -bottom-2 left-0 w-full h-4 bg-[#FFE66D] border-2 border-black -z-10" />
+                  <div className="absolute -bottom-2 left-0 w-full h-4 bg-[#FFE66D] border border-gray-200 -z-10" />
                 </span>
                 해볼까요?
               </h2>

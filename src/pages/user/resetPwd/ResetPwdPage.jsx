@@ -8,7 +8,7 @@ import { PageSteps } from "../shared/PageSteps";
 
 const PAGE_BG = "min-h-screen bg-white text-slate-900";
 const CARD_CLASS =
-  "bg-white border-4 border-black rounded-3xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]";
+  "bg-white border border-gray-200 rounded-3xl shadow-[4px_4px_12px_rgba(0,0,0,0.08)]";
 
 export default function ResetPwdPage() {
   useEffect(() => {

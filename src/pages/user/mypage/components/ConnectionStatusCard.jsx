@@ -4,9 +4,9 @@ import { Link2, Shield, Smartphone } from "lucide-react";
 const SECTION_TITLE = "text-xs font-black tracking-widest";
 const ROW = "flex items-center justify-between py-3";
 const BTN =
-  "px-4 py-2 rounded-2xl border-2 border-black bg-white text-black font-black text-sm hover:bg-slate-50 active:translate-y-[1px]";
+  "px-4 py-2 rounded-2xl border border-gray-200 bg-white text-black font-black text-sm hover:bg-slate-50 active:translate-y-[1px]";
 const BTN_DANGER =
-  "px-4 py-2 rounded-2xl border-2 border-black bg-white text-red-600 font-black text-sm hover:bg-slate-50 active:translate-y-[1px]";
+  "px-4 py-2 rounded-2xl border border-gray-200 bg-white text-red-600 font-black text-sm hover:bg-slate-50 active:translate-y-[1px]";
 
 export function ConnectionStatusCard({
   user,
@@ -59,7 +59,7 @@ export function ConnectionStatusCard({
 
         <div className={ROW}>
           <p className="text-sm text-slate-600 font-bold">로그인 방식</p>
-          <span className="px-3 py-1 rounded-full border-2 border-black bg-white text-xs font-black">
+          <span className="px-3 py-1 rounded-full border border-gray-200 bg-white text-xs font-black">
             {loginProvider || "LOCAL"}
           </span>
         </div>
@@ -96,7 +96,7 @@ export function ConnectionStatusCard({
           <p className={SECTION_TITLE}>SECURITY · GOOGLE OTP</p>
         </div>
 
-        <div className="flex items-center justify-between gap-3 border-2 border-black rounded-2xl p-4 bg-white">
+        <div className="flex items-center justify-between gap-3 border border-gray-200 rounded-2xl p-4 bg-white">
           <span className="text-sm font-black">
             {otp?.enabled ? "OTP 사용중" : "OTP 미사용"}
           </span>

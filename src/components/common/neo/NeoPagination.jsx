@@ -39,12 +39,11 @@ const NeoPagination = ({ currentPage, totalPages, onPageChange, maxVisible = 5 }
                 <button
                     onClick={() => handlePageChange(currentPage - 1)}
                     disabled={currentPage === 1}
-                    className="px-3 py-2 font-black text-sm border-4 border-black rounded-xl bg-white
+                    className="px-3 py-2 font-black text-sm border border-gray-200 rounded-xl bg-white
                         disabled:opacity-50 disabled:cursor-not-allowed
                         hover:bg-slate-100
-                        shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
-                        hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]
-                        hover:translate-x-[2px] hover:translate-y-[2px]
+                        shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
+                        hover:shadow-[6px_6px_16px_rgba(0,0,0,0.12)]
                         transition-all"
                 >
                     이전
@@ -55,10 +54,10 @@ const NeoPagination = ({ currentPage, totalPages, onPageChange, maxVisible = 5 }
                     <button
                         key={pageNum}
                         onClick={() => handlePageChange(pageNum)}
-                        className={`w-10 h-10 font-black text-sm border-4 border-black rounded-xl transition-all shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
+                        className={`w-10 h-10 font-black text-sm border border-gray-200 rounded-xl transition-all shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
                             ${currentPage === pageNum
                                 ? 'bg-pink-500 text-white'
-                                : 'bg-white text-black hover:bg-slate-100 hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px]'
+                                : 'bg-white text-black hover:bg-slate-100 hover:shadow-[6px_6px_16px_rgba(0,0,0,0.12)]'
                             }`}
                     >
                         {pageNum}
@@ -69,12 +68,11 @@ const NeoPagination = ({ currentPage, totalPages, onPageChange, maxVisible = 5 }
                 <button
                     onClick={() => handlePageChange(currentPage + 1)}
                     disabled={currentPage === totalPages}
-                    className="px-3 py-2 font-black text-sm border-4 border-black rounded-xl bg-white
+                    className="px-3 py-2 font-black text-sm border border-gray-200 rounded-xl bg-white
                         disabled:opacity-50 disabled:cursor-not-allowed
                         hover:bg-slate-100
-                        shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
-                        hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]
-                        hover:translate-x-[2px] hover:translate-y-[2px]
+                        shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
+                        hover:shadow-[6px_6px_16px_rgba(0,0,0,0.12)]
                         transition-all"
                 >
                     다음

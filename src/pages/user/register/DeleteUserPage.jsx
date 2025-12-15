@@ -16,8 +16,8 @@ function Sticker({
       style={{ rotate }}
       className={`
         ${color}
-        border-4 border-black
-        ${withShadow ? "shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]" : ""}
+        border border-gray-200
+        ${withShadow ? "shadow-[4px_4px_12px_rgba(0,0,0,0.08)]" : ""}
         transition-all duration-200
         ${className}
       `}
@@ -40,8 +40,8 @@ function PopButton({
       className={`
         ${color}
         font-black
-        border-4 border-black
-        shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]
+        border border-gray-200
+        shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
         transition-all duration-200
         rounded-2xl
         ${className}
@@ -58,7 +58,7 @@ function ReasonRow({ checked, onChange, value, title }) {
     <label
       className={`
         flex items-center gap-3 cursor-pointer
-        border-4 border-black rounded-2xl px-4 py-3
+        border border-gray-200 rounded-2xl px-4 py-3
         bg-white
         ${checked ? "outline outline-2 outline-black" : ""}
       `}
@@ -288,7 +288,7 @@ export default function DeleteUserPage() {
                       value={deleteDetail}
                       onChange={(e) => onChangeDetail(e.target.value)}
                       className="
-                        w-full border-4 border-black rounded-2xl p-3 text-sm h-28 resize-none
+                        w-full border border-gray-200 rounded-2xl p-3 text-sm h-28 resize-none
                         focus:outline-none
                       "
                       placeholder="기타 사유 또는 추가 의견이 있다면 입력해 주세요."
@@ -296,7 +296,7 @@ export default function DeleteUserPage() {
                   </div>
                 )}
 
-                <div className="border-4 border-black rounded-3xl p-5 bg-slate-100">
+                <div className="border border-gray-200 rounded-3xl p-5 bg-slate-100">
                   <p className="text-xs md:text-sm font-bold text-gray-700 leading-relaxed">
                     탈퇴 시 계정 정보 및 서비스 이용 이력은 관련 법령에 따라
                     일정 기간 보관 후 안전하게 파기됩니다.
