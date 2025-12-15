@@ -105,7 +105,7 @@ const ListNotice = () => {
         <CommunityLayout>
             <div className="pt-8">
                 {/* 검색 영역 */}
-                <div className="flex items-center justify-end mb-6 pb-4 border-b-4 border-black">
+                <div className="flex items-center justify-end mb-6 pb-4 border-b border-gray-200">
                     <div className="relative">
                         <input
                             type="text"
@@ -114,9 +114,9 @@ const ListNotice = () => {
                             onChange={(e) => setSearchKeyword(e.target.value)}
                             onKeyPress={handleKeyPress}
                             className="w-56 px-4 py-2 pr-10 font-bold
-                                border-4 border-black rounded-xl
-                                shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
-                                focus:outline-none focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]
+                                border border-gray-200 rounded-xl
+                                shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
+                                focus:outline-none focus:shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
                                 focus:translate-x-[2px] focus:translate-y-[2px]
                                 transition-all"
                         />

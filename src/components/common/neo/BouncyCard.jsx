@@ -26,8 +26,8 @@ const BouncyCard = React.forwardRef(
         whileHover={hoverEffect ? { y: -10, rotate: 2 } : undefined}
         className={cn(
           "bg-white",
-          "border-4 border-black",
-          "shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]",
+          "border border-gray-200",
+          "shadow-[4px_4px_12px_rgba(0,0,0,0.08)]",
           "rounded-3xl",
           "overflow-hidden",
           className

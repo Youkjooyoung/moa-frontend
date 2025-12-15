@@ -1,7 +1,7 @@
 const CARD_CLASS =
-  "bg-white border-4 border-black rounded-3xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]";
+  "bg-white border border-gray-200 rounded-3xl shadow-[4px_4px_12px_rgba(0,0,0,0.08)]";
 const BTN_CLASS =
-  "bg-white text-black px-12 py-3 rounded-2xl text-lg font-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]";
+  "bg-white text-black px-12 py-3 rounded-2xl text-lg font-black border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[4px_4px_12px_rgba(0,0,0,0.08)]";
 
 export function ResetPwdGuide() {
   return (

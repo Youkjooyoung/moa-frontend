@@ -26,7 +26,7 @@ export default function AddBlacklistFormCard({
   return (
     <section className="relative px-6 md:px-12 pb-24">
       <div className="max-w-3xl mx-auto">
-        <Card className="bg-white border-4 border-black shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] rounded-3xl overflow-hidden">
+        <Card className="bg-white border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] rounded-3xl overflow-hidden">
           <CardHeader className="border-b-4 border-black bg-slate-100">
             <CardTitle className="text-xl font-black">
               블랙리스트 대상 및 사유 입력
@@ -35,7 +35,7 @@ export default function AddBlacklistFormCard({
 
           <CardContent className="p-8 space-y-6">
             {error && (
-              <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-red-100 border-4 border-black text-sm font-bold">
+              <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-red-100 border border-gray-200 text-sm font-bold">
                 <AlertTriangle className="w-4 h-4" />
                 <span>{error}</span>
               </div>
@@ -47,14 +47,14 @@ export default function AddBlacklistFormCard({
                 value={userId}
                 onChange={(e) => onChangeUserId(e.target.value)}
                 placeholder="user001@example.com"
-                className="h-11 border-4 border-black rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] font-medium"
+                className="h-11 border border-gray-200 rounded-xl shadow-[4px_4px_12px_rgba(0,0,0,0.08)] font-medium"
               />
             </div>
 
             <div className="space-y-2">
               <label className="text-sm font-black">사유 구분</label>
               <Select value={reasonType} onValueChange={onChangeReasonType}>
-                <SelectTrigger className="h-11 border-4 border-black rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                <SelectTrigger className="h-11 border border-gray-200 rounded-xl shadow-[4px_4px_12px_rgba(0,0,0,0.08)]">
                   <SelectValue placeholder="사유를 선택하세요" />
                 </SelectTrigger>
                 <SelectContent>
@@ -81,7 +81,7 @@ export default function AddBlacklistFormCard({
                 value={reasonDetail}
                 onChange={(e) => onChangeReasonDetail(e.target.value)}
                 rows={4}
-                className="resize-none border-4 border-black rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+                className="resize-none border border-gray-200 rounded-xl shadow-[4px_4px_12px_rgba(0,0,0,0.08)]"
                 placeholder="상세 사유를 입력하세요."
               />
             </div>
@@ -90,7 +90,7 @@ export default function AddBlacklistFormCard({
               <Button
                 type="button"
                 variant="outline"
-                className="h-11 px-6 border-4 border-black rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] font-black bg-white"
+                className="h-11 px-6 border border-gray-200 rounded-xl shadow-[4px_4px_12px_rgba(0,0,0,0.08)] font-black bg-white"
                 onClick={onCancel}
                 disabled={submitting}
               >
@@ -98,7 +98,7 @@ export default function AddBlacklistFormCard({
               </Button>
               <Button
                 type="button"
-                className="h-11 px-7 bg-red-500 hover:bg-red-500 border-4 border-black rounded-xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] font-black text-white"
+                className="h-11 px-7 bg-red-500 hover:bg-red-500 border border-gray-200 rounded-xl shadow-[4px_4px_12px_rgba(0,0,0,0.08)] font-black text-white"
                 onClick={onSubmit}
                 disabled={submitting}
               >

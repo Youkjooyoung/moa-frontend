@@ -17,7 +17,7 @@ export function MenuButton({
         border-2 transition-all duration-200
         ${
           active
-            ? "bg-indigo-600 text-white border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+            ? "bg-indigo-600 text-white border-black shadow-[4px_4px_12px_rgba(0,0,0,0.08)]"
             : "bg-white text-slate-800 border-black hover:bg-gray-50 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.7)]"
         }
         ${

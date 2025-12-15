@@ -5,6 +5,11 @@ import MainFeaturesSection from "./sections/MainFeaturesSection";
 import MainProductsSection from "./sections/MainProductsSection";
 import MainTrendingSection from "./sections/MainTrendingSection";
 import MainHowItWorksSection from "./sections/MainHowItWorksSection";
+import MainMarqueeSection from "./sections/MainMarqueeSection";
+import MainStatementSection from "./sections/MainStatementSection";
+import MainComparisonSection from "./sections/MainComparisonSection";
+import MainStatsMarquee from "./sections/MainStatsMarquee";
+import MainSearchSection from "./sections/MainSearchSection";
 
 export default function MainPage() {
   const loadMain = useMainStore((s) => s.loadMain);
@@ -18,7 +23,7 @@ export default function MainPage() {
   }, [loadMain]);
 
   return (
-    <div className="min-h-screen bg-slate-50 text-black overflow-hidden">
+    <div className="min-h-screen bg-slate-50 text-black -mt-35 pt-5">
       <div
         className="fixed inset-0 pointer-events-none opacity-[0.03]"
         style={{
@@ -30,14 +35,18 @@ export default function MainPage() {
 
       {error ? (
         <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 py-10">
-          <div className="bg-white border-4 border-black rounded-3xl shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-6 font-black">
+          <div className="bg-white border border-gray-200 rounded-3xl shadow-[4px_4px_12px_rgba(0,0,0,0.08)] p-6 font-black">
             {error}
           </div>
         </div>
       ) : null}
 
       <div className="relative z-10">
-        <MainHeroSection products={products} stats={stats} />
+        <MainHeroSection products={products} parties={parties} stats={stats} />
+        <MainMarqueeSection />
+        <MainStatementSection />
+        <MainComparisonSection />
+        <MainStatsMarquee />
         <MainFeaturesSection stats={stats} />
         <MainProductsSection />
         <MainTrendingSection parties={parties} />

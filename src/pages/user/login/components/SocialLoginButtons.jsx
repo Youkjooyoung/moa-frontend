@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 
 const SOCIAL_BUTTON =
-  "w-full h-12 flex items-center justify-center gap-3 border-4 border-black rounded-2xl shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] text-[13px] font-black uppercase tracking-[0.2em]";
+  "w-full h-12 flex items-center justify-center gap-3 border border-gray-200 rounded-2xl shadow-[4px_4px_12px_rgba(0,0,0,0.08)] text-[13px] font-black uppercase tracking-[0.2em]";
 
 export function SocialLoginButtons({ onKakao, onGoogle, loginLoading }) {
   return (

@@ -4,9 +4,9 @@ import { KeyRound, Home, Clock, CreditCard, Users, Wallet } from "lucide-react";
 const WRAP = "p-6";
 const TITLE = "flex items-center gap-2 font-black";
 const ITEM =
-  "w-full flex items-center justify-between gap-3 px-4 py-3 rounded-2xl border-2 border-black bg-white text-black font-black text-sm hover:bg-slate-50 active:translate-y-[1px]";
+  "w-full flex items-center justify-between gap-3 px-4 py-3 rounded-2xl border border-gray-200 bg-white text-black font-black text-sm hover:bg-slate-50 active:translate-y-[1px]";
 const ACTIVE =
-  "w-full flex items-center justify-between gap-3 px-4 py-3 rounded-2xl border-2 border-black bg-slate-100 text-black font-black text-sm";
+  "w-full flex items-center justify-between gap-3 px-4 py-3 rounded-2xl border border-gray-200 bg-slate-100 text-black font-black text-sm";
 
 export function AccountMenu({
   actions,
@@ -48,7 +48,7 @@ export function AccountMenu({
     <div className={WRAP}>
       <div className="flex items-center justify-between mb-4">
         <p className={TITLE}>
-          <span className="inline-flex items-center justify-center w-8 h-8 rounded-xl border-2 border-black bg-white">
+          <span className="inline-flex items-center justify-center w-8 h-8 rounded-xl border border-gray-200 bg-white">
             ▦
           </span>
           Account Menu

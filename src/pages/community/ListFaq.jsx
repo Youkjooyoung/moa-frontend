@@ -146,7 +146,7 @@ const ListFaq = () => {
         <CommunityLayout>
             <div className="pt-8">
                 {/* 카테고리 및 검색 영역 */}
-                <div className="flex items-center justify-between mb-6 pb-4 border-b-4 border-black">
+                <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-200">
                     <div className="flex items-center gap-2">
                         {categories.map((category) => (
                             <button
@@ -154,11 +154,11 @@ const ListFaq = () => {
                                 onClick={() => handleCategoryChange(category)}
                                 className={`
                                     px-4 py-2 font-black text-sm rounded-lg
-                                    border-2 border-black
+                                    border border-gray-200
                                     transition-all duration-200
                                     ${activeCategory === category
-                                        ? 'bg-pink-500 text-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]'
-                                        : 'bg-white text-black hover:bg-slate-100 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px]'
+                                        ? 'bg-pink-500 text-white shadow-[4px_4px_12px_rgba(0,0,0,0.08)]'
+                                        : 'bg-white text-black hover:bg-slate-100 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] hover:shadow-[6px_6px_16px_rgba(0,0,0,0.12)] '
                                     }
                                 `}
                             >
@@ -175,9 +175,9 @@ const ListFaq = () => {
                             onChange={(e) => setSearchKeyword(e.target.value)}
                             onKeyPress={handleKeyPress}
                             className="w-56 px-4 py-2 pr-10 font-bold
-                                border-4 border-black rounded-xl
-                                shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
-                                focus:outline-none focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]
+                                border border-gray-200 rounded-xl
+                                shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
+                                focus:outline-none focus:shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
                                 focus:translate-x-[2px] focus:translate-y-[2px]
                                 transition-all"
                         />

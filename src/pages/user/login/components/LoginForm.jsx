@@ -3,7 +3,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 
 const FIELD_CLASS =
-  "bg-white border-4 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-sm text-slate-900";
+  "bg-white border border-gray-200 rounded-2xl shadow-[4px_4px_12px_rgba(0,0,0,0.08)] text-sm text-slate-900";
 
 export function LoginForm({
   email,
@@ -100,7 +100,7 @@ export function LoginForm({
       <Button
         id="btnLogin"
         type="submit"
-        className="w-full h-12 text-sm md:text-base font-black rounded-[18px] border-4 border-black bg-indigo-600 text-white shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]"
+        className="w-full h-12 text-sm md:text-base font-black rounded-[18px] border border-gray-200 bg-indigo-600 text-white shadow-[4px_4px_12px_rgba(0,0,0,0.08)]"
         disabled={isLoginDisabled}
       >
         {loginLoading ? "Logging in..." : "Log in"}

@@ -28,7 +28,7 @@ export function LoginOtpDialog({
       }}
     >
       <DialogContent className="max-w-sm p-0">
-        <div className="bg-white border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] rounded-[28px]">
+        <div className="bg-white border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] rounded-[28px]">
           <DialogHeader className="px-8 pt-8 pb-2">
             <DialogTitle className="text-lg font-black text-slate-900">
               {isBackupMode
@@ -45,7 +45,7 @@ export function LoginOtpDialog({
             <button
               type="button"
               onClick={onSwitchOtp}
-              className={`flex-1 py-2 rounded-2xl border-2 border-black font-black text-[11px] uppercase tracking-[0.3em] ${
+              className={`flex-1 py-2 rounded-2xl border border-gray-200 font-black text-[11px] uppercase tracking-[0.3em] ${
                 isBackupMode ? "text-slate-500" : "bg-white text-slate-900"
               }`}
             >
@@ -54,7 +54,7 @@ export function LoginOtpDialog({
             <button
               type="button"
               onClick={onSwitchBackup}
-              className={`flex-1 py-2 rounded-2xl border-2 border-black font-black text-[11px] uppercase tracking-[0.3em] ${
+              className={`flex-1 py-2 rounded-2xl border border-gray-200 font-black text-[11px] uppercase tracking-[0.3em] ${
                 isBackupMode ? "bg-white text-slate-900" : "text-slate-500"
               }`}
             >
@@ -78,7 +78,7 @@ export function LoginOtpDialog({
                   ? "백업 코드 입력 (예: X7K9-AB12)"
                   : "6자리 인증 코드 입력"
               }
-              className="text-center tracking-[0.4em] text-lg border-4 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+              className="text-center tracking-[0.4em] text-lg border border-gray-200 rounded-2xl shadow-[4px_4px_12px_rgba(0,0,0,0.08)]"
               onChange={(e) => onChangeCode(e.target.value)}
             />
 
@@ -87,7 +87,7 @@ export function LoginOtpDialog({
             )}
 
             <Button
-              className="w-full h-12 bg-indigo-600 text-white font-black rounded-2xl border-4 border-black shadow-[5px_5px_0px_0px_rgba(0,0,0,1)]"
+              className="w-full h-12 bg-indigo-600 text-white font-black rounded-2xl border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]"
               onClick={onConfirm}
               disabled={loading || !otpCode.trim()}
             >

@@ -4,14 +4,13 @@ import { motion } from "framer-motion";
 function Sticker({ children, color = "bg-white", rotate = 0, className = "" }) {
   return (
     <motion.div
-      whileHover={{ scale: 1.03, rotate: rotate + 2 }}
+      whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
       className={`
         ${color}
-        border-4 border-black
-        shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]
-        hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]
-        hover:translate-x-[3px] hover:translate-y-[3px]
+        border border-gray-200
+        shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
+        hover:shadow-[6px_6px_16px_rgba(0,0,0,0.12)]
         transition-all duration-200
         ${className}
       `}
@@ -30,7 +29,7 @@ export default function MainHowItWorksSection() {
   ];
 
   return (
-    <section className="relative px-6 md:px-12 py-20 bg-white border-b-4 border-black">
+    <section className="relative px-6 md:px-12 py-20 bg-white border-b border-gray-200">
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 26 }}
@@ -55,7 +54,7 @@ export default function MainHowItWorksSection() {
             >
               <motion.div
                 whileHover={{ scale: 1.06, rotate: 6 }}
-                className={`w-28 h-28 ${s.color} rounded-3xl border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] mx-auto mb-6 flex items-center justify-center`}
+                className={`w-28 h-28 ${s.color} rounded-3xl border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] mx-auto mb-6 flex items-center justify-center`}
               >
                 <span className="text-5xl">{s.emoji}</span>
               </motion.div>

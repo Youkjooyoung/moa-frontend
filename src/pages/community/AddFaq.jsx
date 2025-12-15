@@ -113,7 +113,7 @@ const AddFaq = () => {
                         <select
                             value={category}
                             onChange={(e) => setCategory(e.target.value)}
-                            className="w-full px-4 py-3 border-4 border-black rounded-xl font-bold bg-white
+                            className="w-full px-4 py-3 border border-gray-200 rounded-xl font-bold bg-white
                                 focus:outline-none focus:ring-2 focus:ring-yellow-300"
                         >
                             {categories.map((cat) => (
@@ -137,7 +137,7 @@ const AddFaq = () => {
                             placeholder="질문 제목을 입력하세요"
                             value={formData.title}
                             onChange={handleChange}
-                            className="w-full px-4 py-3 border-4 border-black rounded-xl font-bold
+                            className="w-full px-4 py-3 border border-gray-200 rounded-xl font-bold
                                 focus:outline-none focus:ring-2 focus:ring-yellow-300 placeholder-gray-400"
                         />
                     </div>
@@ -157,7 +157,7 @@ const AddFaq = () => {
                             value={formData.content}
                             onChange={handleChange}
                             rows={10}
-                            className="w-full px-4 py-3 border-4 border-black rounded-xl font-bold resize-none
+                            className="w-full px-4 py-3 border border-gray-200 rounded-xl font-bold resize-none
                                 focus:outline-none focus:ring-2 focus:ring-yellow-300 placeholder-gray-400"
                         />
                     </div>
@@ -166,10 +166,10 @@ const AddFaq = () => {
                         <button
                             onClick={handleCancel}
                             className="px-6 py-2 text-sm font-black text-black bg-white
-                                border-4 border-black rounded-xl
-                                shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
-                                hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]
-                                hover:translate-x-[2px] hover:translate-y-[2px]
+                                border border-gray-200 rounded-xl
+                                shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
+                                hover:shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
+                                
                                 transition-all"
                         >
                             취소
@@ -177,10 +177,10 @@ const AddFaq = () => {
                         <button
                             onClick={handleSubmit}
                             className="px-6 py-2 text-sm font-black text-white bg-pink-500
-                                border-4 border-black rounded-xl
-                                shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
-                                hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]
-                                hover:translate-x-[2px] hover:translate-y-[2px]
+                                border border-gray-200 rounded-xl
+                                shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
+                                hover:shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
+                                
                                 transition-all"
                         >
                             등록

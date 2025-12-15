@@ -52,12 +52,12 @@ export default function UserListTableCard({
   return (
     <section className="relative px-6 md:px-12 pb-16">
       <div className="max-w-7xl mx-auto">
-        <div className="bg-white border-4 border-black shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] rounded-3xl overflow-hidden">
+        <div className="bg-white border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] rounded-3xl overflow-hidden">
           <Card className="border-0 shadow-none rounded-none">
             <CardHeader className="border-b-4 border-black bg-white p-6">
               <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                 <CardTitle className="text-xl md:text-2xl font-black text-black flex items-center gap-3">
-                  <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-cyan-400 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                  <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-cyan-400 border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]">
                     <Users className="w-6 h-6 text-black" />
                   </span>
                   회원 목록
@@ -74,7 +74,7 @@ export default function UserListTableCard({
                         value={filters.status}
                         onValueChange={handleStatusChange}
                       >
-                        <SelectTrigger className="h-10 w-32 rounded-xl border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-white text-black focus:ring-0">
+                        <SelectTrigger className="h-10 w-32 rounded-xl border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] bg-white text-black focus:ring-0">
                           <SelectValue placeholder="회원상태" />
                         </SelectTrigger>
                         <SelectContent>
@@ -90,14 +90,14 @@ export default function UserListTableCard({
                     <div className="flex items-center gap-2">
                       <Input
                         type="date"
-                        className="h-10 w-40 text-xs rounded-xl border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-white text-black focus-visible:ring-0"
+                        className="h-10 w-40 text-xs rounded-xl border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] bg-white text-black focus-visible:ring-0"
                         value={filters.joinStart}
                         onChange={(e) => handleJoinStartChange(e.target.value)}
                       />
                       <span className="text-xs font-black text-black">~</span>
                       <Input
                         type="date"
-                        className="h-10 w-40 text-xs rounded-xl border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-white text-black focus-visible:ring-0"
+                        className="h-10 w-40 text-xs rounded-xl border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] bg-white text-black focus-visible:ring-0"
                         value={filters.joinEnd}
                         onChange={(e) => handleJoinEndChange(e.target.value)}
                       />
@@ -108,7 +108,7 @@ export default function UserListTableCard({
                     <div className="relative w-full sm:w-64">
                       <Search className="absolute left-3 top-3 w-4 h-4 text-black" />
                       <Input
-                        className="pl-10 pr-3 h-10 text-sm rounded-xl border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-white text-black focus-visible:ring-0"
+                        className="pl-10 pr-3 h-10 text-sm rounded-xl border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] bg-white text-black focus-visible:ring-0"
                         placeholder="이메일 검색..."
                         value={searchValue}
                         onChange={handleSearchChange}
@@ -117,7 +117,7 @@ export default function UserListTableCard({
                     </div>
 
                     <Button
-                      className="h-10 px-5 rounded-2xl bg-pink-500 hover:bg-pink-500 text-white font-black border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:brightness-95 transition"
+                      className="h-10 px-5 rounded-2xl bg-pink-500 hover:bg-pink-500 text-white font-black border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] hover:brightness-95 transition"
                       onClick={handleSearchSubmit}
                     >
                       검색
@@ -125,7 +125,7 @@ export default function UserListTableCard({
 
                     <Button
                       variant="outline"
-                      className="h-10 px-4 rounded-2xl bg-white hover:bg-white text-black font-black border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:brightness-95 transition"
+                      className="h-10 px-4 rounded-2xl bg-white hover:bg-white text-black font-black border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] hover:brightness-95 transition"
                       onClick={handleReset}
                     >
                       초기화
@@ -255,7 +255,7 @@ export default function UserListTableCard({
                   <Button
                     variant="outline"
                     size="icon"
-                    className="h-10 w-10 text-xs bg-white hover:bg-white text-black font-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:brightness-95 transition rounded-2xl"
+                    className="h-10 w-10 text-xs bg-white hover:bg-white text-black font-black border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] hover:brightness-95 transition rounded-2xl"
                     disabled={page <= 1}
                     onClick={() => changePageBlock("first")}
                   >
@@ -264,7 +264,7 @@ export default function UserListTableCard({
                   <Button
                     variant="outline"
                     size="icon"
-                    className="h-10 w-10 text-xs bg-white hover:bg-white text-black font-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:brightness-95 transition rounded-2xl"
+                    className="h-10 w-10 text-xs bg-white hover:bg-white text-black font-black border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] hover:brightness-95 transition rounded-2xl"
                     disabled={page <= 1}
                     onClick={() => changePageBlock("prevBlock")}
                   >
@@ -276,7 +276,7 @@ export default function UserListTableCard({
                       key={p}
                       variant={p === page ? "default" : "outline"}
                       size="icon"
-                      className={`h-10 w-10 text-xs font-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition rounded-2xl ${
+                      className={`h-10 w-10 text-xs font-black border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] transition rounded-2xl ${
                         p === page
                           ? "bg-pink-500 hover:bg-pink-500 text-white hover:brightness-95"
                           : "bg-white hover:bg-white text-black hover:brightness-95"
@@ -290,7 +290,7 @@ export default function UserListTableCard({
                   <Button
                     variant="outline"
                     size="icon"
-                    className="h-10 w-10 text-xs bg-white hover:bg-white text-black font-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:brightness-95 transition rounded-2xl"
+                    className="h-10 w-10 text-xs bg-white hover:bg-white text-black font-black border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] hover:brightness-95 transition rounded-2xl"
                     disabled={page >= (totalPages || 1)}
                     onClick={() => changePageBlock("nextBlock")}
                   >
@@ -299,7 +299,7 @@ export default function UserListTableCard({
                   <Button
                     variant="outline"
                     size="icon"
-                    className="h-10 w-10 text-xs bg-white hover:bg-white text-black font-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:brightness-95 transition rounded-2xl"
+                    className="h-10 w-10 text-xs bg-white hover:bg-white text-black font-black border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] hover:brightness-95 transition rounded-2xl"
                     disabled={page >= (totalPages || 1)}
                     onClick={() => changePageBlock("last")}
                   >

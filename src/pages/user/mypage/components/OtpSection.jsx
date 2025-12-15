@@ -24,10 +24,10 @@ export function OtpSection({ otp, backup, actions }) {
               className="
                 h-7 px-3 text-[11px] font-black
                 bg-indigo-600 text-white
-                border-2 border-black rounded-lg
-                shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]
-                hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]
-                hover:translate-x-[1px] hover:translate-y-[1px]
+                border border-gray-200 rounded-lg
+                shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
+                hover:shadow-[6px_6px_16px_rgba(0,0,0,0.12)]
+               
               "
             >
               OTP 설정
@@ -42,7 +42,7 @@ export function OtpSection({ otp, backup, actions }) {
                 onClick={backup.issued ? undefined : backup.issueBackupCodes}
                 className={`
                   h-7 px-3 text-[11px] font-black
-                  border-2 border-black rounded-lg
+                  border border-gray-200 rounded-lg
                   ${
                     backup.issued
                       ? "bg-slate-100 text-slate-400 cursor-not-allowed"
@@ -58,7 +58,7 @@ export function OtpSection({ otp, backup, actions }) {
                 onClick={actions.otp.prepareDisable}
                 className="
                   h-7 px-3 text-[11px] font-black
-                  border-2 border-black rounded-lg
+                  border border-gray-200 rounded-lg
                   bg-white text-red-600 hover:bg-red-50
                 "
               >

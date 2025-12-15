@@ -63,11 +63,11 @@ const CommunityLayout = ({ children }) => {
                                     onClick={() => tab.onClick ? tab.onClick() : navigate(tab.path)}
                                     className={`
                                         px-6 py-3 font-black text-lg rounded-xl
-                                        border-4 border-black
+                                        border border-gray-200
                                         transition-all duration-200
                                         ${isActive
-                                            ? 'bg-cyan-400 text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'
-                                            : 'bg-white text-black hover:bg-lime-400 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px]'
+                                            ? 'bg-cyan-400 text-black shadow-[4px_4px_12px_rgba(0,0,0,0.08)]'
+                                            : 'bg-white text-black hover:bg-lime-400 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] hover:shadow-[4px_4px_12px_rgba(0,0,0,0.08)]'
                                         }
                                     `}
                                 >

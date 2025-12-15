@@ -22,10 +22,9 @@ function Sticker({ children, color = "bg-white", rotate = 0, className = "" }) {
       whileTap={{ scale: 0.98 }}
       className={`
         ${color}
-        border-4 border-black
-        shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]
-        hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]
-        hover:translate-x-[3px] hover:translate-y-[3px]
+        border border-gray-200
+        shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
+        hover:shadow-[6px_6px_16px_rgba(0,0,0,0.12)]
         transition-all duration-200
         ${className}
       `}
@@ -47,8 +46,8 @@ function BouncyCard({ children, className = "", delay = 0, onClick }) {
       onClick={onClick}
       className={`
         bg-white
-        border-4 border-black
-        shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]
+        border border-gray-200
+        shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
         rounded-3xl
         overflow-hidden
         cursor-pointer
@@ -78,7 +77,7 @@ export default function MainTrendingSection() {
   };
 
   return (
-    <section className="relative px-6 md:px-12 py-20 bg-slate-50 border-b-4 border-black">
+    <section className="relative px-6 md:px-12 py-20 bg-slate-50 border-b border-gray-200">
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 26 }}
@@ -105,7 +104,7 @@ export default function MainTrendingSection() {
 
         {partiesError?.status === 401 && (
           <div className="mb-10">
-            <div className="bg-white border-4 border-black rounded-3xl p-6 font-bold text-gray-800 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+            <div className="bg-white border border-gray-200 rounded-3xl p-6 font-bold text-gray-800 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]">
               파티 목록은 로그인 후 확인할 수 있어요. (서버 응답: 인증 필요)
             </div>
           </div>
@@ -116,7 +115,7 @@ export default function MainTrendingSection() {
             {[...Array(4)].map((_, i) => (
               <div
                 key={i}
-                className="h-56 bg-white border-4 border-black rounded-3xl shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] animate-pulse"
+                className="h-56 bg-white border border-gray-200 rounded-3xl shadow-[4px_4px_12px_rgba(0,0,0,0.08)] animate-pulse"
               />
             ))}
           </div>
@@ -153,7 +152,7 @@ export default function MainTrendingSection() {
                     delay={i * 0.06}
                     onClick={() => goParty(party)}
                   >
-                    <div className={`h-28 ${bg} border-b-4 border-black flex items-end justify-between p-4`}>
+                    <div className={`h-28 ${bg} border-b border-gray-200 flex items-end justify-between p-4`}>
                       <div className="text-white font-black">
                         <div className="text-sm opacity-90">{service || "Party"}</div>
                         <div className="text-xs opacity-80">{host ? `파티장: ${host}` : ""}</div>
@@ -191,7 +190,7 @@ export default function MainTrendingSection() {
                           e.stopPropagation();
                           goParty(party);
                         }}
-                        className="mt-4 w-full bg-white border-4 border-black rounded-2xl py-3 font-black hover:bg-slate-100 transition"
+                        className="mt-4 w-full bg-white border border-gray-200 rounded-2xl py-3 font-black hover:bg-slate-100 transition"
                       >
                         자세히 보기
                       </button>
@@ -203,7 +202,7 @@ export default function MainTrendingSection() {
 
             {visible.length === 0 && (
               <div className="py-16 text-center">
-                <div className="inline-block bg-white border-4 border-black rounded-3xl px-8 py-6 font-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+                <div className="inline-block bg-white border border-gray-200 rounded-3xl px-8 py-6 font-black shadow-[4px_4px_12px_rgba(0,0,0,0.08)]">
                   표시할 파티가 없습니다.
                 </div>
               </div>

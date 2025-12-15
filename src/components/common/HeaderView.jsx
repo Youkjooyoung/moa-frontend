@@ -29,10 +29,10 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import NotificationPopover from "@/components/push/NotificationPopover";
 
-function Sticker({ children, color = "bg-white", className = "" }) {
+function Sticker({ children, color = "bg-transparent", className = "" }) {
   return (
     <div
-      className={`${color} border-4 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-shadow duration-150 ${className}`}
+      className={`${color} ${className}`}
     >
       {children}
     </div>
@@ -43,19 +43,19 @@ function NavPill({ to, icon: Icon, children, active }) {
   return (
     <Link
       to={to}
-      className={`group inline-flex items-center gap-2 px-4 py-2 font-black text-[15px] rounded-2xl border-2 border-black whitespace-nowrap transition-colors
+      className={`group inline-flex items-center gap-2 px-4 py-2 font-black text-[15px] rounded-2xl border-0 whitespace-nowrap transition-colors
       ${
         active
           ? "bg-black text-white"
-          : "bg-white text-black hover:bg-black hover:text-white"
+          : "bg-transparent text-black hover:bg-black hover:text-white"
       }`}
     >
       <span
-        className={`inline-flex items-center justify-center w-7 h-7 rounded-xl border-2 border-black transition-colors
+        className={`inline-flex items-center justify-center w-7 h-7 rounded-xl border-0 transition-colors
         ${
           active
             ? "bg-white text-black"
-            : "bg-slate-50 text-black group-hover:bg-white group-hover:text-black"
+            : "bg-transparent text-black group-hover:bg-white group-hover:text-black"
         }`}
       >
         <Icon className="w-4 h-4" />
@@ -87,7 +87,7 @@ export default function HeaderView({
   const renderProviderBadge = () => {
     if (isAdmin) {
       return (
-        <Badge className="bg-lime-400 text-black border-2 border-black h-6 px-1.5 text-[10px] font-black rounded-md leading-none">
+        <Badge className="w-fit bg-lime-400 text-black border-0 px-1.5 py-0 text-[9px] font-black rounded-full">
           ADMIN
         </Badge>
       );
@@ -111,21 +111,15 @@ export default function HeaderView({
     switch (provider) {
       case "kakao":
         return (
-          <Badge className="bg-[#FEE500] text-black border-2 border-black h-6 text-[11px] px-2 font-black rounded-lg">
-            KAKAO
-          </Badge>
+          <Badge className="w-fit bg-[#FEE500] text-black border-0 px-1.5 py-0 text-[9px] font-black rounded-full">KAKAO</Badge>
         );
       case "google":
         return (
-          <Badge className="bg-white text-black border-2 border-black h-6 text-[11px] px-2 font-black rounded-lg">
-            GOOGLE
-          </Badge>
+          <Badge className="w-fit bg-white text-black border border-gray-300 px-1.5 py-0 text-[9px] font-black rounded-full">GOOGLE</Badge>
         );
       default:
         return (
-          <Badge className="bg-slate-100 text-black border-2 border-black h-6 text-[11px] px-2 font-black rounded-lg">
-            EMAIL
-          </Badge>
+          <Badge className="w-fit bg-pink-100 text-pink-600 border-0 px-1.5 py-0 text-[9px] font-black rounded-full">EMAIL</Badge>
         );
     }
   };
@@ -145,7 +139,7 @@ export default function HeaderView({
             >
               <Link
                 to="/admin/dashboard"
-                className="py-2.5 flex items-center justify-between gap-3 font-black text-black rounded-2xl hover:bg-black hover:text-white border-2 border-black bg-white px-3 transition-colors"
+                className="py-2.5 flex items-center justify-between gap-3 font-black text-black rounded-2xl hover:bg-black hover:text-white border border-gray-200 bg-white px-3 transition-colors"
               >
                 <span className="flex items-center gap-2">
                   <LayoutDashboard className="w-5 h-5" />
@@ -161,7 +155,7 @@ export default function HeaderView({
             >
               <Link
                 to="/admin/users"
-                className="py-2.5 flex items-center justify-between gap-3 font-black text-black rounded-2xl hover:bg-black hover:text-white border-2 border-black bg-white px-3 transition-colors"
+                className="py-2.5 flex items-center justify-between gap-3 font-black text-black rounded-2xl hover:bg-black hover:text-white border border-gray-200 bg-white px-3 transition-colors"
               >
                 <span className="flex items-center gap-2">
                   <Users className="w-5 h-5" />
@@ -177,7 +171,7 @@ export default function HeaderView({
             >
               <Link
                 to="/admin/sales"
-                className="py-2.5 flex items-center justify-between gap-3 font-black text-black rounded-2xl hover:bg-black hover:text-white border-2 border-black bg-white px-3 transition-colors"
+                className="py-2.5 flex items-center justify-between gap-3 font-black text-black rounded-2xl hover:bg-black hover:text-white border border-gray-200 bg-white px-3 transition-colors"
               >
                 <span className="flex items-center gap-2">
                   <CreditCard className="w-5 h-5" />
@@ -193,7 +187,7 @@ export default function HeaderView({
             >
               <Link
                 to="/product"
-                className="py-2.5 flex items-center justify-between gap-3 font-black text-black rounded-2xl hover:bg-black hover:text-white border-2 border-black bg-white px-3 transition-colors"
+                className="py-2.5 flex items-center justify-between gap-3 font-black text-black rounded-2xl hover:bg-black hover:text-white border border-gray-200 bg-white px-3 transition-colors"
               >
                 <span className="flex items-center gap-2">
                   <Boxes className="w-5 h-5" />
@@ -218,7 +212,7 @@ export default function HeaderView({
           >
             <Link
               to="/product"
-              className="py-2.5 flex items-center justify-between gap-3 font-black text-black rounded-2xl hover:bg-black hover:text-white border-2 border-black bg-white px-3 transition-colors"
+              className="py-2.5 flex items-center justify-between gap-3 font-black text-black rounded-2xl hover:bg-black hover:text-white border border-gray-200 bg-white px-3 transition-colors"
             >
               <span className="flex items-center gap-2">
                 <Boxes className="w-5 h-5" />
@@ -234,7 +228,7 @@ export default function HeaderView({
           >
             <Link
               to="/subscription"
-              className="py-2.5 flex items-center justify-between gap-3 font-black text-black rounded-2xl hover:bg-black hover:text-white border-2 border-black bg-white px-3 transition-colors"
+              className="py-2.5 flex items-center justify-between gap-3 font-black text-black rounded-2xl hover:bg-black hover:text-white border border-gray-200 bg-white px-3 transition-colors"
             >
               <span className="flex items-center gap-2">
                 <Home className="w-5 h-5" />
@@ -250,7 +244,7 @@ export default function HeaderView({
           >
             <Link
               to="/party"
-              className="py-2.5 flex items-center justify-between gap-3 font-black text-black rounded-2xl hover:bg-black hover:text-white border-2 border-black bg-white px-3 transition-colors"
+              className="py-2.5 flex items-center justify-between gap-3 font-black text-black rounded-2xl hover:bg-black hover:text-white border border-gray-200 bg-white px-3 transition-colors"
             >
               <span className="flex items-center gap-2">
                 <Users className="w-5 h-5" />
@@ -267,11 +261,11 @@ export default function HeaderView({
   };
 
   return (
-    <header className="sticky top-0 z-[200] isolate w-full bg-slate-50 border-b-4 border-black">
+    <header className="sticky top-0 z-[200] isolate w-full bg-transparent border-b border-transparent">
       <div className="w-full max-w-7xl mx-auto h-20 flex items-center justify-between px-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-6 min-w-0">
           <Link to="/" className="shrink-0">
-            <Sticker color="bg-white" className="px-4 py-2 rounded-2xl">
+            <Sticker className="px-4 py-2 rounded-2xl">
               <span className="text-2xl font-black tracking-tight">MoA!</span>
             </Sticker>
           </Link>
@@ -338,7 +332,7 @@ export default function HeaderView({
               {/* 관리자 스위치: lg 이상에서만 헤더에 노출 (겹침 방지) */}
               {user?.role === "ADMIN" && (
                 <Sticker
-                  color="bg-white"
+                  
                   className="hidden lg:flex items-center gap-2 rounded-2xl px-3 py-2"
                 >
                   <Switch
@@ -356,7 +350,7 @@ export default function HeaderView({
                 </Sticker>
               )}
 
-              <Sticker color="bg-white" className="rounded-2xl p-1.5">
+              <Sticker  className="rounded-2xl p-1.5">
                 <NotificationPopover />
               </Sticker>
 
@@ -366,9 +360,9 @@ export default function HeaderView({
               />
 
               <Link to="/mypage" className="hidden sm:flex items-center gap-3">
-                <Sticker color="bg-white" className="rounded-2xl p-2">
+                <Sticker  className="rounded-2xl p-2">
                   <div className="flex items-center gap-3">
-                    <Avatar className="h-10 w-10 border-2 border-black bg-slate-50">
+                    <Avatar className="h-10 w-10 border border-gray-200 bg-slate-50">
                       <AvatarImage
                         src={profileImageUrl}
                         alt={displayNickname}
@@ -407,12 +401,12 @@ export default function HeaderView({
                 {/* 드랍다운: 폭 키우고(360), 내부를 2열 퀵액션으로 구성해서 “길쭉함” 제거 */}
                 <DropdownMenuContent
                   align="end"
-                  className="w-[520px] max-w-[calc(100vw-24px)] p-3 mt-3 bg-white border-4 border-black rounded-3xl shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+                  className="w-[520px] max-w-[calc(100vw-24px)] p-3 mt-3 bg-white border border-gray-200 rounded-3xl shadow-[4px_4px_12px_rgba(0,0,0,0.08)]"
                 >
                   <DropdownMenuLabel className="font-normal p-0 mb-3">
                     <Sticker color="bg-slate-100" className="rounded-2xl p-3">
                       <div className="flex items-center gap-3">
-                        <Avatar className="h-11 w-11 border-2 border-black bg-white">
+                        <Avatar className="h-11 w-11 border border-gray-200 bg-white">
                           <AvatarImage
                             src={profileImageUrl}
                             alt={displayNickname}
@@ -439,7 +433,7 @@ export default function HeaderView({
                   {user?.role === "ADMIN" && (
                     <div className="lg:hidden mb-3">
                       <Sticker
-                        color="bg-white"
+                        
                         className="rounded-2xl px-3 py-3"
                       >
                         <div className="flex items-center justify-between gap-3">
@@ -498,7 +492,7 @@ export default function HeaderView({
                     className="p-0 border-0 bg-transparent hover:bg-transparent md:hidden"
                   >
                     <Sticker
-                      color="bg-white"
+                      
                       className="w-12 h-12 rounded-2xl flex items-center justify-center"
                     >
                       <Menu className="w-6 h-6 text-black" />
@@ -507,7 +501,7 @@ export default function HeaderView({
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
                   align="end"
-                  className="w-[520px] max-w-[calc(100vw-24px)] p-3 mt-3 bg-white border-4 border-black rounded-3xl shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+                  className="w-[520px] max-w-[calc(100vw-24px)] p-3 mt-3 bg-white border border-gray-200 rounded-3xl shadow-[4px_4px_12px_rgba(0,0,0,0.08)]"
 
                 >
                   {renderMobileNavItems(false)}
@@ -515,7 +509,7 @@ export default function HeaderView({
               </DropdownMenu>
 
               <Link to="/signup" className="hidden sm:block">
-                <Sticker color="bg-white" className="px-4 py-2 rounded-2xl">
+                <Sticker className="px-4 py-2 rounded-2xl">
                   <span className="font-black text-black">회원가입</span>
                 </Sticker>
               </Link>
