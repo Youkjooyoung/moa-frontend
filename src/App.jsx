@@ -6,7 +6,6 @@ import { useGlobalLinkHandler } from "@/hooks/common/useGlobalLinkHandler";
 
 import ProtectedRoute from "@/routes/ProtectedRoute";
 import OAuthCallbackPage from "./pages/oauth/OAuthCallbackPage";
-import OAuthGooglePage from "./pages/oauth/OAuthGooglePage";
 import PhoneConnectPage from "./pages/oauth/PhoneConnectPage";
 import SocialRegisterPage from "@/pages/user/register/SocialRegisterPage";
 import MainPage from "./pages/main/MainPage";
@@ -89,7 +88,6 @@ export default function App() {
           <Route path="/party-test/zo3" element={<PartyListPageZO3 />} />
 
           <Route path="/oauth/callback" element={<OAuthCallbackPage />} />
-          <Route path="/oauth/google" element={<OAuthGooglePage />} />
           <Route path="/oauth/phone-connect" element={<PhoneConnectPage />} />
           {/* User pages (Public) */}
           <Route path="/login" element={<LoginPage />} />
