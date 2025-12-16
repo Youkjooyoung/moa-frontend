@@ -188,6 +188,7 @@ export const useMyPage = () => {
       },
     },
     actions: {
+      navigate,
       ...handlers,
       otp: otpActionHandlers,
       handleGoogleClick,
