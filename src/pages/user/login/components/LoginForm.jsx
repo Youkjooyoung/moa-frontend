@@ -23,15 +23,6 @@ const getFieldStyles = (theme) => {
         link: "text-[#635bff] border-[#635bff]/40",
         checkbox: "text-[#635bff]",
       };
-    case 'portrait':
-      return {
-        field: "bg-white/60 border border-pink-200 rounded-2xl shadow-[4px_4px_12px_rgba(255,181,197,0.15)] text-sm text-gray-900",
-        focus: "focus-visible:ring-pink-400 focus-visible:border-pink-400",
-        label: "text-gray-500",
-        button: "bg-gradient-to-r from-[#FFB5C5] to-[#C5B5FF] hover:opacity-90 border-transparent",
-        link: "text-pink-500 border-pink-300/40",
-        checkbox: "text-pink-500",
-      };
     case 'pop':
       return {
         field: "bg-white border-2 border-black rounded-2xl shadow-[4px_4px_0px_rgba(0,0,0,1)] text-sm text-black",

@@ -17,10 +17,6 @@ function AnimatedGradient({ theme }) {
       color1: "rgba(99, 91, 255, 0.15)",
       color2: "rgba(0, 212, 255, 0.15)",
     },
-    portrait: {
-      color1: "rgba(255, 181, 197, 0.15)",
-      color2: "rgba(197, 181, 255, 0.15)",
-    },
     classic: {
       color1: "rgba(99, 91, 255, 0.15)",
       color2: "rgba(0, 212, 255, 0.15)",
@@ -110,22 +106,6 @@ const GetSubscription = () => {
                     buttonSecondary: 'border-gray-700 hover:border-[#635bff] hover:text-[#635bff]',
                     statusActive: 'bg-emerald-500/20 text-emerald-400',
                     loadingSpinner: 'border-[#635bff]',
-                };
-            case 'portrait':
-                return {
-                    bg: 'bg-gradient-to-br from-[#FDF8F3] via-[#FFF5F7] to-[#F5F0FF]',
-                    headerBg: 'bg-white/80 backdrop-blur-sm',
-                    text: 'text-gray-900',
-                    subtext: 'text-gray-500',
-                    cardBg: 'bg-white/80 backdrop-blur-sm',
-                    cardBorder: 'border-pink-100',
-                    iconColor1: 'text-pink-500',
-                    iconColor2: 'text-purple-500',
-                    priceColor: 'text-pink-600',
-                    buttonPrimary: 'bg-gradient-to-r from-[#FFB5C5] to-[#C5B5FF] hover:opacity-90',
-                    buttonSecondary: 'border-pink-200 hover:border-pink-400 hover:text-pink-600',
-                    statusActive: 'bg-emerald-50 text-emerald-600',
-                    loadingSpinner: 'border-pink-500',
                 };
             case 'classic':
                 return {

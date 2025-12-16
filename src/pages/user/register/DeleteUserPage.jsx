@@ -43,24 +43,6 @@ const getThemeStyles = (theme) => {
         radioChecked: 'outline-[#635bff]',
         radioAccent: 'accent-[#635bff]',
       };
-    case 'portrait':
-      return {
-        bg: 'bg-gradient-to-br from-[#FDF8F3] via-[#FFF5F7] to-[#F5F0FF]',
-        text: 'text-gray-900',
-        subtext: 'text-gray-500',
-        highlight: 'text-pink-500',
-        highlightBg: 'bg-pink-500',
-        stickerBg: 'bg-white/80 backdrop-blur-sm',
-        stickerBorder: 'border border-pink-200',
-        stickerShadow: 'shadow-[4px_4px_12px_rgba(255,181,197,0.2)]',
-        cardBg: 'bg-white/80 backdrop-blur-sm',
-        cardBorder: 'border border-pink-200',
-        inputBorder: 'border border-pink-200',
-        buttonPrimary: 'bg-red-500 text-white hover:bg-red-600',
-        buttonSecondary: 'bg-white text-gray-900 hover:bg-gray-50',
-        radioChecked: 'outline-pink-500',
-        radioAccent: 'accent-pink-500',
-      };
     case 'pop':
       return {
         bg: 'bg-slate-50',
@@ -218,7 +200,7 @@ export default function DeleteUserPage() {
       {theme === 'christmas' && <ChristmasBackground />}
 
       {/* Grid Pattern (non-dark themes) */}
-      {theme !== 'dark' && theme !== 'christmas' && theme !== 'portrait' && (
+      {theme !== 'dark' && theme !== 'christmas' && (
         <div
           className="fixed inset-0 pointer-events-none opacity-[0.035]"
           style={{

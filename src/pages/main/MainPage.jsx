@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { useMainStore } from "@/store/main/mainStore";
+import { useThemeStore } from "@/store/themeStore";
+import { ChristmasBackground } from "@/config/themeConfig";
 import MainHeroSection from "./sections/MainHeroSection";
 import MainFeaturesSection from "./sections/MainFeaturesSection";
 import MainProductsSection from "./sections/MainProductsSection";
@@ -18,13 +20,21 @@ export default function MainPage() {
   const parties = useMainStore((s) => s.parties);
   const stats = useMainStore((s) => s.stats);
   const error = useMainStore((s) => s.error);
+  const { theme } = useThemeStore();
 
   useEffect(() => {
     loadMain();
   }, [loadMain]);
 
+  const bgClass = theme === 'dark'
+    ? 'bg-[#0B1120] text-white'
+    : theme === 'christmas'
+    ? 'bg-transparent text-black'
+    : 'bg-slate-50 text-black';
+
   return (
-    <div className="min-h-screen bg-slate-50 text-black -mt-35 pt-5">
+    <div className={`min-h-screen ${bgClass} -mt-35 pt-5`}>
+      {theme === 'christmas' && <ChristmasBackground />}
       {/* Animated Gradient Orbs Background - portrait-v2 effect */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         {/* Primary Orb - Orange/Coral */}

@@ -1,97 +1,76 @@
 import React, { useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowUpRight, Users } from "lucide-react";
+import { ArrowUpRight, Users, Calendar } from "lucide-react";
 import { useMainStore } from "@/store/main/mainStore";
-import {
-  formatCurrency,
-  getPartyId,
-  getPartyTitle,
-  getPartyDescription,
-  getPartyPrice,
-  getPartyServiceName,
-  getPartyHostName,
-  getPartyStatus,
-  getPartyMembers,
-  getPartyMaxMembers,
-} from "@/utils/format";
-
-function Sticker({ children, color = "bg-white", rotate = 0, className = "" }) {
-  return (
-    <motion.div
-      whileHover={{ scale: 1.03 }}
-      whileTap={{ scale: 0.98 }}
-      className={`
-        ${color}
-        border border-gray-200
-        shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
-        hover:shadow-[6px_6px_16px_rgba(0,0,0,0.12)]
-        transition-all duration-200
-        ${className}
-      `}
-      style={{ transform: `rotate(${rotate}deg)` }}
-    >
-      {children}
-    </motion.div>
-  );
-}
-
-function BouncyCard({ children, className = "", delay = 0, onClick }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 30, rotate: -2 }}
-      whileInView={{ opacity: 1, y: 0, rotate: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay, type: "spring", stiffness: 220, damping: 16 }}
-      whileHover={{ y: -8, rotate: 1 }}
-      onClick={onClick}
-      className={`
-        bg-white
-        border border-gray-200
-        shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
-        rounded-3xl
-        overflow-hidden
-        cursor-pointer
-        ${className}
-      `}
-    >
-      {children}
-    </motion.div>
-  );
-}
+import { useThemeStore } from "@/store/themeStore";
 
 export default function MainTrendingSection() {
   const navigate = useNavigate();
   const parties = useMainStore((s) => s.parties);
   const partiesLoading = useMainStore((s) => s.partiesLoading);
   const partiesError = useMainStore((s) => s.partiesError);
+  const theme = useThemeStore((s) => s.theme);
+  const isDark = theme === "dark";
 
   // 마감 임박 파티 3개 선택 (모집률 높은 순)
   const visible = useMemo(() => {
     const list = Array.isArray(parties) ? [...parties] : [];
-
-    // 모집률(현재 인원 / 최대 인원) 기준으로 정렬 (높은 순)
+    console.log("MainTrendingSection parties:", list); // 디버깅용
     const sorted = list
       .map((party) => {
-        const members = getPartyMembers(party) || 0;
-        const maxMembers = getPartyMaxMembers(party) || 4;
+        const members = party.currentMembers || 0;
+        const maxMembers = party.maxMembers || 4;
         const fillRatio = members / maxMembers;
         return { party, fillRatio };
       })
       .sort((a, b) => b.fillRatio - a.fillRatio)
       .map((item) => item.party);
-
     return sorted.slice(0, 3);
   }, [parties]);
 
   const goParty = (party) => {
-    const id = getPartyId(party);
-    if (!id) return;
-    navigate(`/parties/${id}`);
+    if (!party.partyId) return;
+    navigate(`/party/${party.partyId}`);
+  };
+
+  const formatDate = (dateData) => {
+    if (!dateData) return "-";
+    if (Array.isArray(dateData)) {
+      const [year, month, day] = dateData;
+      return `${year}.${String(month).padStart(2, "0")}.${String(day).padStart(2, "0")}`;
+    }
+    const date = new Date(dateData);
+    return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, "0")}.${String(date.getDate()).padStart(2, "0")}`;
+  };
+
+  const getStatusBadge = (party) => {
+    const { partyStatus, maxMembers, currentMembers } = party;
+    const remainingSlots = (maxMembers || 0) - (currentMembers || 0);
+    if (partyStatus === "RECRUITING" && remainingSlots === 1) {
+      return { bg: "bg-gradient-to-r from-orange-500 to-red-500", text: "마감임박", pulse: true };
+    }
+    const badges = {
+      RECRUITING: { bg: "bg-[#635bff]", text: "모집중" },
+      ACTIVE: { bg: "bg-emerald-500", text: "파티중" },
+      PENDING_PAYMENT: { bg: "bg-amber-500", text: "결제대기" },
+      CLOSED: { bg: "bg-gray-400", text: "파티종료" },
+    };
+    return badges[partyStatus] || badges.RECRUITING;
+  };
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { staggerChildren: 0.06 } },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.4, 0.0, 0.2, 1] } },
   };
 
   return (
-    <section className="relative px-6 md:px-12 py-20 bg-slate-50 border-b border-gray-200">
+    <section className={`relative px-6 md:px-12 py-20 ${isDark ? "bg-slate-800" : "bg-slate-50"} border-b ${isDark ? "border-gray-600" : "border-gray-200"}`}>
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 26 }}
@@ -100,26 +79,23 @@ export default function MainTrendingSection() {
           className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10"
         >
           <div>
-            <Sticker color="bg-pink-500" rotate={-1} className="inline-block px-4 py-2 rounded-xl mb-4">
+            <div className="inline-block px-4 py-2 rounded-xl mb-4 bg-pink-500">
               <span className="font-black text-white">마감 임박 ⏰</span>
-            </Sticker>
-            <h2 className="text-4xl md:text-5xl font-black">서두르세요!</h2>
-            <p className="text-gray-700 font-medium mt-3">곧 마감되는 파티에 지금 바로 참여하세요.</p>
+            </div>
+            <h2 className={`text-4xl md:text-5xl font-black ${isDark ? "text-white" : "text-black"}`}>서두르세요!</h2>
+            <p className={`font-medium mt-3 ${isDark ? "text-gray-300" : "text-gray-700"}`}>곧 마감되는 파티에 지금 바로 참여하세요.</p>
           </div>
-
-          <Link to="/parties">
-            <Sticker color="bg-black" rotate={2} className="px-5 py-3 rounded-xl cursor-pointer">
-              <span className="flex items-center gap-2 text-white font-black">
-                전체 보기 <ArrowUpRight className="w-5 h-5" />
-              </span>
-            </Sticker>
+          <Link to="/party">
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }} className="px-5 py-3 rounded-xl cursor-pointer bg-black">
+              <span className="flex items-center gap-2 text-white font-black">전체 보기 <ArrowUpRight className="w-5 h-5" /></span>
+            </motion.div>
           </Link>
         </motion.div>
 
         {partiesError?.status === 401 && (
           <div className="mb-10">
-            <div className="bg-white border border-gray-200 rounded-3xl p-6 font-bold text-gray-800 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]">
-              파티 목록은 로그인 후 확인할 수 있어요. (서버 응답: 인증 필요)
+            <div className={`${isDark ? "bg-[#1E293B]" : "bg-white"} border ${isDark ? "border-gray-600" : "border-gray-200"} rounded-2xl p-6 font-bold`}>
+              파티 목록은 로그인 후 확인할 수 있어요.
             </div>
           </div>
         )}
@@ -127,107 +103,108 @@ export default function MainTrendingSection() {
         {partiesLoading && (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[...Array(3)].map((_, i) => (
-              <div
-                key={i}
-                className="h-56 bg-white border border-gray-200 rounded-3xl shadow-[4px_4px_12px_rgba(0,0,0,0.08)] animate-pulse"
-              />
+              <div key={i} className={`${isDark ? "bg-[#1E293B] border-gray-700" : "bg-white border-gray-100"} border rounded-2xl overflow-hidden animate-pulse`}>
+                <div className="h-40 bg-gradient-to-br from-gray-100 to-gray-50" />
+                <div className="p-5 space-y-3">
+                  <div className="h-5 bg-gray-200 rounded-lg w-1/3" />
+                  <div className="h-4 bg-gray-200 rounded-lg w-3/4" />
+                  <div className="h-4 bg-gray-200 rounded-lg w-1/2" />
+                  <div className="h-6 bg-gray-200 rounded-lg w-2/5 mt-4" />
+                </div>
+              </div>
             ))}
           </div>
         )}
 
+
         {!partiesLoading && (
           <>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {visible.map((party, i) => {
-                const service = getPartyServiceName(party);
-                const host = getPartyHostName(party);
-                const title = getPartyTitle(party);
-                const desc = getPartyDescription(party);
-                const price = getPartyPrice(party);
-                const members = getPartyMembers(party) || 0;
-                const maxMembers = getPartyMaxMembers(party) || 4;
-                const fillPercent = Math.round((members / maxMembers) * 100);
-                const status = String(getPartyStatus(party) || "");
-                const isRecruiting =
-                  status.toUpperCase() === "RECRUITING" ||
-                  status.toUpperCase() === "OPEN" ||
-                  status.toUpperCase() === "ACTIVE";
-
-                const bg =
-                  i % 3 === 0
-                    ? "bg-red-500"
-                    : i % 3 === 1
-                    ? "bg-blue-500"
-                    : "bg-indigo-500";
+            <motion.div variants={containerVariants} initial="hidden" animate="visible" className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {visible.map((party) => {
+                const badge = getStatusBadge(party);
+                const remainingSlots = (party.maxMembers || 4) - (party.currentMembers || 0);
 
                 return (
-                  <BouncyCard
-                    key={`${getPartyId(party) ?? i}`}
-                    delay={i * 0.06}
+                  <motion.div
+                    key={party.partyId}
+                    variants={itemVariants}
+                    whileHover={{ y: -6, transition: { duration: 0.2 } }}
                     onClick={() => goParty(party)}
+                    className={`group relative overflow-hidden cursor-pointer transition-all duration-300 ${
+                      isDark
+                        ? "bg-[#1E293B] border border-gray-700 rounded-2xl hover:shadow-2xl hover:border-gray-600"
+                        : "bg-white border border-gray-100 rounded-2xl hover:shadow-2xl hover:border-gray-200"
+                    }`}
                   >
-                    <div className={`h-28 ${bg} border-b border-gray-200 flex items-end justify-between p-4`}>
-                      <div className="text-white font-black">
-                        <div className="text-sm opacity-90">{service || "Party"}</div>
-                        <div className="text-xs opacity-80">{host ? `파티장: ${host}` : ""}</div>
-                      </div>
+                    {/* Service Banner */}
+                    <div className="relative h-40 bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
+                      {party.productImage ? (
+                        <img src={party.productImage} alt={party.productName} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                      ) : (
+                        <div className="w-20 h-20 rounded-2xl flex items-center justify-center text-white text-3xl font-black shadow-lg bg-[#635bff]">
+                          {party.productName?.[0]}
+                        </div>
+                      )}
 
-                      <Sticker
-                        color={isRecruiting ? "bg-cyan-400" : "bg-slate-200"}
-                        rotate={-2}
-                        className="px-2 py-1 rounded-lg"
-                      >
-                        <span className="text-xs font-black">
-                          {isRecruiting ? "모집중 🙋" : "마감"}
+                      {/* Status Badge */}
+                      <div className="absolute top-3 right-3">
+                        <span className={`${badge.bg} ${badge.pulse ? "animate-pulse" : ""} text-white px-3 py-1.5 rounded-full text-xs font-bold shadow-lg`}>
+                          {badge.text}
                         </span>
-                      </Sticker>
-                    </div>
-
-                    <div className="p-4">
-                      <div className="font-black text-base line-clamp-2 min-h-[44px]">{title || "-"}</div>
-                      <div className="mt-2 text-xs font-bold text-gray-600 line-clamp-2 min-h-[32px]">
-                        {desc || ""}
                       </div>
 
-                      <div className="mt-4 space-y-2">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-1 text-sm font-black text-gray-700">
-                            <Users className="w-4 h-4" />
-                            <span>{members}/{maxMembers}명</span>
-                          </div>
-                          <span className="font-black text-pink-500">
-                            {formatCurrency(price, { fallback: "0원" })}
+                      {/* Hover Overlay */}
+                      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[#635bff]/5" />
+                    </div>
+
+                    {/* Content */}
+                    <div className="p-5">
+                      {/* Service Badge */}
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${isDark ? "text-[#635bff] bg-[#635bff]/20" : "text-[#635bff] bg-[#635bff]/10"}`}>
+                          {party.productName}
+                        </span>
+                      </div>
+
+                      {/* Title */}
+                      <h3 className={`font-bold mb-3 line-clamp-1 transition-colors ${isDark ? "text-white group-hover:text-[#635bff]" : "text-gray-900 group-hover:text-[#635bff]"}`}>
+                        {party.title || `${party.productName} 파티`}
+                      </h3>
+
+                      {/* Info Row */}
+                      <div className={`flex items-center justify-between text-sm mb-4 ${isDark ? "text-gray-400" : "text-gray-500"}`}>
+                        <div className="flex items-center gap-1.5">
+                          <Calendar className="w-4 h-4" />
+                          <span>{formatDate(party.startDate)}</span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <Users className="w-4 h-4" />
+                          <span>{party.currentMembers || 0}/{party.maxMembers || 4}</span>
+                          {remainingSlots <= 2 && remainingSlots > 0 && (
+                            <span className="text-xs text-orange-500 font-semibold">({remainingSlots}자리)</span>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Price */}
+                      <div className={`flex items-center justify-between pt-4 border-t ${isDark ? "border-gray-700" : "border-gray-100"}`}>
+                        <span className={`text-sm ${isDark ? "text-gray-400" : "text-gray-500"}`}>월 구독료</span>
+                        <div className="text-right">
+                          <span className={`text-xl font-black ${isDark ? "text-white" : "text-gray-900"}`}>
+                            {party.monthlyFee?.toLocaleString()}
                           </span>
-                        </div>
-                        <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
-                          <div
-                            className="h-full bg-gradient-to-r from-orange-400 to-pink-500 rounded-full transition-all duration-500"
-                            style={{ width: `${fillPercent}%` }}
-                          />
-                        </div>
-                        <div className="text-xs font-bold text-orange-500 text-right">
-                          {fillPercent}% 모집 완료
+                          <span className="text-sm text-gray-500 ml-1">원</span>
                         </div>
                       </div>
-
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          goParty(party);
-                        }}
-                        className="mt-4 w-full bg-white border border-gray-200 rounded-2xl py-3 font-black hover:bg-slate-100 transition"
-                      >
-                        자세히 보기
-                      </button>
                     </div>
-                  </BouncyCard>
+                  </motion.div>
                 );
               })}
-            </div>
+            </motion.div>
 
             {visible.length === 0 && (
               <div className="py-16 text-center">
-                <div className="inline-block bg-white border border-gray-200 rounded-3xl px-8 py-6 font-black shadow-[4px_4px_12px_rgba(0,0,0,0.08)]">
+                <div className={`inline-block ${isDark ? "bg-[#1E293B]" : "bg-white"} border ${isDark ? "border-gray-600" : "border-gray-200"} rounded-2xl px-8 py-6 font-black ${isDark ? "text-white" : "text-black"}`}>
                   표시할 파티가 없습니다.
                 </div>
               </div>

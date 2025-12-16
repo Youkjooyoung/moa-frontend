@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { NeoCard } from "@/components/common/neo";
+import { useThemeStore } from "@/store/themeStore";
 
 // ============================================
 // Statement Section - WHY MoA?
@@ -8,9 +9,10 @@ import { NeoCard } from "@/components/common/neo";
 export default function MainStatementSection() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const { theme, isDark } = useThemeStore();
 
   return (
-    <section ref={ref} className="py-32 px-6 bg-white border-b border-gray-200">
+    <section ref={ref} className={`py-32 px-6 border-b ${isDark ? 'bg-[#0B1120] border-gray-600' : 'bg-white border-gray-200'}`}>
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -20,7 +22,7 @@ export default function MainStatementSection() {
         <NeoCard color="bg-cyan-400" rotate={-2} className="inline-block px-6 py-3 rounded-xl mb-8">
           <span className="text-2xl font-black">WHY MoA?</span>
         </NeoCard>
-        <p className="text-[28px] md:text-[36px] lg:text-[44px] font-black leading-[1.3]">
+        <p className={`text-[28px] md:text-[36px] lg:text-[44px] font-black leading-[1.3] ${isDark ? 'text-white' : 'text-black'}`}>
           매달 나가는 구독료,
           <br />
           혼자 다 내고 계셨나요?

@@ -105,11 +105,9 @@ export default function PaymentSuccessPage() {
                     await joinParty(partyId, paymentData);
                     localStorage.removeItem("pendingPayment");
 
-                    // ✨ 파티원은 월 구독료 자동 결제를 위해 빌링키 등록 필요
-                    // 결제 성공 후 자동으로 빌링키 등록 페이지로 리다이렉트
-                    localStorage.setItem("afterBillingRedirect", `/party/${partyId}`);
-                    localStorage.setItem("billingRegistrationReason", "party_join");
-                    navigate("/payment/billing/register");
+                    // ✨ 빌링키 등록은 파티 상세 페이지에서 유도 (OTT 정보 확인 시)
+                    // 결제 즉시 리다이렉트 하지 않고 파티 상세로 바로 이동
+                    navigate(`/party/${partyId}`);
                 } else if (type === "RETRY_DEPOSIT") {
                     await processLeaderDeposit(partyId, paymentData);
                     localStorage.removeItem("pendingPayment");

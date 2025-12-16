@@ -16,10 +16,6 @@ function AnimatedGradient({ theme }) {
       color1: "rgba(99, 91, 255, 0.15)",
       color2: "rgba(0, 212, 255, 0.15)",
     },
-    portrait: {
-      color1: "rgba(255, 181, 197, 0.15)",
-      color2: "rgba(197, 181, 255, 0.15)",
-    },
     classic: {
       color1: "rgba(99, 91, 255, 0.15)",
       color2: "rgba(0, 212, 255, 0.15)",
@@ -133,25 +129,6 @@ export default function UserSubscriptionList() {
           iconColor2: 'text-[#00d4ff]',
           priceColor: 'text-[#635bff]',
           statusActive: 'bg-emerald-500/20 text-emerald-400',
-        };
-      case 'portrait':
-        return {
-          bg: 'bg-gradient-to-br from-[#FDF8F3] via-[#FFF5F7] to-[#F5F0FF]',
-          headerBg: 'bg-white/80 backdrop-blur-sm',
-          badgeBg: 'bg-pink-100',
-          badgeText: 'text-pink-600',
-          text: 'text-gray-900',
-          subtext: 'text-gray-500',
-          cardBg: 'bg-white/80 backdrop-blur-sm',
-          cardBorder: 'border-pink-100',
-          cardHover: 'hover:shadow-lg hover:shadow-pink-200/30',
-          buttonBg: 'bg-gradient-to-r from-[#FFB5C5] to-[#C5B5FF]',
-          buttonHover: 'hover:opacity-90',
-          buttonShadow: 'shadow-pink-200/40',
-          iconColor1: 'text-pink-500',
-          iconColor2: 'text-purple-500',
-          priceColor: 'text-pink-600',
-          statusActive: 'bg-emerald-50 text-emerald-600',
         };
       case 'classic':
         return {

@@ -43,19 +43,6 @@ const getThemeStyles = (theme) => {
         inputBorder: 'border border-gray-700 bg-[#0F172A] text-white',
         buttonBg: 'bg-[#635bff] hover:bg-[#5851e8]',
       };
-    case 'portrait':
-      return {
-        bg: 'bg-gradient-to-br from-[#FDF8F3] via-[#FFF5F7] to-[#F5F0FF]',
-        text: 'text-gray-900',
-        subtext: 'text-gray-600',
-        highlight: 'text-pink-500',
-        stickerBg: 'bg-white/80 backdrop-blur-sm',
-        stickerBorder: 'border border-pink-200',
-        stickerShadow: 'shadow-[4px_4px_12px_rgba(255,181,197,0.2)]',
-        cardBg: 'bg-white/80 backdrop-blur-sm border border-pink-200 shadow-[4px_4px_12px_rgba(255,181,197,0.2)]',
-        inputBorder: 'border border-pink-200',
-        buttonBg: 'bg-gradient-to-r from-[#FFB5C5] to-[#C5B5FF] hover:opacity-90',
-      };
     case 'pop':
       return {
         bg: 'bg-slate-50',

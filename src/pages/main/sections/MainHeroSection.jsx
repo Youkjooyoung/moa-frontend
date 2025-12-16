@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { Sparkles, Users, ArrowRight, Plus, Search } from "lucide-react";
 import { NeoCard } from "@/components/common/neo";
+import { useThemeStore } from "@/store/themeStore";
 import {
   formatCurrency,
   getPartyServiceName,
@@ -14,7 +15,7 @@ import {
 // ============================================
 // Confetti Component - 둥둥 떠다니는 종이 조각
 // ============================================
-const Confetti = () => {
+const Confetti = ({ isDark }) => {
   const confettiPieces = [
     { color: "bg-pink-400", size: "w-4 h-4", left: "5%", delay: 0, duration: 8, rotate: 45 },
     { color: "bg-cyan-400", size: "w-3 h-3", left: "15%", delay: 1.2, duration: 10, rotate: -30 },
@@ -33,7 +34,7 @@ const Confetti = () => {
       {confettiPieces.map((piece, index) => (
         <motion.div
           key={index}
-          className={`absolute ${piece.color} ${piece.size} rounded-sm border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]`}
+          className={`absolute ${piece.color} ${piece.size} rounded-sm ${isDark ? 'border-transparent' : 'border border-gray-200'} shadow-[4px_4px_12px_rgba(0,0,0,0.08)]`}
           style={{ left: piece.left, top: -20 }}
           animate={{
             y: ["0vh", "110vh"],
@@ -55,6 +56,8 @@ const Confetti = () => {
 export default function MainHeroSection({ parties, products = [] }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [showResults, setShowResults] = useState(false);
+  const { theme } = useThemeStore();
+  const isDark = theme === 'dark';
 
   // portrait-v2 스타일: useInView로 섹션 감지
   const heroRef = useRef(null);
@@ -182,7 +185,7 @@ export default function MainHeroSection({ parties, products = [] }) {
     <>
       {/* 히어로 섹션 */}
       <section ref={heroRef} className="relative pt-32 pb-10 flex flex-col items-center justify-center overflow-hidden px-6">
-        <Confetti />
+        <Confetti isDark={isDark} />
 
         {/* 메인 헤드라인 */}
         <motion.div
@@ -230,10 +233,10 @@ export default function MainHeroSection({ parties, products = [] }) {
             animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 0.3 }}
           >
-            <NeoCard color="bg-white" rotate={1} className="inline-block px-5 py-2 rounded-xl mb-6">
+            <NeoCard color={isDark ? "bg-[#1E293B]" : "bg-white"} rotate={1} className="inline-block px-5 py-2 rounded-xl mb-6">
               <div className="flex items-center gap-2">
                 <Sparkles size={16} className="text-pink-500" />
-                <span className="font-bold">구독료, 이제 똑똑하게 나눠요</span>
+                <span className={`font-bold ${isDark ? 'text-white' : ''}`}>구독료, 이제 똑똑하게 나눠요</span>
               </div>
             </NeoCard>
           </motion.div>
@@ -258,8 +261,8 @@ export default function MainHeroSection({ parties, products = [] }) {
             animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 0.5, duration: 0.8 }}
           >
-            <NeoCard color="bg-white" rotate={-1} className="inline-block px-6 py-3 rounded-xl mb-8">
-              <p className="text-lg md:text-xl font-bold">
+            <NeoCard color={isDark ? "bg-[#1E293B]" : "bg-white"} rotate={-1} className="inline-block px-6 py-3 rounded-xl mb-8">
+              <p className={`text-lg md:text-xl font-bold ${isDark ? 'text-white' : ''}`}>
                 넷플릭스, 디즈니+, 유튜브 프리미엄까지 함께 나누면 최대 75% 절약!
               </p>
             </NeoCard>
@@ -291,7 +294,7 @@ export default function MainHeroSection({ parties, products = [] }) {
                 onFocus={() => setShowResults(true)}
                 onBlur={() => setTimeout(() => setShowResults(false), 200)}
                 placeholder="구독상품 검색"
-                className="w-36 sm:w-44 px-4 py-3 pl-10 font-bold bg-white border border-gray-200 rounded-xl shadow-[4px_4px_12px_rgba(0,0,0,0.08)] focus:shadow-[6px_6px_16px_rgba(0,0,0,0.12)] transition-all outline-none text-sm"
+                className={`w-36 sm:w-44 px-4 py-3 pl-10 font-bold ${isDark ? 'bg-[#1E293B] border-gray-600 text-white placeholder:text-gray-400' : 'bg-white border-gray-200'} border rounded-xl shadow-[4px_4px_12px_rgba(0,0,0,0.08)] focus:shadow-[6px_6px_16px_rgba(0,0,0,0.12)] transition-all outline-none text-sm`}
               />
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
 
@@ -302,20 +305,20 @@ export default function MainHeroSection({ parties, products = [] }) {
                     initial={{ opacity: 0, y: -5 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -5 }}
-                    className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-xl shadow-[6px_6px_16px_rgba(0,0,0,0.12)] overflow-hidden z-50 min-w-[200px]"
+                    className={`absolute top-full left-0 right-0 mt-2 ${isDark ? 'bg-[#1E293B] border-gray-600' : 'bg-white border-gray-200'} border rounded-xl shadow-[6px_6px_16px_rgba(0,0,0,0.12)] overflow-hidden z-50 min-w-[200px]`}
                   >
                     {filteredProducts.length > 0 ? (
                       filteredProducts.map((product) => (
                         <Link
                           key={product?.productId || product?.id}
                           to={`/mypage/subscriptions/add?productId=${product?.productId || product?.id}`}
-                          className="flex items-center gap-2 px-4 py-3 hover:bg-pink-50 transition-colors border-b border-gray-200 last:border-0"
+                          className={`flex items-center gap-2 px-4 py-3 ${isDark ? 'hover:bg-[#2D3B4F] border-gray-600' : 'hover:bg-pink-50 border-gray-200'} transition-colors border-b last:border-0`}
                         >
-                          <span className="font-black text-sm">{product?.productName || product?.name}</span>
+                          <span className={`font-black text-sm ${isDark ? 'text-white' : ''}`}>{product?.productName || product?.name}</span>
                         </Link>
                       ))
                     ) : (
-                      <div className="px-4 py-3 text-sm text-gray-500 font-bold">
+                      <div className={`px-4 py-3 text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'} font-bold`}>
                         검색 결과 없음
                       </div>
                     )}
@@ -391,7 +394,7 @@ export default function MainHeroSection({ parties, products = [] }) {
                 }}
                 className="absolute"
               >
-                <ServiceCard card={card} />
+                <ServiceCard card={card} isDark={isDark} />
               </motion.div>
             );
           })}
@@ -410,7 +413,7 @@ export default function MainHeroSection({ parties, products = [] }) {
                 ease: [0.4, 0.0, 0.2, 1]
               }}
             >
-              <ServiceCard card={card} />
+              <ServiceCard card={card} isDark={isDark} />
             </motion.div>
           ))}
         </div>
@@ -438,7 +441,11 @@ export default function MainHeroSection({ parties, products = [] }) {
 }
 
 // 서비스 카드 컴포넌트
-function ServiceCard({ card }) {
+function ServiceCard({ card, isDark }) {
+  const cardBg = isDark ? 'bg-[#1E293B] border-gray-600' : 'bg-white border-gray-200';
+  const textColor = isDark ? 'text-white' : 'text-black';
+  const subTextColor = isDark ? 'text-gray-400' : 'text-gray-500';
+
   // 파티가 없는 빈 카드
   if (card.isEmpty) {
     return (
@@ -446,17 +453,17 @@ function ServiceCard({ card }) {
         <motion.div
           whileHover={{ scale: 1.05, y: -4 }}
           whileTap={{ scale: 0.98 }}
-          className="w-[150px] md:w-[170px] bg-white border border-gray-200 rounded-2xl p-4 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] cursor-pointer hover:shadow-[6px_6px_16px_rgba(0,0,0,0.12)] transition-all"
+          className={`w-[150px] md:w-[170px] ${cardBg} border rounded-2xl p-4 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] cursor-pointer hover:shadow-[6px_6px_16px_rgba(0,0,0,0.12)] transition-all`}
         >
-          <div className={`w-10 h-10 ${card.bgColor} rounded-xl border border-gray-200 flex items-center justify-center mb-3`}>
+          <div className={`w-10 h-10 ${card.bgColor} rounded-xl ${isDark ? 'border-gray-600' : 'border-gray-200'} border flex items-center justify-center mb-3`}>
             <span className="text-white font-black text-lg">{card.emoji}</span>
           </div>
-          <h3 className="font-black text-black text-sm mb-1">{card.serviceName}</h3>
+          <h3 className={`font-black ${textColor} text-sm mb-1`}>{card.serviceName}</h3>
           <div className="mt-2 flex items-center gap-1 text-pink-500">
             <Plus size={14} className="stroke-[3]" />
             <span className="text-xs font-black">파티원 찾기</span>
           </div>
-          <p className="text-[10px] text-gray-400 font-bold mt-1">
+          <p className={`text-[10px] ${subTextColor} font-bold mt-1`}>
             지금 바로 시작하세요!
           </p>
         </motion.div>
@@ -468,19 +475,19 @@ function ServiceCard({ card }) {
   return (
     <motion.div
       whileHover={{ scale: 1.05, y: -4 }}
-      className="w-[150px] md:w-[170px] bg-white border border-gray-200 rounded-2xl p-4 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] hover:shadow-[6px_6px_16px_rgba(0,0,0,0.12)] transition-shadow"
+      className={`w-[150px] md:w-[170px] ${cardBg} border rounded-2xl p-4 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] hover:shadow-[6px_6px_16px_rgba(0,0,0,0.12)] transition-shadow`}
     >
-      <div className={`w-10 h-10 ${card.bgColor} rounded-xl border border-gray-200 flex items-center justify-center mb-3`}>
+      <div className={`w-10 h-10 ${card.bgColor} rounded-xl ${isDark ? 'border-gray-600' : 'border-gray-200'} border flex items-center justify-center mb-3`}>
         <span className="text-white font-black text-lg">{card.emoji}</span>
       </div>
-      <h3 className="font-black text-black text-sm mb-1">{card.name}</h3>
-      <p className="text-xs text-gray-500 font-bold mb-3">{card.category}</p>
+      <h3 className={`font-black ${textColor} text-sm mb-1`}>{card.name}</h3>
+      <p className={`text-xs ${subTextColor} font-bold mb-3`}>{card.category}</p>
       <div className="flex items-center justify-between">
         <div>
           <p className="text-lg font-black text-pink-500">{card.price}</p>
-          <p className="text-[10px] text-gray-400 font-bold">월 비용</p>
+          <p className={`text-[10px] ${subTextColor} font-bold`}>월 비용</p>
         </div>
-        <div className="flex items-center gap-1 text-xs font-bold text-black bg-lime-400 px-2 py-1 rounded-full border border-gray-200">
+        <div className={`flex items-center gap-1 text-xs font-bold text-black bg-lime-400 px-2 py-1 rounded-full ${isDark ? 'border-gray-600' : 'border-gray-200'} border`}>
           <Users size={12} />
           <span>{card.members}</span>
         </div>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import CommunityLayout from '../../components/community/CommunityLayout';
 import { useAuthStore } from '@/store/authStore';
+import { useThemeStore } from '@/store/themeStore';
 import { NeoCard, NeoButton } from '@/components/common/neo';
 
 const GetNotice = () => {
@@ -9,10 +10,36 @@ const GetNotice = () => {
     const params = useParams();
     const noticeId = params.id || params.communityId;
     const { user } = useAuthStore();
+    const { theme } = useThemeStore();
     const [notice, setNotice] = useState(null);
     const [loading, setLoading] = useState(true);
 
     const isAdmin = user?.role === 'ADMIN';
+
+    // Theme-specific color helpers
+    const getAccentColor = () => {
+        switch (theme) {
+            case 'classic': return '#635bff';
+            case 'dark': return '#635bff';
+            case 'pop': return '#ec4899';
+            case 'christmas': return '#c41e3a';
+            default: return '#635bff';
+        }
+    };
+
+    const getSecondaryColor = () => {
+        switch (theme) {
+            case 'classic': return '#06b6d4';
+            case 'dark': return '#06b6d4';
+            case 'pop': return '#84cc16';
+            case 'christmas': return '#1a5f2a';
+            default: return '#06b6d4';
+        }
+    };
+
+    const getTextColor = () => {
+        return theme === 'dark' ? 'text-white' : 'text-black';
+    };
 
     useEffect(() => {
         if (!noticeId || noticeId === 'undefined') {
@@ -75,14 +102,20 @@ const GetNotice = () => {
         <CommunityLayout>
             <div className="max-w-3xl mx-auto pt-8">
                 <div className="border-b border-gray-200 pb-6 mb-6">
-                    <h2 className="text-xl font-black text-black mb-4">
+                    <h2 className={`text-xl font-black ${getTextColor()} mb-4`}>
                         {notice.title}
                     </h2>
                     <div className="flex items-center gap-4">
-                        <span className="px-3 py-1 bg-lime-400 border border-gray-200 rounded-lg text-sm font-black">
+                        <span
+                            className={`px-3 py-1 border border-gray-200 rounded-lg text-sm font-black ${getTextColor()}`}
+                            style={{ backgroundColor: getSecondaryColor() }}
+                        >
                             등록일: {formatDate(notice.createdAt)}
                         </span>
-                        <span className="px-3 py-1 bg-cyan-400 border border-gray-200 rounded-lg text-sm font-black">
+                        <span
+                            className={`px-3 py-1 border border-gray-200 rounded-lg text-sm font-black ${getTextColor()}`}
+                            style={{ backgroundColor: getAccentColor() }}
+                        >
                             조회수: {notice.viewCount || 0}
                         </span>
                     </div>
@@ -96,24 +129,25 @@ const GetNotice = () => {
                     {isAdmin && (
                         <button
                             onClick={() => navigate(`/community/notice/update/${noticeId}`)}
-                            className="px-6 py-2 text-sm font-black text-black bg-cyan-400
+                            className={`px-6 py-2 text-sm font-black ${getTextColor()}
                                 border border-gray-200 rounded-xl
                                 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
                                 hover:shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
-                                
-                                transition-all"
+
+                                transition-all`}
+                            style={{ backgroundColor: getAccentColor() }}
                         >
                             수정
                         </button>
                     )}
                     <button
                         onClick={() => navigate('/community/notice')}
-                        className="px-6 py-2 text-sm font-black text-black bg-white
+                        className={`px-6 py-2 text-sm font-black ${getTextColor()} bg-white
                             border border-gray-200 rounded-xl
                             shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
                             hover:shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
-                            
-                            transition-all"
+
+                            transition-all`}
                     >
                         목록
                     </button>

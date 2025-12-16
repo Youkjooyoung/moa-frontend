@@ -1,15 +1,16 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Users, Shield, Zap } from "lucide-react";
+import { useThemeStore } from "@/store/themeStore";
 
-function Sticker({ children, color = "bg-white", rotate = 0, className = "" }) {
+function Sticker({ children, color = "bg-white", rotate = 0, className = "", isDark = false }) {
   return (
     <motion.div
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
       className={`
         ${color}
-        border border-gray-200
+        ${isDark ? 'border-gray-600' : 'border-gray-200'}
         shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
         hover:shadow-[6px_6px_16px_rgba(0,0,0,0.12)]
         transition-all duration-200
@@ -22,7 +23,7 @@ function Sticker({ children, color = "bg-white", rotate = 0, className = "" }) {
   );
 }
 
-function BouncyCard({ children, className = "", delay = 0 }) {
+function BouncyCard({ children, className = "", delay = 0, isDark = false }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 40, rotate: -2 }}
@@ -31,8 +32,8 @@ function BouncyCard({ children, className = "", delay = 0 }) {
       transition={{ delay, type: "spring", stiffness: 220, damping: 16 }}
       whileHover={{ y: -8, rotate: 1 }}
       className={`
-        bg-white
-        border border-gray-200
+        ${isDark ? 'bg-[#1a2332]' : 'bg-white'}
+        ${isDark ? 'border-gray-600' : 'border-gray-200'}
         shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
         rounded-3xl
         overflow-hidden
@@ -45,6 +46,8 @@ function BouncyCard({ children, className = "", delay = 0 }) {
 }
 
 export default function MainFeaturesSection() {
+  const { theme, isDark } = useThemeStore();
+
   const features = [
     {
       icon: Users,
@@ -70,7 +73,7 @@ export default function MainFeaturesSection() {
   ];
 
   return (
-    <section className="relative px-6 md:px-12 py-20 bg-white border-b border-gray-200">
+    <section className={`relative px-6 md:px-12 py-20 ${isDark ? 'bg-[#0B1120]' : 'bg-white'} ${isDark ? 'border-gray-700' : 'border-gray-200'} border-b`}>
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -82,24 +85,25 @@ export default function MainFeaturesSection() {
             color="bg-lime-400"
             rotate={-2}
             className="inline-block px-6 py-3 rounded-xl mb-6"
+            isDark={isDark}
           >
             <span className="text-xl md:text-2xl font-black">WHY MoA? 🤔</span>
           </Sticker>
-          <h2 className="text-4xl md:text-6xl font-black tracking-tight">
+          <h2 className={`text-4xl md:text-6xl font-black tracking-tight ${isDark ? 'text-white' : ''}`}>
             이래서 <span className="text-pink-500">MoA</span>야!
           </h2>
         </motion.div>
 
         <div className="grid md:grid-cols-3 gap-8">
           {features.map((f, i) => (
-            <BouncyCard key={f.title} className="p-8 h-full" delay={i * 0.08}>
+            <BouncyCard key={f.title} className="p-8 h-full" delay={i * 0.08} isDark={isDark}>
               <div
-                className={`w-20 h-20 ${f.color} rounded-2xl border border-gray-200 flex items-center justify-center mb-6 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]`}
+                className={`w-20 h-20 ${f.color} rounded-2xl ${isDark ? 'border-gray-600' : 'border-gray-200'} border flex items-center justify-center mb-6 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]`}
               >
                 <span className="text-4xl">{f.emoji}</span>
               </div>
-              <h3 className="text-2xl font-black mb-3">{f.title}</h3>
-              <p className="text-lg text-gray-600 font-medium">{f.desc}</p>
+              <h3 className={`text-2xl font-black mb-3 ${isDark ? 'text-white' : ''}`}>{f.title}</h3>
+              <p className={`text-lg font-medium ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>{f.desc}</p>
             </BouncyCard>
           ))}
         </div>

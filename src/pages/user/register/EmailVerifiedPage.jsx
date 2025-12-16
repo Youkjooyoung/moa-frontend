@@ -25,14 +25,6 @@ const getThemeStyles = (theme) => {
         text: 'text-gray-400',
         button: 'bg-[#635bff] hover:bg-[#5851e8]',
       };
-    case 'portrait':
-      return {
-        bg: 'bg-gradient-to-br from-[#FDF8F3] via-[#FFF5F7] to-[#F5F0FF]',
-        cardBg: 'bg-white/80 backdrop-blur-sm border border-pink-200 shadow-[4px_4px_12px_rgba(255,181,197,0.2)]',
-        title: 'text-pink-600',
-        text: 'text-gray-500',
-        button: 'bg-gradient-to-r from-[#FFB5C5] to-[#C5B5FF] hover:opacity-90',
-      };
     case 'pop':
       return {
         bg: 'bg-slate-50',

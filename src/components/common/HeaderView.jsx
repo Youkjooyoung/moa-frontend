@@ -45,19 +45,17 @@ function NavPill({ to, icon: Icon, children, active, theme = "classic" }) {
     <Link
       to={to}
       className={`group inline-flex items-center gap-2 px-4 py-2 font-black text-[15px] rounded-2xl border-0 whitespace-nowrap transition-colors
-      ${
-        active
+      ${active
           ? "bg-black text-white"
           : "bg-transparent text-black hover:bg-black hover:text-white"
-      }`}
+        }`}
     >
       <span
         className={`inline-flex items-center justify-center w-7 h-7 rounded-xl border-0 transition-colors
-        ${
-          active
+        ${active
             ? "bg-white text-black"
             : "bg-transparent text-black group-hover:bg-white group-hover:text-black"
-        }`}
+          }`}
       >
         <Icon className="w-4 h-4" />
       </span>
@@ -343,15 +341,12 @@ export default function HeaderView({
                     id="admin-mode"
                     checked={isAdminMode}
                     onCheckedChange={handleAdminSwitch}
-                    className={`${
-                      currentTheme === "dark"
-                        ? "data-[state=checked]:bg-[#635bff] data-[state=unchecked]:bg-gray-600"
-                        : currentTheme === "portrait"
-                        ? "data-[state=checked]:bg-pink-400 data-[state=unchecked]:bg-pink-200"
-                        : currentTheme === "christmas"
+                    className={`${currentTheme === "dark"
+                      ? "data-[state=checked]:bg-[#635bff] data-[state=unchecked]:bg-gray-600"
+                      : currentTheme === "christmas"
                         ? "data-[state=checked]:bg-[#c41e3a] data-[state=unchecked]:bg-gray-300"
                         : "data-[state=checked]:bg-black data-[state=unchecked]:bg-slate-300"
-                    }`}
+                      }`}
                   />
                   <Label
                     htmlFor="admin-mode"
@@ -406,11 +401,9 @@ export default function HeaderView({
                     className="p-0 border-0 bg-transparent hover:bg-transparent"
                   >
                     <div
-                      className={`${themeStyle.menuBg} ${
-                        themeStyle.menuBorder
-                      } ${
-                        currentTheme === "pop" ? "" : "shadow-lg"
-                      } w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-200`}
+                      className={`${themeStyle.menuBg} ${themeStyle.menuBorder
+                        } ${currentTheme === "pop" ? "" : "shadow-lg"
+                        } w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-200`}
                     >
                       <Menu className={`w-6 h-6 ${themeStyle.menuText}`} />
                     </div>
@@ -474,15 +467,12 @@ export default function HeaderView({
                             id="admin-mode-dd"
                             checked={isAdminMode}
                             onCheckedChange={handleAdminSwitch}
-                            className={`${
-                              currentTheme === "dark"
-                                ? "data-[state=checked]:bg-[#635bff] data-[state=unchecked]:bg-gray-600"
-                                : currentTheme === "portrait"
-                                ? "data-[state=checked]:bg-pink-400 data-[state=unchecked]:bg-pink-200"
-                                : currentTheme === "christmas"
+                            className={`${currentTheme === "dark"
+                              ? "data-[state=checked]:bg-[#635bff] data-[state=unchecked]:bg-gray-600"
+                              : currentTheme === "christmas"
                                 ? "data-[state=checked]:bg-[#c41e3a] data-[state=unchecked]:bg-gray-300"
                                 : "data-[state=checked]:bg-black data-[state=unchecked]:bg-slate-300"
-                            }`}
+                              }`}
                           />
                         </div>
                       </Sticker>
@@ -498,13 +488,11 @@ export default function HeaderView({
                     >
                       <div className="w-full">
                         <div
-                          className={`w-full rounded-2xl px-4 py-3 transition-all duration-200 ${
-                            themeStyle.accentBg
-                          } ${
-                            currentTheme === "pop"
+                          className={`w-full rounded-2xl px-4 py-3 transition-all duration-200 ${themeStyle.accentBg
+                            } ${currentTheme === "pop"
                               ? "border-2 border-black"
                               : ""
-                          }`}
+                            }`}
                         >
                           <div
                             className={`flex items-center justify-between gap-2 font-black ${themeStyle.accentText}`}
@@ -552,9 +540,8 @@ export default function HeaderView({
 
               <Link to="/login">
                 <div
-                  className={`${themeStyle.menuBg} ${themeStyle.menuBorder} ${
-                    currentTheme === "pop" ? "" : "shadow-lg"
-                  } px-5 py-2 rounded-2xl transition-all duration-200`}
+                  className={`${themeStyle.menuBg} ${themeStyle.menuBorder} ${currentTheme === "pop" ? "" : "shadow-lg"
+                    } px-5 py-2 rounded-2xl transition-all duration-200`}
                 >
                   <span className={`font-black ${themeStyle.menuText}`}>
                     로그인

@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
 import {
     ArrowRight,
@@ -18,14 +18,10 @@ import {
     Heart,
     Clock,
     CreditCard,
+    Calendar,
+    Loader2,
 } from "lucide-react";
-
-// Mock Data
-const MOCK_PARTIES = [
-    { id: 1, serviceName: "Netflix", title: "넷플릭스 프리미엄 같이 봐요", hostName: "영화덕후", currentMembers: 3, maxMembers: 4, pricePerMonth: 4500 },
-    { id: 2, serviceName: "Disney+", title: "디즈니플러스 파티원 구해요", hostName: "마블팬", currentMembers: 2, maxMembers: 4, pricePerMonth: 3500 },
-    { id: 3, serviceName: "Wavve", title: "웨이브 같이 볼 분", hostName: "드라마러버", currentMembers: 1, maxMembers: 4, pricePerMonth: 3200 },
-];
+import { usePartyStore } from "@/store/party/partyStore";
 
 const OTT_SERVICES = [
     { name: "Netflix", color: "#E50914", savings: "75%" },
@@ -155,61 +151,115 @@ const FeatureCard = ({ icon: Icon, title, description, color, delay = 0 }) => (
     </motion.div>
 );
 
-// Party Card
-const PartyCard = ({ party, index }) => (
-    <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.4, delay: index * 0.1 }}
-        whileHover={{ y: -6, transition: { duration: 0.2 } }}
-        className="group relative bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300"
-    >
-        {/* Service Banner */}
-        <div className="relative h-32 bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
-            <div
-                className="w-16 h-16 rounded-2xl flex items-center justify-center text-white text-2xl font-black shadow-lg"
-                style={{
-                    background: OTT_SERVICES.find(s => s.name === party.serviceName)?.color || "#635bff",
-                }}
-            >
-                {party.serviceName?.[0]}
-            </div>
+// Party Card - 실제 API 데이터용
+const PartyCard = ({ party, index, onClick }) => {
+    // 마감 임박 여부 계산
+    const remainingSlots = (party.maxMembers || 4) - (party.currentMembers || 0);
+    const isAlmostFull = remainingSlots <= 2 && remainingSlots > 0;
 
-            {/* Status Badge */}
-            <div className="absolute top-3 right-3 px-3 py-1 bg-green-500 text-white text-xs font-semibold rounded-full">
-                모집중
-            </div>
-        </div>
+    // 날짜 포맷
+    const formatDate = (dateString) => {
+        if (!dateString) return "";
+        const date = new Date(dateString);
+        return `${date.getMonth() + 1}/${date.getDate()}`;
+    };
 
-        {/* Content */}
-        <div className="p-5">
-            <div className="flex items-center gap-2 mb-2">
-                <span className="text-xs font-medium text-[#635bff] bg-[#635bff]/10 px-2 py-1 rounded-full">
-                    {party.serviceName}
-                </span>
-            </div>
+    // OTT 서비스 색상 매칭
+    const getServiceColor = (productName) => {
+        const colorMap = {
+            "Netflix": "#E50914",
+            "넷플릭스": "#E50914",
+            "Disney+": "#113CCF",
+            "디즈니+": "#113CCF",
+            "디즈니플러스": "#113CCF",
+            "Wavve": "#1351F9",
+            "웨이브": "#1351F9",
+            "Watcha": "#FF0558",
+            "왓챠": "#FF0558",
+            "TVING": "#FF153C",
+            "티빙": "#FF153C",
+            "Coupang Play": "#5F0080",
+            "쿠팡플레이": "#5F0080",
+            "YouTube Premium": "#FF0000",
+            "유튜브 프리미엄": "#FF0000",
+        };
+        return colorMap[productName] || "#635bff";
+    };
 
-            <h3 className="font-bold text-gray-900 mb-3 line-clamp-1">{party.title}</h3>
+    return (
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.4, delay: index * 0.1 }}
+            whileHover={{ y: -6, transition: { duration: 0.2 } }}
+            onClick={onClick}
+            className="group relative bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300 cursor-pointer"
+        >
+            {/* Service Banner */}
+            <div className="relative h-32 bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center overflow-hidden">
+                {party.productImage ? (
+                    <img
+                        src={party.productImage}
+                        alt={party.productName}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                ) : (
+                    <div
+                        className="w-16 h-16 rounded-2xl flex items-center justify-center text-white text-2xl font-black shadow-lg"
+                        style={{ background: getServiceColor(party.productName) }}
+                    >
+                        {party.productName?.[0]}
+                    </div>
+                )}
 
-            <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-sm text-gray-500">
-                    <Users className="w-4 h-4" />
-                    <span>{party.currentMembers}/{party.maxMembers || 4}</span>
+                {/* Status Badge */}
+                <div className={`absolute top-3 right-3 px-3 py-1 text-white text-xs font-semibold rounded-full shadow-lg ${
+                    isAlmostFull ? "bg-orange-500 animate-pulse" : "bg-green-500"
+                }`}>
+                    {isAlmostFull ? `마감임박 (${remainingSlots}자리)` : "모집중"}
                 </div>
-                <div className="text-right">
-                    <div className="text-lg font-bold text-gray-900">
-                        {party.pricePerMonth?.toLocaleString()}
-                        <span className="text-sm font-normal text-gray-500">원/월</span>
+            </div>
+
+            {/* Content */}
+            <div className="p-5">
+                <div className="flex items-center gap-2 mb-2">
+                    <span className="text-xs font-medium text-[#635bff] bg-[#635bff]/10 px-2 py-1 rounded-full">
+                        {party.productName}
+                    </span>
+                </div>
+
+                <h3 className="font-bold text-gray-900 mb-3 line-clamp-1 group-hover:text-[#635bff] transition-colors">
+                    {party.title || `${party.productName} 파티`}
+                </h3>
+
+                <div className="flex items-center justify-between text-sm text-gray-500 mb-3">
+                    <div className="flex items-center gap-1.5">
+                        <Calendar className="w-4 h-4" />
+                        <span>{formatDate(party.startDate)}</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                        <Users className="w-4 h-4" />
+                        <span>{party.currentMembers || 0}/{party.maxMembers || 4}</span>
+                    </div>
+                </div>
+
+                <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+                    <span className="text-sm text-gray-500">월 구독료</span>
+                    <div className="text-right">
+                        <span className="text-lg font-bold text-gray-900">
+                            {party.monthlyFee?.toLocaleString()}
+                        </span>
+                        <span className="text-sm font-normal text-gray-500">원</span>
                     </div>
                 </div>
             </div>
-        </div>
 
-        {/* Hover Overlay */}
-        <div className="absolute inset-0 bg-[#635bff]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-    </motion.div>
-);
+            {/* Hover Overlay */}
+            <div className="absolute inset-0 bg-[#635bff]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+        </motion.div>
+    );
+};
 
 // Pricing Card
 const PricingCard = ({ title, price, features, popular, delay = 0 }) => (
@@ -315,8 +365,42 @@ const TestimonialCard = ({ quote, author, role, delay = 0 }) => (
 
 // Main Component
 export default function LandingPageT() {
+    const navigate = useNavigate();
     const { scrollYProgress } = useScroll();
     const headerBg = useTransform(scrollYProgress, [0, 0.1], ["rgba(255,255,255,0)", "rgba(255,255,255,0.9)"]);
+
+    // Party Store
+    const { parties, loading, loadParties } = usePartyStore();
+
+    // 파티 데이터 불러오기 - 최신순으로 6개
+    useEffect(() => {
+        loadParties({ sort: "latest", size: 6 }, true);
+    }, [loadParties]);
+
+    // 마감 임박 파티 우선 + 최신순 정렬
+    const sortedParties = [...parties]
+        .filter(party => party.status === "RECRUITING" || party.status === "모집중")
+        .sort((a, b) => {
+            // 마감 임박 (남은 자리가 적은) 파티 우선
+            const remainingA = (a.maxMembers || 4) - (a.currentMembers || 0);
+            const remainingB = (b.maxMembers || 4) - (b.currentMembers || 0);
+
+            // 마감 임박 (1-2자리 남음) 파티를 우선
+            const isAlmostFullA = remainingA > 0 && remainingA <= 2;
+            const isAlmostFullB = remainingB > 0 && remainingB <= 2;
+
+            if (isAlmostFullA && !isAlmostFullB) return -1;
+            if (!isAlmostFullA && isAlmostFullB) return 1;
+
+            // 그 외에는 최신순
+            return new Date(b.startDate) - new Date(a.startDate);
+        })
+        .slice(0, 3); // 최대 3개만 표시
+
+    // 파티 카드 클릭 핸들러
+    const handlePartyClick = (partyId) => {
+        navigate(`/party/${partyId}`);
+    };
 
     return (
         <div className="min-h-screen bg-white text-gray-900 overflow-hidden">
@@ -476,11 +560,33 @@ export default function LandingPageT() {
 
                                 {/* Content Area */}
                                 <div className="p-6 bg-gradient-to-br from-gray-50 to-white">
-                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                        {MOCK_PARTIES.map((party, i) => (
-                                            <PartyCard key={party.id} party={party} index={i} />
-                                        ))}
-                                    </div>
+                                    {loading.parties ? (
+                                        <div className="flex items-center justify-center py-12">
+                                            <Loader2 className="w-8 h-8 animate-spin text-[#635bff]" />
+                                            <span className="ml-3 text-gray-500">파티를 불러오는 중...</span>
+                                        </div>
+                                    ) : sortedParties.length > 0 ? (
+                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                            {sortedParties.map((party, i) => (
+                                                <PartyCard
+                                                    key={party.partyId}
+                                                    party={party}
+                                                    index={i}
+                                                    onClick={() => handlePartyClick(party.partyId)}
+                                                />
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <div className="text-center py-12">
+                                            <Users className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+                                            <p className="text-gray-500 mb-4">아직 모집 중인 파티가 없어요</p>
+                                            <Link to="/party/create">
+                                                <PrimaryButton className="text-sm">
+                                                    첫 번째 파티 만들기
+                                                </PrimaryButton>
+                                            </Link>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>

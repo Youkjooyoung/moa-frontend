@@ -29,3 +29,7 @@ export const withdrawUser = (data) => httpClient.post("/users/delete", data);
 export const getMyAccount = () => httpClient.get("/users/me/account");
 
 export const getMyCard = () => httpClient.get("/users/me/card");
+
+export const deleteMyAccount = () => httpClient.delete("/users/me/account");
+
+export const deleteMyCard = () => httpClient.delete("/users/me/card");

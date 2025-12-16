@@ -7,7 +7,6 @@ import { requestPayment } from "../../utils/paymentHandler";
 import { calculateEndDate, getTodayString } from "../../utils/dateUtils";
 import { updateOttAccount, fetchPartyDetail } from "../../hooks/party/partyService";
 import RippleButton from "../../components/party/RippleButton";
-import { useConfetti } from "../../components/party/SuccessConfetti";
 import {
   useTheme,
   ThemeSwitcher,
@@ -52,7 +51,6 @@ export default function PartyCreatePage() {
   const [localLoading, setLocalLoading] = useState(false);
   const [isRestoring, setIsRestoring] = useState(!!searchParams.get("step"));
   const [errors, setErrors] = useState({});
-  const { triggerConfetti, ConfettiComponent } = useConfetti();
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -194,7 +192,6 @@ export default function PartyCreatePage() {
 
     try {
       await updateOttAccount(createdPartyId, ottInfo);
-      triggerConfetti();
       setTimeout(() => {
         alert("파티가 생성되었습니다!");
         navigate(`/party/${createdPartyId}`);
@@ -221,8 +218,19 @@ export default function PartyCreatePage() {
     );
   }
 
+  // 테마별 악센트 색상
+  const getAccentColor = () => {
+    switch (theme) {
+      case "christmas": return "#c41e3a";
+      case "pop": return "#ec4899";
+      case "dark": return "#635bff";
+      default: return "#635bff";
+    }
+  };
+  const accentColor = getAccentColor();
+
   return (
-    <div className={`min-h-screen ${theme === "dark" ? "bg-[#0B1120]" : "bg-[#fafafa]"} pb-20 transition-colors duration-300`}>
+    <div className={`min-h-screen ${currentTheme.bg} pb-20 transition-colors duration-300`}>
       {/* Theme Switcher */}
       <ThemeSwitcher theme={theme} onThemeChange={setTheme} />
 
@@ -230,7 +238,10 @@ export default function PartyCreatePage() {
       <ThemeMarquee theme={theme} />
 
       {/* Hero Header */}
-      <div className={`relative overflow-hidden border-b ${theme === "dark" ? "bg-[#0B1120] border-gray-800" : theme === "pop" ? "bg-slate-50 border-4 border-black" : "bg-white border-gray-100"
+      <div className={`relative overflow-hidden border-b ${theme === "dark" ? "bg-[#0B1120] border-gray-800"
+          : theme === "pop" ? "bg-slate-50 border-4 border-black"
+            : theme === "christmas" ? "bg-white border-gray-100"
+              : "bg-white border-gray-100"
         }`}>
         <ThemeBackground theme={theme} />
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center relative z-10">
@@ -254,8 +265,12 @@ export default function PartyCreatePage() {
         </div>
       </div>
 
-      {/* Progress Stepper - Variant T Style */}
-      <div className="bg-white border-b border-gray-100 sticky top-20 z-30">
+      {/* Progress Stepper - Theme-aware */}
+      <div className={`sticky top-20 z-30 border-b ${theme === "dark" ? "bg-[#1E293B] border-gray-700"
+          : theme === "pop" ? "bg-white border-2 border-black"
+            : theme === "christmas" ? "bg-white border-gray-100"
+              : "bg-white border-gray-100"
+        }`}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
             {steps.map((s, idx) => {
@@ -269,28 +284,28 @@ export default function PartyCreatePage() {
                     <motion.div
                       animate={{
                         scale: isActive ? 1.1 : 1,
-                        backgroundColor: isCompleted ? "#635bff" : isActive ? "#ffffff" : "#f5f5f5"
+                        backgroundColor: isCompleted ? accentColor : isActive ? (theme === "dark" ? "#1E293B" : "#ffffff") : (theme === "dark" ? "#334155" : "#f5f5f5")
                       }}
-                      className={`w-10 h-10 rounded-full flex items-center justify-center transition-all border-2 ${isCompleted
-                        ? "border-[#635bff] text-white shadow-lg shadow-[#635bff]/25"
-                        : isActive
-                          ? "border-[#635bff] text-[#635bff]"
-                          : "border-gray-200 text-gray-400"
-                        }`}
+                      className={`w-10 h-10 rounded-full flex items-center justify-center transition-all border-2`}
+                      style={{
+                        borderColor: isCompleted || isActive ? accentColor : (theme === "dark" ? "#4B5563" : "#e5e7eb"),
+                        color: isCompleted ? "#ffffff" : isActive ? accentColor : (theme === "dark" ? "#9CA3AF" : "#9ca3af"),
+                        boxShadow: isCompleted ? `0 10px 15px -3px ${accentColor}40` : "none"
+                      }}
                     >
                       {isCompleted ? <Check className="w-5 h-5" /> : <Icon className="w-5 h-5" />}
                     </motion.div>
                     <p
-                      className={`mt-2 text-xs font-semibold ${isActive ? "text-[#635bff]" : "text-gray-400"
-                        }`}
+                      className={`mt-2 text-xs font-semibold`}
+                      style={{ color: isActive ? accentColor : (theme === "dark" ? "#9CA3AF" : "#9ca3af") }}
                     >
                       {s.label}
                     </p>
                   </div>
                   {idx < steps.length - 1 && (
                     <div
-                      className={`h-0.5 flex-1 mx-2 transition-all duration-500 ${step > s.number ? "bg-[#635bff]" : "bg-gray-200"
-                        }`}
+                      className={`h-0.5 flex-1 mx-2 transition-all duration-500`}
+                      style={{ backgroundColor: step > s.number ? accentColor : (theme === "dark" ? "#4B5563" : "#e5e7eb") }}
                     ></div>
                   )}
                 </div>
@@ -319,8 +334,8 @@ export default function PartyCreatePage() {
               </div>
 
               {products.length === 0 ? (
-                <div className="text-center py-20 bg-white rounded-2xl border border-dashed border-gray-200">
-                  <p className="text-gray-400">사용 가능한 상품이 없습니다</p>
+                <div className={`text-center py-20 rounded-2xl border border-dashed ${currentTheme.card}`}>
+                  <p className={currentTheme.subtext}>사용 가능한 상품이 없습니다</p>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -330,10 +345,14 @@ export default function PartyCreatePage() {
                       whileHover={{ y: -4, scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={() => handleProductSelect(product)}
-                      className="group bg-white border border-gray-100 hover:border-[#635bff]/30 rounded-2xl p-5 cursor-pointer transition-all hover:shadow-lg hover:shadow-[#635bff]/10"
+                      className={`group rounded-2xl p-5 cursor-pointer transition-all hover:shadow-lg ${currentTheme.card}`}
+                      style={{ '--hover-shadow': `${accentColor}20` }}
                     >
                       <div className="flex items-center gap-4 mb-3">
-                        <div className="w-14 h-14 bg-gradient-to-br from-[#635bff]/10 to-[#00d4ff]/10 rounded-xl flex items-center justify-center overflow-hidden border border-gray-100">
+                        <div
+                          className="w-14 h-14 rounded-xl flex items-center justify-center overflow-hidden border border-gray-100"
+                          style={{ background: `linear-gradient(to bottom right, ${accentColor}15, ${accentColor}05)` }}
+                        >
                           {product.image ? (
                             <img
                               src={product.image}
@@ -341,18 +360,18 @@ export default function PartyCreatePage() {
                               className="w-full h-full object-cover"
                             />
                           ) : (
-                            <Sparkles className="w-6 h-6 text-[#635bff]" />
+                            <Sparkles className="w-6 h-6" style={{ color: accentColor }} />
                           )}
                         </div>
                         <div className="flex-1">
-                          <h3 className="font-bold text-gray-900 text-lg group-hover:text-[#635bff] transition-colors">
+                          <h3 className={`font-bold text-lg transition-colors ${currentTheme.cardText}`} style={{ '--hover-color': accentColor }}>
                             {product.productName}
                           </h3>
-                          <p className="text-sm text-gray-500 font-semibold">
+                          <p className={`text-sm font-semibold ${currentTheme.cardSubtext}`}>
                             월 {product.price.toLocaleString()}원
                           </p>
                         </div>
-                        <ArrowRight className="w-5 h-5 text-gray-300 group-hover:text-[#635bff] group-hover:translate-x-1 transition-all" />
+                        <ArrowRight className="w-5 h-5 text-gray-300 group-hover:translate-x-1 transition-all" style={{ color: accentColor }} />
                       </div>
                     </motion.div>
                   ))}
@@ -656,7 +675,7 @@ export default function PartyCreatePage() {
                 <button
                   type="button"
                   onClick={() => setStep(1)}
-                  className="text-gray-500 hover:text-gray-700 font-semibold px-6 py-3 transition-colors"
+                  className={`font-semibold px-6 py-3 transition-colors ${currentTheme.subtext} hover:opacity-80`}
                 >
                   이전
                 </button>
@@ -664,7 +683,8 @@ export default function PartyCreatePage() {
                   type="submit"
                   whileHover={{ scale: 1.02, y: -1 }}
                   whileTap={{ scale: 0.98 }}
-                  className="px-8 py-3 bg-[#635bff] hover:bg-[#5851e8] text-white rounded-full font-semibold shadow-lg shadow-[#635bff]/25 transition-all flex items-center gap-2"
+                  className={`px-8 py-3 text-white rounded-full font-semibold transition-all flex items-center gap-2 ${currentTheme.accentBg}`}
+                  style={{ boxShadow: `0 10px 15px -3px ${accentColor}40` }}
                 >
                   다음
                   <ArrowRight className="w-4 h-4" />
@@ -688,23 +708,23 @@ export default function PartyCreatePage() {
                 <p className="text-gray-500">파티 생성을 위해 보증금을 결제해주세요</p>
               </div>
 
-              <div className="bg-white border border-gray-100 rounded-2xl p-6 space-y-4">
+              <div className={`rounded-2xl p-6 space-y-4 ${currentTheme.card}`}>
                 <div className="flex justify-between items-center text-sm">
-                  <span className="text-gray-500">서비스</span>
-                  <span className="text-gray-900 font-bold">{selectedProduct.productName}</span>
+                  <span className={currentTheme.cardSubtext}>서비스</span>
+                  <span className={`font-bold ${currentTheme.cardText}`}>{selectedProduct.productName}</span>
                 </div>
-                <div className="flex justify-between items-center text-sm border-b border-gray-100 pb-4">
-                  <span className="text-gray-500">이용 기간</span>
-                  <span className="text-gray-900 font-bold">
+                <div className={`flex justify-between items-center text-sm border-b pb-4 ${theme === "dark" ? "border-gray-700" : "border-gray-100"}`}>
+                  <span className={currentTheme.cardSubtext}>이용 기간</span>
+                  <span className={`font-bold ${currentTheme.cardText}`}>
                     {dates.startDate} ~ {dates.endDate}
                   </span>
                 </div>
                 <div className="flex justify-between items-center pt-4">
-                  <span className="text-gray-900 font-bold text-lg">총 보증금</span>
+                  <span className={`font-bold text-lg ${currentTheme.cardText}`}>총 보증금</span>
                   <div className="text-right">
-                    <div className="text-3xl font-bold text-[#635bff]">
+                    <div className="text-3xl font-bold" style={{ color: accentColor }}>
                       {selectedProduct.price.toLocaleString()}
-                      <span className="text-lg text-gray-400 ml-1">원</span>
+                      <span className={`text-lg ml-1 ${currentTheme.cardSubtext}`}>원</span>
                     </div>
                   </div>
                 </div>
@@ -718,14 +738,15 @@ export default function PartyCreatePage() {
               <div className="flex justify-between pt-4">
                 <button
                   onClick={() => setStep(2)}
-                  className="text-gray-500 hover:text-gray-700 font-semibold px-6 py-3 transition-colors"
+                  className={`font-semibold px-6 py-3 transition-colors ${currentTheme.subtext} hover:opacity-80`}
                 >
                   이전
                 </button>
                 <RippleButton
                   onClick={handlePayment}
                   disabled={localLoading}
-                  className="px-8 py-3 bg-[#635bff] hover:bg-[#5851e8] text-white rounded-full font-semibold shadow-lg shadow-[#635bff]/25 flex items-center gap-2 disabled:opacity-50 transition-all transform hover:scale-[1.02] active:scale-[0.98]"
+                  className={`px-8 py-3 text-white rounded-full font-semibold flex items-center gap-2 disabled:opacity-50 transition-all transform hover:scale-[1.02] active:scale-[0.98] ${currentTheme.accentBg}`}
+                  style={{ boxShadow: `0 10px 15px -3px ${accentColor}40` }}
                 >
                   {localLoading ? (
                     "처리중..."
@@ -799,9 +820,6 @@ export default function PartyCreatePage() {
           )}
         </AnimatePresence>
       </div>
-
-      {/* Confetti Effect */}
-      <ConfettiComponent />
     </div>
   );
 }

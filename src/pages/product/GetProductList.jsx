@@ -48,24 +48,6 @@ const getThemeStyles = (theme) => {
         highlight: 'text-[#635bff]',
         priceBox: 'bg-[#0F172A]/80 border-gray-700',
       };
-    case 'portrait':
-      return {
-        bg: 'bg-gradient-to-br from-[#FDF8F3] via-[#FFF5F7] to-[#F5F0FF]',
-        text: 'text-gray-900',
-        subtext: 'text-gray-500',
-        cardBg: 'bg-white/80 backdrop-blur-sm border border-pink-200 rounded-[2rem] shadow-[4px_4px_12px_rgba(255,181,197,0.2)]',
-        cardHover: 'hover:border-pink-300 hover:shadow-[0_25px_50px_-12px_rgba(255,181,197,0.3)]',
-        searchBg: 'bg-white/80 backdrop-blur-sm border border-pink-200',
-        inputBg: 'bg-pink-50/50',
-        inputFocus: 'focus:ring-pink-300/20 focus:bg-white',
-        filterActive: 'bg-pink-100 text-pink-600 ring-1 ring-pink-300',
-        filterInactive: 'bg-white text-gray-500 hover:bg-pink-50 border border-pink-200',
-        buttonPrimary: 'bg-gradient-to-r from-[#FFB5C5] to-[#C5B5FF] hover:opacity-90 text-white',
-        buttonSecondary: 'bg-white border border-pink-200 text-gray-700 hover:bg-pink-50',
-        modalBg: 'bg-white/90 backdrop-blur-sm',
-        highlight: 'text-pink-500',
-        priceBox: 'bg-pink-50/80 border-pink-100',
-      };
     case 'pop':
       return {
         bg: 'bg-slate-50',
@@ -149,10 +131,9 @@ const ProductDetailModal = ({ product, onClose, user, navigate, onSubscribe, onE
         {/* Header Section */}
         <div className={`py-9 px-6 flex flex-row items-center gap-6 relative overflow-hidden flex-shrink-0 ${theme === 'christmas' ? 'bg-[#c41e3a]/10' :
             theme === 'dark' ? 'bg-[#0F172A]' :
-              theme === 'portrait' ? 'bg-gradient-to-r from-pink-100 to-purple-100' :
-                theme === 'pop' ? 'bg-pink-100' :
-                  theme === 'classic' ? 'bg-[#635bff]/10' :
-                    'bg-purple-50'
+              theme === 'pop' ? 'bg-pink-100' :
+                theme === 'classic' ? 'bg-[#635bff]/10' :
+                  'bg-purple-50'
           }`}>
           <div className={`absolute top-0 left-0 w-32 h-32 rounded-full filter blur-3xl opacity-50 -ml-10 -mt-10 ${theme === 'christmas' ? 'bg-[#c41e3a]/30' :
               theme === 'dark' ? 'bg-[#635bff]/30' :
@@ -186,10 +167,9 @@ const ProductDetailModal = ({ product, onClose, user, navigate, onSubscribe, onE
             <div className="flex items-center gap-2 mt-2">
               <span className={`text-xs font-bold px-2.5 py-1 rounded-lg ${theme === 'christmas' ? 'bg-[#c41e3a]/20 text-[#c41e3a]' :
                   theme === 'dark' ? 'bg-[#635bff]/20 text-[#635bff]' :
-                    theme === 'portrait' ? 'bg-pink-200 text-pink-700' :
-                      theme === 'pop' ? 'bg-pink-200 text-pink-700' :
-                        theme === 'classic' ? 'bg-[#635bff]/20 text-[#635bff]' :
-                          'bg-purple-100 text-purple-700'
+                    theme === 'pop' ? 'bg-pink-200 text-pink-700' :
+                      theme === 'classic' ? 'bg-[#635bff]/20 text-[#635bff]' :
+                        'bg-purple-100 text-purple-700'
                 }`}>
                 {product.categoryName || '구독'}
               </span>

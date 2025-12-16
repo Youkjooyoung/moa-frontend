@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ChevronRight, ArrowUpRight } from "lucide-react";
 import { useMainStore } from "@/store/main/mainStore";
+import { useThemeStore } from "@/store/themeStore";
 import {
   formatCurrency,
   getProductId,
@@ -15,14 +16,14 @@ import {
   getProductIconUrl,
 } from "@/utils/format";
 
-function Sticker({ children, color = "bg-white", rotate = 0, className = "" }) {
+function Sticker({ children, color = "bg-white", rotate = 0, className = "", isDark = false }) {
   return (
     <motion.div
       whileHover={{ scale: 1.03 }}
       whileTap={{ scale: 0.98 }}
       className={`
         ${color}
-        border border-gray-200
+        ${isDark ? 'border-gray-600' : 'border-gray-200'}
         shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
         hover:shadow-[6px_6px_16px_rgba(0,0,0,0.12)]
         transition-all duration-200
@@ -35,7 +36,7 @@ function Sticker({ children, color = "bg-white", rotate = 0, className = "" }) {
   );
 }
 
-function BouncyCard({ children, className = "", delay = 0, onClick }) {
+function BouncyCard({ children, className = "", delay = 0, onClick, isDark = false }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 30, rotate: -1 }}
@@ -45,8 +46,8 @@ function BouncyCard({ children, className = "", delay = 0, onClick }) {
       whileHover={{ y: -8, rotate: 1 }}
       onClick={onClick}
       className={`
-        bg-white
-        border border-gray-200
+        ${isDark ? 'bg-[#1E293B]' : 'bg-white'}
+        ${isDark ? 'border-gray-600' : 'border-gray-200'}
         shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
         rounded-3xl
         overflow-hidden
@@ -64,6 +65,8 @@ export default function MainProductsSection() {
   const products = useMainStore((s) => s.products);
   const productsLoading = useMainStore((s) => s.productsLoading);
   const productsError = useMainStore((s) => s.productsError);
+  const theme = useThemeStore((s) => s.theme);
+  const isDark = theme === "dark";
 
   // 랜덤 3개 상품 선택
   const randomProducts = useMemo(() => {
@@ -85,7 +88,7 @@ export default function MainProductsSection() {
   };
 
   return (
-    <section className="relative px-6 md:px-12 py-20 bg-slate-100 border-b border-gray-200">
+    <section className={`relative px-6 md:px-12 py-20 ${isDark ? 'bg-[#0F172A] border-gray-700' : 'bg-slate-100 border-gray-200'} border-b`}>
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 26 }}
@@ -98,19 +101,20 @@ export default function MainProductsSection() {
               color="bg-cyan-400"
               rotate={-1}
               className="inline-block px-4 py-2 rounded-xl mb-4"
+              isDark={isDark}
             >
               <span className="font-black">구독 상품 🎬</span>
             </Sticker>
-            <h2 className="text-4xl md:text-5xl font-black">
+            <h2 className={`text-4xl md:text-5xl font-black ${isDark ? 'text-white' : 'text-black'}`}>
               원하는 서비스를 골라요
             </h2>
-            <p className="text-gray-700 font-medium mt-3">
+            <p className={`font-medium mt-3 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
               다양한 구독 서비스를 확인하고 파티에 참여하세요.
             </p>
           </div>
 
           <Link to="/product">
-            <Sticker color="bg-black" rotate={2} className="px-5 py-3 rounded-xl cursor-pointer">
+            <Sticker color="bg-black" rotate={2} className="px-5 py-3 rounded-xl cursor-pointer" isDark={isDark}>
               <span className="flex items-center gap-2 text-white font-black">
                 전체 보기 <ArrowUpRight className="w-5 h-5" />
               </span>
@@ -120,7 +124,7 @@ export default function MainProductsSection() {
 
         {productsError?.status === 401 && (
           <div className="mb-10">
-            <div className="bg-white border border-gray-200 rounded-3xl p-6 font-bold text-gray-800 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]">
+            <div className={`${isDark ? 'bg-[#1E293B] border-gray-600 text-white' : 'bg-white border-gray-200 text-gray-800'} rounded-3xl p-6 font-bold shadow-[4px_4px_12px_rgba(0,0,0,0.08)]`}>
               구독 상품은 로그인 후 확인할 수 있어요.
             </div>
           </div>
@@ -131,7 +135,7 @@ export default function MainProductsSection() {
             {[...Array(3)].map((_, i) => (
               <div
                 key={i}
-                className="h-72 bg-white border border-gray-200 rounded-3xl shadow-[4px_4px_12px_rgba(0,0,0,0.08)] animate-pulse"
+                className={`h-72 ${isDark ? 'bg-[#1E293B] border-gray-600' : 'bg-white border-gray-200'} rounded-3xl shadow-[4px_4px_12px_rgba(0,0,0,0.08)] animate-pulse`}
               />
             ))}
           </div>
@@ -161,22 +165,23 @@ export default function MainProductsSection() {
                     key={`${getProductId(p) ?? i}`}
                     delay={i * 0.08}
                     onClick={() => goDetail(p)}
+                    isDark={isDark}
                   >
-                    <div className="p-6 border-b border-gray-200 bg-slate-50">
+                    <div className={`p-6 ${isDark ? 'border-gray-600 bg-[#2D3B4F]' : 'border-gray-200 bg-slate-50'} border-b`}>
                       <div className="flex items-center justify-between gap-4">
                         <div className="min-w-0">
-                          <div className="font-black text-xl truncate">
+                          <div className={`font-black text-xl truncate ${isDark ? 'text-white' : 'text-black'}`}>
                             {name || "-"}
                           </div>
                           <div className="mt-2 inline-flex">
                             <span
-                              className={`${badge.cls} border border-gray-200 px-3 py-1 rounded-full font-black text-sm`}
+                              className={`${badge.cls} ${isDark ? 'border-gray-600' : 'border-gray-200'} px-3 py-1 rounded-full font-black text-sm`}
                             >
                               {badge.label}
                             </span>
                           </div>
                         </div>
-                        <div className="w-14 h-14 rounded-2xl bg-white border border-gray-200 overflow-hidden flex items-center justify-center">
+                        <div className={`w-14 h-14 rounded-2xl ${isDark ? 'bg-[#1E293B] border-gray-600' : 'bg-white border-gray-200'} overflow-hidden flex items-center justify-center`}>
                           {icon ? (
                             <img
                               src={icon}
@@ -184,31 +189,31 @@ export default function MainProductsSection() {
                               className="w-full h-full object-cover"
                             />
                           ) : (
-                            <span className="font-black text-lg">MoA</span>
+                            <span className={`font-black text-lg ${isDark ? 'text-white' : 'text-black'}`}>MoA</span>
                           )}
                         </div>
                       </div>
                     </div>
 
                     <div className="p-6 space-y-3 text-sm font-bold">
-                      <div className="flex justify-between border-b border-gray-100 pb-2">
-                        <span className="text-gray-600">요금제</span>
-                        <span className="text-black">{tier || "-"}</span>
+                      <div className={`flex justify-between pb-2 ${isDark ? 'border-gray-600' : 'border-gray-100'} border-b`}>
+                        <span className={isDark ? 'text-gray-400' : 'text-gray-600'}>요금제</span>
+                        <span className={isDark ? 'text-white' : 'text-black'}>{tier || "-"}</span>
                       </div>
-                      <div className="flex justify-between border-b border-gray-100 pb-2">
-                        <span className="text-gray-600">가격</span>
+                      <div className={`flex justify-between pb-2 ${isDark ? 'border-gray-600' : 'border-gray-100'} border-b`}>
+                        <span className={isDark ? 'text-gray-400' : 'text-gray-600'}>가격</span>
                         <span className="text-pink-500 font-black">
                           {formatCurrency(price, { fallback: "-" })}
                         </span>
                       </div>
-                      <div className="flex justify-between border-b border-gray-100 pb-2">
-                        <span className="text-gray-600">동시 접속</span>
-                        <span className="text-black">
+                      <div className={`flex justify-between pb-2 ${isDark ? 'border-gray-600' : 'border-gray-100'} border-b`}>
+                        <span className={isDark ? 'text-gray-400' : 'text-gray-600'}>동시 접속</span>
+                        <span className={isDark ? 'text-white' : 'text-black'}>
                           {maxProfiles ? `최대 ${maxProfiles}명` : "-"}
                         </span>
                       </div>
 
-                      <p className="text-gray-700 font-medium leading-6 line-clamp-2 min-h-[48px]">
+                      <p className={`font-medium leading-6 line-clamp-2 min-h-[48px] ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                         {desc || "설명 정보가 없습니다."}
                       </p>
 
@@ -217,7 +222,7 @@ export default function MainProductsSection() {
                           e.stopPropagation();
                           goDetail(p);
                         }}
-                        className="w-full mt-2 bg-white border border-gray-200 rounded-2xl py-3 font-black hover:bg-slate-100 transition flex items-center justify-center gap-2"
+                        className={`w-full mt-2 ${isDark ? 'bg-[#1E293B] border-gray-600 hover:bg-[#2D3B4F]' : 'bg-white border-gray-200 hover:bg-slate-100'} rounded-2xl py-3 font-black transition flex items-center justify-center gap-2 ${isDark ? 'text-white' : 'text-black'}`}
                       >
                         자세히 보기 <ChevronRight className="w-4 h-4" />
                       </button>
@@ -229,7 +234,7 @@ export default function MainProductsSection() {
 
             {randomProducts.length === 0 && (
               <div className="py-16 text-center">
-                <div className="inline-block bg-white border border-gray-200 rounded-3xl px-8 py-6 font-black shadow-[4px_4px_12px_rgba(0,0,0,0.08)]">
+                <div className={`inline-block ${isDark ? 'bg-[#1E293B] border-gray-600 text-white' : 'bg-white border-gray-200 text-black'} rounded-3xl px-8 py-6 font-black shadow-[4px_4px_12px_rgba(0,0,0,0.08)]`}>
                   등록된 상품이 없습니다.
                 </div>
               </div>

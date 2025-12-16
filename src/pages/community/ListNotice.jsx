@@ -27,8 +27,6 @@ const ListNotice = () => {
                 return 'bg-[#c41e3a]';
             case 'dark':
                 return 'bg-[#635bff]';
-            case 'portrait':
-                return 'bg-gradient-to-r from-[#FFB5C5] to-[#C5B5FF]';
             case 'classic':
                 return 'bg-[#635bff]';
             case 'pop':
@@ -43,8 +41,6 @@ const ListNotice = () => {
                 return 'hover:text-[#c41e3a]';
             case 'dark':
                 return 'hover:text-[#635bff]';
-            case 'portrait':
-                return 'hover:text-pink-400';
             case 'classic':
                 return 'hover:text-[#635bff]';
             case 'pop':

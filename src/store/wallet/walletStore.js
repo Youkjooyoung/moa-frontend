@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { getMyAccount, getMyCard } from '@/api/userApi';
+import { getMyAccount, getMyCard, deleteMyAccount, deleteMyCard } from '@/api/userApi';
 import { getMyDeposits } from '@/api/depositApi';
 import { getMyPayments } from '@/api/paymentApi';
 import { getMySettlements } from '@/api/settlementApi';
@@ -175,6 +175,44 @@ export const useWalletStore = create((set, get) => ({
                 error: { ...state.error, card: errorMessage }
             }));
             console.error("Failed to load card:", error);
+        } finally {
+            set((state) => ({
+                loading: { ...state.loading, card: false }
+            }));
+        }
+    },
+
+    // Delete account
+    deleteAccount: async () => {
+        set((state) => ({
+            loading: { ...state.loading, account: true }
+        }));
+        try {
+            await deleteMyAccount();
+            set({ account: null });
+            return true;
+        } catch (error) {
+            console.error("Failed to delete account:", error);
+            throw error;
+        } finally {
+            set((state) => ({
+                loading: { ...state.loading, account: false }
+            }));
+        }
+    },
+
+    // Delete card
+    deleteCard: async () => {
+        set((state) => ({
+            loading: { ...state.loading, card: true }
+        }));
+        try {
+            await deleteMyCard();
+            set({ card: null });
+            return true;
+        } catch (error) {
+            console.error("Failed to delete card:", error);
+            throw error;
         } finally {
             set((state) => ({
                 loading: { ...state.loading, card: false }

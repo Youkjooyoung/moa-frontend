@@ -25,13 +25,6 @@ const getThemeStyles = (theme) => {
         cardBg: 'bg-[#1E293B] border border-gray-700 rounded-3xl shadow-[4px_4px_12px_rgba(0,0,0,0.3)]',
         subtext: 'text-gray-400',
       };
-    case 'portrait':
-      return {
-        bg: 'bg-gradient-to-br from-[#FDF8F3] via-[#FFF5F7] to-[#F5F0FF]',
-        text: 'text-gray-900',
-        cardBg: 'bg-white/80 backdrop-blur-sm border border-pink-200 rounded-3xl shadow-[4px_4px_12px_rgba(255,181,197,0.2)]',
-        subtext: 'text-gray-500',
-      };
     case 'pop':
       return {
         bg: 'bg-slate-50',
