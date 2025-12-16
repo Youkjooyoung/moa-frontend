@@ -8,9 +8,26 @@ import {
 } from '@/components/ui/dialog';
 import { NeoCard, NeoButton } from '@/components/common/neo';
 import { formatDate, getCategoryName } from '../../utils/communityUtils';
+import { useThemeStore } from '@/store/themeStore';
+
+// 테마별 스타일
+const modalThemeStyles = {
+    default: {
+        categoryBadge: 'bg-cyan-400 text-black',
+        focusRing: 'focus:ring-cyan-400',
+        submitButton: 'bg-pink-500 text-white',
+    },
+    christmas: {
+        categoryBadge: 'bg-amber-100 text-amber-700',
+        focusRing: 'focus:ring-red-800',
+        submitButton: 'bg-red-800 text-red-100',
+    },
+};
 
 const InquiryAnswerModalContent = ({ inquiry, onClose, onAnswerSubmit }) => {
     const [answerContent, setAnswerContent] = useState(inquiry?.answerContent || '');
+    const { theme } = useThemeStore();
+    const themeStyle = modalThemeStyles[theme] || modalThemeStyles.default;
 
     const handleSubmit = async () => {
         if (!answerContent.trim()) {
@@ -32,7 +49,7 @@ const InquiryAnswerModalContent = ({ inquiry, onClose, onAnswerSubmit }) => {
             <div className="space-y-6">
                 {/* Meta Info */}
                 <div className="flex flex-wrap items-center gap-3">
-                    <span className="px-3 py-1 text-xs font-black rounded-lg bg-cyan-400 text-black border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]">
+                    <span className={`px-3 py-1 text-xs font-black rounded-lg ${themeStyle.categoryBadge} border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]`}>
                         {getCategoryName(inquiry.communityCodeId)}
                     </span>
                     <span className="text-sm font-bold text-gray-500">
@@ -81,7 +98,7 @@ const InquiryAnswerModalContent = ({ inquiry, onClose, onAnswerSubmit }) => {
                         onChange={(e) => setAnswerContent(e.target.value)}
                         placeholder="답변 내용을 입력하세요"
                         rows={8}
-                        className="w-full px-4 py-3 border border-gray-200 rounded-xl font-bold focus:outline-none focus:ring-2 focus:ring-cyan-400 placeholder-gray-400 resize-none"
+                        className={`w-full px-4 py-3 border border-gray-200 rounded-xl font-bold focus:outline-none focus:ring-2 ${themeStyle.focusRing} placeholder-gray-400 resize-none`}
                     />
                 </div>
             </div>
@@ -95,7 +112,7 @@ const InquiryAnswerModalContent = ({ inquiry, onClose, onAnswerSubmit }) => {
                     취소
                 </NeoButton>
                 <NeoButton
-                    color="bg-pink-500 text-white"
+                    color={themeStyle.submitButton}
                     size="sm"
                     onClick={handleSubmit}
                 >

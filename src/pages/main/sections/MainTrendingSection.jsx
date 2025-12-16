@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowUpRight, Users } from "lucide-react";
 import { useMainStore } from "@/store/main/mainStore";
+import { useThemeStore } from "@/store/themeStore";
 import {
   formatCurrency,
   getPartyId,
@@ -15,6 +16,29 @@ import {
   getPartyMembers,
   getPartyMaxMembers,
 } from "@/utils/format";
+
+// 테마별 Trending 섹션 스타일
+const trendingThemeStyles = {
+  default: {
+    stickerBg: "bg-pink-500",
+    recruitingBg: "bg-cyan-400",
+    priceColor: "text-pink-500",
+    progressGradient: "bg-gradient-to-r from-orange-400 to-pink-500",
+    percentColor: "text-orange-500",
+    emoji: "⏰",
+    cardBgColors: ["bg-red-500", "bg-blue-500", "bg-indigo-500"],
+  },
+  christmas: {
+    stickerBg: "bg-[#c41e3a]",
+    recruitingBg: "bg-[#1a5f2a]",
+    recruitingText: "text-white",
+    priceColor: "text-[#c41e3a]",
+    progressGradient: "bg-gradient-to-r from-[#1a5f2a] to-[#c41e3a]",
+    percentColor: "text-[#c41e3a]",
+    emoji: "🎅",
+    cardBgColors: ["bg-[#c41e3a]", "bg-[#1a5f2a]", "bg-[#c41e3a]"],
+  },
+};
 
 function Sticker({ children, color = "bg-white", rotate = 0, className = "" }) {
   return (
@@ -65,6 +89,8 @@ export default function MainTrendingSection() {
   const parties = useMainStore((s) => s.parties);
   const partiesLoading = useMainStore((s) => s.partiesLoading);
   const partiesError = useMainStore((s) => s.partiesError);
+  const { theme } = useThemeStore();
+  const themeStyle = trendingThemeStyles[theme] || trendingThemeStyles.default;
 
   // 마감 임박 파티 3개 선택 (모집률 높은 순)
   const visible = useMemo(() => {
@@ -100,8 +126,10 @@ export default function MainTrendingSection() {
           className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10"
         >
           <div>
-            <Sticker color="bg-pink-500" rotate={-1} className="inline-block px-4 py-2 rounded-xl mb-4">
-              <span className="font-black text-white">마감 임박 ⏰</span>
+            <Sticker color={themeStyle.stickerBg} rotate={-1} className="inline-block px-4 py-2 rounded-xl mb-4">
+              <span className="font-black text-white">
+                {theme === "christmas" ? "🎅 마감 임박 🎄" : `마감 임박 ${themeStyle.emoji}`}
+              </span>
             </Sticker>
             <h2 className="text-4xl md:text-5xl font-black">서두르세요!</h2>
             <p className="text-gray-700 font-medium mt-3">곧 마감되는 파티에 지금 바로 참여하세요.</p>
@@ -153,12 +181,7 @@ export default function MainTrendingSection() {
                   status.toUpperCase() === "OPEN" ||
                   status.toUpperCase() === "ACTIVE";
 
-                const bg =
-                  i % 3 === 0
-                    ? "bg-red-500"
-                    : i % 3 === 1
-                    ? "bg-blue-500"
-                    : "bg-indigo-500";
+                const bg = themeStyle.cardBgColors[i % 3];
 
                 return (
                   <BouncyCard
@@ -173,12 +196,12 @@ export default function MainTrendingSection() {
                       </div>
 
                       <Sticker
-                        color={isRecruiting ? "bg-cyan-400" : "bg-slate-200"}
+                        color={isRecruiting ? themeStyle.recruitingBg : "bg-slate-200"}
                         rotate={-2}
                         className="px-2 py-1 rounded-lg"
                       >
-                        <span className="text-xs font-black">
-                          {isRecruiting ? "모집중 🙋" : "마감"}
+                        <span className={`text-xs font-black ${isRecruiting && themeStyle.recruitingText ? themeStyle.recruitingText : ""}`}>
+                          {isRecruiting ? (theme === "christmas" ? "🎄 모집중" : "모집중 🙋") : "마감"}
                         </span>
                       </Sticker>
                     </div>
@@ -195,17 +218,17 @@ export default function MainTrendingSection() {
                             <Users className="w-4 h-4" />
                             <span>{members}/{maxMembers}명</span>
                           </div>
-                          <span className="font-black text-pink-500">
+                          <span className={`font-black ${themeStyle.priceColor}`}>
                             {formatCurrency(price, { fallback: "0원" })}
                           </span>
                         </div>
                         <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
                           <div
-                            className="h-full bg-gradient-to-r from-orange-400 to-pink-500 rounded-full transition-all duration-500"
+                            className={`h-full ${themeStyle.progressGradient} rounded-full transition-all duration-500`}
                             style={{ width: `${fillPercent}%` }}
                           />
                         </div>
-                        <div className="text-xs font-bold text-orange-500 text-right">
+                        <div className={`text-xs font-bold ${themeStyle.percentColor} text-right`}>
                           {fillPercent}% 모집 완료
                         </div>
                       </div>

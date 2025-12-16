@@ -3,6 +3,19 @@ import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, X } from "lucide-react";
 import { NeoCard } from "@/components/common/neo";
+import { useThemeStore } from "@/store/themeStore";
+
+// 테마별 Search 섹션 스타일
+const searchThemeStyles = {
+  default: {
+    linkText: "text-pink-500",
+    tagHover: "hover:bg-pink-100 hover:border-pink-500",
+  },
+  christmas: {
+    linkText: "text-[#c41e3a]",
+    tagHover: "hover:bg-red-50 hover:border-[#c41e3a]",
+  },
+};
 
 // 서비스별 색상 매핑
 const serviceColors = {
@@ -35,6 +48,8 @@ const getServiceColor = (name) => {
 export default function MainSearchSection({ products = [] }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [isFocused, setIsFocused] = useState(false);
+  const { theme } = useThemeStore();
+  const themeStyle = searchThemeStyles[theme] || searchThemeStyles.default;
 
   // 검색 결과 필터링
   const filteredProducts = useMemo(() => {
@@ -122,7 +137,7 @@ export default function MainSearchSection({ products = [] }) {
                               {product?.category || "구독 서비스"}
                             </p>
                           </div>
-                          <span className="text-pink-500 font-black text-sm">
+                          <span className={`${themeStyle.linkText} font-black text-sm`}>
                             파티 찾기 →
                           </span>
                         </Link>
@@ -150,7 +165,7 @@ export default function MainSearchSection({ products = [] }) {
             <button
               key={tag}
               onClick={() => setSearchQuery(tag)}
-              className="px-4 py-2 bg-slate-100 border border-gray-200 rounded-full font-bold text-sm hover:bg-pink-100 hover:border-pink-500 transition-all"
+              className={`px-4 py-2 bg-slate-100 border border-gray-200 rounded-full font-bold text-sm ${themeStyle.tagHover} transition-all`}
             >
               {tag}
             </button>

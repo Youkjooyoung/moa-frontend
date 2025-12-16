@@ -4,8 +4,29 @@ import { Calendar, CalendarPlus, Sparkles, LayoutGrid, Bell, Users, Lightbulb } 
 import httpClient from '../../api/httpClient';
 import { useAuthStore } from '../../store/authStore';
 import UpdateProductModal from '../../components/product/UpdateProductModal';
+import { useThemeStore } from '@/store/themeStore';
+
+// 테마별 스타일
+const getProductThemeStyles = {
+    default: {
+        spinnerBorder: 'border-indigo-600',
+        cardShadow: 'shadow-2xl',
+        sparklesIcon: 'text-indigo-500',
+        benefitIcon1: 'bg-indigo-50 text-indigo-600',
+        focusRing: 'focus:ring-indigo-500',
+    },
+    christmas: {
+        spinnerBorder: 'border-red-800',
+        cardShadow: 'shadow-[4px_4px_12px_rgba(0,0,0,0.08)]',
+        sparklesIcon: 'text-red-800',
+        benefitIcon1: 'bg-red-50 text-red-800',
+        focusRing: 'focus:ring-red-800',
+    },
+};
 
 const GetProduct = () => {
+    const { theme } = useThemeStore();
+    const themeStyle = getProductThemeStyles[theme] || getProductThemeStyles.default;
     const { id } = useParams();
     const navigate = useNavigate();
     const { user } = useAuthStore();
@@ -44,7 +65,7 @@ const GetProduct = () => {
     if (loading) {
         return (
             <div className="flex justify-center items-center h-64">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+                <div className={`animate-spin rounded-full h-12 w-12 border-b-2 ${themeStyle.spinnerBorder}`}></div>
             </div>
         );
     }
@@ -53,7 +74,7 @@ const GetProduct = () => {
 
     return (
         <div className="container mx-auto px-4 py-12 max-w-4xl">
-            <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden">
+            <div className={`bg-white rounded-[2rem] ${themeStyle.cardShadow} overflow-hidden`}>
                 {/* Header Section (Horizontal Layout with Gradient) */}
                 <div className="bg-purple-50 p-8 flex flex-col md:flex-row items-center gap-6 relative overflow-hidden">
                     {/* Blur Circles */}
@@ -111,13 +132,13 @@ const GetProduct = () => {
                     {/* MoA 구독 관리 혜택 */}
                     <div className="mb-8">
                         <h3 className="font-bold text-stone-800 mb-6 flex items-center gap-2 text-base">
-                            <Sparkles className="w-5 h-5 text-indigo-500" /> MoA 구독 관리 혜택
+                            <Sparkles className={`w-5 h-5 ${themeStyle.sparklesIcon}`} /> MoA 구독 관리 혜택
                         </h3>
                         <div className="space-y-5">
                             {[
                                 {
                                     icon: LayoutGrid,
-                                    color: 'bg-indigo-50 text-indigo-600',
+                                    color: themeStyle.benefitIcon1,
                                     title: "1. 모든 구독을 한눈에 정리하세요",
                                     desc: "흩어진 구독을 한 곳에서 확인하고 더 쉽고 편하게 관리할 수 있어요."
                                 },
@@ -169,7 +190,7 @@ const GetProduct = () => {
                                     type="date"
                                     value={startDate}
                                     onChange={(e) => setStartDate(e.target.value)}
-                                    className="w-full pl-12 pr-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent font-medium text-stone-900"
+                                    className={`w-full pl-12 pr-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 ${themeStyle.focusRing} focus:border-transparent font-medium text-stone-900`}
                                 />
                             </div>
                         </div>

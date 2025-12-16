@@ -128,7 +128,7 @@ export default function PartyDetailPage() {
   const getStatusBadge = (status) => {
     const badges = {
       RECRUITING: {
-        bg: "bg-[#635bff]",
+        bg: theme === "christmas" ? "bg-green-800" : "bg-[#635bff]",
         text: "모집중"
       },
       ACTIVE: {
@@ -180,7 +180,12 @@ export default function PartyDetailPage() {
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
             onClick={() => navigate("/party")}
-            className={`flex items-center gap-2 mb-8 transition-colors group ${theme === "dark" ? "text-gray-400 hover:text-[#635bff]" : "text-gray-500 hover:text-[#635bff]"
+            className={`flex items-center gap-2 mb-8 transition-colors group ${
+              theme === "dark"
+                ? "text-gray-400 hover:text-[#635bff]"
+                : theme === "christmas"
+                  ? "text-gray-500 hover:text-red-800"
+                  : "text-gray-500 hover:text-[#635bff]"
               }`}
           >
             <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
@@ -196,7 +201,11 @@ export default function PartyDetailPage() {
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.4 }}
-                  className="flex-shrink-0 w-24 h-24 md:w-32 md:h-32 rounded-2xl overflow-hidden bg-white shadow-lg border border-gray-100"
+                  className={`flex-shrink-0 w-24 h-24 md:w-32 md:h-32 rounded-2xl overflow-hidden bg-white border ${
+                    theme === "christmas"
+                      ? "shadow-[4px_4px_12px_rgba(0,0,0,0.08)] border-gray-200"
+                      : "shadow-lg border-gray-100"
+                  }`}
                 >
                   {party.productImage ? (
                     <img
@@ -227,7 +236,11 @@ export default function PartyDetailPage() {
                       </span>
                     )}
                     {isMember && !isLeader && (
-                      <span className="bg-white text-[#635bff] px-3 py-1.5 rounded-full text-xs font-bold shadow-lg border border-[#635bff]/20">
+                      <span className={`bg-white px-3 py-1.5 rounded-full text-xs font-bold border ${
+                        theme === "christmas"
+                          ? "text-green-800 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] border-gray-200"
+                          : "text-[#635bff] shadow-lg border-[#635bff]/20"
+                      }`}>
                         <Check className="w-3 h-3 inline mr-1" />
                         참여중
                       </span>
@@ -262,10 +275,14 @@ export default function PartyDetailPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 }}
                   whileHover={{ y: -2 }}
-                  className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm hover:shadow-lg transition-all"
+                  className={`bg-white rounded-2xl p-5 border transition-all ${
+                    theme === "christmas"
+                      ? "border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] hover:shadow-[4px_4px_12px_rgba(0,0,0,0.08)]"
+                      : "border-gray-100 shadow-sm hover:shadow-lg"
+                  }`}
                 >
                   <div className="flex items-center gap-2 text-gray-500 text-sm mb-2">
-                    <Users className="w-4 h-4 text-[#635bff]" />
+                    <Users className={`w-4 h-4 ${theme === "christmas" ? "text-red-800" : "text-[#635bff]"}`} />
                     <span>파티 인원</span>
                   </div>
                   <p className="text-2xl font-black text-gray-900">
@@ -276,7 +293,11 @@ export default function PartyDetailPage() {
                       initial={{ width: 0 }}
                       animate={{ width: `${(party.currentMembers / party.maxMembers) * 100}%` }}
                       transition={{ duration: 0.8, ease: "easeOut" }}
-                      className="h-full bg-gradient-to-r from-[#635bff] to-[#00d4ff] rounded-full"
+                      className={`h-full rounded-full ${
+                        theme === "christmas"
+                          ? "bg-gradient-to-r from-red-800 to-green-800"
+                          : "bg-gradient-to-r from-[#635bff] to-[#00d4ff]"
+                      }`}
                     />
                   </div>
                 </motion.div>
@@ -287,10 +308,14 @@ export default function PartyDetailPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 }}
                   whileHover={{ y: -2 }}
-                  className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm hover:shadow-lg transition-all"
+                  className={`bg-white rounded-2xl p-5 border transition-all ${
+                    theme === "christmas"
+                      ? "border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] hover:shadow-[4px_4px_12px_rgba(0,0,0,0.08)]"
+                      : "border-gray-100 shadow-sm hover:shadow-lg"
+                  }`}
                 >
                   <div className="flex items-center gap-2 text-gray-500 text-sm mb-2">
-                    <Calendar className="w-4 h-4 text-[#635bff]" />
+                    <Calendar className={`w-4 h-4 ${theme === "christmas" ? "text-red-800" : "text-[#635bff]"}`} />
                     <span>이용 기간</span>
                   </div>
                   <p className="text-sm font-bold text-gray-900">
@@ -308,9 +333,13 @@ export default function PartyDetailPage() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
-              className="w-full lg:w-80 bg-white rounded-2xl p-6 border border-gray-100 shadow-xl sticky top-24"
+              className={`w-full lg:w-80 bg-white rounded-2xl p-6 border sticky top-24 ${
+                theme === "christmas"
+                  ? "border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]"
+                  : "border-gray-100 shadow-xl"
+              }`}
             >
-              <div className="flex items-center gap-2 text-[#635bff] mb-4">
+              <div className={`flex items-center gap-2 mb-4 ${theme === "christmas" ? "text-red-800" : "text-[#635bff]"}`}>
                 <TrendingDown className="w-5 h-5" />
                 <span className="text-sm font-semibold">최대 75% 할인</span>
               </div>
@@ -334,7 +363,7 @@ export default function PartyDetailPage() {
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-500">첫 결제 총액</span>
-                  <span className="font-bold text-[#635bff]">
+                  <span className={`font-bold ${theme === "christmas" ? "text-red-800" : "text-[#635bff]"}`}>
                     {(perPersonFee * 2).toLocaleString()}원
                   </span>
                 </div>
@@ -359,7 +388,11 @@ export default function PartyDetailPage() {
                   whileHover={{ scale: 1.02, y: -1 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => setIsJoinModalOpen(true)}
-                  className="w-full py-3.5 bg-[#635bff] hover:bg-[#5851e8] text-white rounded-full font-semibold shadow-lg shadow-[#635bff]/25 transition-all flex items-center justify-center gap-2"
+                  className={`w-full py-3.5 text-white rounded-full font-semibold shadow-lg transition-all flex items-center justify-center gap-2 ${
+                    theme === "christmas"
+                      ? "bg-red-800 hover:bg-red-900 shadow-red-800/25"
+                      : "bg-[#635bff] hover:bg-[#5851e8] shadow-[#635bff]/25"
+                  }`}
                 >
                   <Sparkles className="w-4 h-4" />
                   파티 가입하기
@@ -396,17 +429,25 @@ export default function PartyDetailPage() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-gradient-to-br from-[#635bff]/5 to-[#00d4ff]/5 rounded-2xl p-6 border border-[#635bff]/10"
+                className={`rounded-2xl p-6 border ${
+                  theme === "christmas"
+                    ? "bg-gradient-to-br from-red-50 to-green-50 border-gray-200"
+                    : "bg-gradient-to-br from-[#635bff]/5 to-[#00d4ff]/5 border-[#635bff]/10"
+                }`}
               >
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
-                    <Lock className="w-5 h-5 text-[#635bff]" />
+                    <Lock className={`w-5 h-5 ${theme === "christmas" ? "text-red-800" : "text-[#635bff]"}`} />
                     계정 정보
                   </h2>
                   {isLeader && (
                     <button
                       onClick={() => setIsOttModalOpen(true)}
-                      className="text-xs bg-white hover:bg-gray-50 text-[#635bff] px-4 py-2 rounded-full border border-[#635bff]/20 transition font-semibold"
+                      className={`text-xs bg-white hover:bg-gray-50 px-4 py-2 rounded-full border transition font-semibold ${
+                        theme === "christmas"
+                          ? "text-red-800 border-gray-200"
+                          : "text-[#635bff] border-[#635bff]/20"
+                      }`}
                     >
                       수정
                     </button>
@@ -441,7 +482,11 @@ export default function PartyDetailPage() {
                   whileHover={{ scale: 1.01 }}
                   whileTap={{ scale: 0.99 }}
                   onClick={() => setShowOttInfo(!showOttInfo)}
-                  className="w-full py-3 bg-white hover:bg-gray-50 text-[#635bff] border border-[#635bff]/20 rounded-xl font-semibold transition-all flex items-center justify-center gap-2"
+                  className={`w-full py-3 bg-white hover:bg-gray-50 border rounded-xl font-semibold transition-all flex items-center justify-center gap-2 ${
+                    theme === "christmas"
+                      ? "text-red-800 border-gray-200"
+                      : "text-[#635bff] border-[#635bff]/20"
+                  }`}
                 >
                   {showOttInfo ? (
                     <>
@@ -463,28 +508,38 @@ export default function PartyDetailPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm"
+              className={`bg-white rounded-2xl p-6 border ${
+                theme === "christmas"
+                  ? "border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]"
+                  : "border-gray-100 shadow-sm"
+              }`}
             >
               <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                <Shield className="w-5 h-5 text-[#635bff]" />
+                <Shield className={`w-5 h-5 ${theme === "christmas" ? "text-red-800" : "text-[#635bff]"}`} />
                 안전한 파티 이용을 위한 안내
               </h3>
               <ul className="space-y-3 text-sm text-gray-600">
                 <li className="flex items-start gap-3">
-                  <div className="w-5 h-5 rounded-full bg-[#635bff]/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <Check className="w-3 h-3 text-[#635bff]" />
+                  <div className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${
+                    theme === "christmas" ? "bg-red-50" : "bg-[#635bff]/10"
+                  }`}>
+                    <Check className={`w-3 h-3 ${theme === "christmas" ? "text-red-800" : "text-[#635bff]"}`} />
                   </div>
                   <span>보증금은 파티 종료 시 전액 환불됩니다</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <div className="w-5 h-5 rounded-full bg-[#635bff]/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <Check className="w-3 h-3 text-[#635bff]" />
+                  <div className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${
+                    theme === "christmas" ? "bg-red-50" : "bg-[#635bff]/10"
+                  }`}>
+                    <Check className={`w-3 h-3 ${theme === "christmas" ? "text-red-800" : "text-[#635bff]"}`} />
                   </div>
                   <span>매월 자동 결제로 편리하게 이용하세요</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <div className="w-5 h-5 rounded-full bg-[#635bff]/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <Check className="w-3 h-3 text-[#635bff]" />
+                  <div className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${
+                    theme === "christmas" ? "bg-red-50" : "bg-[#635bff]/10"
+                  }`}>
+                    <Check className={`w-3 h-3 ${theme === "christmas" ? "text-red-800" : "text-[#635bff]"}`} />
                   </div>
                   <span>탈퇴 시 다음 결제일 전까지 이용 가능합니다</span>
                 </li>
@@ -497,10 +552,14 @@ export default function PartyDetailPage() {
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
-              className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm h-fit sticky top-24"
+              className={`bg-white rounded-2xl p-6 border h-fit sticky top-24 ${
+                theme === "christmas"
+                  ? "border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]"
+                  : "border-gray-100 shadow-sm"
+              }`}
             >
               <h3 className="text-sm font-bold text-gray-500 mb-4 uppercase tracking-wide flex items-center gap-2">
-                <Users className="w-4 h-4 text-[#635bff]" />
+                <Users className={`w-4 h-4 ${theme === "christmas" ? "text-red-800" : "text-[#635bff]"}`} />
                 파티 멤버
               </h3>
 
@@ -583,7 +642,7 @@ export default function PartyDetailPage() {
               <div className="space-y-3 mb-6">
                 <div className="bg-gray-50 p-4 rounded-xl flex justify-between items-center border border-gray-100">
                   <span className="text-sm text-gray-600">보증금 + 첫달 구독료</span>
-                  <span className="font-bold text-[#635bff]">
+                  <span className={`font-bold ${theme === "christmas" ? "text-red-800" : "text-[#635bff]"}`}>
                     {(perPersonFee * 2).toLocaleString()}원
                   </span>
                 </div>
@@ -610,7 +669,11 @@ export default function PartyDetailPage() {
                     triggerConfetti();
                     handleJoin();
                   }}
-                  className="flex-1 py-3.5 bg-[#635bff] hover:bg-[#5851e8] text-white rounded-full font-semibold shadow-lg shadow-[#635bff]/25 transition-all"
+                  className={`flex-1 py-3.5 text-white rounded-full font-semibold shadow-lg transition-all ${
+                    theme === "christmas"
+                      ? "bg-red-800 hover:bg-red-900 shadow-red-800/25"
+                      : "bg-[#635bff] hover:bg-[#5851e8] shadow-[#635bff]/25"
+                  }`}
                 >
                   가입하기
                 </motion.button>

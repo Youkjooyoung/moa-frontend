@@ -163,9 +163,12 @@ export default function MyPartyListPage() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => navigate("/party/create")}
-              className={`flex items-center gap-2 px-6 py-3 font-semibold transition-all shadow-lg ${theme === "pop"
-                  ? "bg-pink-500 text-white border-4 border-black rounded-2xl"
-                  : "bg-slate-900 hover:bg-slate-800 text-white rounded-lg"
+              className={`flex items-center gap-2 px-6 py-3 font-semibold transition-all shadow-lg ${
+                theme === "pop"
+                  ? "bg-red-800 text-white border border-gray-200 rounded-2xl shadow-[4px_4px_12px_rgba(0,0,0,0.08)]"
+                  : theme === "christmas"
+                    ? "bg-red-800 hover:bg-red-900 text-white rounded-lg"
+                    : "bg-slate-900 hover:bg-slate-800 text-white rounded-lg"
                 }`}
             >
               <Plus className="w-5 h-5" />
@@ -185,7 +188,11 @@ export default function MyPartyListPage() {
         >
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Total Parties */}
-            <div className="bg-white rounded-xl p-5 border border-slate-200 hover:shadow-lg transition-all hover:-translate-y-1">
+            <div className={`bg-white rounded-xl p-5 border transition-all hover:-translate-y-1 ${
+              theme === "christmas"
+                ? "border-gray-200 hover:shadow-[4px_4px_12px_rgba(0,0,0,0.08)]"
+                : "border-slate-200 hover:shadow-lg"
+            }`}>
               <div className="flex items-center justify-between mb-2">
                 <div className="w-10 h-10 bg-gradient-to-br from-blue-50 to-purple-50 rounded-lg flex items-center justify-center">
                   <Users className="w-5 h-5 text-blue-600" />
@@ -198,7 +205,11 @@ export default function MyPartyListPage() {
             </div>
 
             {/* As Leader */}
-            <div className="bg-white rounded-xl p-5 border border-slate-200 hover:shadow-lg transition-all hover:-translate-y-1">
+            <div className={`bg-white rounded-xl p-5 border transition-all hover:-translate-y-1 ${
+              theme === "christmas"
+                ? "border-gray-200 hover:shadow-[4px_4px_12px_rgba(0,0,0,0.08)]"
+                : "border-slate-200 hover:shadow-lg"
+            }`}>
               <div className="flex items-center justify-between mb-2">
                 <div className="w-10 h-10 bg-gradient-to-br from-amber-50 to-orange-50 rounded-lg flex items-center justify-center">
                   <Crown className="w-5 h-5 text-amber-500" />
@@ -211,7 +222,11 @@ export default function MyPartyListPage() {
             </div>
 
             {/* Active Parties */}
-            <div className="bg-white rounded-xl p-5 border border-slate-200 hover:shadow-lg transition-all hover:-translate-y-1">
+            <div className={`bg-white rounded-xl p-5 border transition-all hover:-translate-y-1 ${
+              theme === "christmas"
+                ? "border-gray-200 hover:shadow-[4px_4px_12px_rgba(0,0,0,0.08)]"
+                : "border-slate-200 hover:shadow-lg"
+            }`}>
               <div className="flex items-center justify-between mb-2">
                 <div className="w-10 h-10 bg-gradient-to-br from-emerald-50 to-teal-50 rounded-lg flex items-center justify-center">
                   <Activity className="w-5 h-5 text-emerald-600" />
@@ -224,7 +239,11 @@ export default function MyPartyListPage() {
             </div>
 
             {/* Recruiting */}
-            <div className="bg-white rounded-xl p-5 border border-slate-200 hover:shadow-lg transition-all hover:-translate-y-1">
+            <div className={`bg-white rounded-xl p-5 border transition-all hover:-translate-y-1 ${
+              theme === "christmas"
+                ? "border-gray-200 hover:shadow-[4px_4px_12px_rgba(0,0,0,0.08)]"
+                : "border-slate-200 hover:shadow-lg"
+            }`}>
               <div className="flex items-center justify-between mb-2">
                 <div className="w-10 h-10 bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg flex items-center justify-center">
                   <TrendingUp className="w-5 h-5 text-purple-600" />
@@ -307,7 +326,11 @@ export default function MyPartyListPage() {
                             to={`/party/${item.partyId}`}
                             className="group block"
                           >
-                            <div className="relative h-full bg-white rounded-xl border border-slate-200 hover:border-slate-300 hover:shadow-lg transition-all duration-300 overflow-hidden hover:-translate-y-1">
+                            <div className={`relative h-full bg-white rounded-xl border transition-all duration-300 overflow-hidden hover:-translate-y-1 ${
+                              theme === "christmas"
+                                ? "border-gray-200 hover:border-gray-200 hover:shadow-[4px_4px_12px_rgba(0,0,0,0.08)]"
+                                : "border-slate-200 hover:border-slate-300 hover:shadow-lg"
+                            }`}>
                               <div className="p-5">
                                 <div className="flex items-start justify-between mb-4">
                                   <div className="flex-1">
@@ -321,7 +344,9 @@ export default function MyPartyListPage() {
                                         <Crown className="w-3 h-3" /> 파티장
                                       </span>
                                     </div>
-                                    <h3 className="text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
+                                    <h3 className={`text-lg font-bold text-slate-900 transition-colors ${
+                                      theme === "christmas" ? "group-hover:text-red-800" : "group-hover:text-blue-600"
+                                    }`}>
                                       {item.productName}
                                     </h3>
                                   </div>
@@ -349,7 +374,11 @@ export default function MyPartyListPage() {
                                   </p>
                                 </div>
 
-                                <div className="mt-4 flex items-center justify-end text-blue-600 group-hover:text-blue-700 font-semibold text-sm">
+                                <div className={`mt-4 flex items-center justify-end font-semibold text-sm ${
+                                  theme === "christmas"
+                                    ? "text-red-800 group-hover:text-red-900"
+                                    : "text-blue-600 group-hover:text-blue-700"
+                                }`}>
                                   <span>상세 보기</span>
                                   <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
                                 </div>
@@ -395,7 +424,11 @@ export default function MyPartyListPage() {
                             to={`/party/${item.partyId}`}
                             className="group block"
                           >
-                            <div className="relative h-full bg-white rounded-xl border border-slate-200 hover:border-slate-300 hover:shadow-lg transition-all duration-300 overflow-hidden hover:-translate-y-1">
+                            <div className={`relative h-full bg-white rounded-xl border transition-all duration-300 overflow-hidden hover:-translate-y-1 ${
+                              theme === "christmas"
+                                ? "border-gray-200 hover:border-gray-200 hover:shadow-[4px_4px_12px_rgba(0,0,0,0.08)]"
+                                : "border-slate-200 hover:border-slate-300 hover:shadow-lg"
+                            }`}>
                               <div className="p-5">
                                 <div className="flex items-start justify-between mb-4">
                                   <div className="flex-1">
@@ -406,7 +439,9 @@ export default function MyPartyListPage() {
                                         {badge.text}
                                       </span>
                                     </div>
-                                    <h3 className="text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
+                                    <h3 className={`text-lg font-bold text-slate-900 transition-colors ${
+                                      theme === "christmas" ? "group-hover:text-red-800" : "group-hover:text-blue-600"
+                                    }`}>
                                       {item.productName}
                                     </h3>
                                     <p className="text-sm text-slate-500 mt-1">
@@ -437,7 +472,11 @@ export default function MyPartyListPage() {
                                   </p>
                                 </div>
 
-                                <div className="mt-4 flex items-center justify-end text-purple-600 group-hover:text-purple-700 font-semibold text-sm">
+                                <div className={`mt-4 flex items-center justify-end font-semibold text-sm ${
+                                  theme === "christmas"
+                                    ? "text-green-800 group-hover:text-green-900"
+                                    : "text-purple-600 group-hover:text-purple-700"
+                                }`}>
                                   <span>상세 보기</span>
                                   <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
                                 </div>

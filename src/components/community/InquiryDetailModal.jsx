@@ -8,8 +8,26 @@ import {
 import { NeoCard } from '@/components/common/neo';
 import InquiryStatusBadge from './InquiryStatusBadge';
 import { formatDate, getCategoryName } from '../../utils/communityUtils';
+import { useThemeStore } from '@/store/themeStore';
+
+// 테마별 스타일
+const detailModalThemeStyles = {
+    default: {
+        categoryBadge: 'bg-cyan-400 text-black',
+        answerCard: 'bg-lime-100',
+        answerTextColor: 'text-lime-700',
+    },
+    christmas: {
+        categoryBadge: 'bg-amber-100 text-amber-700',
+        answerCard: 'bg-green-800',
+        answerTextColor: 'text-green-100',
+    },
+};
 
 const InquiryDetailModal = ({ isOpen, onClose, inquiry }) => {
+    const { theme } = useThemeStore();
+    const themeStyle = detailModalThemeStyles[theme] || detailModalThemeStyles.default;
+
     if (!inquiry) return null;
 
     return (
@@ -22,7 +40,7 @@ const InquiryDetailModal = ({ isOpen, onClose, inquiry }) => {
                 <div className="space-y-6">
                     {/* Meta Info */}
                     <div className="flex flex-wrap items-center gap-3">
-                        <span className="px-3 py-1 text-xs font-black rounded-lg bg-cyan-400 text-black border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]">
+                        <span className={`px-3 py-1 text-xs font-black rounded-lg ${themeStyle.categoryBadge} border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]`}>
                             {getCategoryName(inquiry.communityCodeId)}
                         </span>
                         <InquiryStatusBadge status={inquiry.answerStatus} />
@@ -65,16 +83,16 @@ const InquiryDetailModal = ({ isOpen, onClose, inquiry }) => {
                     {inquiry.answerContent && (
                         <div className="border-t-4 border-black pt-6">
                             <NeoCard
-                                color="bg-lime-100"
+                                color={themeStyle.answerCard}
                                 hoverable={false}
                                 className="rounded-xl p-5"
                             >
-                                <p className="text-sm font-black text-lime-700 mb-2">답변</p>
-                                <p className="text-black font-medium whitespace-pre-wrap leading-relaxed">
+                                <p className={`text-sm font-black ${themeStyle.answerTextColor} mb-2`}>답변</p>
+                                <p className={`${theme === 'christmas' ? 'text-white' : 'text-black'} font-medium whitespace-pre-wrap leading-relaxed`}>
                                     {inquiry.answerContent}
                                 </p>
                                 {inquiry.answeredAt && (
-                                    <p className="text-xs font-bold text-gray-500 mt-4">
+                                    <p className={`text-xs font-bold ${theme === 'christmas' ? 'text-green-200' : 'text-gray-500'} mt-4`}>
                                         답변일: {formatDate(inquiry.answeredAt)}
                                     </p>
                                 )}

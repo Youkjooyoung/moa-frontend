@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ChevronRight, ArrowUpRight } from "lucide-react";
 import { useMainStore } from "@/store/main/mainStore";
+import { useThemeStore } from "@/store/themeStore";
 import {
   formatCurrency,
   getProductId,
@@ -14,6 +15,21 @@ import {
   getProductStatus,
   getProductIconUrl,
 } from "@/utils/format";
+
+// 테마별 Products 섹션 스타일
+const productsThemeStyles = {
+  default: {
+    stickerBg: "bg-cyan-400",
+    priceColor: "text-pink-500",
+    emoji: "🎬",
+  },
+  christmas: {
+    stickerBg: "bg-[#1a5f2a]",
+    stickerText: "text-white",
+    priceColor: "text-[#c41e3a]",
+    emoji: "🎄",
+  },
+};
 
 function Sticker({ children, color = "bg-white", rotate = 0, className = "" }) {
   return (
@@ -64,6 +80,8 @@ export default function MainProductsSection() {
   const products = useMainStore((s) => s.products);
   const productsLoading = useMainStore((s) => s.productsLoading);
   const productsError = useMainStore((s) => s.productsError);
+  const { theme } = useThemeStore();
+  const themeStyle = productsThemeStyles[theme] || productsThemeStyles.default;
 
   // 랜덤 3개 상품 선택
   const randomProducts = useMemo(() => {
@@ -95,11 +113,13 @@ export default function MainProductsSection() {
         >
           <div>
             <Sticker
-              color="bg-cyan-400"
+              color={themeStyle.stickerBg}
               rotate={-1}
               className="inline-block px-4 py-2 rounded-xl mb-4"
             >
-              <span className="font-black">구독 상품 🎬</span>
+              <span className={`font-black ${themeStyle.stickerText || ""}`}>
+                {theme === "christmas" ? "🎄 구독 상품 🎁" : `구독 상품 ${themeStyle.emoji}`}
+              </span>
             </Sticker>
             <h2 className="text-4xl md:text-5xl font-black">
               원하는 서비스를 골라요
@@ -197,7 +217,7 @@ export default function MainProductsSection() {
                       </div>
                       <div className="flex justify-between border-b border-gray-100 pb-2">
                         <span className="text-gray-600">가격</span>
-                        <span className="text-pink-500 font-black">
+                        <span className={`${themeStyle.priceColor} font-black`}>
                           {formatCurrency(price, { fallback: "-" })}
                         </span>
                       </div>
