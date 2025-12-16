@@ -156,21 +156,21 @@ export const useMyPage = () => {
           return;
         }
 
-        const res = await httpClient.post("/oauth/release", { oauthId: targetId });
+        const res = await httpClient.post("/oauth/release", {
+          oauthId: targetId,
+        });
 
         if (res.success) {
-          alert("Social account has been unlinked.");
+          alert(`${provider.toUpperCase()} 계정 연동이 해제되었습니다.`);
           await useAuthStore.getState().fetchSession();
-          const updatedUser = useAuthStore.getState().user;
-          if (updatedUser) setUser(updatedUser);
         } else {
-          alert(res.error?.message || "Failed to unlink social account.");
+          alert(res.error?.message || "소셜 계정 연동 해제에 실패했습니다.");
         }
       } catch (e) {
         console.error(e);
         alert(
           e?.response?.data?.error?.message ||
-            "An error occurred while unlinking the social account."
+            "소셜 계정 연동 해제 중 오류가 발생했습니다."
         );
       }
     },

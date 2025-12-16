@@ -62,7 +62,13 @@ export const useAuthStore = create(
         localStorage.removeItem("auth-storage");
       },
       fetchSession: async () => {
-        const { clearAuth } = get();
+        const { clearAuth, accessToken } = get();
+
+        // ✅ 로그인 안 된 상태면 호출 자체를 안 함
+        if (!accessToken) {
+          clearAuth();
+          return;
+        }
 
         set({ loading: true });
 
@@ -76,7 +82,11 @@ export const useAuthStore = create(
             clearAuth();
           }
         } catch (error) {
-          console.error("Session Fetch Error:", error);
+          const status = error?.response?.status;
+
+          if (status !== 401) {
+            console.error("Session Fetch Error:", error);
+          }
           clearAuth();
         } finally {
           set({ loading: false });

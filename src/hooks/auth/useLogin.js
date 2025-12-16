@@ -73,7 +73,7 @@ export const useLoginPageLogic = () => {
   } = useLoginStore();
   const { setTokens } = useAuthStore();
 
-  const [googleLoading, setGoogleLoading] = useState(false);
+  // const [googleLoading, setGoogleLoading] = useState(false);
   const [otpMode, setOtpMode] = useState("otp");
   const [loginLoading, setLoginLoading] = useState(false);
   const [otpLoading, setOtpLoading] = useState(false);
@@ -148,8 +148,8 @@ export const useLoginPageLogic = () => {
     const trimmedPassword = password.trim();
     const nextErrors = { email: "", password: "", otp: "" };
 
-    if (!trimmedEmail) nextErrors.email = "Please enter your email.";
-    if (!trimmedPassword) nextErrors.password = "Please enter your password.";
+    if (!trimmedEmail) nextErrors.email = "이메일을 입력해주세요";
+    if (!trimmedPassword) nextErrors.password = "비밀번호를 확인해주세요.";
 
     setErrors(nextErrors);
     if (nextErrors.email || nextErrors.password) return;
@@ -163,7 +163,18 @@ export const useLoginPageLogic = () => {
       });
 
       if (!response.success) {
-        alert(response.error?.message || "Login failed.");
+        const code = response.error?.code;
+        const message = response.error?.message;
+
+        if (
+          code === "N401" ||
+          code === "AUTH_FAILED" ||
+          message?.includes("Invalid email or password")
+        ) {
+          alert("이메일 또는 비밀번호가 일치하지 않습니다.");
+        } else {
+          alert(message || "로그인에 실패했습니다.");
+        }
         return;
       }
 
@@ -199,9 +210,9 @@ export const useLoginPageLogic = () => {
       const code = apiError?.code;
       const message = apiError?.message || "Login processing error.";
 
-      if (code === "E403" && message.includes("Login failed 5 times")) {
+      if (code === "E403" && message?.includes("계정 잠금")) {
         const start = window.confirm(
-          "Login failed 5 times and your account may be locked. Verify your identity now?"
+          "로그인 실패가 5회 누적되어 계정이 잠겼습니다.\n본인 인증을 진행하시겠습니까?"
         );
         if (start) {
           await handleUnlockByCertification();
@@ -209,7 +220,7 @@ export const useLoginPageLogic = () => {
         return;
       }
 
-      alert(code ? `[${code}] ${message}` : message);
+      alert(code ? `[${code}] ${message}` : "로그인 중 오류가 발생했습니다.");
     } finally {
       setLoginLoading(false);
     }

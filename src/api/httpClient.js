@@ -20,13 +20,8 @@ const processQueue = (error, token = null) => {
   });
   failedQueue = [];
 };
-
-/* =========================
- * REQUEST INTERCEPTOR
- * ========================= */
 httpClient.interceptors.request.use(
   (config) => {
-    // ✅ 비로그인 API는 JWT 완전 제외
     if (config.skipAuth) {
       return config;
     }
@@ -43,20 +38,24 @@ httpClient.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-/* =========================
- * RESPONSE INTERCEPTOR
- * ========================= */
 httpClient.interceptors.response.use(
   (response) => response.data,
   async (error) => {
     const originalRequest = error.config;
     const status = error.response?.status;
 
-    // ✅ skipAuth 요청은 refresh 로직 절대 타지 않음
     if (originalRequest?.skipAuth) {
       return Promise.reject(error);
     }
+    const isAuthEndpoint =
+      originalRequest.url.startsWith("/auth/login") ||
+      originalRequest.url.startsWith("/signup") ||
+      originalRequest.url.startsWith("/auth/verify") ||
+      originalRequest.url.startsWith("/auth/otp");
 
+    if (status === 401 && isAuthEndpoint) {
+      return Promise.reject(error);
+    }
     if (
       status === 401 &&
       originalRequest.url !== "/auth/refresh" &&

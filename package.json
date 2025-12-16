@@ -45,6 +45,7 @@
     "accordian": "^0.0.1",
     "apexcharts": "^5.3.6",
     "axios": "^1.13.2",
+    "canvas-confetti": "^1.9.4",
     "chart.js": "^4.5.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
