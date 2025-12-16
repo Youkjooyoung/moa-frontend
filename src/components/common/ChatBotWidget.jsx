@@ -25,11 +25,6 @@ const themeColors = {
     header: "bg-pink-500",
     accent: "#ec4899",
   },
-  portrait: {
-    primary: "bg-gradient-to-r from-[#FFB5C5] to-[#C5B5FF] hover:from-[#FFa5b5] hover:to-[#b5a5ef]",
-    header: "bg-gradient-to-r from-[#FFB5C5] to-[#C5B5FF]",
-    accent: "#FFB5C5",
-  },
   christmas: {
     primary: "bg-[#c41e3a] hover:bg-[#a51830]",
     header: "bg-gradient-to-r from-[#c41e3a] to-[#1a5f2a]",

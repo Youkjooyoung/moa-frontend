@@ -37,9 +37,10 @@ export const fetchMainSubscriptionProducts = async () => {
 };
 
 // 파티 목록 조회 - /parties 엔드포인트 직접 사용 (permitAll)
+// 모집중인 파티만 마감 임박순으로 가져옴
 export const fetchMainTrendingParties = async () => {
   const payload = await safeGet("/parties", {
-    params: { sort: "deadline", size: 12 },
+    params: { sort: "deadline", size: 12, partyStatus: "RECRUITING" },
   });
   if (payload?.__error) return payload;
   return normalizeList(payload);

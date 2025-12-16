@@ -5,7 +5,7 @@ import { persist, createJSONStorage } from "zustand/middleware";
 export const useThemeStore = create(
   persist(
     (set, get) => ({
-      // Current theme: 'classic' | 'dark' | 'pop' | 'portrait' | 'christmas'
+      // Current theme: 'classic' | 'dark' | 'pop' | 'christmas'
       // 기본 테마는 pop
       theme: "pop",
 
@@ -21,7 +21,7 @@ export const useThemeStore = create(
 
       // Cycle through themes
       cycleTheme: () => {
-        const themes = ["classic", "dark", "pop", "portrait", "christmas"];
+        const themes = ["classic", "dark", "pop", "christmas"];
         const currentIndex = themes.indexOf(get().theme);
         const nextIndex = (currentIndex + 1) % themes.length;
         get().setTheme(themes[nextIndex]);

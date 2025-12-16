@@ -39,11 +39,6 @@ const Inquiry = () => {
                     primary: 'bg-[#635bff]',
                     secondary: 'bg-gray-700',
                 };
-            case 'portrait':
-                return {
-                    primary: 'bg-gradient-to-r from-[#FFB5C5] to-[#C5B5FF]',
-                    secondary: 'bg-pink-300',
-                };
             case 'classic':
                 return {
                     primary: 'bg-[#635bff]',
@@ -153,7 +148,7 @@ const Inquiry = () => {
                             hoverable={false}
                             className="inline-block px-4 py-2 rounded-xl mb-6"
                         >
-                            <h3 className={`text-lg font-black ${theme === 'portrait' || theme === 'dark' ? 'text-white' : 'text-black'}`}>
+                            <h3 className={`text-lg font-black ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
                                 문의하기
                             </h3>
                         </NeoCard>

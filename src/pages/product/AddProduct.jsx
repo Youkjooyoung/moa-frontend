@@ -14,9 +14,27 @@ import {
     DialogFooter,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { useThemeStore } from '@/store/themeStore';
+import { useTheme, ChristmasBackground } from '@/config/themeConfig';
 
 const AddProduct = () => {
     const navigate = useNavigate();
+    const { theme } = useThemeStore();
+    const { accentColor, bgColor, cardBg } = useTheme();
+
+    const getAccentColor = () => {
+        switch (theme) {
+            case 'classic':
+            case 'dark':
+                return '#635bff';
+            case 'pop':
+                return '#ec4899';
+            case 'christmas':
+                return '#c41e3a';
+            default:
+                return '#635bff';
+        }
+    };
 
     const {
         formData,
@@ -117,32 +135,47 @@ const AddProduct = () => {
         enabled: true
     });
 
+    const accent = getAccentColor();
+
     return (
-        <div className="container mx-auto px-4 py-12 max-w-2xl relative">
-            {/* 전체 화면 드래그 오버레이 */}
-            {isDragging && !selectedFile && (
-                <div className="fixed inset-0 z-50 bg-indigo-500/10 backdrop-blur-sm border-4 border-indigo-500 rounded-xl flex items-center justify-center m-4 pointer-events-none">
-                    <div className="bg-white p-8 rounded-3xl shadow-2xl flex flex-col items-center animate-bounce">
-                        <Upload className="w-16 h-16 text-indigo-600 mb-4" />
-                        <h3 className="text-2xl font-bold text-indigo-900">여기에 파일을 놓으세요</h3>
-                        <p className="text-indigo-600">이미지가 자동으로 업로드됩니다.</p>
+        <div className={`min-h-screen ${theme === 'christmas' ? '' : theme === 'dark' ? 'bg-[#0B1120]' : 'bg-stone-50'}`}>
+            {theme === 'christmas' && <ChristmasBackground />}
+            <div className="container mx-auto px-4 py-12 max-w-2xl relative">
+                {/* 전체 화면 드래그 오버레이 */}
+                {isDragging && !selectedFile && (
+                    <div className="fixed inset-0 z-50 backdrop-blur-sm border-4 rounded-xl flex items-center justify-center m-4 pointer-events-none"
+                        style={{
+                            backgroundColor: `${accent}1A`,
+                            borderColor: accent
+                        }}>
+                        <div className={`p-8 rounded-3xl shadow-2xl flex flex-col items-center animate-bounce ${theme === 'dark' ? 'bg-[#1E293B]' : 'bg-white'}`}>
+                            <Upload className="w-16 h-16 mb-4" style={{ color: accent }} />
+                            <h3 className={`text-2xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>여기에 파일을 놓으세요</h3>
+                            <p style={{ color: accent }}>이미지가 자동으로 업로드됩니다.</p>
+                        </div>
                     </div>
-                </div>
-            )}
+                )}
 
-            <h1 className="text-3xl font-bold mb-2 text-stone-900">새로운 구독 상품 등록</h1>
-            <p className="text-stone-500 mb-8">관리자 권한으로 새로운 구독 서비스를 등록합니다.</p>
+                <h1 className={`text-3xl font-bold mb-2 ${theme === 'dark' ? 'text-white' : 'text-stone-900'}`}>새로운 구독 상품 등록</h1>
+                <p className={`mb-8 ${theme === 'dark' ? 'text-gray-400' : 'text-stone-500'}`}>관리자 권한으로 새로운 구독 서비스를 등록합니다.</p>
 
-            <form onSubmit={handleSubmit} className="bg-white p-8 rounded-[2rem] border border-stone-200 shadow-xl space-y-8">
+                <form onSubmit={handleSubmit} className={`p-8 rounded-[2rem] shadow-xl space-y-8 ${theme === 'dark' ? 'bg-[#1E293B] border border-gray-700' : 'bg-white border border-stone-200'}`}>
                 {/* 상품명 */}
                 <div>
-                    <label className="block text-sm font-bold text-stone-700 mb-2">상품명 <span className="text-red-500">*</span></label>
+                    <label className={`block text-sm font-bold mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-stone-700'}`}>상품명 <span className="text-red-500">*</span></label>
                     <input
                         type="text"
                         name="productName"
                         value={formData.productName}
                         onChange={handleChange}
-                        className="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-3.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all font-medium"
+                        className={`w-full rounded-xl px-4 py-3.5 focus:ring-2 focus:border-transparent outline-none transition-all font-medium ${
+                            theme === 'dark'
+                                ? 'bg-[#0B1120] border border-gray-600 text-white focus:ring-opacity-50'
+                                : 'bg-stone-50 border border-stone-200 text-gray-900'
+                        }`}
+                        style={{
+                            '--tw-ring-color': accent
+                        } as React.CSSProperties}
                         placeholder="예: Netflix Premium"
                         required
                     />
@@ -151,13 +184,20 @@ const AddProduct = () => {
                 <div className="grid grid-cols-2 gap-6">
                     {/* 카테고리 */}
                     <div>
-                        <label className="block text-sm font-bold text-stone-700 mb-2">카테고리 <span className="text-red-500">*</span></label>
+                        <label className={`block text-sm font-bold mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-stone-700'}`}>카테고리 <span className="text-red-500">*</span></label>
                         <div className="relative">
                             <select
                                 name="categoryId"
                                 value={formData.categoryId}
                                 onChange={handleChange}
-                                className="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-3.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none appearance-none font-medium cursor-pointer"
+                                className={`w-full rounded-xl px-4 py-3.5 focus:ring-2 focus:border-transparent outline-none appearance-none font-medium cursor-pointer ${
+                                    theme === 'dark'
+                                        ? 'bg-[#0B1120] border border-gray-600 text-white'
+                                        : 'bg-stone-50 border border-stone-200 text-gray-900'
+                                }`}
+                                style={{
+                                    '--tw-ring-color': accent
+                                } as React.CSSProperties}
                                 required
                             >
                                 <option value="">선택하세요</option>
@@ -165,22 +205,29 @@ const AddProduct = () => {
                                     <option key={cat.categoryId} value={cat.categoryId}>{cat.categoryName}</option>
                                 ))}
                             </select>
-                            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-stone-500">
+                            <div className={`absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none ${theme === 'dark' ? 'text-gray-400' : 'text-stone-500'}`}>
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
                             </div>
                         </div>
                     </div>
                     {/* 가격 */}
                     <div>
-                        <label className="block text-sm font-bold text-stone-700 mb-2">가격 (월) <span className="text-red-500">*</span></label>
+                        <label className={`block text-sm font-bold mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-stone-700'}`}>가격 (월) <span className="text-red-500">*</span></label>
                         <div className="relative">
-                            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-500 font-bold">₩</span>
+                            <span className={`absolute left-4 top-1/2 -translate-y-1/2 font-bold ${theme === 'dark' ? 'text-gray-400' : 'text-stone-500'}`}>₩</span>
                             <input
                                 type="number"
                                 name="price"
                                 value={formData.price}
                                 onChange={handleChange}
-                                className="w-full bg-stone-50 border border-stone-200 rounded-xl pl-9 pr-4 py-3.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all font-bold"
+                                className={`w-full rounded-xl pl-9 pr-4 py-3.5 focus:ring-2 focus:border-transparent outline-none transition-all font-bold ${
+                                    theme === 'dark'
+                                        ? 'bg-[#0B1120] border border-gray-600 text-white'
+                                        : 'bg-stone-50 border border-stone-200 text-gray-900'
+                                }`}
+                                style={{
+                                    '--tw-ring-color': accent
+                                } as React.CSSProperties}
                                 placeholder="0"
                                 required
                             />
@@ -190,7 +237,7 @@ const AddProduct = () => {
 
                 {/* 이미지 업로드 */}
                 <div>
-                    <label className="block text-sm font-bold text-stone-700 mb-2">상품 이미지</label>
+                    <label className={`block text-sm font-bold mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-stone-700'}`}>상품 이미지</label>
                     <div className="space-y-4">
                         {!previewUrl ? (
                             <div className="relative group">
@@ -204,27 +251,48 @@ const AddProduct = () => {
                                 />
                                 <label
                                     htmlFor="image-upload"
-                                    className={`flex flex-col items-center justify-center w-full h-48 border-2 border-dashed rounded-2xl cursor-pointer transition-all group-hover:scale-[0.99]
-                                        ${isDragging
-                                            ? 'border-indigo-500 bg-indigo-50'
-                                            : 'border-stone-300 bg-stone-50 hover:bg-stone-100 hover:border-indigo-400'
-                                        }`}
+                                    className={`flex flex-col items-center justify-center w-full h-48 border-2 border-dashed rounded-2xl cursor-pointer transition-all group-hover:scale-[0.99] ${
+                                        theme === 'dark'
+                                            ? isDragging
+                                                ? 'bg-opacity-20'
+                                                : 'border-gray-600 bg-[#0B1120] hover:bg-gray-800/50'
+                                            : isDragging
+                                                ? 'bg-opacity-20'
+                                                : 'border-stone-300 bg-stone-50 hover:bg-stone-100'
+                                    }`}
+                                    style={{
+                                        borderColor: isDragging ? accent : undefined,
+                                        backgroundColor: isDragging ? `${accent}20` : undefined
+                                    }}
                                 >
                                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                        <div className={`w-12 h-12 rounded-full shadow-sm flex items-center justify-center mb-3 transition-colors ${isDragging ? 'bg-indigo-100' : 'bg-white'}`}>
-                                            <Upload className={`w-6 h-6 ${isDragging ? 'text-indigo-600' : 'text-indigo-500'}`} />
+                                        <div className={`w-12 h-12 rounded-full shadow-sm flex items-center justify-center mb-3 transition-colors ${
+                                            theme === 'dark'
+                                                ? isDragging ? 'bg-opacity-30' : 'bg-gray-800'
+                                                : isDragging ? 'bg-opacity-30' : 'bg-white'
+                                        }`}
+                                        style={{
+                                            backgroundColor: isDragging ? `${accent}30` : undefined
+                                        }}>
+                                            <Upload className="w-6 h-6" style={{ color: isDragging ? accent : theme === 'dark' ? '#9CA3AF' : accent }} />
                                         </div>
-                                        <p className="mb-2 text-sm text-stone-600 font-bold"><span className="text-indigo-600">클릭하여 업로드</span> 또는 파일 놓기</p>
-                                        <p className="text-xs text-stone-400">PNG, JPG, GIF (MAX. 10MB)</p>
+                                        <p className={`mb-2 text-sm font-bold ${theme === 'dark' ? 'text-gray-300' : 'text-stone-600'}`}>
+                                            <span style={{ color: accent }}>클릭하여 업로드</span> 또는 파일 놓기
+                                        </p>
+                                        <p className={`text-xs ${theme === 'dark' ? 'text-gray-500' : 'text-stone-400'}`}>PNG, JPG, GIF (MAX. 10MB)</p>
                                     </div>
                                 </label>
                             </div>
                         ) : (
-                            <div className="relative w-full h-64 bg-stone-100 rounded-2xl overflow-hidden group border border-stone-200 shadow-sm">
+                            <div className={`relative w-full h-64 rounded-2xl overflow-hidden group shadow-sm ${
+                                theme === 'dark'
+                                    ? 'bg-gray-800 border border-gray-600'
+                                    : 'bg-stone-100 border border-stone-200'
+                            }`}>
                                 <img
                                     src={previewUrl}
                                     alt="Preview"
-                                    className="w-full h-full object-contain bg-stone-50"
+                                    className={`w-full h-full object-contain ${theme === 'dark' ? 'bg-[#0B1120]' : 'bg-stone-50'}`}
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex flex-col justify-end p-6">
                                     <div className="text-white">
@@ -237,7 +305,11 @@ const AddProduct = () => {
                                 <button
                                     type="button"
                                     onClick={() => handleRemoveImage('image-upload')}
-                                    className="absolute top-4 right-4 p-2.5 bg-white/90 hover:bg-white text-stone-700 rounded-xl shadow-lg backdrop-blur-sm transition-all hover:scale-105 active:scale-95"
+                                    className={`absolute top-4 right-4 p-2.5 rounded-xl shadow-lg backdrop-blur-sm transition-all hover:scale-105 active:scale-95 ${
+                                        theme === 'dark'
+                                            ? 'bg-gray-700/90 hover:bg-gray-600 text-white'
+                                            : 'bg-white/90 hover:bg-white text-stone-700'
+                                    }`}
                                 >
                                     <X className="w-5 h-5" />
                                 </button>
@@ -246,15 +318,29 @@ const AddProduct = () => {
                     </div>
                 </div>
 
-                <div className="pt-6 border-t border-stone-100">
+                <div className={`pt-6 border-t ${theme === 'dark' ? 'border-gray-700' : 'border-stone-100'}`}>
                     <button
                         type="submit"
                         disabled={loading}
-                        className={`w-full py-4 rounded-xl font-bold text-lg text-white shadow-lg shadow-indigo-200 transition-all transform active:scale-[0.98] flex items-center justify-center gap-2
+                        className={`w-full py-4 rounded-xl font-bold text-lg text-white shadow-lg transition-all transform active:scale-[0.98] flex items-center justify-center gap-2
                             ${loading
                                 ? 'bg-stone-400 cursor-not-allowed'
-                                : 'bg-indigo-600 hover:bg-indigo-700 hover:shadow-indigo-300'
+                                : ''
                             }`}
+                        style={{
+                            backgroundColor: loading ? undefined : accent,
+                            boxShadow: loading ? undefined : `0 10px 15px -3px ${accent}33`
+                        }}
+                        onMouseEnter={(e) => {
+                            if (!loading) {
+                                e.currentTarget.style.filter = 'brightness(0.9)';
+                            }
+                        }}
+                        onMouseLeave={(e) => {
+                            if (!loading) {
+                                e.currentTarget.style.filter = 'brightness(1)';
+                            }
+                        }}
                     >
                         {loading ? (
                             <>
@@ -268,7 +354,11 @@ const AddProduct = () => {
                     <button
                         type="button"
                         onClick={() => navigate('/product')}
-                        className="w-full mt-3 py-4 rounded-xl font-bold text-stone-500 hover:bg-stone-100 transition-colors"
+                        className={`w-full mt-3 py-4 rounded-xl font-bold transition-colors ${
+                            theme === 'dark'
+                                ? 'text-gray-400 hover:bg-gray-800'
+                                : 'text-stone-500 hover:bg-stone-100'
+                        }`}
                     >
                         취소
                     </button>
@@ -277,10 +367,10 @@ const AddProduct = () => {
 
             {/* 커스텀 알림 모달 */}
             <Dialog open={alertInfo.isOpen} onOpenChange={(open) => !open && setAlertInfo(prev => ({ ...prev, isOpen: false }))}>
-                <DialogContent className="sm:max-w-md bg-white rounded-2xl">
+                <DialogContent className={`sm:max-w-md rounded-2xl ${theme === 'dark' ? 'bg-[#1E293B] border-gray-700' : 'bg-white'}`}>
                     <DialogHeader>
-                        <DialogTitle>{alertInfo.title}</DialogTitle>
-                        <DialogDescription>
+                        <DialogTitle className={theme === 'dark' ? 'text-white' : ''}>{alertInfo.title}</DialogTitle>
+                        <DialogDescription className={theme === 'dark' ? 'text-gray-400' : ''}>
                             {alertInfo.message}
                         </DialogDescription>
                     </DialogHeader>
@@ -291,13 +381,17 @@ const AddProduct = () => {
                                 setAlertInfo(prev => ({ ...prev, isOpen: false }));
                                 if (alertInfo.onConfirm) alertInfo.onConfirm();
                             }}
-                            className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl"
+                            className="text-white rounded-xl"
+                            style={{ backgroundColor: accent }}
+                            onMouseEnter={(e) => e.currentTarget.style.filter = 'brightness(0.9)'}
+                            onMouseLeave={(e) => e.currentTarget.style.filter = 'brightness(1)'}
                         >
                             확인
                         </Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
+            </div>
         </div>
     );
 };

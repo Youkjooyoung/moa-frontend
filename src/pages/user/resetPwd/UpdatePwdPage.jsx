@@ -46,18 +46,6 @@ const getThemeStyles = (theme) => {
         highlight: 'text-[#635bff]',
         stepBg: 'bg-[#635bff]',
       };
-    case 'portrait':
-      return {
-        bg: 'bg-gradient-to-br from-[#FDF8F3] via-[#FFF5F7] to-[#F5F0FF]',
-        text: 'text-gray-900',
-        subtext: 'text-gray-500',
-        card: 'bg-white/80 backdrop-blur-sm border border-pink-200 rounded-3xl shadow-[4px_4px_12px_rgba(255,181,197,0.2)]',
-        section: 'bg-white/80 backdrop-blur-sm border border-pink-200 rounded-2xl shadow-[4px_4px_12px_rgba(255,181,197,0.15)]',
-        input: 'bg-white/60 border border-pink-200 rounded-2xl shadow-[4px_4px_12px_rgba(255,181,197,0.1)] text-gray-900',
-        button: 'bg-gradient-to-r from-[#FFB5C5] to-[#C5B5FF] text-white hover:opacity-90 border-transparent',
-        highlight: 'text-pink-500',
-        stepBg: 'bg-pink-500',
-      };
     case 'pop':
       return {
         bg: 'bg-slate-50',

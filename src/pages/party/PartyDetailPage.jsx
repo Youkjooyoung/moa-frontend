@@ -7,7 +7,6 @@ import { requestPayment } from "../../utils/paymentHandler";
 import LeavePartyWarningModal from "../../components/party/LeavePartyWarningModal";
 import UpdateOttModal from "../../components/party/UpdateOttModal";
 import RippleButton from "../../components/party/RippleButton";
-import { useConfetti } from "../../components/party/SuccessConfetti";
 import { fetchPartyMembers, leaveParty } from "../../hooks/party/partyService";
 import {
   useTheme,
@@ -29,16 +28,28 @@ import {
   Sparkles,
   TrendingDown,
   Shield,
-  ArrowRight
+  ArrowRight,
+  CreditCard
 } from "lucide-react";
 
 export default function PartyDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user } = useAuthStore();
+  const { user, fetchSession } = useAuthStore();
 
   // Theme
   const { theme, setTheme, currentTheme } = useTheme("appTheme");
+
+  // 테마별 악센트 색상
+  const getAccentColor = () => {
+    switch (theme) {
+      case "christmas": return "#c41e3a";
+      case "pop": return "#ec4899";
+      case "dark": return "#635bff";
+      default: return "#635bff";
+    }
+  };
+  const accentColor = getAccentColor();
 
   // Zustand Store
   const {
@@ -52,11 +63,14 @@ export default function PartyDetailPage() {
   const [isOttModalOpen, setIsOttModalOpen] = useState(false);
   const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
   const [showOttInfo, setShowOttInfo] = useState(false);
-  const { triggerConfetti, ConfettiComponent } = useConfetti();
 
   useEffect(() => {
     loadPartyDetail(id);
     loadMembers();
+    // 사용자 정보 갱신 (빌링키 등록 여부 최신 상태 반영)
+    if (user) {
+      fetchSession();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
@@ -276,7 +290,8 @@ export default function PartyDetailPage() {
                       initial={{ width: 0 }}
                       animate={{ width: `${(party.currentMembers / party.maxMembers) * 100}%` }}
                       transition={{ duration: 0.8, ease: "easeOut" }}
-                      className="h-full bg-gradient-to-r from-[#635bff] to-[#00d4ff] rounded-full"
+                      className="h-full rounded-full"
+                      style={{ background: `linear-gradient(to right, ${accentColor}, ${accentColor}99)` }}
                     />
                   </div>
                 </motion.div>
@@ -359,7 +374,8 @@ export default function PartyDetailPage() {
                   whileHover={{ scale: 1.02, y: -1 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => setIsJoinModalOpen(true)}
-                  className="w-full py-3.5 bg-[#635bff] hover:bg-[#5851e8] text-white rounded-full font-semibold shadow-lg shadow-[#635bff]/25 transition-all flex items-center justify-center gap-2"
+                  className={`w-full py-3.5 text-white rounded-full font-semibold transition-all flex items-center justify-center gap-2 ${currentTheme.accentBg}`}
+                  style={{ boxShadow: `0 10px 15px -3px ${accentColor}40` }}
                 >
                   <Sparkles className="w-4 h-4" />
                   파티 가입하기
@@ -396,65 +412,137 @@ export default function PartyDetailPage() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-gradient-to-br from-[#635bff]/5 to-[#00d4ff]/5 rounded-2xl p-6 border border-[#635bff]/10"
+                className={`rounded-2xl p-6 border ${theme === "christmas"
+                  ? "bg-gradient-to-br from-red-50 to-green-50 border-red-200"
+                  : theme === "pop"
+                    ? "bg-gradient-to-br from-pink-50 to-purple-50 border-pink-200"
+                    : theme === "dark"
+                      ? "bg-gradient-to-br from-gray-800 to-gray-900 border-gray-700"
+                      : "bg-gradient-to-br from-[#635bff]/5 to-[#00d4ff]/5 border-[#635bff]/10"
+                  }`}
               >
                 <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
-                    <Lock className="w-5 h-5 text-[#635bff]" />
+                  <h2 className={`text-lg font-bold flex items-center gap-2 ${theme === "dark" ? "text-white" : "text-gray-900"
+                    }`}>
+                    <Lock className="w-5 h-5" style={{ color: accentColor }} />
                     계정 정보
                   </h2>
                   {isLeader && (
                     <button
                       onClick={() => setIsOttModalOpen(true)}
-                      className="text-xs bg-white hover:bg-gray-50 text-[#635bff] px-4 py-2 rounded-full border border-[#635bff]/20 transition font-semibold"
+                      className={`text-xs px-4 py-2 rounded-full border transition font-semibold ${theme === "dark"
+                        ? "bg-gray-700 hover:bg-gray-600 text-white border-gray-600"
+                        : "bg-white hover:bg-gray-50 border-gray-200"
+                        }`}
+                      style={{ color: theme === "dark" ? "#fff" : accentColor }}
                     >
                       수정
                     </button>
                   )}
                 </div>
 
-                <div className="space-y-3 mb-4">
-                  <div className="bg-white/80 backdrop-blur-sm p-4 rounded-xl border border-gray-100 flex justify-between items-center">
-                    <span className="text-sm text-gray-600 font-medium">아이디</span>
-                    <div className="font-mono font-semibold text-gray-900">
-                      {showOttInfo ? (
-                        party.ottId || <span className="text-gray-400 italic">미등록</span>
-                      ) : (
-                        <span className="blur-sm select-none">user@example.com</span>
-                      )}
+                {/* 빌링키 미등록 멤버(비방장)에게 카드 등록 안내 */}
+                {isMember && !isLeader && !user?.hasBillingKey ? (
+                  <div className="text-center py-8">
+                    <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full mb-4 ${theme === "christmas"
+                      ? "bg-red-100"
+                      : theme === "pop"
+                        ? "bg-pink-100"
+                        : theme === "dark"
+                          ? "bg-gray-700"
+                          : "bg-[#635bff]/10"
+                      }`}>
+                      <CreditCard className="w-8 h-8" style={{ color: accentColor }} />
                     </div>
+                    <h3 className={`text-lg font-bold mb-2 ${theme === "dark" ? "text-white" : "text-gray-900"
+                      }`}>
+                      🔒 카드 등록 후 확인 가능
+                    </h3>
+                    <p className={`text-sm mb-6 ${theme === "dark" ? "text-gray-400" : "text-gray-500"
+                      }`}>
+                      정기결제를 위해 카드를 등록하면<br />
+                      OTT 계정 정보를 확인할 수 있어요
+                    </p>
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => {
+                        localStorage.setItem("afterBillingRedirect", `/party/${id}`);
+                        localStorage.setItem("billingRegistrationReason", "party_join");
+                        navigate("/payment/billing/register");
+                      }}
+                      className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-bold text-white transition-all shadow-lg"
+                      style={{
+                        backgroundColor: accentColor,
+                        boxShadow: `0 4px 14px ${accentColor}40`
+                      }}
+                    >
+                      <CreditCard className="w-5 h-5" />
+                      카드 등록하기
+                      <ArrowRight className="w-4 h-4" />
+                    </motion.button>
                   </div>
+                ) : (
+                  /* 방장 또는 빌링키 등록된 멤버 - 정상 OTT 정보 표시 */
+                  <>
+                    <div className="space-y-3 mb-4">
+                      <div className={`backdrop-blur-sm p-4 rounded-xl border flex justify-between items-center ${theme === "dark"
+                        ? "bg-gray-700/50 border-gray-600"
+                        : "bg-white/80 border-gray-100"
+                        }`}>
+                        <span className={`text-sm font-medium ${theme === "dark" ? "text-gray-300" : "text-gray-600"
+                          }`}>아이디</span>
+                        <div className={`font-mono font-semibold ${theme === "dark" ? "text-white" : "text-gray-900"
+                          }`}>
+                          {showOttInfo ? (
+                            party.ottId || <span className="text-gray-400 italic">미등록</span>
+                          ) : (
+                            <span className="blur-sm select-none">user@example.com</span>
+                          )}
+                        </div>
+                      </div>
 
-                  <div className="bg-white/80 backdrop-blur-sm p-4 rounded-xl border border-gray-100 flex justify-between items-center">
-                    <span className="text-sm text-gray-600 font-medium">비밀번호</span>
-                    <div className="font-mono font-semibold text-gray-900">
-                      {showOttInfo ? (
-                        party.ottPassword || <span className="text-gray-400 italic">미등록</span>
-                      ) : (
-                        <span className="blur-sm select-none">••••••••••</span>
-                      )}
+                      <div className={`backdrop-blur-sm p-4 rounded-xl border flex justify-between items-center ${theme === "dark"
+                        ? "bg-gray-700/50 border-gray-600"
+                        : "bg-white/80 border-gray-100"
+                        }`}>
+                        <span className={`text-sm font-medium ${theme === "dark" ? "text-gray-300" : "text-gray-600"
+                          }`}>비밀번호</span>
+                        <div className={`font-mono font-semibold ${theme === "dark" ? "text-white" : "text-gray-900"
+                          }`}>
+                          {showOttInfo ? (
+                            party.ottPassword || <span className="text-gray-400 italic">미등록</span>
+                          ) : (
+                            <span className="blur-sm select-none">••••••••••</span>
+                          )}
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
 
-                <motion.button
-                  whileHover={{ scale: 1.01 }}
-                  whileTap={{ scale: 0.99 }}
-                  onClick={() => setShowOttInfo(!showOttInfo)}
-                  className="w-full py-3 bg-white hover:bg-gray-50 text-[#635bff] border border-[#635bff]/20 rounded-xl font-semibold transition-all flex items-center justify-center gap-2"
-                >
-                  {showOttInfo ? (
-                    <>
-                      <EyeOff className="w-4 h-4" />
-                      정보 숨기기
-                    </>
-                  ) : (
-                    <>
-                      <Eye className="w-4 h-4" />
-                      정보 보기
-                    </>
-                  )}
-                </motion.button>
+                    <motion.button
+                      whileHover={{ scale: 1.01 }}
+                      whileTap={{ scale: 0.99 }}
+                      onClick={() => setShowOttInfo(!showOttInfo)}
+                      className={`w-full py-3 rounded-xl font-semibold transition-all flex items-center justify-center gap-2 border ${theme === "dark"
+                        ? "bg-gray-700 hover:bg-gray-600 text-white border-gray-600"
+                        : "bg-white hover:bg-gray-50 border-gray-200"
+                        }`}
+                      style={{ color: theme === "dark" ? "#fff" : accentColor }}
+                    >
+                      {showOttInfo ? (
+                        <>
+                          <EyeOff className="w-4 h-4" />
+                          정보 숨기기
+                        </>
+                      ) : (
+                        <>
+                          <Eye className="w-4 h-4" />
+                          정보 보기
+                        </>
+                      )}
+                    </motion.button>
+                  </>
+                )}
               </motion.div>
             )}
 
@@ -571,34 +659,77 @@ export default function PartyDetailPage() {
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
-              className="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl"
+              className={`rounded-2xl p-6 max-w-md w-full shadow-2xl ${theme === "dark" ? "bg-[#1E293B]" : "bg-white"}`}
             >
-              <h3 className="text-2xl font-black text-gray-900 mb-2 text-center">
-                파티 가입 확인
+              {/* Step Indicator */}
+              <div className="flex items-center justify-center gap-2 mb-6">
+                <div className="flex items-center gap-2">
+                  <div
+                    className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold"
+                    style={{ backgroundColor: accentColor }}
+                  >
+                    1
+                  </div>
+                  <span className="text-sm font-semibold" style={{ color: accentColor }}>결제</span>
+                </div>
+                <div className={`w-8 h-0.5 ${theme === "dark" ? "bg-gray-600" : "bg-gray-200"}`} />
+                <div className="flex items-center gap-2">
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${theme === "dark" ? "bg-gray-700 text-gray-400" : "bg-gray-200 text-gray-500"}`}>
+                    2
+                  </div>
+                  <span className={`text-sm ${theme === "dark" ? "text-gray-500" : "text-gray-400"}`}>카드 등록</span>
+                </div>
+              </div>
+
+              <h3 className={`text-xl font-bold mb-1 text-center ${currentTheme.text}`}>
+                파티 가입
               </h3>
-              <p className="text-gray-500 text-center mb-6">
-                결제 정보를 확인해주세요
+              <p className={`text-sm text-center mb-5 ${currentTheme.subtext}`}>
+                결제 후 자동결제를 위한 카드 등록이 진행됩니다
               </p>
 
-              <div className="space-y-3 mb-6">
-                <div className="bg-gray-50 p-4 rounded-xl flex justify-between items-center border border-gray-100">
-                  <span className="text-sm text-gray-600">보증금 + 첫달 구독료</span>
-                  <span className="font-bold text-[#635bff]">
-                    {(perPersonFee * 2).toLocaleString()}원
-                  </span>
+              {/* Payment Breakdown */}
+              <div className={`rounded-xl p-4 mb-4 ${theme === "dark" ? "bg-gray-800/50" : "bg-gray-50"}`}>
+                <p className={`text-xs font-semibold mb-3 ${currentTheme.subtext}`}>💳 첫 결제 금액</p>
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-2">
+                      <span className={`text-sm ${currentTheme.text}`}>보증금</span>
+                      <span className={`text-xs px-1.5 py-0.5 rounded ${theme === "dark" ? "bg-emerald-900/50 text-emerald-400" : "bg-emerald-100 text-emerald-600"}`}>
+                        환불가능
+                      </span>
+                    </div>
+                    <span className={`font-semibold ${currentTheme.text}`}>{perPersonFee.toLocaleString()}원</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className={`text-sm ${currentTheme.text}`}>첫달 구독료</span>
+                    <span className={`font-semibold ${currentTheme.text}`}>{perPersonFee.toLocaleString()}원</span>
+                  </div>
+                  <div className={`border-t pt-2 mt-2 ${theme === "dark" ? "border-gray-700" : "border-gray-200"}`}>
+                    <div className="flex justify-between items-center">
+                      <span className={`text-sm font-bold ${currentTheme.text}`}>합계</span>
+                      <span className="text-lg font-bold" style={{ color: accentColor }}>
+                        {(perPersonFee * 2).toLocaleString()}원
+                      </span>
+                    </div>
+                  </div>
                 </div>
-                <div className="bg-gray-50 p-4 rounded-xl flex justify-between items-center border border-gray-100">
-                  <span className="text-sm text-gray-600">월 정기결제</span>
-                  <span className="font-bold text-gray-900">
-                    {perPersonFee.toLocaleString()}원
-                  </span>
-                </div>
+              </div>
+
+              {/* Recurring Payment Info */}
+              <div className={`rounded-xl p-4 mb-5 border ${theme === "dark" ? "bg-[#635bff]/10 border-[#635bff]/20" : "bg-blue-50 border-blue-100"}`}>
+                <p className={`text-xs font-semibold mb-2 ${theme === "dark" ? "text-[#635bff]" : "text-blue-600"}`}>📅 정기결제 안내</p>
+                <ul className={`text-xs space-y-1 ${theme === "dark" ? "text-gray-300" : "text-gray-600"}`}>
+                  <li>• 매월 자동결제: <span className="font-semibold">{perPersonFee.toLocaleString()}원</span></li>
+                  <li>• 파티 탈퇴 시 보증금은 전액 환불됩니다</li>
+                  <li>• 카드는 마이페이지에서 변경 가능합니다</li>
+                </ul>
               </div>
 
               <div className="flex gap-3">
                 <button
                   onClick={() => setIsJoinModalOpen(false)}
-                  className="flex-1 py-3.5 font-semibold text-gray-500 hover:text-gray-700 hover:bg-gray-50 rounded-full transition-all"
+                  className={`flex-1 py-3 font-semibold rounded-full transition-all ${theme === "dark" ? "bg-gray-700 text-gray-300 hover:bg-gray-600" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}
                 >
                   취소
                 </button>
@@ -607,21 +738,18 @@ export default function PartyDetailPage() {
                   whileTap={{ scale: 0.98 }}
                   onClick={() => {
                     setIsJoinModalOpen(false);
-                    triggerConfetti();
                     handleJoin();
                   }}
-                  className="flex-1 py-3.5 bg-[#635bff] hover:bg-[#5851e8] text-white rounded-full font-semibold shadow-lg shadow-[#635bff]/25 transition-all"
+                  className={`flex-1 py-3 text-white rounded-full font-semibold transition-all ${currentTheme.accentBg}`}
+                  style={{ boxShadow: `0 8px 16px -4px ${accentColor}40` }}
                 >
-                  가입하기
+                  결제하기 →
                 </motion.button>
               </div>
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* Confetti Effect */}
-      <ConfettiComponent />
     </div>
   );
 }

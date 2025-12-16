@@ -32,16 +32,6 @@ const InquiryForm = ({ formData, setFormData, imagePreview, setImageFile, setIma
                     textColor: 'text-gray-200',
                     inputBg: 'bg-[#0F172A] border-gray-700',
                 };
-            case 'portrait':
-                return {
-                    focusRing: 'focus:ring-pink-400',
-                    fileButton: 'file:bg-gradient-to-r file:from-[#FFB5C5] file:to-[#C5B5FF]',
-                    removeButton: 'bg-pink-500 hover:bg-pink-600',
-                    submitButton: 'bg-gradient-to-r from-[#FFB5C5] to-[#C5B5FF]',
-                    cardBg: 'bg-white',
-                    textColor: 'text-black',
-                    inputBg: 'bg-white border-gray-200',
-                };
             case 'classic':
                 return {
                     focusRing: 'focus:ring-[#635bff]',

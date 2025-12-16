@@ -2,6 +2,8 @@ import React, { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAdminDashboard } from "@/hooks/admin/useAdminDashboard";
+import { useThemeStore } from "@/store/themeStore";
+import { ChristmasBackground } from "@/config/themeConfig";
 import {
     Loader2,
     DollarSign,
@@ -69,7 +71,7 @@ const GridPattern = () => (
 );
 
 // Period Filter Component
-const PeriodFilter = ({ selected, onChange }) => {
+const PeriodFilter = ({ selected, onChange, theme }) => {
     const options = [
         { value: "today", label: "오늘" },
         { value: "7days", label: "7일" },
@@ -77,15 +79,20 @@ const PeriodFilter = ({ selected, onChange }) => {
         { value: "all", label: "전체" },
     ];
 
+    const bgClass = theme === 'dark' ? 'bg-[#1E293B]' : 'bg-white';
+    const borderClass = theme === 'dark' ? 'border-gray-700' : 'border-gray-200';
+    const textClass = theme === 'dark' ? 'text-gray-300' : 'text-gray-600';
+    const hoverClass = theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-100';
+
     return (
-        <div className="flex items-center gap-2 bg-white rounded-xl border border-gray-200 p-1">
+        <div className={`flex items-center gap-2 ${bgClass} rounded-xl border ${borderClass} p-1`}>
             {options.map((opt) => (
                 <button
                     key={opt.value}
                     onClick={() => onChange(opt.value)}
                     className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${selected === opt.value
                         ? "bg-[#635bff] text-white shadow-md"
-                        : "text-gray-600 hover:bg-gray-100"
+                        : `${textClass} ${hoverClass}`
                         }`}
                 >
                     {opt.label}
@@ -96,39 +103,47 @@ const PeriodFilter = ({ selected, onChange }) => {
 };
 
 // Enhanced Stat Card with Trend
-const StatCard = ({ icon: Icon, title, value, subtitle, color, trend, delay = 0 }) => (
-    <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay }}
-        whileHover={{ y: -4, transition: { duration: 0.2 } }}
-        className="group relative bg-white rounded-2xl border border-gray-100 p-5 shadow-sm hover:shadow-xl hover:border-gray-200 transition-all duration-300 overflow-hidden"
-    >
-        <div
-            className="absolute top-0 right-0 w-32 h-32 rounded-full opacity-10 -translate-y-1/2 translate-x-1/2 transition-transform duration-300 group-hover:scale-150"
-            style={{ background: color }}
-        />
-        <div className="relative">
-            <div className="flex items-center justify-between mb-3">
-                <div
-                    className="w-11 h-11 rounded-xl flex items-center justify-center transition-transform duration-300 group-hover:scale-110"
-                    style={{ background: `${color}15` }}
-                >
-                    <Icon className="w-5 h-5" style={{ color }} />
-                </div>
-                {trend !== undefined && (
-                    <div className={`flex items-center gap-1 text-sm font-bold ${trend >= 0 ? 'text-emerald-600' : 'text-red-500'}`}>
-                        {trend >= 0 ? <TrendingUp className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />}
-                        <span>{Math.abs(trend)}%</span>
+const StatCard = ({ icon: Icon, title, value, subtitle, color, trend, delay = 0, theme }) => {
+    const bgClass = theme === 'dark' ? 'bg-[#1E293B]' : 'bg-white';
+    const borderClass = theme === 'dark' ? 'border-gray-700 hover:border-gray-600' : 'border-gray-100 hover:border-gray-200';
+    const titleClass = theme === 'dark' ? 'text-gray-400' : 'text-gray-500';
+    const valueClass = theme === 'dark' ? 'text-white' : 'text-gray-900';
+    const subtitleClass = theme === 'dark' ? 'text-gray-500' : 'text-gray-400';
+
+    return (
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay }}
+            whileHover={{ y: -4, transition: { duration: 0.2 } }}
+            className={`group relative ${bgClass} rounded-2xl border ${borderClass} p-5 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden`}
+        >
+            <div
+                className="absolute top-0 right-0 w-32 h-32 rounded-full opacity-10 -translate-y-1/2 translate-x-1/2 transition-transform duration-300 group-hover:scale-150"
+                style={{ background: color }}
+            />
+            <div className="relative">
+                <div className="flex items-center justify-between mb-3">
+                    <div
+                        className="w-11 h-11 rounded-xl flex items-center justify-center transition-transform duration-300 group-hover:scale-110"
+                        style={{ background: `${color}15` }}
+                    >
+                        <Icon className="w-5 h-5" style={{ color }} />
                     </div>
-                )}
+                    {trend !== undefined && (
+                        <div className={`flex items-center gap-1 text-sm font-bold ${trend >= 0 ? 'text-emerald-600' : 'text-red-500'}`}>
+                            {trend >= 0 ? <TrendingUp className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />}
+                            <span>{Math.abs(trend)}%</span>
+                        </div>
+                    )}
+                </div>
+                <div className={`text-sm font-medium ${titleClass} mb-1`}>{title}</div>
+                <div className={`text-xl font-black ${valueClass}`}>{value}</div>
+                {subtitle && <div className={`text-xs ${subtitleClass} mt-1`}>{subtitle}</div>}
             </div>
-            <div className="text-sm font-medium text-gray-500 mb-1">{title}</div>
-            <div className="text-xl font-black text-gray-900">{value}</div>
-            {subtitle && <div className="text-xs text-gray-400 mt-1">{subtitle}</div>}
-        </div>
-    </motion.div>
-);
+        </motion.div>
+    );
+};
 
 // Alert Item Component
 const AlertItem = ({ type, title, message, time }) => {
@@ -157,26 +172,32 @@ const AlertItem = ({ type, title, message, time }) => {
 };
 
 // Quick Action Button
-const QuickActionButton = ({ icon: Icon, label, to, color, delay = 0 }) => (
-    <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.3, delay }}
-    >
-        <Link
-            to={to}
-            className="group flex flex-col items-center gap-2 p-4 bg-white rounded-2xl border border-gray-100 hover:border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300"
+const QuickActionButton = ({ icon: Icon, label, to, color, delay = 0, theme }) => {
+    const bgClass = theme === 'dark' ? 'bg-[#1E293B]' : 'bg-white';
+    const borderClass = theme === 'dark' ? 'border-gray-700 hover:border-gray-600' : 'border-gray-100 hover:border-gray-200';
+    const textClass = theme === 'dark' ? 'text-gray-300' : 'text-gray-700';
+
+    return (
+        <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3, delay }}
         >
-            <div
-                className="w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-110"
-                style={{ background: `${color}15` }}
+            <Link
+                to={to}
+                className={`group flex flex-col items-center gap-2 p-4 ${bgClass} rounded-2xl border ${borderClass} shadow-sm hover:shadow-lg transition-all duration-300`}
             >
-                <Icon className="w-6 h-6" style={{ color }} />
-            </div>
-            <span className="text-sm font-medium text-gray-700">{label}</span>
-        </Link>
-    </motion.div>
-);
+                <div
+                    className="w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-110"
+                    style={{ background: `${color}15` }}
+                >
+                    <Icon className="w-6 h-6" style={{ color }} />
+                </div>
+                <span className={`text-sm font-medium ${textClass}`}>{label}</span>
+            </Link>
+        </motion.div>
+    );
+};
 
 // OTT Service Stats with Progress
 const OttServiceStats = ({ stats }) => {
@@ -230,6 +251,7 @@ const OttServiceStats = ({ stats }) => {
 
 export default function AdminDashboardPage() {
     const { stats, loading, error } = useAdminDashboard();
+    const { theme } = useThemeStore();
     const [period, setPeriod] = useState("7days");
     const [searchQuery, setSearchQuery] = useState("");
 
@@ -240,9 +262,12 @@ export default function AdminDashboardPage() {
         { type: "info", title: "신규 가입", message: "오늘 신규 가입자 15명", time: "3시간 전" },
     ], []);
 
+    const mainBgClass = theme === 'dark' ? 'bg-[#0B1120]' : theme === 'christmas' ? 'bg-transparent' : 'bg-gray-50';
+
     if (loading) {
         return (
-            <div className="min-h-screen bg-gray-50 flex justify-center items-center">
+            <div className={`min-h-screen ${mainBgClass} flex justify-center items-center`}>
+                {theme === 'christmas' && <ChristmasBackground />}
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -256,16 +281,21 @@ export default function AdminDashboardPage() {
     }
 
     if (error) {
+        const errorBgClass = theme === 'dark' ? 'bg-[#1E293B]' : 'bg-white';
+        const errorTextClass = theme === 'dark' ? 'text-white' : 'text-gray-900';
+        const errorSubtextClass = theme === 'dark' ? 'text-gray-300' : 'text-gray-500';
+
         return (
-            <div className="min-h-screen bg-gray-50 flex justify-center items-center">
+            <div className={`min-h-screen ${mainBgClass} flex justify-center items-center`}>
+                {theme === 'christmas' && <ChristmasBackground />}
                 <motion.div
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    className="text-center p-8 bg-white rounded-2xl shadow-lg border border-red-100"
+                    className={`text-center p-8 ${errorBgClass} rounded-2xl shadow-lg border border-red-100`}
                 >
                     <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
-                    <h2 className="text-xl font-bold text-gray-900 mb-2">데이터 로드 실패</h2>
-                    <p className="text-gray-500">통계 데이터를 불러오는데 실패했습니다.</p>
+                    <h2 className={`text-xl font-bold ${errorTextClass} mb-2`}>데이터 로드 실패</h2>
+                    <p className={errorSubtextClass}>통계 데이터를 불러오는데 실패했습니다.</p>
                 </motion.div>
             </div>
         );
@@ -358,10 +388,18 @@ export default function AdminDashboardPage() {
 
     const goalPercentage = Math.min(100, Math.round(((stats.thisMonthRevenue || 0) / 10000000) * 100));
 
+    const cardBgClass = theme === 'dark' ? 'bg-[#1E293B]' : 'bg-white';
+    const cardBorderClass = theme === 'dark' ? 'border-gray-700' : 'border-gray-100';
+    const titleClass = theme === 'dark' ? 'text-white' : 'text-gray-900';
+    const subtitleClass = theme === 'dark' ? 'text-gray-400' : 'text-gray-500';
+    const inputBgClass = theme === 'dark' ? 'bg-[#0B1120] text-white' : 'bg-white text-gray-900';
+    const inputBorderClass = theme === 'dark' ? 'border-gray-700' : 'border-gray-200';
+
     return (
-        <div className="min-h-screen bg-gray-50 relative">
-            <AnimatedGradient />
-            <GridPattern />
+        <div className={`min-h-screen ${mainBgClass} relative`}>
+            {theme === 'christmas' && <ChristmasBackground />}
+            {theme !== 'dark' && theme !== 'christmas' && <AnimatedGradient />}
+            {theme !== 'dark' && theme !== 'christmas' && <GridPattern />}
 
             <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 {/* Header with Search and Period Filter */}
@@ -376,8 +414,8 @@ export default function AdminDashboardPage() {
                                 <BarChart3 className="w-5 h-5 text-white" />
                             </div>
                             <div>
-                                <h1 className="text-2xl md:text-3xl font-black text-gray-900">관리자 대시보드</h1>
-                                <p className="text-gray-500 text-sm">서비스 현황을 한눈에 확인하세요</p>
+                                <h1 className={`text-2xl md:text-3xl font-black ${titleClass}`}>관리자 대시보드</h1>
+                                <p className={`${subtitleClass} text-sm`}>서비스 현황을 한눈에 확인하세요</p>
                             </div>
                         </div>
 
@@ -390,11 +428,11 @@ export default function AdminDashboardPage() {
                                     placeholder="사용자, 파티 검색..."
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm w-full sm:w-64 focus:outline-none focus:ring-2 focus:ring-[#635bff]/20 focus:border-[#635bff]"
+                                    className={`pl-10 pr-4 py-2.5 border ${inputBorderClass} ${inputBgClass} rounded-xl text-sm w-full sm:w-64 focus:outline-none focus:ring-2 focus:ring-[#635bff]/20 focus:border-[#635bff]`}
                                 />
                             </div>
                             {/* Period Filter */}
-                            <PeriodFilter selected={period} onChange={setPeriod} />
+                            <PeriodFilter selected={period} onChange={setPeriod} theme={theme} />
                         </div>
                     </div>
                 </motion.div>
@@ -404,14 +442,14 @@ export default function AdminDashboardPage() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.1 }}
-                    className="mb-6 bg-white rounded-2xl border border-gray-100 p-4 shadow-sm"
+                    className={`mb-6 ${cardBgClass} rounded-2xl border ${cardBorderClass} p-4 shadow-sm`}
                 >
                     <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-2">
                             <Bell className="w-5 h-5 text-[#635bff]" />
-                            <h3 className="font-bold text-gray-900">실시간 알림</h3>
+                            <h3 className={`font-bold ${titleClass}`}>실시간 알림</h3>
                         </div>
-                        <span className="text-xs text-gray-500">최근 24시간</span>
+                        <span className={`text-xs ${subtitleClass}`}>최근 24시간</span>
                     </div>
                     <div className="space-y-2">
                         {alerts.map((alert, i) => (
@@ -427,14 +465,14 @@ export default function AdminDashboardPage() {
                     transition={{ delay: 0.15 }}
                     className="mb-6"
                 >
-                    <h3 className="text-lg font-bold text-gray-900 mb-3">빠른 작업</h3>
+                    <h3 className={`text-lg font-bold ${titleClass} mb-3`}>빠른 작업</h3>
                     <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
-                        <QuickActionButton icon={Users} label="회원 관리" to="/admin/users" color="#635bff" delay={0} />
-                        <QuickActionButton icon={PartyPopper} label="파티 목록" to="/party" color="#10b981" delay={0.05} />
-                        <QuickActionButton icon={AlertCircle} label="블랙리스트" to="/admin/blacklist/add" color="#ef4444" delay={0.1} />
-                        <QuickActionButton icon={Activity} label="공지사항" to="/community/notice" color="#f59e0b" delay={0.15} />
-                        <QuickActionButton icon={Calendar} label="FAQ 관리" to="/community/faq" color="#8b5cf6" delay={0.2} />
-                        <QuickActionButton icon={CreditCard} label="문의 관리" to="/community/inquiry/admin" color="#06b6d4" delay={0.25} />
+                        <QuickActionButton icon={Users} label="회원 관리" to="/admin/users" color="#635bff" delay={0} theme={theme} />
+                        <QuickActionButton icon={PartyPopper} label="파티 목록" to="/party" color="#10b981" delay={0.05} theme={theme} />
+                        <QuickActionButton icon={AlertCircle} label="블랙리스트" to="/admin/blacklist/add" color="#ef4444" delay={0.1} theme={theme} />
+                        <QuickActionButton icon={Activity} label="공지사항" to="/community/notice" color="#f59e0b" delay={0.15} theme={theme} />
+                        <QuickActionButton icon={Calendar} label="FAQ 관리" to="/community/faq" color="#8b5cf6" delay={0.2} theme={theme} />
+                        <QuickActionButton icon={CreditCard} label="문의 관리" to="/community/inquiry/admin" color="#06b6d4" delay={0.25} theme={theme} />
                     </div>
                 </motion.div>
 
@@ -448,6 +486,7 @@ export default function AdminDashboardPage() {
                         color="#635bff"
                         trend={12}
                         delay={0}
+                        theme={theme}
                     />
                     <StatCard
                         icon={Wallet}
@@ -457,6 +496,7 @@ export default function AdminDashboardPage() {
                         color="#00d4ff"
                         trend={8}
                         delay={0.1}
+                        theme={theme}
                     />
                     <StatCard
                         icon={Users}
@@ -466,6 +506,7 @@ export default function AdminDashboardPage() {
                         color="#10b981"
                         trend={15}
                         delay={0.2}
+                        theme={theme}
                     />
                     <StatCard
                         icon={PartyPopper}
@@ -475,15 +516,16 @@ export default function AdminDashboardPage() {
                         color="#f59e0b"
                         trend={5}
                         delay={0.3}
+                        theme={theme}
                     />
                 </div>
 
                 {/* Secondary Stats */}
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                    <StatCard icon={Activity} title="모집중 파티" value={`${stats.recruitingPartyCount || 0}개`} color="#8b5cf6" delay={0.4} />
-                    <StatCard icon={Clock} title="결제 대기" value={`${stats.pendingPaymentCount || 0}건`} color="#f97316" delay={0.5} />
-                    <StatCard icon={CheckCircle2} title="완료된 결제" value={`${(stats.completedPaymentCount || 0).toLocaleString()}건`} color="#06b6d4" delay={0.6} />
-                    <StatCard icon={UserPlus} title="오늘 가입" value={`${stats.todayNewUsers || 0}명`} color="#ec4899" trend={-3} delay={0.7} />
+                    <StatCard icon={Activity} title="모집중 파티" value={`${stats.recruitingPartyCount || 0}개`} color="#8b5cf6" delay={0.4} theme={theme} />
+                    <StatCard icon={Clock} title="결제 대기" value={`${stats.pendingPaymentCount || 0}건`} color="#f97316" delay={0.5} theme={theme} />
+                    <StatCard icon={CheckCircle2} title="완료된 결제" value={`${(stats.completedPaymentCount || 0).toLocaleString()}건`} color="#06b6d4" delay={0.6} theme={theme} />
+                    <StatCard icon={UserPlus} title="오늘 가입" value={`${stats.todayNewUsers || 0}명`} color="#ec4899" trend={-3} delay={0.7} theme={theme} />
                 </div>
 
                 {/* Charts Row 1 */}
@@ -493,12 +535,12 @@ export default function AdminDashboardPage() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.3 }}
-                        className="lg:col-span-2 bg-white rounded-2xl border border-gray-100 p-6 shadow-sm"
+                        className={`lg:col-span-2 ${cardBgClass} rounded-2xl border ${cardBorderClass} p-6 shadow-sm`}
                     >
                         <div className="flex items-center justify-between mb-4">
                             <div>
-                                <h3 className="text-lg font-bold text-gray-900">매출 추이</h3>
-                                <p className="text-sm text-gray-500">최근 7일 일별 매출</p>
+                                <h3 className={`text-lg font-bold ${titleClass}`}>매출 추이</h3>
+                                <p className={`text-sm ${subtitleClass}`}>최근 7일 일별 매출</p>
                             </div>
                             <div className="flex items-center gap-2 px-3 py-1 bg-[#635bff]/10 rounded-full">
                                 <TrendingUp className="w-4 h-4 text-[#635bff]" />
@@ -513,12 +555,12 @@ export default function AdminDashboardPage() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.4 }}
-                        className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm"
+                        className={`${cardBgClass} rounded-2xl border ${cardBorderClass} p-6 shadow-sm`}
                     >
                         <div className="flex items-center justify-between mb-4">
                             <div>
-                                <h3 className="text-lg font-bold text-gray-900">월 목표</h3>
-                                <p className="text-sm text-gray-500">1,000만원 목표</p>
+                                <h3 className={`text-lg font-bold ${titleClass}`}>월 목표</h3>
+                                <p className={`text-sm ${subtitleClass}`}>1,000만원 목표</p>
                             </div>
                             <Target className="w-5 h-5 text-gray-400" />
                         </div>
@@ -533,10 +575,10 @@ export default function AdminDashboardPage() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.5 }}
-                        className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm"
+                        className={`${cardBgClass} rounded-2xl border ${cardBorderClass} p-6 shadow-sm`}
                     >
-                        <h3 className="text-lg font-bold text-gray-900 mb-1">월별 매출</h3>
-                        <p className="text-sm text-gray-500 mb-4">최근 6개월 비교</p>
+                        <h3 className={`text-lg font-bold ${titleClass} mb-1`}>월별 매출</h3>
+                        <p className={`text-sm ${subtitleClass} mb-4`}>최근 6개월 비교</p>
                         <Chart options={monthlyBarOptions} series={monthlyBarSeries} type="bar" height={200} />
                     </motion.div>
 
@@ -545,10 +587,10 @@ export default function AdminDashboardPage() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.5 }}
-                        className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm"
+                        className={`${cardBgClass} rounded-2xl border ${cardBorderClass} p-6 shadow-sm`}
                     >
-                        <h3 className="text-lg font-bold text-gray-900 mb-1">파티 현황</h3>
-                        <p className="text-sm text-gray-500 mb-4">상태별 분포</p>
+                        <h3 className={`text-lg font-bold ${titleClass} mb-1`}>파티 현황</h3>
+                        <p className={`text-sm ${subtitleClass} mb-4`}>상태별 분포</p>
                         <Chart options={partyDonutOptions} series={partyDonutSeries} type="donut" height={200} />
                     </motion.div>
 
@@ -557,10 +599,10 @@ export default function AdminDashboardPage() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.6 }}
-                        className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm"
+                        className={`${cardBgClass} rounded-2xl border ${cardBorderClass} p-6 shadow-sm`}
                     >
-                        <h3 className="text-lg font-bold text-gray-900 mb-1">사용자 추이</h3>
-                        <p className="text-sm text-gray-500 mb-4">주간 가입/활성</p>
+                        <h3 className={`text-lg font-bold ${titleClass} mb-1`}>사용자 추이</h3>
+                        <p className={`text-sm ${subtitleClass} mb-4`}>주간 가입/활성</p>
                         <Chart options={userGrowthOptions} series={userGrowthSeries} type="area" height={200} />
                     </motion.div>
                 </div>
@@ -572,10 +614,10 @@ export default function AdminDashboardPage() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.7 }}
-                        className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm"
+                        className={`${cardBgClass} rounded-2xl border ${cardBorderClass} p-6 shadow-sm`}
                     >
-                        <h3 className="text-lg font-bold text-gray-900 mb-1">OTT별 파티</h3>
-                        <p className="text-sm text-gray-500 mb-4">서비스별 현황</p>
+                        <h3 className={`text-lg font-bold ${titleClass} mb-1`}>OTT별 파티</h3>
+                        <p className={`text-sm ${subtitleClass} mb-4`}>서비스별 현황</p>
                         <OttServiceStats stats={stats.ottPartyStats} />
                     </motion.div>
 
@@ -584,12 +626,12 @@ export default function AdminDashboardPage() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.8 }}
-                        className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm"
+                        className={`${cardBgClass} rounded-2xl border ${cardBorderClass} p-6 shadow-sm`}
                     >
                         <div className="flex items-center justify-between mb-4">
                             <div>
-                                <h3 className="text-lg font-bold text-gray-900">최근 가입</h3>
-                                <p className="text-sm text-gray-500">신규 회원</p>
+                                <h3 className={`text-lg font-bold ${titleClass}`}>최근 가입</h3>
+                                <p className={`text-sm ${subtitleClass}`}>신규 회원</p>
                             </div>
                             <Link to="/admin/users" className="flex items-center gap-1 text-sm font-medium text-[#635bff] hover:underline">
                                 전체보기 <ArrowRight className="w-4 h-4" />
@@ -602,16 +644,16 @@ export default function AdminDashboardPage() {
                                     initial={{ opacity: 0, x: -20 }}
                                     animate={{ opacity: 1, x: 0 }}
                                     transition={{ delay: 0.8 + index * 0.1 }}
-                                    className="flex items-center gap-3 p-2 rounded-xl hover:bg-gray-50 transition-colors"
+                                    className={`flex items-center gap-3 p-2 rounded-xl ${theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-50'} transition-colors`}
                                 >
                                     <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#635bff] to-[#00d4ff] flex items-center justify-center text-white text-sm font-bold">
                                         {user.userName?.[0] || '?'}
                                     </div>
                                     <div className="flex-1 min-w-0">
-                                        <div className="font-medium text-gray-900 text-sm truncate">{user.userName}</div>
-                                        <div className="text-xs text-gray-500 truncate">{user.userEmail}</div>
+                                        <div className={`font-medium ${titleClass} text-sm truncate`}>{user.userName}</div>
+                                        <div className={`text-xs ${subtitleClass} truncate`}>{user.userEmail}</div>
                                     </div>
-                                    <div className="text-xs text-gray-400">{user.regDate?.slice(5)}</div>
+                                    <div className={`text-xs ${subtitleClass}`}>{user.regDate?.slice(5)}</div>
                                 </motion.div>
                             ))}
                         </div>
@@ -622,26 +664,26 @@ export default function AdminDashboardPage() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.9 }}
-                        className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm"
+                        className={`${cardBgClass} rounded-2xl border ${cardBorderClass} p-6 shadow-sm`}
                     >
                         <div className="flex items-center justify-between mb-4">
                             <div>
-                                <h3 className="text-lg font-bold text-gray-900">최근 결제</h3>
-                                <p className="text-sm text-gray-500">결제 내역</p>
+                                <h3 className={`text-lg font-bold ${titleClass}`}>최근 결제</h3>
+                                <p className={`text-sm ${subtitleClass}`}>결제 내역</p>
                             </div>
                             <CreditCard className="w-5 h-5 text-gray-400" />
                         </div>
                         <div className="space-y-2">
                             {stats.recentPayments?.slice(0, 4).map((payment, index) => (
-                                <div key={payment.paymentId} className="flex items-center gap-3 p-2 rounded-xl hover:bg-gray-50">
+                                <div key={payment.paymentId} className={`flex items-center gap-3 p-2 rounded-xl ${theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-50'}`}>
                                     <div className="w-9 h-9 rounded-full bg-emerald-100 flex items-center justify-center">
                                         <CheckCircle2 className="w-4 h-4 text-emerald-600" />
                                     </div>
                                     <div className="flex-1 min-w-0">
-                                        <div className="font-medium text-gray-900 text-sm truncate">{payment.odUserId}</div>
-                                        <div className="text-xs text-gray-500">{payment.amount?.toLocaleString()}원</div>
+                                        <div className={`font-medium ${titleClass} text-sm truncate`}>{payment.odUserId}</div>
+                                        <div className={`text-xs ${subtitleClass}`}>{payment.amount?.toLocaleString()}원</div>
                                     </div>
-                                    <div className="text-xs text-gray-400">{payment.paymentDate?.slice(5)}</div>
+                                    <div className={`text-xs ${subtitleClass}`}>{payment.paymentDate?.slice(5)}</div>
                                 </div>
                             ))}
                         </div>

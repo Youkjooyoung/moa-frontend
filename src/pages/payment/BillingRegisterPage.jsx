@@ -61,10 +61,10 @@ export default function BillingRegisterPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className={`rounded-2xl shadow-lg p-10 ${theme === "pop"
-              ? "bg-white border-4 border-black"
-              : theme === "dark"
-                ? "bg-[#1E293B] border border-gray-700"
-                : "bg-white shadow-[#635bff]/10 border border-gray-100"
+            ? "bg-white border-4 border-black"
+            : theme === "dark"
+              ? "bg-[#1E293B] border border-gray-700"
+              : "bg-white shadow-[#635bff]/10 border border-gray-100"
             }`}
         >
           <div className="text-center">
@@ -76,16 +76,20 @@ export default function BillingRegisterPage() {
               <Loader2 className={`w-12 h-12 ${theme === "pop" ? "text-pink-500" : "text-[#635bff]"}`} />
             </motion.div>
             <h2 className={`text-2xl font-bold mb-2 ${currentTheme.text}`}>
-              자동 결제 설정 중...
+              {localStorage.getItem("billingRegistrationReason") === "party_join"
+                ? "거의 다 됐어요! 🎉"
+                : "자동 결제 설정 중..."}
             </h2>
             <p className={`font-medium mb-6 ${currentTheme.subtext}`}>
-              월 구독료 자동 결제를 위해 카드를 등록합니다
+              {localStorage.getItem("billingRegistrationReason") === "party_join"
+                ? "파티 가입 완료를 위해 카드를 등록해주세요"
+                : "월 구독료 자동 결제를 위해 카드를 등록합니다"}
             </p>
             <div className={`rounded-xl p-4 text-left ${theme === "pop"
-                ? "bg-pink-100 border-2 border-black"
-                : theme === "dark"
-                  ? "bg-[#635bff]/10 border border-[#635bff]/20"
-                  : "bg-[#635bff]/5 border border-[#635bff]/10"
+              ? "bg-pink-100 border-2 border-black"
+              : theme === "dark"
+                ? "bg-[#635bff]/10 border border-[#635bff]/20"
+                : "bg-[#635bff]/5 border border-[#635bff]/10"
               }`}>
               <div className={`flex items-center gap-2 font-semibold mb-3 ${theme === "pop" ? "text-black" : "text-[#635bff]"
                 }`}>

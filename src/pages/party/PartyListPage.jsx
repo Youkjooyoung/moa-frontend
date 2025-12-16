@@ -308,24 +308,12 @@ export default function PartyListPage() {
                   ? "text-pink-500"
                   : theme === "christmas"
                     ? "bg-gradient-to-r from-[#c41e3a] to-[#1a5f2a] bg-clip-text text-transparent"
-                    : `bg-gradient-to-r ${theme === "dark" ? "from-[#635bff] via-[#00d4ff] to-[#00d4ff]" : theme === "portrait" ? "from-[#FFB5C5] to-[#C5B5FF]" : "from-[#635bff] to-[#00d4ff]"} bg-clip-text text-transparent`
+                    : `bg-gradient-to-r ${theme === "dark" ? "from-[#635bff] via-[#00d4ff] to-[#00d4ff]" : "from-[#635bff] to-[#00d4ff]"} bg-clip-text text-transparent`
                   }`}>
                   더 저렴하게
                 </span>
               </>
             </motion.h1>
-
-            {/* Subheadline */}
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className={`text-lg mb-8 max-w-xl mx-auto ${currentTheme.subtext}`}
-            >
-              Netflix, Disney+, Wavve 등 프리미엄 OTT 서비스를
-              <br className="hidden sm:block" />
-              안전하고 저렴하게 이용하세요
-            </motion.p>
 
             {/* CTA Button */}
             <motion.div
@@ -363,17 +351,6 @@ export default function PartyListPage() {
                   <ArrowRight className="w-4 h-4" />
                 </motion.button>
               )}
-
-              <div className={`flex items-center gap-4 text-sm ${currentTheme.subtext}`}>
-                <div className="flex items-center gap-1.5">
-                  <Shield className="w-4 h-4 text-green-500" />
-                  <span>안전한 결제</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <Zap className="w-4 h-4 text-yellow-500" />
-                  <span>즉시 이용</span>
-                </div>
-              </div>
             </motion.div>
           </div>
         </div>
@@ -444,7 +421,6 @@ export default function PartyListPage() {
                     { value: "", label: "전체" },
                     { value: "RECRUITING", label: "모집중" },
                     { value: "ACTIVE", label: "파티중" },
-                    { value: "CLOSED", label: "파티종료" },
                   ].map((filter) => (
                     <button
                       key={filter.value}
@@ -589,9 +565,7 @@ export default function PartyListPage() {
                     ? "bg-white border-2 border-black rounded-3xl"
                     : theme === "dark"
                       ? "bg-[#1E293B] border border-gray-700 rounded-2xl hover:shadow-2xl hover:border-gray-600"
-                      : theme === "portrait"
-                        ? "bg-white/40 backdrop-blur-xl border border-white/60 hover:border-white/80 hover:shadow-2xl shadow-lg rounded-2xl"
-                        : "bg-white border border-gray-100 rounded-2xl hover:shadow-2xl hover:border-gray-200"
+                      : "bg-white border border-gray-100 rounded-2xl hover:shadow-2xl hover:border-gray-200"
                     }`}
                 >
                   {/* Service Banner */}

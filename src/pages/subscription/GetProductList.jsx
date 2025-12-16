@@ -64,19 +64,6 @@ export default function GetProductList() {
           categoryBg: 'bg-[#0F172A]',
           detailText: 'text-[#635bff]',
         };
-      case 'portrait':
-        return {
-          bg: 'bg-gradient-to-br from-[#FDF8F3] via-[#FFF5F7] to-[#F5F0FF]',
-          text: 'text-gray-900',
-          subtext: 'text-gray-500',
-          searchBg: 'bg-white/60',
-          buttonActive: 'bg-gradient-to-r from-[#FFB5C5] to-[#C5B5FF] text-white border-transparent',
-          buttonInactive: 'bg-white text-gray-600 border-gray-300',
-          cardBg: 'bg-white/80 backdrop-blur-sm',
-          cardHover: 'hover:shadow-lg hover:shadow-pink-200/30',
-          categoryBg: 'bg-gray-100',
-          detailText: 'text-pink-500',
-        };
       case 'classic':
         return {
           bg: 'bg-white',

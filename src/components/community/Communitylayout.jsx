@@ -29,14 +29,6 @@ const CommunityLayout = ({ children }) => {
                     activeTab: 'bg-[#635bff]',
                     inactiveTabHover: 'hover:bg-[#635bff]/20',
                 };
-            case 'portrait':
-                return {
-                    primary: 'bg-gradient-to-r from-[#FFB5C5] to-[#C5B5FF]',
-                    secondary: 'bg-pink-300',
-                    tertiary: 'bg-white',
-                    activeTab: 'bg-gradient-to-r from-[#FFB5C5] to-[#C5B5FF]',
-                    inactiveTabHover: 'hover:bg-pink-100',
-                };
             case 'classic':
                 return {
                     primary: 'bg-[#635bff]',
@@ -87,7 +79,7 @@ const CommunityLayout = ({ children }) => {
     ];
 
     return (
-        <div className={`min-h-screen ${theme === 'dark' ? 'bg-[#0B1120]' : theme === 'portrait' ? 'bg-gradient-to-br from-[#FDF8F3] via-[#FFF5F7] to-[#F5F0FF]' : 'bg-slate-50'}`}>
+        <div className={`min-h-screen ${theme === 'dark' ? 'bg-[#0B1120]' : 'bg-slate-50'}`}>
             {/* Header Section */}
             <div className={`${theme === 'pop' ? 'border-b-4 border-black' : theme === 'dark' ? 'border-b border-gray-700' : 'border-b border-gray-200'} ${theme === 'dark' ? 'bg-[#1E293B]' : 'bg-white'}`}>
                 <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-6">
@@ -97,7 +89,7 @@ const CommunityLayout = ({ children }) => {
                         hoverable={false}
                         className="inline-block px-6 py-3 rounded-2xl mx-auto"
                     >
-                        <h1 className={`text-3xl font-black tracking-tight ${theme === 'portrait' || theme === 'pop' || theme === 'christmas' ? 'text-white' : 'text-white'}`}>
+                        <h1 className={`text-3xl font-black tracking-tight text-white`}>
                             고객센터
                         </h1>
                     </NeoCard>

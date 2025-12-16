@@ -26,15 +26,6 @@ const NoticeItem = ({ notice, index, formatDate, onClick }) => {
                     dateColor: 'text-gray-400',
                     viewBadge: 'bg-[#635bff]',
                 };
-            case 'portrait':
-                return {
-                    cardBg: 'bg-white',
-                    cardHover: 'hover:bg-pink-100',
-                    textColor: 'text-black',
-                    indexColor: 'text-gray-400',
-                    dateColor: 'text-gray-500',
-                    viewBadge: 'bg-gradient-to-r from-[#FFB5C5] to-[#C5B5FF]',
-                };
             case 'classic':
                 return {
                     cardBg: 'bg-white',

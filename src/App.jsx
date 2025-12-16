@@ -114,19 +114,21 @@ import ScrollToTop from "./components/common/ScrollToTop";
 import PineappleEasterEgg from "./components/common/PineappleEasterEgg";
 import { useAuthStore } from "./store/authStore";
 import { useThemeStore } from "./store/themeStore";
-import { ThemeSwitcher } from "./config/themeConfig";
+import { ThemeSwitcher, ThemeBackground, themeConfig } from "./config/themeConfig";
 
 export default function App() {
   useGlobalLinkHandler();
   const { user } = useAuthStore();
   const { theme, setTheme } = useThemeStore();
+  const currentTheme = themeConfig[theme] || themeConfig.default;
 
   // Easter egg for specific test accounts
   const showEasterEgg =
     user && (user.userId === "usertest1" || user.userId === "admintest");
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className={`min-h-screen flex flex-col transition-colors duration-300 ${currentTheme.bg} ${currentTheme.text}`}>
+      <ThemeBackground theme={theme} />
       <ScrollToTop />
       {showEasterEgg && <PineappleEasterEgg />}
       <ThemeSwitcher theme={theme} onThemeChange={setTheme} />

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sun, Moon, Palette, Sparkles, TreePine, Circle } from "lucide-react";
+import { Sun, Moon, Palette, TreePine, Circle } from "lucide-react";
 import { useThemeStore } from "@/store/themeStore";
 
 // ============================================
@@ -98,29 +98,6 @@ export const themeConfig = {
     buttonInactive: "bg-white text-black border-2 border-black hover:bg-pink-100",
     sectionBg: "bg-white",
     gradientText: "text-pink-500",
-  },
-  portrait: {
-    name: "Portrait",
-    icon: Sparkles,
-    bg: "bg-gradient-to-br from-[#FDF8F3] via-[#FFF5F7] to-[#F5F0FF]",
-    heroBg: "bg-transparent",
-    text: "text-[#3d3d3d]",
-    subtext: "text-[#888]",
-    card: "bg-white/40 backdrop-blur-xl border border-white/60 hover:border-white/80 hover:shadow-2xl shadow-lg",
-    cardText: "text-[#4a4a4a]",
-    cardSubtext: "text-[#888]",
-    accent: "#FFB5C5",
-    accentBg: "bg-gradient-to-r from-[#FFB5C5] to-[#C5B5FF]",
-    accentText: "text-pink-400",
-    filterBg: "bg-white/40 backdrop-blur-xl",
-    filterBorder: "border border-white/60",
-    inputBg: "bg-white/60",
-    inputBorder: "border border-white/60",
-    inputText: "text-gray-700",
-    buttonActive: "bg-gradient-to-r from-[#FFB5C5] to-[#C5B5FF] text-white shadow-lg shadow-pink-200/50",
-    buttonInactive: "bg-white/50 text-[#888] hover:bg-white/70 border border-white/40",
-    sectionBg: "bg-white/30",
-    gradientText: "bg-gradient-to-r from-[#FFB5C5] to-[#C5B5FF] bg-clip-text text-transparent",
   },
   christmas: {
     name: "Christmas",
@@ -320,48 +297,6 @@ export const headerThemes = {
     avatarBorder: "border-2 border-black bg-slate-50",
     avatarFallback: "bg-cyan-400 text-black",
   },
-  portrait: {
-    // Header container
-    bg: "bg-gradient-to-r from-[#FDF8F3]/90 via-[#FFF5F7]/90 to-[#F5F0FF]/90 backdrop-blur-xl",
-    border: "border-white/40",
-    borderWidth: "border-b",
-    // Text colors
-    text: "text-gray-700",
-    subtext: "text-gray-500",
-    // Logo
-    logoBg: "bg-white/70",
-    logoBorder: "border border-pink-200/60",
-    logoShadow: "shadow-lg shadow-pink-100/50",
-    logoText: "text-gray-800",
-    // Sticker/Card components
-    stickerBg: "bg-white/70 backdrop-blur-sm",
-    stickerBorder: "border border-pink-200/60",
-    stickerShadow: "shadow-lg shadow-pink-100/50",
-    stickerText: "text-gray-700",
-    // Menu button
-    menuBg: "bg-gradient-to-r from-[#FFB5C5] to-[#C5B5FF]",
-    menuText: "text-white",
-    menuBorder: "border border-white/40",
-    // Dropdown
-    dropdownBg: "bg-white/95 backdrop-blur-xl",
-    dropdownBorder: "border border-pink-200/60",
-    dropdownShadow: "shadow-2xl shadow-pink-100/30",
-    dropdownItemBg: "bg-white/50",
-    dropdownItemHover: "hover:bg-pink-50/50",
-    dropdownItemText: "text-gray-700",
-    dropdownItemSubtext: "text-gray-500",
-    // Accent
-    accent: "#FFB5C5",
-    accentBg: "bg-gradient-to-r from-[#FFB5C5] to-[#C5B5FF]",
-    accentText: "text-white",
-    // Separator
-    separatorColor: "bg-pink-200/50",
-    // Switch
-    switchChecked: "data-[state=checked]:bg-pink-400 data-[state=unchecked]:bg-pink-200",
-    // Avatar
-    avatarBorder: "border-2 border-pink-200 bg-white/50",
-    avatarFallback: "bg-gradient-to-r from-[#FFB5C5] to-[#C5B5FF] text-white",
-  },
   christmas: {
     // Header container - Variant T style with Christmas accent
     bg: "bg-white/95 backdrop-blur-xl",
@@ -434,14 +369,6 @@ export const navPillStyles = {
     iconActive: "bg-white text-pink-500",
     iconInactive: "bg-slate-50 text-black",
   },
-  portrait: {
-    base: "border border-pink-200/60 shadow-md shadow-pink-100/30",
-    active: "bg-gradient-to-r from-[#FFB5C5] to-[#C5B5FF] text-white border-transparent shadow-lg shadow-pink-200/40",
-    inactive: "bg-white/70 backdrop-blur-sm text-gray-600 hover:bg-gradient-to-r hover:from-[#FFB5C5] hover:to-[#C5B5FF] hover:text-white hover:border-transparent hover:shadow-lg hover:shadow-pink-200/40",
-    iconBase: "border border-pink-200/60",
-    iconActive: "bg-white text-pink-400 border-transparent",
-    iconInactive: "bg-white/50 text-gray-500",
-  },
   christmas: {
     // Variant T style with Christmas red accent
     base: "border border-gray-200 shadow-sm",
@@ -460,8 +387,6 @@ export const getMobileNavItemStyle = (theme) => {
   switch (theme) {
     case "dark":
       return "py-2.5 flex items-center justify-between gap-3 font-bold text-white rounded-2xl hover:bg-[#635bff] border border-gray-600 bg-gray-700/50 px-3 transition-all duration-200";
-    case "portrait":
-      return "py-2.5 flex items-center justify-between gap-3 font-bold text-gray-700 rounded-2xl hover:bg-gradient-to-r hover:from-[#FFB5C5] hover:to-[#C5B5FF] hover:text-white border border-pink-200/60 bg-white/50 px-3 transition-all duration-200";
     case "pop":
       return "py-2.5 flex items-center justify-between gap-3 font-black text-black rounded-2xl hover:bg-pink-500 hover:text-white border-2 border-black bg-white px-3 transition-all duration-200";
     case "christmas":
@@ -523,54 +448,6 @@ export const DarkGradient = () => (
       }}
       animate={{ scale: [1, 1.15, 1], opacity: [0.4, 0.6, 0.4] }}
       transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-    />
-  </div>
-);
-
-// Portrait Theme Background
-export const PortraitBackground = () => (
-  <div className="fixed top-0 left-0 right-0 bottom-0 pointer-events-none -z-10 overflow-hidden">
-    <motion.div
-      className="absolute w-[800px] h-[800px] rounded-full opacity-30"
-      style={{
-        background: "radial-gradient(circle, rgba(255, 181, 197, 0.6) 0%, transparent 70%)",
-        top: "-20%",
-        left: "10%",
-      }}
-      animate={{
-        scale: [1, 1.2, 1],
-        x: [0, 50, 0],
-        y: [0, 30, 0],
-      }}
-      transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
-    />
-    <motion.div
-      className="absolute w-[600px] h-[600px] rounded-full opacity-30"
-      style={{
-        background: "radial-gradient(circle, rgba(197, 181, 255, 0.5) 0%, transparent 70%)",
-        top: "30%",
-        right: "5%",
-      }}
-      animate={{
-        scale: [1, 1.1, 1],
-        x: [0, -40, 0],
-        y: [0, 40, 0],
-      }}
-      transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
-    />
-    <motion.div
-      className="absolute w-[700px] h-[700px] rounded-full opacity-25"
-      style={{
-        background: "radial-gradient(circle, rgba(181, 212, 255, 0.4) 0%, transparent 70%)",
-        bottom: "-10%",
-        left: "20%",
-      }}
-      animate={{
-        scale: [1, 1.15, 1],
-        x: [0, 60, 0],
-        y: [0, -30, 0],
-      }}
-      transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
     />
   </div>
 );
@@ -714,8 +591,6 @@ export const ThemeBackground = ({ theme }) => {
           <GridPattern dark />
         </>
       );
-    case "portrait":
-      return <PortraitBackground />;
     case "christmas":
       return <ChristmasBackground />;
     case "pop":
@@ -748,11 +623,9 @@ export const ThemeSwitcher = ({ theme, onThemeChange }) => {
           ? "bg-gray-800 text-white border border-gray-600"
           : theme === "pop"
             ? "bg-pink-500 text-white border-2 border-black"
-            : theme === "portrait"
-              ? "bg-gradient-to-r from-[#FFB5C5] to-[#C5B5FF] text-white"
-              : theme === "christmas"
-                ? "bg-[#c41e3a] text-white shadow-lg shadow-[#c41e3a]/25"
-                : "bg-white text-gray-700 border border-gray-200 shadow-lg"
+            : theme === "christmas"
+              ? "bg-[#c41e3a] text-white shadow-lg shadow-[#c41e3a]/25"
+              : "bg-white text-gray-700 border border-gray-200 shadow-lg"
           }`}
       >
         <motion.div
@@ -813,13 +686,11 @@ export const ThemeSwitcher = ({ theme, onThemeChange }) => {
                   className={`absolute top-0 right-0 p-2.5 rounded-full shadow-lg transition-colors duration-200 ${isActive
                     ? key === "pop"
                       ? "bg-pink-500 text-white border-2 border-black"
-                      : key === "portrait"
-                        ? "bg-gradient-to-r from-[#FFB5C5] to-[#C5B5FF] text-white"
-                        : key === "dark"
-                          ? "bg-gray-800 text-white border border-gray-500"
-                          : key === "christmas"
-                            ? "bg-[#c41e3a] text-white"
-                            : "bg-[#635bff] text-white"
+                      : key === "dark"
+                        ? "bg-gray-800 text-white border border-gray-500"
+                        : key === "christmas"
+                          ? "bg-[#c41e3a] text-white"
+                          : "bg-[#635bff] text-white"
                     : key === "dark"
                       ? "bg-gray-700 text-gray-300 hover:bg-gray-600 border border-gray-500"
                       : key === "christmas"

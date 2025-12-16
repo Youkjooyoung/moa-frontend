@@ -31,16 +31,6 @@ const getDialogStyles = (theme) => {
         input: "border border-gray-700 bg-[#0F172A] text-white shadow-[4px_4px_12px_rgba(0,0,0,0.2)]",
         button: "bg-[#635bff] hover:bg-[#5851e8]",
       };
-    case 'portrait':
-      return {
-        container: "bg-white/90 backdrop-blur-sm border border-pink-200 shadow-[4px_4px_12px_rgba(255,181,197,0.2)]",
-        title: "text-pink-600",
-        desc: "text-gray-500",
-        tabActive: "bg-white text-pink-600 border-pink-400",
-        tabInactive: "text-gray-500 border-pink-200",
-        input: "border border-pink-200 shadow-[4px_4px_12px_rgba(255,181,197,0.15)]",
-        button: "bg-gradient-to-r from-[#FFB5C5] to-[#C5B5FF] hover:opacity-90",
-      };
     case 'pop':
       return {
         container: "bg-white border-2 border-black shadow-[6px_6px_0px_rgba(0,0,0,1)]",

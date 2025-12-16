@@ -44,6 +44,16 @@ export const getMyParties = async () => {
     }
 };
 
+export const getMyClosedParties = async () => {
+    try {
+        const response = await httpClient.get("/parties/my/closed");
+        return response;
+    } catch (error) {
+        console.error("Failed to fetch my closed parties:", error);
+        throw error;
+    }
+};
+
 export const getPartyMembers = (partyId) => {
     return httpClient.get(`${API_BASE_URL}/${partyId}/members`);
 };

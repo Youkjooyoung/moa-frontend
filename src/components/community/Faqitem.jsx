@@ -39,18 +39,6 @@ const FaqItem = ({ faq, index, isAdmin, onUpdate, getCategoryFromTitle, isOpen, 
                     textColor: 'text-gray-200',
                     iconColor: 'text-gray-400',
                 };
-            case 'portrait':
-                return {
-                    categoryBadge: 'bg-gradient-to-r from-[#FFB5C5] to-[#C5B5FF]',
-                    focusRing: 'focus:ring-pink-400',
-                    saveButton: 'bg-pink-300',
-                    editButton: 'bg-pink-300',
-                    cardBg: 'bg-white',
-                    hoverBg: 'hover:bg-slate-50',
-                    answerBg: 'bg-slate-50',
-                    textColor: 'text-black',
-                    iconColor: 'text-black',
-                };
             case 'classic':
                 return {
                     categoryBadge: 'bg-[#635bff]',

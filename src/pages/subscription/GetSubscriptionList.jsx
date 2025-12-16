@@ -34,19 +34,6 @@ const getThemeStyles = (theme) => {
                 statusActive: 'bg-green-900/50 text-green-400',
                 statusInactive: 'bg-red-900/50 text-red-400',
             };
-        case 'portrait':
-            return {
-                bg: 'bg-gradient-to-br from-[#FDF8F3] via-[#FFF5F7] to-[#F5F0FF]',
-                text: 'text-gray-900',
-                subtext: 'text-gray-500',
-                title: 'text-gray-900',
-                cardBg: 'bg-white/80 backdrop-blur-sm border border-pink-200 rounded-xl shadow-[4px_4px_12px_rgba(255,181,197,0.2)]',
-                cardHover: 'hover:shadow-[0_10px_25px_-5px_rgba(255,181,197,0.3)]',
-                empty: 'bg-white/80 backdrop-blur-sm border border-dashed border-pink-300 rounded-2xl',
-                buttonPrimary: 'bg-gradient-to-r from-[#FFB5C5] to-[#C5B5FF] hover:opacity-90 text-white',
-                statusActive: 'bg-green-100 text-green-700',
-                statusInactive: 'bg-red-100 text-red-700',
-            };
         case 'pop':
             return {
                 bg: 'bg-slate-50',

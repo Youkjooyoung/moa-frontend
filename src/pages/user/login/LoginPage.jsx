@@ -30,13 +30,6 @@ const getThemeStyles = (theme) => {
         titleColor: 'text-white',
         headerBorder: 'border-b border-gray-700',
       };
-    case 'portrait':
-      return {
-        bg: 'bg-gradient-to-br from-[#FDF8F3] via-[#FFF5F7] to-[#F5F0FF]',
-        cardStyle: 'bg-white/80 backdrop-blur-sm border border-pink-200 shadow-[4px_4px_12px_rgba(255,181,197,0.2)] rounded-[32px] overflow-hidden',
-        titleColor: 'text-pink-600',
-        headerBorder: 'border-b border-pink-200',
-      };
     case 'pop':
       return {
         bg: 'bg-slate-50',
