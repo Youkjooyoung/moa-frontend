@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { useMainStore } from "@/store/main/mainStore";
 import { useThemeStore } from "@/store/themeStore";
+import { ChristmasBackground } from "@/config/themeConfig";
 
 // 테마별 배경 orbs 스타일
 const mainPageThemeStyles = {

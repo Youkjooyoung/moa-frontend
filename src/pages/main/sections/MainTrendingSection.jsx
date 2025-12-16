@@ -91,6 +91,7 @@ export default function MainTrendingSection() {
   const partiesError = useMainStore((s) => s.partiesError);
   const { theme } = useThemeStore();
   const themeStyle = trendingThemeStyles[theme] || trendingThemeStyles.default;
+  const isDark = theme === "dark";
 
   // 마감 임박 파티 3개 선택 (모집률 높은 순)
   const visible = useMemo(() => {
@@ -239,7 +240,7 @@ export default function MainTrendingSection() {
                         <span className={`text-xs font-black ${isRecruiting && themeStyle.recruitingText ? themeStyle.recruitingText : ""}`}>
                           {isRecruiting ? (theme === "christmas" ? "🎄 모집중" : "모집중 🙋") : "마감"}
                         </span>
-                      </div>
+                      </Sticker>
 
                       {/* Hover Overlay */}
                       <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[#635bff]/5" />
@@ -278,7 +279,7 @@ export default function MainTrendingSection() {
                   </motion.div>
                 );
               })}
-            </motion.div>
+            </div>
 
             {visible.length === 0 && (
               <div className="py-16 text-center">

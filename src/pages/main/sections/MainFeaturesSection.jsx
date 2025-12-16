@@ -63,6 +63,7 @@ function BouncyCard({ children, className = "", delay = 0, isDark = false }) {
 export default function MainFeaturesSection() {
   const { theme } = useThemeStore();
   const themeStyle = featuresThemeStyles[theme] || featuresThemeStyles.default;
+  const isDark = theme === "dark";
 
   const features = [
     {

@@ -124,10 +124,10 @@ export const SnowPlowProvider = ({ children }) => {
 // ============================================
 export const SnowPlowButton = ({ className = "" }) => {
   const context = useSnowPlow();
-  const { theme } = useThemeStore(); // Get theme
+  const { theme } = useThemeStore();
   const [isShaking, setIsShaking] = useState(false);
 
-  if (theme !== 'christmas') return null; // Hide if not christmas
+  if (theme !== 'christmas') return null;
 
   // 30초 후 버튼 흔들기 힌트 (Only if snow piled up)
   useEffect(() => {

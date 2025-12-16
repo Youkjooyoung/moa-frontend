@@ -34,8 +34,6 @@ const GetProduct = () => {
     const [loading, setLoading] = useState(true);
     const [startDate, setStartDate] = useState(new Date().toISOString().split('T')[0]);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-    const { theme } = useThemeStore();
-    const { accentColor, bgColor, cardBg } = useTheme();
 
     const getAccentColor = () => {
         switch (theme) {
@@ -140,10 +138,10 @@ const GetProduct = () => {
                                 </span>
                             </div>
                         </div>
-                    </div>
+                </div>
 
-                    {/* Content Section */}
-                    <div className="p-8">
+                {/* Content Section */}
+                <div className="p-8">
                         {/* Description */}
                         {product.description && (
                             <div className="mb-8">
@@ -270,20 +268,19 @@ const GetProduct = () => {
                                 </>
                             )}
                         </div>
-                    </div>
                 </div>
-
-                {/* Update Product Modal */}
-                <UpdateProductModal
-                    isOpen={isEditModalOpen}
-                    onClose={() => setIsEditModalOpen(false)}
-                    productId={id}
-                    initialData={product}
-                    onSuccess={() => {
-                        navigate('/product');
-                    }}
-                />
             </div>
+
+            {/* Update Product Modal */}
+            <UpdateProductModal
+                isOpen={isEditModalOpen}
+                onClose={() => setIsEditModalOpen(false)}
+                productId={id}
+                initialData={product}
+                onSuccess={() => {
+                    navigate('/product');
+                }}
+            />
         </div>
     );
 };

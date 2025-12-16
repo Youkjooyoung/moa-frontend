@@ -25,6 +25,7 @@ export default function MainStatementSection() {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const { theme } = useThemeStore();
   const themeStyle = statementThemeStyles[theme] || statementThemeStyles.default;
+  const isDark = theme === "dark";
 
   return (
     <section ref={ref} className={`py-32 px-6 border-b ${isDark ? 'bg-[#0B1120] border-gray-600' : 'bg-white border-gray-200'}`}>

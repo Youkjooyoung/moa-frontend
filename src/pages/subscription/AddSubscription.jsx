@@ -26,7 +26,6 @@ const AddSubscription = () => {
     const { productId } = useParams();
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
-    const { theme } = useThemeStore();
 
     // Helper function for theme-specific accent color
     const getAccentColor = () => {

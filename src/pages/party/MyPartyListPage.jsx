@@ -214,6 +214,8 @@ export default function MyPartyListPage() {
             </motion.button>
           </div>
         </div>
+      </div>
+
       {/* Simple Header */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -314,11 +316,6 @@ export default function MyPartyListPage() {
         >
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Total Parties */}
-            <div className={`bg-white rounded-xl p-5 border transition-all hover:-translate-y-1 ${
-              theme === "christmas"
-                ? "border-gray-200 hover:shadow-[4px_4px_12px_rgba(0,0,0,0.08)]"
-                : "border-slate-200 hover:shadow-lg"
-            }`}>
             <div className={`rounded-xl p-5 hover:shadow-lg transition-all hover:-translate-y-1 ${
               theme === "dark"
                 ? "bg-[#1E293B] border border-gray-700"
@@ -342,11 +339,6 @@ export default function MyPartyListPage() {
             </div>
 
             {/* As Leader */}
-            <div className={`bg-white rounded-xl p-5 border transition-all hover:-translate-y-1 ${
-              theme === "christmas"
-                ? "border-gray-200 hover:shadow-[4px_4px_12px_rgba(0,0,0,0.08)]"
-                : "border-slate-200 hover:shadow-lg"
-            }`}>
             <div className={`rounded-xl p-5 hover:shadow-lg transition-all hover:-translate-y-1 ${
               theme === "dark"
                 ? "bg-[#1E293B] border border-gray-700"
@@ -370,11 +362,6 @@ export default function MyPartyListPage() {
             </div>
 
             {/* Active Parties */}
-            <div className={`bg-white rounded-xl p-5 border transition-all hover:-translate-y-1 ${
-              theme === "christmas"
-                ? "border-gray-200 hover:shadow-[4px_4px_12px_rgba(0,0,0,0.08)]"
-                : "border-slate-200 hover:shadow-lg"
-            }`}>
             <div className={`rounded-xl p-5 hover:shadow-lg transition-all hover:-translate-y-1 ${
               theme === "dark"
                 ? "bg-[#1E293B] border border-gray-700"
@@ -398,11 +385,6 @@ export default function MyPartyListPage() {
             </div>
 
             {/* Recruiting */}
-            <div className={`bg-white rounded-xl p-5 border transition-all hover:-translate-y-1 ${
-              theme === "christmas"
-                ? "border-gray-200 hover:shadow-[4px_4px_12px_rgba(0,0,0,0.08)]"
-                : "border-slate-200 hover:shadow-lg"
-            }`}>
             <div className={`rounded-xl p-5 hover:shadow-lg transition-all hover:-translate-y-1 ${
               theme === "dark"
                 ? "bg-[#1E293B] border border-gray-700"
@@ -520,11 +502,6 @@ export default function MyPartyListPage() {
                             to={`/party/${item.partyId}`}
                             className="group block"
                           >
-                            <div className={`relative h-full bg-white rounded-xl border transition-all duration-300 overflow-hidden hover:-translate-y-1 ${
-                              theme === "christmas"
-                                ? "border-gray-200 hover:border-gray-200 hover:shadow-[4px_4px_12px_rgba(0,0,0,0.08)]"
-                                : "border-slate-200 hover:border-slate-300 hover:shadow-lg"
-                            }`}>
                             <div className={`relative h-full rounded-xl hover:shadow-lg transition-all duration-300 overflow-hidden hover:-translate-y-1 ${
                               theme === "dark"
                                 ? "bg-[#1E293B] border border-gray-700 hover:border-gray-600"
@@ -545,9 +522,6 @@ export default function MyPartyListPage() {
                                         <Crown className="w-3 h-3" /> 파티장
                                       </span>
                                     </div>
-                                    <h3 className={`text-lg font-bold text-slate-900 transition-colors ${
-                                      theme === "christmas" ? "group-hover:text-red-800" : "group-hover:text-blue-600"
-                                    }`}>
                                     <h3 className={`text-lg font-bold transition-colors ${currentTheme.text}`} style={{ "--hover-color": accentColor }}>
                                       {item.productName}
                                     </h3>
@@ -584,11 +558,6 @@ export default function MyPartyListPage() {
                                   </p>
                                 </div>
 
-                                <div className={`mt-4 flex items-center justify-end font-semibold text-sm ${
-                                  theme === "christmas"
-                                    ? "text-red-800 group-hover:text-red-900"
-                                    : "text-blue-600 group-hover:text-blue-700"
-                                }`}>
                                 <div className="mt-4 flex items-center justify-end font-semibold text-sm" style={{ color: accentColor }}>
                                   <span>상세 보기</span>
                                   <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
@@ -643,11 +612,6 @@ export default function MyPartyListPage() {
                             to={`/party/${item.partyId}`}
                             className="group block"
                           >
-                            <div className={`relative h-full bg-white rounded-xl border transition-all duration-300 overflow-hidden hover:-translate-y-1 ${
-                              theme === "christmas"
-                                ? "border-gray-200 hover:border-gray-200 hover:shadow-[4px_4px_12px_rgba(0,0,0,0.08)]"
-                                : "border-slate-200 hover:border-slate-300 hover:shadow-lg"
-                            }`}>
                             <div className={`relative h-full rounded-xl hover:shadow-lg transition-all duration-300 overflow-hidden hover:-translate-y-1 ${
                               theme === "dark"
                                 ? "bg-[#1E293B] border border-gray-700 hover:border-gray-600"
@@ -665,9 +629,6 @@ export default function MyPartyListPage() {
                                         {badge.text}
                                       </span>
                                     </div>
-                                    <h3 className={`text-lg font-bold text-slate-900 transition-colors ${
-                                      theme === "christmas" ? "group-hover:text-red-800" : "group-hover:text-blue-600"
-                                    }`}>
                                     <h3 className={`text-lg font-bold transition-colors ${currentTheme.text}`}>
                                       {item.productName}
                                     </h3>
@@ -707,11 +668,6 @@ export default function MyPartyListPage() {
                                   </p>
                                 </div>
 
-                                <div className={`mt-4 flex items-center justify-end font-semibold text-sm ${
-                                  theme === "christmas"
-                                    ? "text-green-800 group-hover:text-green-900"
-                                    : "text-purple-600 group-hover:text-purple-700"
-                                }`}>
                                 <div className="mt-4 flex items-center justify-end font-semibold text-sm" style={{ color: accentColor }}>
                                   <span>상세 보기</span>
                                   <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />

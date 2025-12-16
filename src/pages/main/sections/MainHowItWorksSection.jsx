@@ -37,6 +37,7 @@ function Sticker({ children, color = "bg-white", rotate = 0, className = "", isD
 export default function MainHowItWorksSection() {
   const { theme } = useThemeStore();
   const themeStyle = howItWorksThemeStyles[theme] || howItWorksThemeStyles.default;
+  const isDark = theme === "dark";
 
   const steps = [
     { num: "01", title: "파티 찾기", desc: "원하는 파티를 검색!", emoji: themeStyle.emojis[0], color: themeStyle.stepColors[0] },

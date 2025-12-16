@@ -31,14 +31,14 @@ const productsThemeStyles = {
   },
 };
 
-function Sticker({ children, color = "bg-white", rotate = 0, className = "" }) {
+function Sticker({ children, color = "bg-white", rotate = 0, className = "", isDark = false }) {
   return (
     <motion.div
       whileHover={{ scale: 1.03 }}
       whileTap={{ scale: 0.98 }}
       className={`
         ${color}
-        ${isDark ? 'border-gray-600' : 'border-gray-200'}
+        ${isDark ? 'border-gray-600' : 'border border-gray-200'}
         shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
         hover:shadow-[6px_6px_16px_rgba(0,0,0,0.12)]
         transition-all duration-200
@@ -82,6 +82,7 @@ export default function MainProductsSection() {
   const productsError = useMainStore((s) => s.productsError);
   const { theme } = useThemeStore();
   const themeStyle = productsThemeStyles[theme] || productsThemeStyles.default;
+  const isDark = theme === "dark";
 
   // 랜덤 3개 상품 선택
   const randomProducts = useMemo(() => {

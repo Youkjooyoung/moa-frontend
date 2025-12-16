@@ -46,12 +46,11 @@ const getServiceColor = (name) => {
 };
 
 export default function MainSearchSection({ products = [] }) {
-  const theme = useThemeStore((state) => state.theme);
+  const { theme } = useThemeStore();
+  const themeStyle = searchThemeStyles[theme] || searchThemeStyles.default;
   const isDark = theme === "dark";
   const [searchQuery, setSearchQuery] = useState("");
   const [isFocused, setIsFocused] = useState(false);
-  const { theme } = useThemeStore();
-  const themeStyle = searchThemeStyles[theme] || searchThemeStyles.default;
 
   // 검색 결과 필터링
   const filteredProducts = useMemo(() => {

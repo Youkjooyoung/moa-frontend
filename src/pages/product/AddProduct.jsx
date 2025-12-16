@@ -54,22 +54,6 @@ const AddProduct = () => {
     const { theme } = useThemeStore();
     const themeStyle = addProductThemeStyles[theme] || addProductThemeStyles.default;
     const navigate = useNavigate();
-    const { theme } = useThemeStore();
-    const { accentColor, bgColor, cardBg } = useTheme();
-
-    const getAccentColor = () => {
-        switch (theme) {
-            case 'classic':
-            case 'dark':
-                return '#635bff';
-            case 'pop':
-                return '#ec4899';
-            case 'christmas':
-                return '#c41e3a';
-            default:
-                return '#635bff';
-        }
-    };
 
     const {
         formData,
@@ -169,8 +153,6 @@ const AddProduct = () => {
         onError: (msg) => showAlert(msg),
         enabled: true
     });
-
-    const accent = getAccentColor();
 
     return (
         <div className="container mx-auto px-4 py-12 max-w-2xl relative">
@@ -365,7 +347,6 @@ const AddProduct = () => {
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
-            </div>
         </div>
     );
 };

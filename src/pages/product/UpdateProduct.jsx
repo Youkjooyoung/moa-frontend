@@ -64,8 +64,6 @@ const UpdateProduct = () => {
         image: '',
         productStatus: 'ACTIVE'
     });
-    const { theme } = useThemeStore();
-    const { accentColor, bgColor, cardBg } = useTheme();
 
     const getAccentColor = () => {
         switch (theme) {

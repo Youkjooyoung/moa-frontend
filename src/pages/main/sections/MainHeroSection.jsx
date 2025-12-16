@@ -72,7 +72,7 @@ const Confetti = ({ themeStyle }) => {
       {confettiPieces.map((piece, index) => (
         <motion.div
           key={index}
-          className={`absolute ${piece.color} ${piece.size} rounded-sm ${isDark ? 'border-transparent' : 'border border-gray-200'} shadow-[4px_4px_12px_rgba(0,0,0,0.08)]`}
+          className={`absolute ${piece.color} ${piece.size} rounded-sm border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]`}
           style={{ left: piece.left, top: -20 }}
           animate={{
             y: ["0vh", "110vh"],
@@ -98,6 +98,7 @@ export default function MainHeroSection({ parties, products = [] }) {
   // 테마 설정
   const { theme } = useThemeStore();
   const themeStyle = heroThemeStyles[theme] || heroThemeStyles.default;
+  const isDark = theme === "dark";
 
   // portrait-v2 스타일: useInView로 섹션 감지
   const heroRef = useRef(null);
@@ -487,6 +488,10 @@ function ServiceCard({ card, theme, themeStyle }) {
   const accentColor = themeStyle?.headlineAccent2 || "text-pink-500";
   const badgeBg = theme === "christmas" ? "bg-[#1a5f2a]" : "bg-lime-400";
   const badgeText = theme === "christmas" ? "text-white" : "text-black";
+  const isDark = theme === "dark";
+  const cardBg = isDark ? "bg-[#1E293B]" : "bg-white";
+  const subTextColor = isDark ? "text-gray-400" : "text-gray-500";
+  const textColor = isDark ? "text-white" : "text-black";
 
   // 파티가 없는 빈 카드
   if (card.isEmpty) {

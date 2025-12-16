@@ -2,7 +2,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { LayoutDashboard } from "lucide-react";
 import { useThemeStore } from "@/store/themeStore";
 import Sticker from "./Sticker";
-import { useThemeStore } from "@/store/themeStore";
 
 // 테마별 스타일
 const heroThemeStyles = {
@@ -27,6 +26,7 @@ const heroThemeStyles = {
 export default function UserListHero({ totalCount }) {
   const { theme } = useThemeStore();
   const themeStyle = heroThemeStyles[theme] || heroThemeStyles.default;
+  const isDark = theme === "dark";
   return (
     <section className="relative px-6 md:px-12 pt-8 pb-12">
       <div className="max-w-7xl mx-auto">
