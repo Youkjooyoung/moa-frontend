@@ -11,7 +11,7 @@ import { LoginForm } from "./components/LoginForm";
 import { SocialLoginButtons } from "./components/SocialLoginButtons";
 import { LoginOtpDialog } from "./components/LoginOtpDialog";
 import { useThemeStore } from "@/store/themeStore";
-import { ThemeSwitcher, ChristmasBackground } from "@/config/themeConfig";
+import { ChristmasBackground } from "@/config/themeConfig";
 
 // Theme-based styles
 const getThemeStyles = (theme) => {
@@ -92,10 +92,7 @@ export default function LoginPage() {
   }, [setField]);
 
   return (
-    <div className={`min-h-screen ${themeStyles.bg} ${theme === 'dark' ? 'text-white' : 'text-slate-900'} pb-20`}>
-      {/* Theme Switcher */}
-      <ThemeSwitcher theme={theme} onThemeChange={setTheme} />
-
+    <div className={`min-h-screen bg-transparent ${theme === 'dark' ? 'text-white' : 'text-slate-900'} pb-20 relative z-10`}>
       {/* Christmas Background */}
       {theme === 'christmas' && <ChristmasBackground />}
 

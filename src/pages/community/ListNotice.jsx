@@ -8,16 +8,17 @@ import { NeoButton, NeoPagination } from '@/components/common/neo';
 import { Search } from 'lucide-react';
 
 // 테마별 스타일
-const listNoticeThemeStyles = {
+const communityThemeStyles = {
     default: {
-        button: 'bg-pink-500 text-white',
+        // Neo/Pop 스타일 - 핑크, 시안 계열
+        button: 'bg-pink-500 hover:bg-pink-600 text-white',
         searchIconHover: 'hover:text-pink-500',
-        focusRing: 'focus:ring-pink-300',
+        focusRing: 'focus:ring-pink-500',
     },
     christmas: {
-        button: 'bg-red-800 text-red-100',
-        searchIconHover: 'hover:text-red-800',
-        focusRing: 'focus:ring-red-800',
+        button: 'bg-[#c41e3a] hover:bg-red-700 text-white',
+        searchIconHover: 'hover:text-[#c41e3a]',
+        focusRing: 'focus:ring-[#c41e3a]',
     },
 };
 
@@ -25,7 +26,7 @@ const ListNotice = () => {
     const navigate = useNavigate();
     const { user } = useAuthStore();
     const { theme } = useThemeStore();
-    const themeStyle = listNoticeThemeStyles[theme] || listNoticeThemeStyles.default;
+    const themeStyle = communityThemeStyles[theme] || communityThemeStyles.default;
     const [notices, setNotices] = useState([]);
     const [filteredNotices, setFilteredNotices] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);

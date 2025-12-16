@@ -3,6 +3,7 @@ import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { AlertTriangle } from 'lucide-react';
 import httpClient from '../../api/httpClient';
 import { useThemeStore } from '@/store/themeStore';
+import { ChristmasBackground } from '@/config/themeConfig';
 
 // 테마별 스타일
 const addSubscriptionThemeStyles = {

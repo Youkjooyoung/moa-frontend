@@ -12,6 +12,12 @@ const cardThemeStyles = {
   },
   christmas: {
     border: "border border-gray-200",
+    shadow: "shadow-[4px_4px_12px_rgba(196,30,58,0.15)]",
+    hoverShadow: "hover:shadow-[6px_6px_16px_rgba(196,30,58,0.2)]",
+  },
+  pop: {
+    // Neo/Pop 스타일 - 부드러운 그림자로 변경
+    border: "border border-gray-200",
     shadow: "shadow-[4px_4px_12px_rgba(0,0,0,0.08)]",
     hoverShadow: "hover:shadow-[6px_6px_16px_rgba(0,0,0,0.12)]",
   },

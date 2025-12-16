@@ -20,13 +20,13 @@ const virtualBankModalThemeStyles = {
     },
     christmas: {
         cardBg: 'bg-gradient-to-br from-red-50 to-green-50 border border-gray-200',
-        iconBg: 'bg-red-800',
-        textAccent: 'text-red-800',
+        iconBg: 'bg-[#c41e3a]',
+        textAccent: 'text-[#c41e3a]',
         textAccentAlt: 'text-red-700',
         border: 'border-gray-200',
         infoBg: 'bg-green-50',
         infoText: 'text-green-800',
-        buttonBg: 'bg-red-800 hover:bg-red-900',
+        buttonBg: 'bg-[#c41e3a] hover:bg-red-700',
         shadow: 'shadow-[4px_4px_12px_rgba(0,0,0,0.08)]',
     },
 };
@@ -193,8 +193,8 @@ export default function VirtualBankModal() {
                                         </motion.p>
                                     </div>
                                     <div className="flex items-center gap-1 mt-2">
-                                        <div className={`w-2 h-2 ${theme === 'christmas' ? 'bg-red-800' : 'bg-orange-500'} rounded-full animate-pulse`} />
-                                        <p className={`text-xs ${theme === 'christmas' ? 'text-red-800' : 'text-orange-600'} font-medium`}>
+                                        <div className={`w-2 h-2 ${theme === 'christmas' ? 'bg-[#c41e3a]' : 'bg-orange-500'} rounded-full animate-pulse`} />
+                                        <p className={`text-xs ${theme === 'christmas' ? 'text-[#c41e3a]' : 'text-orange-600'} font-medium`}>
                                             숫자 4자리가 인증코드입니다
                                         </p>
                                     </div>

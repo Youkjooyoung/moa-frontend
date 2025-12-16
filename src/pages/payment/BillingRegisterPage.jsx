@@ -8,8 +8,6 @@ import { handleApiError } from "../../utils/errorHandler";
 import { toast } from "../../utils/toast";
 import {
   useTheme,
-  ThemeSwitcher,
-  ThemeBackground,
 } from "../../config/themeConfig";
 
 export default function BillingRegisterPage() {
@@ -50,12 +48,7 @@ export default function BillingRegisterPage() {
   }, [user, navigate]);
 
   return (
-    <div className={`min-h-screen flex items-center justify-center relative transition-colors duration-300 ${theme === "dark" ? "bg-[#0B1120]" : "bg-[#fafafa]"
-      }`}>
-      {/* Theme Switcher */}
-      <ThemeSwitcher theme={theme} onThemeChange={setTheme} />
-
-      <ThemeBackground theme={theme} />
+    <div className="min-h-screen bg-transparent flex items-center justify-center relative transition-colors duration-300 z-10">
       <div className="max-w-md w-full mx-4 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

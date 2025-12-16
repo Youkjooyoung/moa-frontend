@@ -8,7 +8,7 @@ import { useThemeStore } from '@/store/themeStore';
 import { NeoCard, NeoPagination } from '@/components/common/neo';
 
 // 테마별 스타일
-const inquiryThemeStyles = {
+const communityThemeStyles = {
     default: {
         cardBg: 'bg-white',
         textColor: 'text-black',
@@ -22,7 +22,7 @@ const inquiryThemeStyles = {
 const Inquiry = () => {
     const { user } = useAuthStore();
     const { theme } = useThemeStore();
-    const themeStyle = inquiryThemeStyles[theme] || inquiryThemeStyles.default;
+    const themeStyle = communityThemeStyles[theme] || communityThemeStyles.default;
     const [inquiries, setInquiries] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);

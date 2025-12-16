@@ -14,13 +14,13 @@ const heroThemeStyles = {
     iconColor: "text-emerald-600",
   },
   christmas: {
-    gradientBg: "bg-gradient-to-br from-red-800 via-red-700 to-green-800",
-    dotColor: "bg-green-400",
+    gradientBg: "bg-gradient-to-br from-[#c41e3a] via-red-700 to-[#1a5f2a]",
+    dotColor: "bg-[#1a5f2a]",
     highlightText: "text-green-200",
     descText: "text-green-100/90",
     cardBg: "bg-white/95 border-gray-200",
-    iconBg: "bg-green-100",
-    iconColor: "text-green-700",
+    iconBg: "bg-[#1a5f2a]",
+    iconColor: "text-green-100",
   },
 };
 

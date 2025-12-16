@@ -8,7 +8,7 @@ const heroThemeStyles = {
     dotColor: "bg-red-500",
   },
   christmas: {
-    dotColor: "bg-green-600",
+    dotColor: "bg-[#1a5f2a]",
   },
 };
 

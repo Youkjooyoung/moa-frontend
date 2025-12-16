@@ -18,12 +18,33 @@ const PAGE_SIZE_OPTIONS = [10, 20, 30, 40, 50, 100]
 // 테마별 스타일
 const historyThemeStyles = {
     default: {
-        searchButton: 'bg-indigo-600 hover:bg-indigo-700',
-        tableRowHover: 'hover:bg-slate-50',
+        // Neo/Pop 스타일 - 핑크, 시안 계열 (깔끔한 흰색 배경)
+        searchButton: 'bg-pink-500 hover:bg-pink-600',
+        tableRowHover: 'hover:bg-pink-50',
+        headerBg: 'bg-white',
+        headerBorder: 'border-gray-100',
+        inputFocus: 'focus:ring-pink-500 focus:border-pink-500',
+        selectTrigger: 'focus:ring-pink-500',
+        tableHeader: 'text-pink-600',
+        tableBorder: 'border-gray-200',
+        paginationHover: 'hover:bg-pink-50',
+        paginationBorder: 'border-gray-200',
+        readBadge: 'bg-cyan-100 text-cyan-700',
+        emptyIcon: 'text-pink-300',
     },
     christmas: {
-        searchButton: 'bg-red-800 hover:bg-red-900',
+        searchButton: 'bg-[#c41e3a] hover:bg-red-700',
         tableRowHover: 'hover:bg-red-50',
+        headerBg: 'bg-red-50',
+        headerBorder: 'border-red-100',
+        inputFocus: 'focus:ring-[#c41e3a] focus:border-[#c41e3a]',
+        selectTrigger: 'focus:ring-[#c41e3a]',
+        tableHeader: 'text-[#c41e3a]',
+        tableBorder: 'border-red-200',
+        paginationHover: 'hover:bg-red-50',
+        paginationBorder: 'border-red-200',
+        readBadge: 'bg-green-100 text-[#1a5f2a]',
+        emptyIcon: 'text-[#c41e3a]/50',
     },
 }
 
@@ -46,12 +67,12 @@ const HistoryTab = ({
 
     return (
         <div className="h-full flex flex-col">
-            <div className="px-6 py-3 border-b border-slate-100 flex flex-wrap items-center gap-3 flex-shrink-0">
+            <div className={`px-6 py-3 border-b ${themeStyle.headerBorder} ${themeStyle.headerBg} flex flex-wrap items-center gap-3 flex-shrink-0`}>
                 <Select
                     value={filters.pushCode || 'all'}
                     onValueChange={(v) => onFilterChange('pushCode', v === 'all' ? '' : v)}
                 >
-                    <SelectTrigger className="w-40">
+                    <SelectTrigger className={`w-40 ${themeStyle.selectTrigger}`}>
                         <SelectValue placeholder="푸시 코드" />
                     </SelectTrigger>
                     <SelectContent>
@@ -68,24 +89,24 @@ const HistoryTab = ({
                     value={filters.receiverId}
                     onChange={(e) => onFilterChange('receiverId', e.target.value)}
                     placeholder="수신자 ID"
-                    className="w-40"
+                    className={`w-40 ${themeStyle.inputFocus}`}
                 />
 
                 <Input
                     type="date"
                     value={filters.startDate}
                     onChange={(e) => onFilterChange('startDate', e.target.value)}
-                    className="w-36"
+                    className={`w-36 ${themeStyle.inputFocus}`}
                 />
                 <span className="text-slate-400">~</span>
                 <Input
                     type="date"
                     value={filters.endDate}
                     onChange={(e) => onFilterChange('endDate', e.target.value)}
-                    className="w-36"
+                    className={`w-36 ${themeStyle.inputFocus}`}
                 />
 
-                <Button onClick={onSearch} size="sm" className={themeStyle.searchButton}>
+                <Button onClick={onSearch} size="sm" className={`${themeStyle.searchButton} text-white`}>
                     <Search className="w-4 h-4 mr-1" />
                     검색
                 </Button>
@@ -97,7 +118,7 @@ const HistoryTab = ({
                         <Loader2 className="w-6 h-6 animate-spin text-slate-400" />
                     </div>
                 ) : history.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center py-12 text-slate-400">
+                    <div className={`flex flex-col items-center justify-center py-12 ${themeStyle.emptyIcon}`}>
                         <History className="w-10 h-10 mb-2 opacity-50" />
                         <p className="text-sm">발송 내역이 없습니다</p>
                     </div>
@@ -105,17 +126,17 @@ const HistoryTab = ({
                     <div className="p-4">
                         <table className="w-full text-sm">
                             <thead>
-                                <tr className="border-b border-slate-200">
-                                    <th className="text-left py-2 px-3 font-medium text-slate-600">수신자</th>
-                                    <th className="text-left py-2 px-3 font-medium text-slate-600">푸시코드</th>
-                                    <th className="text-left py-2 px-3 font-medium text-slate-600">제목</th>
-                                    <th className="text-left py-2 px-3 font-medium text-slate-600">발송일시</th>
-                                    <th className="text-center py-2 px-3 font-medium text-slate-600">읽음</th>
+                                <tr className={`border-b ${themeStyle.tableBorder}`}>
+                                    <th className={`text-left py-2 px-3 font-medium ${themeStyle.tableHeader}`}>수신자</th>
+                                    <th className={`text-left py-2 px-3 font-medium ${themeStyle.tableHeader}`}>푸시코드</th>
+                                    <th className={`text-left py-2 px-3 font-medium ${themeStyle.tableHeader}`}>제목</th>
+                                    <th className={`text-left py-2 px-3 font-medium ${themeStyle.tableHeader}`}>발송일시</th>
+                                    <th className={`text-center py-2 px-3 font-medium ${themeStyle.tableHeader}`}>읽음</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {history.map((item) => (
-                                    <tr key={item.pushId} className={`border-b border-slate-100 ${themeStyle.tableRowHover}`}>
+                                    <tr key={item.pushId} className={`border-b ${themeStyle.headerBorder} ${themeStyle.tableRowHover}`}>
                                         <td className="py-2.5 px-3 text-slate-700">{item.receiverId}</td>
                                         <td className="py-2.5 px-3">
                                             <Badge variant="outline" className="font-mono text-xs">
@@ -130,7 +151,7 @@ const HistoryTab = ({
                                         </td>
                                         <td className="py-2.5 px-3 text-center">
                                             {item.isRead === 'Y' ? (
-                                                <Badge className="bg-green-100 text-green-700">읽음</Badge>
+                                                <Badge className={themeStyle.readBadge}>읽음</Badge>
                                             ) : (
                                                 <Badge variant="outline">안읽음</Badge>
                                             )}
@@ -143,11 +164,11 @@ const HistoryTab = ({
                 )}
             </ScrollArea>
 
-            <div className="px-6 py-3 border-t border-slate-100 flex items-center justify-between flex-shrink-0">
+            <div className={`px-6 py-3 border-t ${themeStyle.headerBorder} flex items-center justify-between flex-shrink-0`}>
                 <div className="flex items-center gap-2">
                     <span className="text-sm text-slate-500">표시 개수:</span>
                     <Select value={pageSize.toString()} onValueChange={onPageSizeChange}>
-                        <SelectTrigger className="w-20 h-8">
+                        <SelectTrigger className={`w-20 h-8 ${themeStyle.selectTrigger}`}>
                             <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -172,7 +193,7 @@ const HistoryTab = ({
                             size="icon"
                             onClick={() => onPageChange(page - 1)}
                             disabled={page <= 1}
-                            className="h-8 w-8"
+                            className={`h-8 w-8 ${themeStyle.paginationHover} ${themeStyle.paginationBorder}`}
                         >
                             <ChevronLeft className="w-4 h-4" />
                         </Button>
@@ -184,7 +205,7 @@ const HistoryTab = ({
                             size="icon"
                             onClick={() => onPageChange(page + 1)}
                             disabled={page >= totalPages}
-                            className="h-8 w-8"
+                            className={`h-8 w-8 ${themeStyle.paginationHover} ${themeStyle.paginationBorder}`}
                         >
                             <ChevronRight className="w-4 h-4" />
                         </Button>

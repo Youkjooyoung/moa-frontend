@@ -13,13 +13,13 @@ const menuButtonThemeStyles = {
     indicatorBg: "bg-indigo-500",
   },
   christmas: {
-    activeBg: "bg-red-800",
+    activeBg: "bg-[#c41e3a]",
     activeBorder: "border-gray-200",
     activeShadow: "shadow-[4px_4px_12px_rgba(0,0,0,0.08)]",
     inactiveBorder: "border-gray-200",
     inactiveShadow: "shadow-[4px_4px_12px_rgba(0,0,0,0.08)]",
     destructiveBorder: "border-gray-200",
-    indicatorBg: "bg-red-500",
+    indicatorBg: "bg-[#c41e3a]",
   },
 };
 

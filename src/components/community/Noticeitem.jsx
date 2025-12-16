@@ -6,49 +6,27 @@ const NoticeItem = ({ notice, index, formatDate, onClick }) => {
     const { theme } = useThemeStore();
 
     // Theme-based colors
-    const getThemeColors = () => {
-        switch (theme) {
-            case 'christmas':
-                return {
-                    cardBg: 'bg-white',
-                    cardHover: 'hover:bg-red-50',
-                    textColor: 'text-black',
-                    indexColor: 'text-gray-400',
-                    dateColor: 'text-gray-500',
-                    viewBadge: 'bg-red-800',
-                };
-            case 'dark':
-                return {
-                    cardBg: 'bg-[#1E293B]',
-                    cardHover: 'hover:bg-[#635bff]/20',
-                    textColor: 'text-gray-200',
-                    indexColor: 'text-gray-500',
-                    dateColor: 'text-gray-400',
-                    viewBadge: 'bg-[#635bff]',
-                };
-            case 'classic':
-                return {
-                    cardBg: 'bg-white',
-                    cardHover: 'hover:bg-blue-50',
-                    textColor: 'text-black',
-                    indexColor: 'text-gray-400',
-                    dateColor: 'text-gray-500',
-                    viewBadge: 'bg-[#635bff]',
-                };
-            case 'pop':
-            default:
-                return {
-                    cardBg: 'bg-white',
-                    cardHover: 'hover:bg-lime-100',
-                    textColor: 'text-black',
-                    indexColor: 'text-gray-400',
-                    dateColor: 'text-gray-500',
-                    viewBadge: 'bg-lime-400',
-                };
-        }
+    const communityThemeStyles = {
+        default: {
+            // Neo/Pop 스타일 - 핑크, 시안 계열
+            cardBg: 'bg-white',
+            cardHover: 'hover:bg-pink-50',
+            textColor: 'text-black',
+            indexColor: 'text-gray-400',
+            dateColor: 'text-gray-500',
+            viewBadge: 'bg-pink-500',
+        },
+        christmas: {
+            cardBg: 'bg-white',
+            cardHover: 'hover:bg-red-50',
+            textColor: 'text-black',
+            indexColor: 'text-gray-400',
+            dateColor: 'text-gray-500',
+            viewBadge: 'bg-[#c41e3a]',
+        },
     };
 
-    const themeColors = getThemeColors();
+    const themeColors = communityThemeStyles[theme] || communityThemeStyles.default;
 
     return (
         <div className="mb-3">

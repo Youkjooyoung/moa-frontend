@@ -10,53 +10,29 @@ const InquiryForm = ({ formData, setFormData, imagePreview, setImageFile, setIma
     const { theme } = useThemeStore();
 
     // Theme-based colors
-    const getThemeColors = () => {
-        switch (theme) {
-            case 'christmas':
-                return {
-                    focusRing: 'focus:ring-red-800',
-                    fileButton: 'file:bg-green-800',
-                    removeButton: 'bg-red-800 hover:bg-red-900',
-                    submitButton: 'bg-red-800',
-                    cardBg: theme === 'dark' ? 'bg-[#1E293B]' : 'bg-white',
-                    textColor: theme === 'dark' ? 'text-gray-200' : 'text-black',
-                    inputBg: theme === 'dark' ? 'bg-[#0F172A] border-gray-700' : 'bg-white border-gray-200',
-                };
-            case 'dark':
-                return {
-                    focusRing: 'focus:ring-[#635bff]',
-                    fileButton: 'file:bg-[#635bff]',
-                    removeButton: 'bg-[#635bff] hover:bg-[#5851e8]',
-                    submitButton: 'bg-[#635bff]',
-                    cardBg: 'bg-[#1E293B]',
-                    textColor: 'text-gray-200',
-                    inputBg: 'bg-[#0F172A] border-gray-700',
-                };
-            case 'classic':
-                return {
-                    focusRing: 'focus:ring-[#635bff]',
-                    fileButton: 'file:bg-[#635bff]',
-                    removeButton: 'bg-[#635bff] hover:bg-[#5851e8]',
-                    submitButton: 'bg-[#635bff]',
-                    cardBg: 'bg-white',
-                    textColor: 'text-black',
-                    inputBg: 'bg-white border-gray-200',
-                };
-            case 'pop':
-            default:
-                return {
-                    focusRing: 'focus:ring-cyan-400',
-                    fileButton: 'file:bg-lime-400',
-                    removeButton: 'bg-pink-500 hover:bg-pink-600',
-                    submitButton: 'bg-pink-500',
-                    cardBg: 'bg-white',
-                    textColor: 'text-black',
-                    inputBg: 'bg-white border-gray-200',
-                };
-        }
+    const communityThemeStyles = {
+        default: {
+            // Neo/Pop 스타일 - 핑크, 시안 계열
+            focusRing: 'focus:ring-pink-500',
+            fileButton: 'file:bg-pink-500',
+            removeButton: 'bg-pink-500 hover:bg-pink-600',
+            submitButton: 'bg-pink-500',
+            cardBg: theme === 'dark' ? 'bg-[#1E293B]' : 'bg-white',
+            textColor: theme === 'dark' ? 'text-gray-200' : 'text-black',
+            inputBg: theme === 'dark' ? 'bg-[#0F172A] border-gray-700' : 'bg-white border-gray-200',
+        },
+        christmas: {
+            focusRing: 'focus:ring-[#c41e3a]',
+            fileButton: 'file:bg-[#1a5f2a]',
+            removeButton: 'bg-[#c41e3a] hover:bg-red-700',
+            submitButton: 'bg-[#c41e3a]',
+            cardBg: theme === 'dark' ? 'bg-[#1E293B]' : 'bg-white',
+            textColor: theme === 'dark' ? 'text-gray-200' : 'text-black',
+            inputBg: theme === 'dark' ? 'bg-[#0F172A] border-gray-700' : 'bg-white border-gray-200',
+        },
     };
 
-    const themeColors = getThemeColors();
+    const themeColors = communityThemeStyles[theme] || communityThemeStyles.default;
 
     const handleChange = (e) => {
         const { name, value } = e.target;

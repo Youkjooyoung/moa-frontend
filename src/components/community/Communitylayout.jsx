@@ -11,45 +11,25 @@ const CommunityLayout = ({ children }) => {
     const { theme } = useThemeStore();
 
     // Theme-based colors
-    const getThemeColors = () => {
-        switch (theme) {
-            case 'christmas':
-                return {
-                    primary: 'bg-red-800',
-                    secondary: 'bg-green-800',
-                    tertiary: 'bg-white',
-                    activeTab: 'bg-red-800',
-                    inactiveTabHover: 'hover:bg-red-50',
-                };
-            case 'dark':
-                return {
-                    primary: 'bg-[#635bff]',
-                    secondary: 'bg-gray-700',
-                    tertiary: 'bg-gray-800',
-                    activeTab: 'bg-[#635bff]',
-                    inactiveTabHover: 'hover:bg-[#635bff]/20',
-                };
-            case 'classic':
-                return {
-                    primary: 'bg-[#635bff]',
-                    secondary: 'bg-blue-500',
-                    tertiary: 'bg-white',
-                    activeTab: 'bg-[#635bff]',
-                    inactiveTabHover: 'hover:bg-blue-100',
-                };
-            case 'pop':
-            default:
-                return {
-                    primary: 'bg-pink-500',
-                    secondary: 'bg-cyan-400',
-                    tertiary: 'bg-lime-400',
-                    activeTab: 'bg-cyan-400',
-                    inactiveTabHover: 'hover:bg-lime-400',
-                };
-        }
+    const communityThemeStyles = {
+        default: {
+            // Neo/Pop 스타일 - 핑크, 시안 계열
+            primary: 'bg-pink-500',
+            secondary: 'bg-cyan-500',
+            tertiary: 'bg-lime-400',
+            activeTab: 'bg-pink-500',
+            inactiveTabHover: 'hover:bg-pink-50',
+        },
+        christmas: {
+            primary: 'bg-[#c41e3a]',
+            secondary: 'bg-[#1a5f2a]',
+            tertiary: 'bg-white',
+            activeTab: 'bg-[#c41e3a]',
+            inactiveTabHover: 'hover:bg-red-50',
+        },
     };
 
-    const themeColors = getThemeColors();
+    const themeColors = communityThemeStyles[theme] || communityThemeStyles.default;
 
     const isActiveTab = (path) => {
         if (path === '/community/inquiry') {
@@ -79,9 +59,9 @@ const CommunityLayout = ({ children }) => {
     ];
 
     return (
-        <div className={`min-h-screen ${theme === 'dark' ? 'bg-[#0B1120]' : 'bg-slate-50'}`}>
+        <div className="min-h-screen bg-transparent relative z-10">
             {/* Header Section */}
-            <div className={`${theme === 'pop' ? 'border-b-4 border-black' : theme === 'dark' ? 'border-b border-gray-700' : 'border-b border-gray-200'} ${theme === 'dark' ? 'bg-[#1E293B]' : 'bg-white'}`}>
+            <div className={`${theme === 'dark' ? 'border-b border-gray-700' : 'border-b border-gray-200'} bg-transparent`}>
                 <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-6">
                     <NeoCard
                         color={themeColors.primary}

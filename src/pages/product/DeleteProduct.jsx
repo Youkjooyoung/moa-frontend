@@ -18,7 +18,7 @@ const deleteProductThemeStyles = {
         confirmButton: 'bg-indigo-600 hover:bg-indigo-700',
     },
     christmas: {
-        confirmButton: 'bg-red-800 hover:bg-red-900',
+        confirmButton: 'bg-[#c41e3a] hover:bg-red-700',
     },
 };
 

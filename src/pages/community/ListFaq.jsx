@@ -8,20 +8,21 @@ import { NeoButton, NeoPagination } from '@/components/common/neo';
 import { Search } from 'lucide-react';
 
 // 테마별 스타일
-const listFaqThemeStyles = {
+const communityThemeStyles = {
     default: {
-        button: 'bg-pink-500 text-white',
+        // Neo/Pop 스타일 - 핑크, 시안 계열
+        button: 'bg-pink-500 hover:bg-pink-600 text-white',
         searchIconHover: 'hover:text-pink-500',
         categoryButtonActive: 'bg-pink-500 text-white',
-        categoryButtonInactive: 'bg-white text-black hover:bg-slate-100',
-        focusRing: 'focus:ring-pink-300',
+        categoryButtonInactive: 'bg-white text-black hover:bg-pink-50',
+        focusRing: 'focus:ring-pink-500',
     },
     christmas: {
-        button: 'bg-red-800 text-red-100',
-        searchIconHover: 'hover:text-red-800',
-        categoryButtonActive: 'bg-red-800 text-white',
+        button: 'bg-[#c41e3a] hover:bg-red-700 text-white',
+        searchIconHover: 'hover:text-[#c41e3a]',
+        categoryButtonActive: 'bg-[#c41e3a] text-white',
         categoryButtonInactive: 'bg-white text-black hover:bg-red-50',
-        focusRing: 'focus:ring-red-800',
+        focusRing: 'focus:ring-[#c41e3a]',
     },
 };
 
@@ -29,7 +30,7 @@ const ListFaq = () => {
     const navigate = useNavigate();
     const { user } = useAuthStore();
     const { theme } = useThemeStore();
-    const themeStyle = listFaqThemeStyles[theme] || listFaqThemeStyles.default;
+    const themeStyle = communityThemeStyles[theme] || communityThemeStyles.default;
     const [faqs, setFaqs] = useState([]);
     const [filteredFaqs, setFilteredFaqs] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);

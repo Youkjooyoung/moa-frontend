@@ -9,8 +9,8 @@ const menuButtonThemeStyles = {
     inactiveHover: "hover:bg-slate-50",
   },
   christmas: {
-    activeBg: "bg-red-800 hover:bg-red-800",
-    activeBorder: "border-red-800",
+    activeBg: "bg-[#c41e3a] hover:bg-red-700",
+    activeBorder: "border-[#c41e3a]",
     inactiveHover: "hover:bg-red-50",
   },
 };

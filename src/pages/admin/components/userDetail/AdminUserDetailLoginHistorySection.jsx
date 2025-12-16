@@ -20,7 +20,7 @@ const historyThemeStyles = {
     tableBorder: "border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]",
     tableHeaderBorder: "border-b border-gray-200",
     buttonBorder: "border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]",
-    activeButton: "bg-red-800 text-white hover:bg-red-800",
+    activeButton: "bg-[#c41e3a] text-white hover:bg-red-700",
     rowHover: "hover:bg-red-50",
     buttonHover: "hover:bg-red-50",
   },

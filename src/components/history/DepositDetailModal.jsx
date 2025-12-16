@@ -16,7 +16,7 @@ const depositModalThemeStyles = {
   christmas: {
     gradientBg: 'bg-gradient-to-br from-red-50 to-green-50',
     iconBg: 'bg-red-100',
-    iconColor: 'text-red-800',
+    iconColor: 'text-[#c41e3a]',
     iconColorSecondary: 'text-green-800',
     border: 'border border-gray-200',
     shadow: 'shadow-[4px_4px_12px_rgba(0,0,0,0.08)]',

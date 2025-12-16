@@ -5,8 +5,6 @@ import { getMyParties, getMyClosedParties } from "../../api/partyApi";
 import { fetchCurrentUser } from "../../api/authApi";
 import {
   useTheme,
-  ThemeSwitcher,
-  ThemeBackground,
   ThemeMarquee,
   ChristmasBackground,
   themeConfig
@@ -24,6 +22,38 @@ import {
   Filter,
 } from "lucide-react";
 
+// Party 페이지 테마 스타일
+const partyThemeStyles = {
+  default: {
+    accent: 'text-indigo-600',
+    accentBg: 'bg-indigo-600',
+    hoverAccentBg: 'hover:bg-indigo-700',
+    badge: 'bg-indigo-50 text-indigo-600',
+    buttonShadow: 'shadow-indigo-600/25',
+    accentColor: '#635bff',
+  },
+  christmas: {
+    accent: 'text-[#c41e3a]',
+    accentBg: 'bg-[#c41e3a]',
+    hoverAccentBg: 'hover:bg-red-700',
+    greenAccent: 'text-[#1a5f2a]',
+    greenBg: 'bg-[#1a5f2a]',
+    badge: 'bg-red-50 text-[#c41e3a]',
+    greenBadge: 'bg-green-50 text-[#1a5f2a]',
+    buttonShadow: 'shadow-[#c41e3a]/25',
+    cardShadow: 'shadow-[4px_4px_12px_rgba(0,0,0,0.08)]',
+    accentColor: '#c41e3a',
+  },
+  pop: {
+    accent: 'text-pink-500',
+    accentBg: 'bg-pink-500',
+    hoverAccentBg: 'hover:bg-pink-600',
+    badge: 'bg-pink-50 text-pink-600',
+    buttonShadow: 'shadow-pink-500/25',
+    accentColor: '#ec4899',
+  },
+};
+
 export default function MyPartyListPage() {
   const navigate = useNavigate();
   const [list, setList] = useState([]);
@@ -34,6 +64,7 @@ export default function MyPartyListPage() {
 
   // Theme
   const { theme, setTheme, currentTheme } = useTheme("appTheme");
+  const themeStyle = partyThemeStyles[theme] || partyThemeStyles.default;
 
   useEffect(() => {
     loadUserAndParties();
@@ -158,17 +189,14 @@ export default function MyPartyListPage() {
 
   if (loading) {
     return (
-      <div className={`min-h-screen ${currentTheme.bg} flex items-center justify-center`}>
+      <div className="min-h-screen bg-transparent flex items-center justify-center relative z-10">
         <div className="animate-spin rounded-full h-12 w-12 border-2 border-t-transparent" style={{ borderColor: accentColor }}></div>
       </div>
     );
   }
 
   return (
-    <div className={`min-h-screen ${currentTheme.bg} pb-20 transition-colors duration-300`}>
-      {/* Theme Switcher */}
-      <ThemeSwitcher theme={theme} onThemeChange={setTheme} />
-
+    <div className="min-h-screen bg-transparent pb-20 transition-colors duration-300 relative z-10">
       {/* Pop Theme Marquee */}
       <ThemeMarquee theme={theme} />
 
@@ -176,9 +204,7 @@ export default function MyPartyListPage() {
       {theme === 'christmas' && <ChristmasBackground />}
 
       {/* Hero Header */}
-      <div className={`relative overflow-hidden ${theme === "dark" ? "bg-[#0B1120]" : theme === "pop" ? "bg-slate-50" : "bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50"
-        }`}>
-        <ThemeBackground theme={theme} />
+      <div className="relative overflow-hidden bg-transparent">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16 relative z-10">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
             <motion.div

@@ -262,11 +262,11 @@ export default function AdminDashboardPage() {
         { type: "info", title: "신규 가입", message: "오늘 신규 가입자 15명", time: "3시간 전" },
     ], []);
 
-    const mainBgClass = theme === 'dark' ? 'bg-[#0B1120]' : theme === 'christmas' ? 'bg-transparent' : 'bg-gray-50';
+    const mainBgClass = 'bg-transparent';
 
     if (loading) {
         return (
-            <div className={`min-h-screen ${mainBgClass} flex justify-center items-center`}>
+            <div className="min-h-screen bg-transparent flex justify-center items-center relative z-10">
                 {theme === 'christmas' && <ChristmasBackground />}
                 <motion.div
                     initial={{ opacity: 0 }}
@@ -286,7 +286,7 @@ export default function AdminDashboardPage() {
         const errorSubtextClass = theme === 'dark' ? 'text-gray-300' : 'text-gray-500';
 
         return (
-            <div className={`min-h-screen ${mainBgClass} flex justify-center items-center`}>
+            <div className="min-h-screen bg-transparent flex justify-center items-center relative z-10">
                 {theme === 'christmas' && <ChristmasBackground />}
                 <motion.div
                     initial={{ opacity: 0, scale: 0.9 }}
@@ -396,7 +396,7 @@ export default function AdminDashboardPage() {
     const inputBorderClass = theme === 'dark' ? 'border-gray-700' : 'border-gray-200';
 
     return (
-        <div className={`min-h-screen ${mainBgClass} relative`}>
+        <div className="min-h-screen bg-transparent relative z-10">
             {theme === 'christmas' && <ChristmasBackground />}
             {theme !== 'dark' && theme !== 'christmas' && <AnimatedGradient />}
             {theme !== 'dark' && theme !== 'christmas' && <GridPattern />}
