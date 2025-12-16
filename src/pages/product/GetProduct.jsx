@@ -16,11 +16,11 @@ const getProductThemeStyles = {
         focusRing: 'focus:ring-indigo-500',
     },
     christmas: {
-        spinnerBorder: 'border-red-800',
+        spinnerBorder: 'border-[#c41e3a]',
         cardShadow: 'shadow-[4px_4px_12px_rgba(0,0,0,0.08)]',
-        sparklesIcon: 'text-red-800',
-        benefitIcon1: 'bg-red-50 text-red-800',
-        focusRing: 'focus:ring-red-800',
+        sparklesIcon: 'text-[#c41e3a]',
+        benefitIcon1: 'bg-red-50 text-[#c41e3a]',
+        focusRing: 'focus:ring-[#c41e3a]',
     },
 };
 

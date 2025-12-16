@@ -9,8 +9,8 @@ const otpThemeStyles = {
     buttonHover: "hover:bg-indigo-50",
   },
   christmas: {
-    buttonBg: "bg-red-800",
-    buttonText: "text-red-800",
+    buttonBg: "bg-[#c41e3a]",
+    buttonText: "text-[#c41e3a]",
     buttonHover: "hover:bg-red-50",
   },
 };

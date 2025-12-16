@@ -17,10 +17,31 @@ import { useThemeStore } from '@/store/themeStore'
 // 테마별 스타일
 const popoverThemeStyles = {
     default: {
-        readAllHover: 'hover:text-indigo-600',
+        // Neo/Pop 스타일 - 핑크, 시안 계열 (깔끔한 흰색 배경)
+        readAllHover: 'hover:text-pink-500',
+        headerBg: 'bg-white',
+        headerBorder: 'border-gray-100',
+        titleText: 'text-pink-600',
+        badgeBg: 'bg-pink-500',
+        emptyIcon: 'text-pink-300',
+        loadMoreHover: 'hover:text-pink-500',
+        sectionLabel: 'text-pink-500',
+        popoverBg: 'bg-white border-gray-200',
+        bellHover: 'hover:text-pink-500 hover:bg-pink-50',
+        bellIcon: 'text-slate-500',
     },
     christmas: {
-        readAllHover: 'hover:text-red-700',
+        readAllHover: 'hover:text-[#c41e3a]',
+        headerBg: 'bg-red-50',
+        headerBorder: 'border-red-100',
+        titleText: 'text-[#c41e3a]',
+        badgeBg: 'bg-[#c41e3a]',
+        emptyIcon: 'text-[#c41e3a]/50',
+        loadMoreHover: 'hover:text-[#c41e3a]',
+        sectionLabel: 'text-[#c41e3a]',
+        popoverBg: 'bg-white border-red-200',
+        bellHover: 'hover:text-[#c41e3a] hover:bg-red-50',
+        bellIcon: 'text-slate-500',
     },
 }
 
@@ -63,11 +84,11 @@ export default function NotificationPopover({ children }) {
             variant="ghost"
             size="icon"
             onClick={onClick}
-            className="relative rounded-full w-11 h-11 text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-colors"
+            className={`relative rounded-full w-11 h-11 ${themeStyle.bellIcon} ${themeStyle.bellHover} transition-colors`}
         >
             <Bell className="w-6 h-6" />
             {unreadCount > 0 && (
-                <span className="absolute top-2 right-2 min-w-[18px] h-[18px] bg-red-500 rounded-full border-2 border-white shadow-sm flex items-center justify-center text-[10px] font-bold text-white px-1">
+                <span className={`absolute top-2 right-2 min-w-[18px] h-[18px] ${themeStyle.badgeBg} rounded-full border-2 border-white shadow-sm flex items-center justify-center text-[10px] font-bold text-white px-1`}>
                     {unreadCount > 99 ? '99+' : unreadCount}
                 </span>
             )}
@@ -93,12 +114,14 @@ export default function NotificationPopover({ children }) {
             </PopoverTrigger>
 
             <PopoverContent
-                className="w-96 p-0 bg-white border border-slate-200 rounded-2xl shadow-xl"
+                className={`w-96 p-0 ${themeStyle.popoverBg} border rounded-2xl shadow-xl`}
                 align="end"
                 sideOffset={8}
             >
-                <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100">
-                    <h3 className="text-base font-bold text-slate-900">알림</h3>
+                <div className={`flex items-center justify-between px-4 py-3 border-b ${themeStyle.headerBorder} ${themeStyle.headerBg}`}>
+                    <h3 className={`text-base font-bold ${themeStyle.titleText}`}>
+                        {theme === 'christmas' ? '🎄 알림' : '알림'}
+                    </h3>
                     <div className="flex items-center gap-1">
                         {unreadCount > 0 && (
                             <Button
@@ -131,9 +154,9 @@ export default function NotificationPopover({ children }) {
                             <Loader2 className="w-6 h-6 animate-spin text-slate-400" />
                         </div>
                     ) : notifications.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center py-12 text-slate-400">
+                        <div className={`flex flex-col items-center justify-center py-12 ${themeStyle.emptyIcon}`}>
                             <Bell className="w-10 h-10 mb-2 opacity-50" />
-                            <p className="text-sm">알림이 없습니다</p>
+                            <p className="text-sm">{theme === 'christmas' ? '🎅 알림이 없습니다' : '알림이 없습니다'}</p>
                         </div>
                     ) : (
                         <div className="py-2">
@@ -147,8 +170,8 @@ export default function NotificationPopover({ children }) {
                             >
                                 {todayNotifications.length > 0 && (
                                     <div className="px-4 py-2">
-                                        <p className="text-xs font-semibold text-slate-500 mb-2">
-                                            오늘 받은 알림
+                                        <p className={`text-xs font-semibold mb-2 ${themeStyle.sectionLabel}`}>
+                                            {theme === 'christmas' ? '🎁 오늘 받은 알림' : '오늘 받은 알림'}
                                         </p>
                                         {todayNotifications.map((notification) => (
                                             <NotificationItem
@@ -164,8 +187,8 @@ export default function NotificationPopover({ children }) {
 
                                 {previousNotifications.length > 0 && (
                                     <div className="px-4 py-2">
-                                        <p className="text-xs font-semibold text-slate-500 mb-2">
-                                            이전 알림
+                                        <p className={`text-xs font-semibold mb-2 ${themeStyle.sectionLabel}`}>
+                                            {theme === 'christmas' ? '🎄 이전 알림' : '이전 알림'}
                                         </p>
                                         {previousNotifications.map((notification) => (
                                             <NotificationItem
@@ -187,7 +210,7 @@ export default function NotificationPopover({ children }) {
                                         size="sm"
                                         onClick={handleLoadMore}
                                         disabled={isLoading}
-                                        className="w-full h-9 text-xs text-slate-500 hover:text-slate-700"
+                                        className={`w-full h-9 text-xs text-slate-500 ${themeStyle.loadMoreHover}`}
                                     >
                                         {isLoading ? (
                                             <Loader2 className="w-4 h-4 animate-spin mr-1" />

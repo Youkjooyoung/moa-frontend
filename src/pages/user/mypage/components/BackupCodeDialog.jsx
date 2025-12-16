@@ -13,7 +13,7 @@ const backupCodeThemeStyles = {
     primaryButton: "bg-indigo-600 hover:bg-indigo-700",
   },
   christmas: {
-    primaryButton: "bg-red-800 hover:bg-red-900",
+    primaryButton: "bg-[#c41e3a] hover:bg-red-700",
   },
 };
 

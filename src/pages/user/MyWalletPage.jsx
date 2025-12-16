@@ -27,8 +27,6 @@ import {
 } from "../../utils/logoHelper";
 import {
   useTheme,
-  ThemeSwitcher,
-  ThemeBackground,
   themeConfig
 } from "../../config/themeConfig";
 
@@ -108,25 +106,19 @@ export default function MyWalletPage() {
 
   if (authLoading || (loading && !account && !card)) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
+      <div className="min-h-screen flex items-center justify-center bg-transparent relative z-10">
         <div className="animate-spin rounded-full h-12 w-12 border-2 border-[#635bff] border-t-transparent"></div>
       </div>
     );
   }
 
   return (
-    <div className={`min-h-screen ${currentTheme.bg} pb-20 transition-colors duration-300`}>
-      {/* Theme Switcher */}
-      <ThemeSwitcher theme={theme} onThemeChange={setTheme} />
-
+    <div className="min-h-screen bg-transparent pb-20 transition-colors duration-300 relative z-10">
       {/* Hero Header */}
-      <div className={`relative overflow-hidden ${theme === "dark"
-        ? "bg-[#0B1120] border-b border-gray-800"
-        : theme === "pop"
-          ? "bg-slate-50"
-          : "bg-transparent"
+      <div className={`relative overflow-hidden bg-transparent ${theme === "dark"
+        ? "border-b border-gray-800"
+        : ""
         }`}>
-        <ThemeBackground theme={theme} />
         <div className="max-w-md mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10">
           <button
             onClick={() => navigate(-1)}

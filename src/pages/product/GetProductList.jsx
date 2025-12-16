@@ -7,7 +7,7 @@ import AddSubscriptionModal from '../../components/subscription/AddSubscriptionM
 import AddProductModal from '../../components/product/AddProductModal';
 import UpdateProductModal from '../../components/product/UpdateProductModal';
 import { useThemeStore } from '@/store/themeStore';
-import { ThemeSwitcher, ChristmasBackground } from '@/config/themeConfig';
+import { ChristmasBackground } from '@/config/themeConfig';
 
 // Theme-based styles
 const getThemeStyles = (theme) => {
@@ -409,17 +409,14 @@ const GetProductList = () => {
 
   if (loading) {
     return (
-      <div className={`min-h-screen ${themeStyles.bg} flex justify-center items-center`}>
+      <div className="min-h-screen bg-transparent flex justify-center items-center relative z-10">
         <div className={`animate-spin rounded-full h-12 w-12 border-b-2 ${theme === 'dark' ? 'border-[#635bff]' : 'border-indigo-600'}`}></div>
       </div>
     );
   }
 
   return (
-    <div className={`min-h-screen ${themeStyles.bg}`}>
-      {/* Theme Switcher */}
-      <ThemeSwitcher theme={theme} onThemeChange={setTheme} />
-
+    <div className="min-h-screen bg-transparent relative z-10">
       {/* Christmas Background */}
       {theme === 'christmas' && <ChristmasBackground />}
 

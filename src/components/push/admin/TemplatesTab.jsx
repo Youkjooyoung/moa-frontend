@@ -13,20 +13,27 @@ import { useThemeStore } from '@/store/themeStore'
 // 테마별 스타일
 const templatesThemeStyles = {
     default: {
-        buttonBg: 'bg-indigo-600 hover:bg-indigo-700',
-        editHover: 'hover:text-indigo-600 hover:bg-indigo-100',
-        cardBorder: 'border-slate-200',
-        cardBg: 'bg-white hover:bg-slate-50',
-        cardExpanded: 'bg-slate-50',
-        contentBorder: 'border-slate-200',
+        // Neo/Pop 스타일 - 핑크, 시안 계열 (깔끔한 흰색 배경)
+        buttonBg: 'bg-pink-500 hover:bg-pink-600',
+        editHover: 'hover:text-pink-600 hover:bg-pink-100',
+        cardBorder: 'border-gray-200',
+        cardBg: 'bg-white hover:bg-pink-50',
+        cardExpanded: 'bg-pink-50',
+        contentBorder: 'border-gray-200',
+        headerBg: 'bg-white',
+        headerBorder: 'border-gray-100',
+        emptyIcon: 'text-pink-300',
     },
     christmas: {
-        buttonBg: 'bg-red-800 hover:bg-red-900',
-        editHover: 'hover:text-red-800 hover:bg-red-100',
+        buttonBg: 'bg-[#c41e3a] hover:bg-red-700',
+        editHover: 'hover:text-[#c41e3a] hover:bg-red-100',
         cardBorder: 'border-gray-200',
         cardBg: 'bg-white hover:bg-red-50',
         cardExpanded: 'bg-red-50',
         contentBorder: 'border-gray-200',
+        headerBg: 'bg-red-50',
+        headerBorder: 'border-red-100',
+        emptyIcon: 'text-[#c41e3a]/50',
     },
 }
 
@@ -37,11 +44,11 @@ const TemplatesTab = ({ templates, isLoading, onAdd, onEdit, onDelete }) => {
 
     return (
         <div className="h-full flex flex-col">
-            <div className="px-6 py-3 border-b border-slate-100 flex items-center justify-between flex-shrink-0">
+            <div className={`px-6 py-3 border-b ${themeStyle.headerBorder} ${themeStyle.headerBg} flex items-center justify-between flex-shrink-0`}>
                 <p className="text-sm text-slate-500">
                     총 <span className="font-semibold text-slate-700">{templates.length}</span>개의 템플릿
                 </p>
-                <Button onClick={onAdd} size="sm" className={themeStyle.buttonBg}>
+                <Button onClick={onAdd} size="sm" className={`${themeStyle.buttonBg} text-white`}>
                     <Plus className="w-4 h-4 mr-1" />
                     새 템플릿
                 </Button>
@@ -53,7 +60,7 @@ const TemplatesTab = ({ templates, isLoading, onAdd, onEdit, onDelete }) => {
                         <Loader2 className="w-6 h-6 animate-spin text-slate-400" />
                     </div>
                 ) : templates.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center py-12 text-slate-400">
+                    <div className={`flex flex-col items-center justify-center py-12 ${themeStyle.emptyIcon}`}>
                         <FileText className="w-10 h-10 mb-2 opacity-50" />
                         <p className="text-sm">등록된 템플릿이 없습니다</p>
                     </div>

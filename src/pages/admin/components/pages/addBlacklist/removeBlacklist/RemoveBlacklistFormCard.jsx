@@ -12,8 +12,8 @@ const formCardThemeStyles = {
     focusRing: "focus-visible:ring-emerald-500 focus-visible:border-emerald-500",
   },
   christmas: {
-    primaryButton: "bg-green-800 hover:bg-green-900",
-    focusRing: "focus-visible:ring-green-600 focus-visible:border-green-600",
+    primaryButton: "bg-[#1a5f2a] hover:bg-green-900",
+    focusRing: "focus-visible:ring-[#1a5f2a] focus-visible:border-[#1a5f2a]",
   },
 };
 

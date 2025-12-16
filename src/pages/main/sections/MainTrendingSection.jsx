@@ -93,7 +93,7 @@ export default function MainTrendingSection() {
   const themeStyle = trendingThemeStyles[theme] || trendingThemeStyles.default;
   const isDark = theme === "dark";
 
-  // 마감 임박 파티 3개 선택 (모집률 높은 순)
+  // 마감 임박 파티 6개 선택 (모집률 높은 순) - 실제 마감임박 파티만 표시
   const visible = useMemo(() => {
     const list = Array.isArray(parties) ? [...parties] : [];
     console.log("MainTrendingSection parties:", list); // 디버깅용
@@ -106,7 +106,7 @@ export default function MainTrendingSection() {
       })
       .sort((a, b) => b.fillRatio - a.fillRatio)
       .map((item) => item.party);
-    return sorted.slice(0, 3);
+    return sorted.slice(0, 6);
   }, [parties]);
 
   const goParty = (party) => {
@@ -184,7 +184,7 @@ export default function MainTrendingSection() {
 
         {partiesLoading && (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[...Array(3)].map((_, i) => (
+            {[...Array(6)].map((_, i) => (
               <div key={i} className={`${isDark ? "bg-[#1E293B] border-gray-700" : "bg-white border-gray-100"} border rounded-2xl overflow-hidden animate-pulse`}>
                 <div className="h-40 bg-gradient-to-br from-gray-100 to-gray-50" />
                 <div className="p-5 space-y-3">
@@ -225,8 +225,9 @@ export default function MainTrendingSection() {
                     variants={itemVariants}
                     whileHover={{ y: -6, transition: { duration: 0.2 } }}
                     onClick={() => goParty(party)}
+                    className="cursor-pointer"
                   >
-                    <div className={`h-28 ${bg} border-b border-gray-200 flex items-end justify-between p-4`}>
+                    <div className={`h-28 ${bg} border-b border-gray-200 flex items-end justify-between p-4 rounded-t-2xl`}>
                       <div className="text-white font-black">
                         <div className="text-sm opacity-90">{service || "Party"}</div>
                         <div className="text-xs opacity-80">{host ? `파티장: ${host}` : ""}</div>
@@ -247,7 +248,7 @@ export default function MainTrendingSection() {
                     </div>
 
                     {/* Content */}
-                    <div className="p-5">
+                    <div className={`p-5 ${isDark ? "bg-[#1E293B]" : "bg-white"} rounded-b-2xl border border-t-0 ${isDark ? "border-gray-700" : "border-gray-200"}`}>
                       {/* Service Badge */}
                       <div className="flex items-center gap-2 mb-3">
                         <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${isDark ? "text-[#635bff] bg-[#635bff]/20" : "text-[#635bff] bg-[#635bff]/10"}`}>
@@ -257,7 +258,7 @@ export default function MainTrendingSection() {
 
                       <div className="mt-4 space-y-2">
                         <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-1 text-sm font-black text-gray-700">
+                          <div className={`flex items-center gap-1 text-sm font-black ${isDark ? "text-gray-300" : "text-gray-700"}`}>
                             <Users className="w-4 h-4" />
                             <span>{members}/{maxMembers}명</span>
                           </div>

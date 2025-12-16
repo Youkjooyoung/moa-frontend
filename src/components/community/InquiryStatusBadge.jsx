@@ -2,20 +2,21 @@ import React from 'react';
 import { useThemeStore } from '@/store/themeStore';
 
 // 테마별 문의 상태 뱃지 스타일
-const inquiryBadgeThemeStyles = {
+const communityThemeStyles = {
     default: {
-        completed: 'bg-lime-400 text-black',
+        // Neo/Pop 스타일 - 핑크, 시안 계열
+        completed: 'bg-cyan-500 text-white',
         pending: 'bg-gray-200 text-gray-600',
     },
     christmas: {
-        completed: 'bg-green-800 text-green-100',      // 포레스트 그린
-        pending: 'bg-amber-100 text-amber-700',        // 크림 베이지
+        completed: 'bg-[#1a5f2a] text-white',
+        pending: 'bg-[#c41e3a] text-white',
     },
 };
 
 const InquiryStatusBadge = ({ status }) => {
     const { theme } = useThemeStore();
-    const themeStyle = inquiryBadgeThemeStyles[theme] || inquiryBadgeThemeStyles.default;
+    const themeStyle = communityThemeStyles[theme] || communityThemeStyles.default;
 
     if (status === '답변완료') {
         return (

@@ -6,16 +6,17 @@ import { useThemeStore } from '@/store/themeStore';
 import { NeoCard, NeoButton } from '@/components/common/neo';
 
 // 테마별 스타일
-const getNoticeThemeStyles = {
+const communityThemeStyles = {
     default: {
-        dateBadge: 'bg-gray-100 text-gray-700',
-        viewBadge: 'bg-gray-100 text-gray-700',
-        editButton: 'bg-gray-700 text-white',
+        // Neo/Pop 스타일 - 핑크, 시안 계열
+        dateBadge: 'bg-cyan-100 text-cyan-700',
+        viewBadge: 'bg-pink-100 text-pink-700',
+        editButton: 'bg-pink-500 hover:bg-pink-600 text-white',
     },
     christmas: {
-        dateBadge: 'bg-green-800 text-green-100',
-        viewBadge: 'bg-amber-100 text-amber-700',
-        editButton: 'bg-red-800 text-red-100',
+        dateBadge: 'bg-[#1a5f2a] text-white',
+        viewBadge: 'bg-[#c41e3a] text-white',
+        editButton: 'bg-[#c41e3a] hover:bg-red-700 text-white',
     },
 };
 
@@ -25,7 +26,7 @@ const GetNotice = () => {
     const noticeId = params.id || params.communityId;
     const { user } = useAuthStore();
     const { theme } = useThemeStore();
-    const themeStyle = getNoticeThemeStyles[theme] || getNoticeThemeStyles.default;
+    const themeStyle = communityThemeStyles[theme] || communityThemeStyles.default;
     const [notice, setNotice] = useState(null);
     const [loading, setLoading] = useState(true);
 

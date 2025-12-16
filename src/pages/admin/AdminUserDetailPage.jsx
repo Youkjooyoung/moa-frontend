@@ -51,7 +51,7 @@ export default function AdminUserDetailPage() {
 
   if (loading) {
     return (
-      <div className={`min-h-screen flex items-center justify-center ${mainBgClass}`}>
+      <div className="min-h-screen flex items-center justify-center bg-transparent relative z-10">
         {theme === 'christmas' && <ChristmasBackground />}
         <p className={`text-sm font-bold ${loadingTextClass}`}>
           회원 정보를 불러오는 중입니다...
@@ -62,7 +62,7 @@ export default function AdminUserDetailPage() {
 
   if (error) {
     return (
-      <div className={`min-h-screen flex items-center justify-center ${mainBgClass}`}>
+      <div className="min-h-screen flex items-center justify-center bg-transparent relative z-10">
         {theme === 'christmas' && <ChristmasBackground />}
         <p className="text-sm font-bold text-red-500">{error}</p>
       </div>
@@ -95,7 +95,7 @@ export default function AdminUserDetailPage() {
 
   return (
     <AdminAuthGuard>
-      <div className={`min-h-screen ${mainBgClass} ${textClass} relative`}>
+      <div className={`min-h-screen bg-transparent ${textClass} relative z-10`}>
         {theme === 'christmas' && <ChristmasBackground />}
         <AdminUserDetailHeader shortId={shortId} />
 

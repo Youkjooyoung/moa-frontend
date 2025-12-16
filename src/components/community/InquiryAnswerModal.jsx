@@ -11,23 +11,24 @@ import { formatDate, getCategoryName } from '../../utils/communityUtils';
 import { useThemeStore } from '@/store/themeStore';
 
 // 테마별 스타일
-const modalThemeStyles = {
+const communityThemeStyles = {
     default: {
-        categoryBadge: 'bg-cyan-400 text-black',
-        focusRing: 'focus:ring-cyan-400',
-        submitButton: 'bg-pink-500 text-white',
+        // Neo/Pop 스타일 - 핑크, 시안 계열
+        categoryBadge: 'bg-pink-500 text-white',
+        focusRing: 'focus:ring-pink-500',
+        submitButton: 'bg-pink-500 hover:bg-pink-600 text-white',
     },
     christmas: {
-        categoryBadge: 'bg-amber-100 text-amber-700',
-        focusRing: 'focus:ring-red-800',
-        submitButton: 'bg-red-800 text-red-100',
+        categoryBadge: 'bg-[#c41e3a] text-white',
+        focusRing: 'focus:ring-[#c41e3a]',
+        submitButton: 'bg-[#c41e3a] hover:bg-red-700 text-white',
     },
 };
 
 const InquiryAnswerModalContent = ({ inquiry, onClose, onAnswerSubmit }) => {
     const [answerContent, setAnswerContent] = useState(inquiry?.answerContent || '');
     const { theme } = useThemeStore();
-    const themeStyle = modalThemeStyles[theme] || modalThemeStyles.default;
+    const themeStyle = communityThemeStyles[theme] || communityThemeStyles.default;
 
   const handleSubmit = async () => {
     if (!answerContent.trim()) {
@@ -95,7 +96,7 @@ const InquiryAnswerModalContent = ({ inquiry, onClose, onAnswerSubmit }) => {
         )}
 
                 {/* Answer Input */}
-                <div className="border-t-4 border-black pt-6">
+                <div className="border-t border-gray-200 pt-6">
                     <label className="block text-sm font-black text-black mb-3">
                         답변 작성
                     </label>

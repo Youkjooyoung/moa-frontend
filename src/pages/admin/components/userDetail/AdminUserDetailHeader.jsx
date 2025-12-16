@@ -10,7 +10,7 @@ const headerThemeStyles = {
   },
   christmas: {
     tagBorder: "border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]",
-    dotColor: "bg-green-600",
+    dotColor: "bg-[#1a5f2a]",
   },
 };
 

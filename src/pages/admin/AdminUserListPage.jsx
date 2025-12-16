@@ -32,7 +32,7 @@ export default function AdminUserListPage() {
     : 'bg-slate-50 text-black';
 
   return (
-    <div className={`min-h-screen ${bgClass} overflow-hidden`}>
+    <div className="min-h-screen bg-transparent overflow-hidden relative z-10">
       {theme === 'christmas' && <ChristmasBackground />}
       {theme !== 'dark' && theme !== 'christmas' && <UserListBackground />}
       <UserListHero totalCount={totalCount} />

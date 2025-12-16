@@ -7,8 +7,6 @@ import { useThemeStore } from "../../store/themeStore";
 import ServiceTypeFilter from "../../components/party/ServiceTypeFilter";
 import {
   themeConfig,
-  ThemeBackground,
-  ThemeSwitcher,
   GridPattern,
 } from "../../config/themeConfig";
 import {
@@ -42,6 +40,35 @@ const Sticker = ({ children, color = "bg-white", rotate = 0, className = "", onC
   </motion.div>
 );
 
+// Party 페이지 테마 스타일
+const partyThemeStyles = {
+  default: {
+    accent: 'text-indigo-600',
+    accentBg: 'bg-indigo-600',
+    hoverAccentBg: 'hover:bg-indigo-700',
+    badge: 'bg-indigo-50 text-indigo-600',
+    buttonShadow: 'shadow-indigo-600/25',
+  },
+  christmas: {
+    accent: 'text-[#c41e3a]',
+    accentBg: 'bg-[#c41e3a]',
+    hoverAccentBg: 'hover:bg-red-700',
+    greenAccent: 'text-[#1a5f2a]',
+    greenBg: 'bg-[#1a5f2a]',
+    badge: 'bg-red-50 text-[#c41e3a]',
+    greenBadge: 'bg-green-50 text-[#1a5f2a]',
+    buttonShadow: 'shadow-[#c41e3a]/25',
+    cardShadow: 'shadow-[4px_4px_12px_rgba(0,0,0,0.08)]',
+  },
+  pop: {
+    accent: 'text-pink-500',
+    accentBg: 'bg-pink-500',
+    hoverAccentBg: 'hover:bg-pink-600',
+    badge: 'bg-pink-50 text-pink-600',
+    buttonShadow: 'shadow-pink-500/25',
+  },
+};
+
 export default function PartyListPage() {
   const navigate = useNavigate();
   const { user } = useAuthStore();
@@ -69,6 +96,7 @@ export default function PartyListPage() {
   // Theme State from Zustand Store
   const { theme, setTheme } = useThemeStore();
   const currentTheme = themeConfig[theme] || themeConfig.classic;
+  const themeStyle = partyThemeStyles[theme] || partyThemeStyles.default;
 
   const myPartyIds = Array.isArray(myParties) ? myParties.map(p => p.partyId) : [];
   const isInitialLoading = loadingParties && list.length === 0;
@@ -246,10 +274,7 @@ export default function PartyListPage() {
   }, [lastScrollY]);
 
   const content = (
-    <div className={`min-h-screen ${currentTheme.bg} pb-20 -mt-20 pt-20 transition-colors duration-300`}>
-      {/* Theme Switcher - Common Component */}
-      <ThemeSwitcher theme={theme} onThemeChange={setTheme} />
-
+    <div className="min-h-screen bg-transparent pb-20 -mt-20 pt-20 transition-colors duration-300 relative z-10">
       {/* Snow Plow Button - Christmas theme only */}
       {theme === "christmas" && (
         <div className="fixed bottom-8 left-8 z-50">
@@ -258,9 +283,7 @@ export default function PartyListPage() {
       )}
 
       {/* Hero Section */}
-      <section className={`relative overflow-hidden ${currentTheme.heroBg}`}>
-        <ThemeBackground theme={theme} />
-        <GridPattern dark={theme === "dark"} />
+      <section className="relative overflow-hidden bg-transparent">
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-2 pb-8 md:pt-4 md:pb-12">
           <div className="text-center max-w-3xl mx-auto">

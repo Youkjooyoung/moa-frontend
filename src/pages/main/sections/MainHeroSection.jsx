@@ -1,9 +1,10 @@
 import React, { useRef, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { Sparkles, Users, ArrowRight, Plus, Search } from "lucide-react";
 import { NeoCard } from "@/components/common/neo";
 import { useThemeStore } from "@/store/themeStore";
+import { useAuthStore } from "@/store/authStore";
 import {
   formatCurrency,
   getPartyServiceName,
@@ -30,6 +31,7 @@ const heroThemeStyles = {
     stickerRight: "bg-cyan-400",
     hotPartyBadge: "bg-lime-400",
     subtext: "text-gray-700",
+    searchResultHover: "hover:bg-pink-50",
   },
   christmas: {
     confettiColors: ["bg-[#c41e3a]", "bg-[#1a5f2a]", "bg-white", "bg-red-300", "bg-green-300", "bg-[#c41e3a]", "bg-[#1a5f2a]", "bg-white", "bg-red-200", "bg-green-200"],
@@ -45,6 +47,7 @@ const heroThemeStyles = {
     stickerRight: "bg-[#c41e3a]",
     hotPartyBadge: "bg-[#c41e3a]",
     subtext: "text-gray-700",
+    searchResultHover: "hover:bg-red-50",
   },
 };
 
@@ -94,11 +97,15 @@ const Confetti = ({ themeStyle }) => {
 export default function MainHeroSection({ parties, products = [] }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [showResults, setShowResults] = useState(false);
+  const navigate = useNavigate();
 
   // 테마 설정
   const { theme } = useThemeStore();
   const themeStyle = heroThemeStyles[theme] || heroThemeStyles.default;
   const isDark = theme === "dark";
+
+  // 로그인 상태 확인
+  const { user } = useAuthStore();
 
   // portrait-v2 스타일: useInView로 섹션 감지
   const heroRef = useRef(null);
@@ -149,14 +156,14 @@ export default function MainHeroSection({ parties, products = [] }) {
     { x: 200, y: 240, rotate: -15, scale: 0.9 },
   ];
 
-  // 모인 그리드 위치 (최종)
+  // 모인 그리드 위치 (최종) - 카드 간격 넓힘
   const gridPositions = [
-    { x: -200, y: -90, rotate: 0, scale: 1 },
-    { x: 0, y: -90, rotate: 0, scale: 1 },
-    { x: 200, y: -90, rotate: 0, scale: 1 },
-    { x: -200, y: 100, rotate: 0, scale: 1 },
-    { x: 0, y: 100, rotate: 0, scale: 1 },
-    { x: 200, y: 100, rotate: 0, scale: 1 },
+    { x: -230, y: -110, rotate: 0, scale: 1 },
+    { x: 0, y: -110, rotate: 0, scale: 1 },
+    { x: 230, y: -110, rotate: 0, scale: 1 },
+    { x: -230, y: 120, rotate: 0, scale: 1 },
+    { x: 0, y: 120, rotate: 0, scale: 1 },
+    { x: 230, y: 120, rotate: 0, scale: 1 },
   ];
 
   // 서비스별 색상 매핑
@@ -177,23 +184,23 @@ export default function MainHeroSection({ parties, products = [] }) {
 
   const defaultColors = ["bg-red-500", "bg-blue-500", "bg-pink-500", "bg-lime-400", "bg-cyan-400", "bg-yellow-400"];
 
-  // 파티가 없을 때 표시할 빈 카드 데이터
+  // 파티가 없을 때 표시할 빈 카드 데이터 (고유한 문자열 id 사용)
   const emptyCards = [
-    { id: 1, isEmpty: true, bgColor: "bg-red-500", emoji: "N", serviceName: "넷플릭스" },
-    { id: 2, isEmpty: true, bgColor: "bg-blue-500", emoji: "D+", serviceName: "디즈니+" },
-    { id: 3, isEmpty: true, bgColor: "bg-pink-500", emoji: "Y", serviceName: "유튜브" },
-    { id: 4, isEmpty: true, bgColor: "bg-lime-400", emoji: "S", serviceName: "스포티파이" },
-    { id: 5, isEmpty: true, bgColor: "bg-cyan-400", emoji: "W", serviceName: "웨이브" },
-    { id: 6, isEmpty: true, bgColor: "bg-yellow-400", emoji: "왓", serviceName: "왓챠" },
+    { id: "empty-netflix", isEmpty: true, bgColor: "bg-red-500", emoji: "N", serviceName: "넷플릭스" },
+    { id: "empty-disney", isEmpty: true, bgColor: "bg-blue-500", emoji: "D+", serviceName: "디즈니+" },
+    { id: "empty-youtube", isEmpty: true, bgColor: "bg-pink-500", emoji: "Y", serviceName: "유튜브" },
+    { id: "empty-spotify", isEmpty: true, bgColor: "bg-lime-400", emoji: "S", serviceName: "스포티파이" },
+    { id: "empty-wavve", isEmpty: true, bgColor: "bg-cyan-400", emoji: "W", serviceName: "웨이브" },
+    { id: "empty-watcha", isEmpty: true, bgColor: "bg-yellow-400", emoji: "왓", serviceName: "왓챠" },
   ];
 
-  // 카드 데이터
+  // 카드 데이터 - 항상 6개 표시 (부족하면 빈 카드로 채움)
   const cards = useMemo(() => {
     if (!Array.isArray(parties) || parties.length === 0) {
       return emptyCards;
     }
 
-    return parties.slice(0, 6).map((party, i) => {
+    const partyCards = parties.slice(0, 6).map((party, i) => {
       const serviceName = getPartyServiceName(party) || "OTT";
       const serviceNameLower = serviceName.toLowerCase();
 
@@ -220,6 +227,15 @@ export default function MainHeroSection({ parties, products = [] }) {
         emoji: colorInfo?.emoji || serviceName.charAt(0).toUpperCase(),
       };
     });
+
+    // 6개 미만이면 빈 카드로 채움
+    if (partyCards.length < 6) {
+      const remainingCount = 6 - partyCards.length;
+      const remainingEmptyCards = emptyCards.slice(partyCards.length, partyCards.length + remainingCount);
+      return [...partyCards, ...remainingEmptyCards];
+    }
+
+    return partyCards;
   }, [parties]);
 
   return (
@@ -355,7 +371,7 @@ export default function MainHeroSection({ parties, products = [] }) {
                         <Link
                           key={product?.productId || product?.id}
                           to={`/mypage/subscriptions/add?productId=${product?.productId || product?.id}`}
-                          className={`flex items-center gap-2 px-4 py-3 ${isDark ? 'hover:bg-[#2D3B4F] border-gray-600' : 'hover:bg-pink-50 border-gray-200'} transition-colors border-b last:border-0`}
+                          className={`flex items-center gap-2 px-4 py-3 ${isDark ? 'hover:bg-[#2D3B4F] border-gray-600' : `${themeStyle.searchResultHover} border-gray-200`} transition-colors border-b last:border-0`}
                         >
                           <span className={`font-black text-sm ${isDark ? 'text-white' : ''}`}>{product?.productName || product?.name}</span>
                         </Link>
@@ -396,7 +412,7 @@ export default function MainHeroSection({ parties, products = [] }) {
           initial={{ opacity: 0, y: 30 }}
           animate={isCardsInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16 md:mb-24 z-20"
+          className="text-center mb-8 md:mb-12 z-20"
         >
           <NeoCard color={themeStyle.hotPartyBadge} rotate={-2} className="inline-block px-6 py-3 rounded-xl mb-4">
             <span className={`text-xl font-black ${theme === "christmas" ? "text-white" : ""}`}>{theme === "christmas" ? "🎄 HOT PARTY! 🎅" : "HOT PARTY! 🔥"}</span>
@@ -437,14 +453,14 @@ export default function MainHeroSection({ parties, products = [] }) {
                 }}
                 className="absolute"
               >
-                <ServiceCard card={card} theme={theme} themeStyle={themeStyle} />
+                <ServiceCard card={card} theme={theme} themeStyle={themeStyle} user={user} navigate={navigate} />
               </motion.div>
             );
           })}
         </div>
 
         {/* 모바일 버전 - 2열 3행 그리드 */}
-        <div ref={mobileCardsRef} className="md:hidden grid grid-cols-2 gap-4 w-full max-w-[360px] mx-auto">
+        <div ref={mobileCardsRef} className="md:hidden grid grid-cols-2 gap-6 w-full max-w-[380px] mx-auto">
           {cards.map((card, index) => (
             <motion.div
               key={card.id}
@@ -456,7 +472,7 @@ export default function MainHeroSection({ parties, products = [] }) {
                 ease: [0.4, 0.0, 0.2, 1]
               }}
             >
-              <ServiceCard card={card} theme={theme} themeStyle={themeStyle} />
+              <ServiceCard card={card} theme={theme} themeStyle={themeStyle} user={user} navigate={navigate} />
             </motion.div>
           ))}
         </div>
@@ -484,7 +500,7 @@ export default function MainHeroSection({ parties, products = [] }) {
 }
 
 // 서비스 카드 컴포넌트
-function ServiceCard({ card, theme, themeStyle }) {
+function ServiceCard({ card, theme, themeStyle, user, navigate }) {
   const accentColor = themeStyle?.headlineAccent2 || "text-pink-500";
   const badgeBg = theme === "christmas" ? "bg-[#1a5f2a]" : "bg-lime-400";
   const badgeText = theme === "christmas" ? "text-white" : "text-black";
@@ -493,28 +509,36 @@ function ServiceCard({ card, theme, themeStyle }) {
   const subTextColor = isDark ? "text-gray-400" : "text-gray-500";
   const textColor = isDark ? "text-white" : "text-black";
 
-  // 파티가 없는 빈 카드
+  // 빈 카드 클릭 핸들러 - 로그인 여부에 따라 이동
+  const handleEmptyCardClick = () => {
+    if (user) {
+      navigate("/party/create");
+    } else {
+      navigate("/login");
+    }
+  };
+
+  // 파티가 없는 빈 카드 - 실제 파티 카드와 동일한 높이
   if (card.isEmpty) {
     return (
-      <Link to="/party/create">
-        <motion.div
-          whileHover={{ scale: 1.05, y: -4 }}
-          whileTap={{ scale: 0.98 }}
-          className={`w-[150px] md:w-[170px] ${cardBg} border rounded-2xl p-4 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] cursor-pointer hover:shadow-[6px_6px_16px_rgba(0,0,0,0.12)] transition-all`}
-        >
-          <div className={`w-10 h-10 ${card.bgColor} rounded-xl ${isDark ? 'border-gray-600' : 'border-gray-200'} border flex items-center justify-center mb-3`}>
-            <span className="text-white font-black text-lg">{card.emoji}</span>
-          </div>
-          <h3 className="font-black text-black text-sm mb-1">{card.serviceName}</h3>
-          <div className={`mt-2 flex items-center gap-1 ${accentColor}`}>
+      <motion.div
+        whileHover={{ scale: 1.05, y: -4 }}
+        whileTap={{ scale: 0.98 }}
+        onClick={handleEmptyCardClick}
+        className={`w-[150px] md:w-[170px] h-[180px] md:h-[190px] ${cardBg} border rounded-2xl p-4 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] cursor-pointer hover:shadow-[6px_6px_16px_rgba(0,0,0,0.12)] transition-all flex flex-col`}
+      >
+        <div className={`w-10 h-10 ${card.bgColor} rounded-xl ${isDark ? 'border-gray-600' : 'border-gray-200'} border flex items-center justify-center mb-3`}>
+          <span className="text-white font-black text-lg">{card.emoji}</span>
+        </div>
+        <h3 className={`font-black ${textColor} text-sm mb-1`}>{card.serviceName}</h3>
+        <p className={`text-xs ${subTextColor} font-bold mb-3`}>구독 서비스</p>
+        <div className="flex items-center justify-between mt-auto">
+          <div className={`flex items-center gap-1 ${accentColor}`}>
             <Plus size={14} className="stroke-[3]" />
-            <span className="text-xs font-black">파티원 찾기</span>
+            <span className="text-xs font-black">파티 만들기</span>
           </div>
-          <p className={`text-[10px] ${subTextColor} font-bold mt-1`}>
-            지금 바로 시작하세요!
-          </p>
-        </motion.div>
-      </Link>
+        </div>
+      </motion.div>
     );
   }
 
@@ -522,14 +546,14 @@ function ServiceCard({ card, theme, themeStyle }) {
   return (
     <motion.div
       whileHover={{ scale: 1.05, y: -4 }}
-      className={`w-[150px] md:w-[170px] ${cardBg} border rounded-2xl p-4 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] hover:shadow-[6px_6px_16px_rgba(0,0,0,0.12)] transition-shadow`}
+      className={`w-[150px] md:w-[170px] h-[180px] md:h-[190px] ${cardBg} border rounded-2xl p-4 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] hover:shadow-[6px_6px_16px_rgba(0,0,0,0.12)] transition-shadow flex flex-col`}
     >
       <div className={`w-10 h-10 ${card.bgColor} rounded-xl ${isDark ? 'border-gray-600' : 'border-gray-200'} border flex items-center justify-center mb-3`}>
         <span className="text-white font-black text-lg">{card.emoji}</span>
       </div>
       <h3 className={`font-black ${textColor} text-sm mb-1`}>{card.name}</h3>
       <p className={`text-xs ${subTextColor} font-bold mb-3`}>{card.category}</p>
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between mt-auto">
         <div>
           <p className={`text-lg font-black ${accentColor}`}>{card.price}</p>
           <p className="text-[10px] text-gray-400 font-bold">월 비용</p>
