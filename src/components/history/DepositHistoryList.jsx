@@ -1,0 +1,137 @@
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ShieldCheck, Calendar } from "lucide-react";
+import { getMyDeposits } from "../../api/depositApi";
+import DepositDetailModal from "./DepositDetailModal";
+
+export default function DepositHistoryList() {
+  const [deposits, setDeposits] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedDeposit, setSelectedDeposit] = useState(null);
+
+  useEffect(() => {
+    loadDeposits();
+  }, []);
+
+  const loadDeposits = async () => {
+    try {
+      const data = await getMyDeposits();
+      setDeposits(data);
+    } catch (error) {
+      console.error("Failed to load deposits", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getStatusStyle = (status) => {
+    switch (status) {
+      case "PAID":
+        return "bg-blue-500 text-white";
+      case "REFUNDED":
+        return "bg-slate-500 text-white";
+      case "FORFEITED":
+        return "bg-red-500 text-white";
+      default:
+        return "bg-amber-500 text-white";
+    }
+  };
+
+  const getStatusLabel = (status) => {
+    switch (status) {
+      case "PAID":
+        return "보관중";
+      case "REFUNDED":
+        return "환불완료";
+      case "FORFEITED":
+        return "몰수";
+      default:
+        return "처리중";
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="animate-spin rounded-full h-8 w-8 border-2 border-blue-600 border-t-transparent"></div>
+      </div>
+    );
+  }
+
+  if (deposits.length === 0) {
+    return (
+      <div className="text-center py-12">
+        <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <ShieldCheck className="w-8 h-8 text-slate-400" />
+        </div>
+        <h3 className="text-lg font-semibold text-slate-900 mb-2">보증금 내역이 없습니다</h3>
+        <p className="text-slate-500 text-sm">파티를 만들거나 가입하면 보증금이 생성됩니다</p>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <div className="space-y-3">
+        <AnimatePresence>
+          {deposits.map((deposit, index) => (
+            <motion.div
+              key={deposit.depositId}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.05 }}
+              onClick={() => setSelectedDeposit(deposit)}
+              className="group bg-white border border-slate-200 rounded-xl p-4 hover:border-blue-300 hover:shadow-lg transition-all cursor-pointer"
+            >
+              <div className="flex justify-between items-start mb-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center">
+                    <ShieldCheck className="w-5 h-5 text-blue-600" />
+                  </div>
+                  <div>
+                    <h3 className="text-base font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
+                      {deposit.productName || "파티"}
+                    </h3>
+                    <div className="flex items-center gap-1.5 text-xs text-slate-500 mt-0.5">
+                      <Calendar className="w-3 h-3" />
+                      <span>
+                        {deposit.paymentDate
+                          ? new Date(deposit.paymentDate).toLocaleDateString()
+                          : "-"}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <span
+                  className={`${getStatusStyle(
+                    deposit.depositStatus
+                  )} px-2.5 py-1 rounded-md text-xs font-bold shadow-sm`}
+                >
+                  {getStatusLabel(deposit.depositStatus)}
+                </span>
+              </div>
+
+              <div className="flex justify-between items-end pt-3 border-t border-slate-100">
+                <div className="text-sm text-slate-600">
+                  {deposit.depositStatus === "PAID" && "안전하게 보관중"}
+                  {deposit.depositStatus === "REFUNDED" && "환불 완료됨"}
+                  {deposit.depositStatus === "FORFEITED" && "몰수됨"}
+                </div>
+                <div className="text-xl font-bold text-slate-900">
+                  {deposit.depositAmount?.toLocaleString() || 0}
+                  <span className="text-sm text-slate-500 ml-1">원</span>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </div>
+
+      <DepositDetailModal
+        isOpen={!!selectedDeposit}
+        onClose={() => setSelectedDeposit(null)}
+        deposit={selectedDeposit}
+      />
+    </>
+  );
+}

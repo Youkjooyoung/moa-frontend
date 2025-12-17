@@ -14,13 +14,39 @@ export default defineConfig({
   },
 
   server: {
+    host: true,
     https: {
       pfx: fs.readFileSync("./moa-ssl.p12"),
       passphrase: "moa1234",
     },
+
     proxy: {
       "/api": {
-        target: "https://localhost:8443",
+        target: "http://localhost:8080",
+        changeOrigin: true,
+        secure: false,
+
+        rewrite: (path) => {
+          return path;
+        },
+
+        configure: (proxy, _options) => {
+          proxy.on("error", (err) => {
+            console.log("proxy error", err);
+          });
+
+          proxy.on("proxyReq", (proxyReq, req) => {
+            console.log("Sending Request:", req.method, req.url);
+          });
+
+          proxy.on("proxyRes", (proxyRes, req) => {
+            console.log("Received Response:", proxyRes.statusCode, req.url);
+          });
+        },
+      },
+
+      "/uploads": {
+        target: "http://localhost:8080",
         changeOrigin: true,
         secure: false,
       },
