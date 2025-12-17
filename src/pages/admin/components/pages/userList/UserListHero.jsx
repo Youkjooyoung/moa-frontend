@@ -14,12 +14,12 @@ const heroThemeStyles = {
     progressBar: "bg-black",
   },
   christmas: {
-    dotColor: "bg-green-600",
-    cardBg1: "bg-green-800",
-    cardBg2: "bg-red-800",
-    iconBg: "bg-green-800",
-    countText: "text-red-700",
-    progressBar: "bg-red-800",
+    dotColor: "bg-[#1a5f2a]",
+    cardBg1: "bg-[#1a5f2a]",
+    cardBg2: "bg-[#c41e3a]",
+    iconBg: "bg-[#1a5f2a]",
+    countText: "text-[#c41e3a]",
+    progressBar: "bg-[#c41e3a]",
   },
 };
 

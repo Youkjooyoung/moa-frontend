@@ -10,8 +10,8 @@ const passwordModalThemeStyles = {
     hoverBg: 'hover:bg-slate-50',
   },
   christmas: {
-    buttonBg: 'bg-red-800 hover:bg-red-900',
-    focusRing: 'focus:ring-red-800 focus:border-red-800',
+    buttonBg: 'bg-[#c41e3a] hover:bg-red-700',
+    focusRing: 'focus:ring-[#c41e3a] focus:border-[#c41e3a]',
     border: 'border border-gray-200',
     shadow: 'shadow-[4px_4px_12px_rgba(0,0,0,0.08)]',
     hoverBg: 'hover:bg-red-50',

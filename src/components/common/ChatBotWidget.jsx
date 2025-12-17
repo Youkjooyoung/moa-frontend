@@ -21,7 +21,7 @@ const themeColors = {
     accent: "#635bff",
   },
   pop: {
-    primary: "bg-pink-500 hover:bg-pink-600 border-2 border-black",
+    primary: "bg-pink-500 hover:bg-pink-600 border border-gray-200",
     header: "bg-pink-500",
     accent: "#ec4899",
   },

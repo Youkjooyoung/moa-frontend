@@ -54,7 +54,7 @@ const updateUserThemeStyles = {
       shadow: "shadow-[4px_4px_12px_rgba(0,0,0,0.08)]",
     },
     button: {
-      primaryBg: "bg-red-800",
+      primaryBg: "bg-[#c41e3a]",
       primaryText: "text-white",
       secondaryBg: "bg-white",
       secondaryText: "text-black",
@@ -68,13 +68,13 @@ const updateUserThemeStyles = {
       focusRing: "focus-visible:ring-0",
     },
     accent: {
-      cyan: "bg-green-800",
-      pink: "bg-red-800",
-      lime: "bg-green-700",
+      cyan: "bg-[#1a5f2a]",
+      pink: "bg-[#c41e3a]",
+      lime: "bg-[#1a5f2a]",
     },
     titleAccent: {
-      cyan: "text-green-800",
-      pink: "text-red-800",
+      cyan: "text-[#1a5f2a]",
+      pink: "text-[#c41e3a]",
     },
   },
 };

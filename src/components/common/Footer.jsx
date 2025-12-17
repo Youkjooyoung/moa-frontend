@@ -28,8 +28,8 @@ const footerThemes = {
     linkHover: "hover:text-[#635bff]",
   },
   pop: {
-    bg: "bg-pink-100",
-    border: "border-black border-t-2",
+    bg: "bg-pink-50",
+    border: "border-gray-200",
     title: "text-black font-black",
     heading: "text-black font-bold",
     text: "text-gray-700",

@@ -10,12 +10,13 @@ import { useThemeStore } from '@/store/themeStore'
 // 테마별 스타일
 const notificationThemeStyles = {
     default: {
-        unreadBg: 'bg-indigo-50/50 border-indigo-100',
-        unreadDot: 'bg-indigo-500',
+        // Neo/Pop 스타일 - 핑크, 시안 계열
+        unreadBg: 'bg-pink-50/50 border-pink-100',
+        unreadDot: 'bg-pink-500',
     },
     christmas: {
         unreadBg: 'bg-red-50/50 border-red-100',
-        unreadDot: 'bg-red-600',
+        unreadDot: 'bg-[#c41e3a]',
     },
 }
 

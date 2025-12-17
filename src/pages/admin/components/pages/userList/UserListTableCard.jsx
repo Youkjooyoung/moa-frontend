@@ -36,9 +36,9 @@ const tableCardThemeStyles = {
     rowBorder: "border-b border-black/10",
   },
   christmas: {
-    iconBg: "bg-green-800",
-    searchButton: "bg-red-800 hover:bg-red-800",
-    activePage: "bg-red-800 hover:bg-red-800 text-red-100 hover:brightness-95",
+    iconBg: "bg-[#1a5f2a]",
+    searchButton: "bg-[#c41e3a] hover:bg-red-700",
+    activePage: "bg-[#c41e3a] hover:bg-red-700 text-red-100 hover:brightness-95",
     hoverBg: "hover:bg-red-50",
     sortButtonHover: "hover:bg-red-50",
     headerBorder: "border-b border-gray-200",

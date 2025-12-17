@@ -17,10 +17,12 @@ const blacklistFormThemeStyles = {
   default: {
     headerBorder: "border-b-4 border-black",
     footerBorder: "border-t-4 border-black",
+    buttonBg: "bg-red-500 hover:bg-red-500",
   },
   christmas: {
     headerBorder: "border-b border-gray-200",
     footerBorder: "border-t border-gray-200",
+    buttonBg: "bg-[#c41e3a] hover:bg-red-700",
   },
 };
 
@@ -114,7 +116,7 @@ export default function AddBlacklistFormCard({
               </Button>
               <Button
                 type="button"
-                className="h-11 px-7 bg-red-500 hover:bg-red-500 border border-gray-200 rounded-xl shadow-[4px_4px_12px_rgba(0,0,0,0.08)] font-black text-white"
+                className={`h-11 px-7 ${themeStyle.buttonBg} border border-gray-200 rounded-xl shadow-[4px_4px_12px_rgba(0,0,0,0.08)] font-black text-white`}
                 onClick={onSubmit}
                 disabled={submitting}
               >

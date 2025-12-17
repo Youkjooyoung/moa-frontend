@@ -11,10 +11,19 @@ import { Separator } from "@/components/ui/separator";
 // 테마별 스타일
 const myPageThemeStyles = {
   default: {
-    accentText: "text-indigo-600",
+    // Neo/Pop 스타일 - 핑크, 시안 계열
+    accent: "text-pink-500",
+    accentBg: "bg-pink-500",
+    buttonBg: "bg-pink-500 hover:bg-pink-600",
+    accentText: "text-pink-500",
+    cyanText: "text-cyan-500",
   },
   christmas: {
-    accentText: "text-red-800",
+    accent: "text-[#c41e3a]",
+    accentBg: "bg-[#c41e3a]",
+    buttonBg: "bg-[#c41e3a] hover:bg-red-700",
+    accentText: "text-[#c41e3a]",
+    cyanText: "text-[#1a5f2a]",
   },
 };
 
@@ -92,7 +101,7 @@ export default function MyPage() {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 font-sans pb-20">
+    <div className="min-h-screen bg-transparent text-slate-900 font-sans pb-20 relative z-10">
       <section className={HERO_WRAPPER}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10">
           <div className="bg-white border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] rounded-[32px] min-h-[320px] flex items-center">

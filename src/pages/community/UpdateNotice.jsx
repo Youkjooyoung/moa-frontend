@@ -7,12 +7,13 @@ import { useThemeStore } from '@/store/themeStore';
 import { NeoCard, NeoButton } from '@/components/common/neo';
 
 // 테마별 스타일
-const updateNoticeThemeStyles = {
+const communityThemeStyles = {
     default: {
-        button: 'bg-pink-500 text-white',
+        // Neo/Pop 스타일 - 핑크 계열
+        button: 'bg-pink-500 hover:bg-pink-600 text-white',
     },
     christmas: {
-        button: 'bg-red-800 text-red-100',
+        button: 'bg-[#c41e3a] hover:bg-red-700 text-white',
     },
 };
 
@@ -22,7 +23,7 @@ const UpdateNotice = () => {
     const noticeId = params.id || params.communityId;
     const { user } = useAuthStore();
     const { theme } = useThemeStore();
-    const themeStyle = updateNoticeThemeStyles[theme] || updateNoticeThemeStyles.default;
+    const themeStyle = communityThemeStyles[theme] || communityThemeStyles.default;
     const [formData, setFormData] = useState({
         communityCodeId: 10,
         title: '',

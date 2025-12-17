@@ -10,8 +10,6 @@ import RippleButton from "../../components/party/RippleButton";
 import { fetchPartyMembers, leaveParty } from "../../hooks/party/partyService";
 import {
   useTheme,
-  ThemeSwitcher,
-  ThemeBackground,
   ThemeMarquee,
   Sticker,
   themeConfig
@@ -32,6 +30,38 @@ import {
   CreditCard
 } from "lucide-react";
 
+// Party 페이지 테마 스타일
+const partyThemeStyles = {
+  default: {
+    accent: 'text-indigo-600',
+    accentBg: 'bg-indigo-600',
+    hoverAccentBg: 'hover:bg-indigo-700',
+    badge: 'bg-indigo-50 text-indigo-600',
+    buttonShadow: 'shadow-indigo-600/25',
+    accentColor: '#635bff',
+  },
+  christmas: {
+    accent: 'text-[#c41e3a]',
+    accentBg: 'bg-[#c41e3a]',
+    hoverAccentBg: 'hover:bg-red-700',
+    greenAccent: 'text-[#1a5f2a]',
+    greenBg: 'bg-[#1a5f2a]',
+    badge: 'bg-red-50 text-[#c41e3a]',
+    greenBadge: 'bg-green-50 text-[#1a5f2a]',
+    buttonShadow: 'shadow-[#c41e3a]/25',
+    cardShadow: 'shadow-[4px_4px_12px_rgba(0,0,0,0.08)]',
+    accentColor: '#c41e3a',
+  },
+  pop: {
+    accent: 'text-pink-500',
+    accentBg: 'bg-pink-500',
+    hoverAccentBg: 'hover:bg-pink-600',
+    badge: 'bg-pink-50 text-pink-600',
+    buttonShadow: 'shadow-pink-500/25',
+    accentColor: '#ec4899',
+  },
+};
+
 export default function PartyDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -39,6 +69,7 @@ export default function PartyDetailPage() {
 
   // Theme
   const { theme, setTheme, currentTheme } = useTheme("appTheme");
+  const themeStyle = partyThemeStyles[theme] || partyThemeStyles.default;
 
   // 테마별 악센트 색상
   const getAccentColor = () => {
@@ -127,7 +158,7 @@ export default function PartyDetailPage() {
 
   if (loading.detail || !party) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
+      <div className="min-h-screen bg-transparent flex items-center justify-center relative z-10">
         <div className="w-10 h-10 border-2 border-gray-200 border-t-[#635bff] rounded-full animate-spin"></div>
       </div>
     );
@@ -177,16 +208,12 @@ export default function PartyDetailPage() {
   };
 
   return (
-    <div className={`min-h-screen ${currentTheme.bg} pb-20 transition-colors duration-300`}>
-      {/* Theme Switcher */}
-      <ThemeSwitcher theme={theme} onThemeChange={setTheme} />
-
+    <div className="min-h-screen bg-transparent pb-20 transition-colors duration-300 relative z-10">
       {/* Pop Theme Marquee */}
       <ThemeMarquee theme={theme} />
 
       {/* Hero Section */}
-      <section className={`relative overflow-hidden ${currentTheme.heroBg}`}>
-        <ThemeBackground theme={theme} />
+      <section className="relative overflow-hidden bg-transparent">
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
           {/* Back Button */}

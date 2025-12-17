@@ -4,20 +4,21 @@ import { formatDate, getCategoryName } from '../../utils/communityUtils';
 import { useThemeStore } from '@/store/themeStore';
 
 // 테마별 스타일
-const inquiryItemThemeStyles = {
+const communityThemeStyles = {
     default: {
-        categoryBadge: 'bg-cyan-400',
-        hoverBg: 'hover:bg-lime-100',
+        // Neo/Pop 스타일 - 핑크, 시안 계열
+        categoryBadge: 'bg-pink-500 text-white',
+        hoverBg: 'hover:bg-pink-50',
     },
     christmas: {
-        categoryBadge: 'bg-amber-100 text-amber-700',
+        categoryBadge: 'bg-[#c41e3a] text-white',
         hoverBg: 'hover:bg-red-50',
     },
 };
 
 const InquiryItem = ({ inquiry, onClick }) => {
     const { theme } = useThemeStore();
-    const themeStyle = inquiryItemThemeStyles[theme] || inquiryItemThemeStyles.default;
+    const themeStyle = communityThemeStyles[theme] || communityThemeStyles.default;
 
     return (
         <div

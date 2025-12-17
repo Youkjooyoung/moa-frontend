@@ -13,9 +13,9 @@ const modalThemeStyles = {
     },
     christmas: {
         modalShadow: 'shadow-[4px_4px_12px_rgba(0,0,0,0.08)]',
-        spinnerBorder: 'border-red-800',
-        priceText: 'text-red-800',
-        submitButton: 'bg-red-800 hover:bg-red-900 shadow-lg shadow-red-200',
+        spinnerBorder: 'border-[#c41e3a]',
+        priceText: 'text-[#c41e3a]',
+        submitButton: 'bg-[#c41e3a] hover:bg-red-700 shadow-lg shadow-red-200',
     },
 };
 

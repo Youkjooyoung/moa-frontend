@@ -114,7 +114,8 @@ import ScrollToTop from "./components/common/ScrollToTop";
 import PineappleEasterEgg from "./components/common/PineappleEasterEgg";
 import { useAuthStore } from "./store/authStore";
 import { useThemeStore } from "./store/themeStore";
-import { ThemeSwitcher, ThemeBackground, themeConfig } from "./config/themeConfig";
+import { ThemeSwitcher, themeConfig } from "./config/themeConfig";
+import { NeoBackground } from "./components/common/neo";
 
 export default function App() {
   useGlobalLinkHandler();
@@ -126,9 +127,21 @@ export default function App() {
   const showEasterEgg =
     user && (user.userId === "usertest1" || user.userId === "admintest");
 
+  // 테마별 배경색 설정
+  const getBgClass = () => {
+    switch (theme) {
+      case 'dark':
+        return 'bg-[#0B1120] text-white';
+      case 'christmas':
+        return 'bg-transparent text-black';
+      default:
+        return 'bg-slate-50 text-black';
+    }
+  };
+
   return (
-    <div className={`min-h-screen flex flex-col transition-colors duration-300 ${currentTheme.bg} ${currentTheme.text}`}>
-      <ThemeBackground theme={theme} />
+    <div className={`min-h-screen flex flex-col transition-colors duration-300 ${getBgClass()}`}>
+      <NeoBackground />
       <ScrollToTop />
       {showEasterEgg && <PineappleEasterEgg />}
       <ThemeSwitcher theme={theme} onThemeChange={setTheme} />

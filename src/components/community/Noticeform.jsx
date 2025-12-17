@@ -4,21 +4,22 @@ import { NeoButton } from '@/components/common/neo';
 import { useThemeStore } from '@/store/themeStore';
 
 // 테마별 스타일
-const noticeFormThemeStyles = {
+const communityThemeStyles = {
     default: {
-        button: 'bg-pink-500 text-white',
-        focusRing: 'focus:ring-pink-300',
+        // Neo/Pop 스타일 - 핑크, 시안 계열
+        button: 'bg-pink-500 hover:bg-pink-600 text-white',
+        focusRing: 'focus:ring-pink-500',
     },
     christmas: {
-        button: 'bg-red-800 text-red-100',
-        focusRing: 'focus:ring-red-300',
+        button: 'bg-[#c41e3a] hover:bg-red-700 text-white',
+        focusRing: 'focus:ring-[#c41e3a]',
     },
 };
 
 const NoticeForm = ({ formData, setFormData, onSubmit, submitText, cancelPath }) => {
     const navigate = useNavigate();
     const { theme } = useThemeStore();
-    const themeStyle = noticeFormThemeStyles[theme] || noticeFormThemeStyles.default;
+    const themeStyle = communityThemeStyles[theme] || communityThemeStyles.default;
 
     const handleChange = (e) => {
         const { name, value } = e.target;

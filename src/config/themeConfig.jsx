@@ -83,19 +83,19 @@ export const themeConfig = {
     heroBg: "bg-slate-50",
     text: "text-black",
     subtext: "text-gray-600",
-    card: "bg-white border-2 border-black",
+    card: "bg-white border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]",
     cardText: "text-black",
     cardSubtext: "text-gray-600",
     accent: "#ec4899",
     accentBg: "bg-pink-500",
     accentText: "text-pink-500",
     filterBg: "bg-white",
-    filterBorder: "border-2 border-black",
+    filterBorder: "border border-gray-200",
     inputBg: "bg-white",
-    inputBorder: "border-2 border-black",
+    inputBorder: "border border-gray-200",
     inputText: "text-black",
-    buttonActive: "bg-pink-500 text-white border-2 border-black",
-    buttonInactive: "bg-white text-black border-2 border-black hover:bg-pink-100",
+    buttonActive: "bg-pink-500 text-white border border-gray-200",
+    buttonInactive: "bg-white text-black border border-gray-200 hover:bg-pink-100",
     sectionBg: "bg-white",
     gradientText: "text-pink-500",
   },
@@ -258,29 +258,29 @@ export const headerThemes = {
   pop: {
     // Header container
     bg: "bg-slate-50",
-    border: "border-black",
-    borderWidth: "border-b-2",
+    border: "border-gray-200",
+    borderWidth: "border-b",
     // Text colors
     text: "text-black",
     subtext: "text-gray-600",
     // Logo
     logoBg: "bg-white",
-    logoBorder: "border-2 border-black",
-    logoShadow: "",
+    logoBorder: "border border-gray-200",
+    logoShadow: "shadow-[4px_4px_12px_rgba(0,0,0,0.08)]",
     logoText: "text-black",
     // Sticker/Card components
     stickerBg: "bg-white",
-    stickerBorder: "border-2 border-black",
-    stickerShadow: "",
+    stickerBorder: "border border-gray-200",
+    stickerShadow: "shadow-[4px_4px_12px_rgba(0,0,0,0.08)]",
     stickerText: "text-black",
     // Menu button
     menuBg: "bg-pink-500",
     menuText: "text-white",
-    menuBorder: "border-2 border-black",
+    menuBorder: "border border-gray-200",
     // Dropdown
     dropdownBg: "bg-white",
-    dropdownBorder: "border-2 border-black",
-    dropdownShadow: "",
+    dropdownBorder: "border border-gray-200",
+    dropdownShadow: "shadow-[4px_4px_12px_rgba(0,0,0,0.08)]",
     dropdownItemBg: "bg-white",
     dropdownItemHover: "hover:bg-pink-100",
     dropdownItemText: "text-black",
@@ -290,11 +290,11 @@ export const headerThemes = {
     accentBg: "bg-pink-500",
     accentText: "text-white",
     // Separator
-    separatorColor: "bg-black",
+    separatorColor: "bg-gray-200",
     // Switch
-    switchChecked: "data-[state=checked]:bg-black data-[state=unchecked]:bg-slate-300",
+    switchChecked: "data-[state=checked]:bg-pink-500 data-[state=unchecked]:bg-slate-300",
     // Avatar
-    avatarBorder: "border-2 border-black bg-slate-50",
+    avatarBorder: "border-2 border-gray-200 bg-slate-50",
     avatarFallback: "bg-cyan-400 text-black",
   },
   christmas: {
@@ -395,7 +395,7 @@ export const getMobileNavItemStyle = (theme) => {
     case "dark":
       return "py-2.5 flex items-center justify-between gap-3 font-bold text-white rounded-2xl hover:bg-[#635bff] border border-gray-600 bg-gray-700/50 px-3 transition-all duration-200";
     case "pop":
-      return "py-2.5 flex items-center justify-between gap-3 font-black text-black rounded-2xl hover:bg-pink-500 hover:text-white border-2 border-black bg-white px-3 transition-all duration-200";
+      return "py-2.5 flex items-center justify-between gap-3 font-black text-black rounded-2xl hover:bg-pink-500 hover:text-white border border-gray-200 bg-white px-3 transition-all duration-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]";
     case "christmas":
       return "py-2.5 flex items-center justify-between gap-3 font-semibold text-gray-900 rounded-2xl hover:bg-[#c41e3a] hover:text-white border border-gray-200 bg-gray-50 px-3 transition-all duration-200";
     default:
@@ -629,7 +629,7 @@ export const ThemeSwitcher = ({ theme, onThemeChange }) => {
         className={`relative p-3 rounded-full shadow-xl transition-all duration-300 ${theme === "dark"
           ? "bg-gray-800 text-white border border-gray-600"
           : theme === "pop"
-            ? "bg-pink-500 text-white border-2 border-black"
+            ? "bg-pink-500 text-white border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]"
             : theme === "christmas"
               ? "bg-[#c41e3a] text-white shadow-lg shadow-[#c41e3a]/25"
               : "bg-white text-gray-700 border border-gray-200 shadow-lg"
@@ -692,7 +692,7 @@ export const ThemeSwitcher = ({ theme, onThemeChange }) => {
                   }}
                   className={`absolute top-0 right-0 p-2.5 rounded-full shadow-lg transition-colors duration-200 ${isActive
                     ? key === "pop"
-                      ? "bg-pink-500 text-white border-2 border-black"
+                      ? "bg-pink-500 text-white border border-gray-200"
                       : key === "dark"
                         ? "bg-gray-800 text-white border border-gray-500"
                         : key === "christmas"
@@ -768,7 +768,7 @@ export const ThemeMarquee = ({ theme, children, direction = "left", speed = 20 }
   );
 
   return (
-    <div className="bg-yellow-300 border-y-2 border-black py-2 overflow-hidden whitespace-nowrap">
+    <div className="bg-yellow-300 border-y border-gray-200 py-2 overflow-hidden whitespace-nowrap shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
       <motion.div
         animate={{ x: direction === "left" ? ["0%", "-50%"] : ["-50%", "0%"] }}
         transition={{ duration: speed, repeat: Infinity, ease: "linear" }}
@@ -789,7 +789,7 @@ export const Sticker = ({ children, color = "bg-white", rotate = 0, className = 
     whileHover={{ scale: 1.05, rotate: rotate + 2 }}
     whileTap={{ scale: 0.98 }}
     onClick={onClick}
-    className={`${color} border-2 border-black transition-all duration-200 ${className}`}
+    className={`${color} border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] transition-all duration-200 ${className}`}
     style={{ transform: `rotate(${rotate}deg)` }}
   >
     {children}

@@ -17,8 +17,8 @@ const paymentModalThemeStyles = {
   },
   christmas: {
     gradientBg: 'bg-gradient-to-br from-red-50 to-green-50',
-    buttonBg: 'bg-gradient-to-r from-red-800 to-green-800 hover:from-red-900 hover:to-green-900',
-    iconColorPrimary: 'text-red-800',
+    buttonBg: 'bg-gradient-to-r from-[#c41e3a] to-green-800 hover:from-red-700 hover:to-green-900',
+    iconColorPrimary: 'text-[#c41e3a]',
     iconColorSecondary: 'text-green-800',
     border: 'border border-gray-200',
     shadow: 'shadow-[4px_4px_12px_rgba(0,0,0,0.08)]',

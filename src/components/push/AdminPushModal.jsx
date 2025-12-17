@@ -16,14 +16,21 @@ import { useThemeStore } from "@/store/themeStore";
 // 테마별 스타일
 const adminPushThemeStyles = {
     default: {
-        iconBg: "bg-indigo-100",
-        iconColor: "text-indigo-600",
-        tabActive: "data-[state=active]:border-indigo-600 data-[state=active]:text-indigo-600",
+        // Neo/Pop 스타일 - 핑크, 시안 계열 (깔끔한 흰색 배경)
+        iconBg: "bg-pink-100",
+        iconColor: "text-pink-600",
+        tabActive: "data-[state=active]:border-pink-500 data-[state=active]:text-pink-600",
+        headerBg: "bg-white",
+        headerBorder: "border-gray-100",
+        titleText: "text-pink-600",
     },
     christmas: {
         iconBg: "bg-red-100",
-        iconColor: "text-red-800",
-        tabActive: "data-[state=active]:border-red-800 data-[state=active]:text-red-800",
+        iconColor: "text-[#c41e3a]",
+        tabActive: "data-[state=active]:border-[#c41e3a] data-[state=active]:text-[#c41e3a]",
+        headerBg: "bg-red-50",
+        headerBorder: "border-red-100",
+        titleText: "text-[#c41e3a]",
     },
 };
 
@@ -74,14 +81,14 @@ const AdminPushModal = ({ isOpen, onClose }) => {
         <>
             <Dialog open={isOpen} onOpenChange={onClose}>
                 <DialogContent className="max-w-4xl h-[700px] p-0 flex flex-col">
-                    <DialogHeader className="px-6 py-4 border-b border-slate-100 flex-shrink-0">
+                    <DialogHeader className={`px-6 py-4 border-b ${themeStyle.headerBorder} ${themeStyle.headerBg} flex-shrink-0`}>
                         <div className="flex items-center gap-3">
                             <div className={`w-10 h-10 rounded-full ${themeStyle.iconBg} flex items-center justify-center`}>
                                 <Bell className={`w-5 h-5 ${themeStyle.iconColor}`} />
                             </div>
                             <div>
-                                <DialogTitle className="text-lg font-semibold text-slate-800">
-                                    푸시 알림 관리
+                                <DialogTitle className={`text-lg font-semibold ${themeStyle.titleText}`}>
+                                    {theme === 'christmas' ? '🎄 푸시 알림 관리' : '푸시 알림 관리'}
                                 </DialogTitle>
                                 <p className="text-sm text-slate-500">
                                     템플릿 관리 · 발송 내역 · 수동 발송
@@ -95,7 +102,7 @@ const AdminPushModal = ({ isOpen, onClose }) => {
                         onValueChange={setActiveTab}
                         className="flex-1 flex flex-col min-h-0"
                     >
-                        <div className="px-6 border-b border-slate-100 flex-shrink-0">
+                        <div className={`px-6 border-b ${themeStyle.headerBorder} flex-shrink-0`}>
                             <TabsList className="bg-transparent h-12 p-0 gap-1">
                                 <TabsTrigger
                                     value="templates"

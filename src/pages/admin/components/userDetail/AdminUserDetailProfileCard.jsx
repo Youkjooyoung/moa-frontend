@@ -14,6 +14,7 @@ const profileCardThemeStyles = {
     buttonBorder: "border-2 border-slate-900",
     buttonHover: "hover:bg-slate-50",
     blacklistActive: "bg-slate-900 text-white hover:bg-slate-900",
+    blacklistButton: "bg-red-500 text-white hover:bg-red-600",
   },
   christmas: {
     avatarBorder: "border border-gray-200",
@@ -21,7 +22,8 @@ const profileCardThemeStyles = {
     badgeBorder: "border border-gray-200",
     buttonBorder: "border border-gray-200",
     buttonHover: "hover:bg-red-50",
-    blacklistActive: "bg-red-800 text-white hover:bg-red-800",
+    blacklistActive: "bg-[#1a5f2a] text-white hover:bg-green-900",
+    blacklistButton: "bg-[#c41e3a] text-white hover:bg-red-700",
   },
 };
 
@@ -104,7 +106,7 @@ export default function AdminUserDetailProfileCard({
             className={`h-10 px-4 rounded-2xl ${themeStyle.buttonBorder} font-black ${
               isBlacklisted
                 ? themeStyle.blacklistActive
-                : "bg-red-500 text-white hover:bg-red-600"
+                : themeStyle.blacklistButton
             }`}
           >
             {isBlacklisted ? "블랙리스트 해제" : "블랙리스트 등록"}

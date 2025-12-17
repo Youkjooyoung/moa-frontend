@@ -11,22 +11,23 @@ import { formatDate, getCategoryName } from '../../utils/communityUtils';
 import { useThemeStore } from '@/store/themeStore';
 
 // 테마별 스타일
-const detailModalThemeStyles = {
+const communityThemeStyles = {
     default: {
-        categoryBadge: 'bg-cyan-400 text-black',
-        answerCard: 'bg-lime-100',
-        answerTextColor: 'text-lime-700',
+        // Neo/Pop 스타일 - 핑크, 시안 계열
+        categoryBadge: 'bg-pink-500 text-white',
+        answerCard: 'bg-pink-50',
+        answerTextColor: 'text-pink-700',
     },
     christmas: {
-        categoryBadge: 'bg-amber-100 text-amber-700',
-        answerCard: 'bg-green-800',
-        answerTextColor: 'text-green-100',
+        categoryBadge: 'bg-[#c41e3a] text-white',
+        answerCard: 'bg-[#1a5f2a]',
+        answerTextColor: 'text-white',
     },
 };
 
 const InquiryDetailModal = ({ isOpen, onClose, inquiry }) => {
     const { theme } = useThemeStore();
-    const themeStyle = detailModalThemeStyles[theme] || detailModalThemeStyles.default;
+    const themeStyle = communityThemeStyles[theme] || communityThemeStyles.default;
 
     if (!inquiry) return null;
 
@@ -87,7 +88,7 @@ const InquiryDetailModal = ({ isOpen, onClose, inquiry }) => {
 
                     {/* Answer */}
                     {inquiry.answerContent && (
-                        <div className="border-t-4 border-black pt-6">
+                        <div className="border-t border-gray-200 pt-6">
                             <NeoCard
                                 color={themeStyle.answerCard}
                                 hoverable={false}

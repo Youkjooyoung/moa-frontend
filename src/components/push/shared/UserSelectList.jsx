@@ -18,10 +18,39 @@ import { useThemeStore } from "@/store/themeStore";
 // 테마별 스타일
 const userSelectThemeStyles = {
     default: {
-        userRowHover: 'hover:bg-slate-50',
+        // Neo/Pop 스타일 - 핑크, 시안 계열
+        userRowHover: 'hover:bg-pink-50',
+        headerBg: 'bg-white',
+        headerBorder: 'border-gray-100',
+        titleText: 'text-pink-600',
+        searchButton: 'bg-pink-500 hover:bg-pink-600 text-white',
+        checkboxBorder: 'border-pink-300',
+        checkboxChecked: 'data-[state=checked]:bg-pink-500 data-[state=checked]:border-pink-500',
+        paginationActive: 'bg-pink-500 text-white hover:bg-pink-600',
+        paginationHover: 'hover:bg-pink-50',
+        badgeBg: 'bg-pink-100 text-pink-600',
+        badgeRemove: 'hover:text-pink-700',
+        selectedBg: 'bg-white',
+        avatarBg: 'bg-cyan-100',
+        avatarIcon: 'text-cyan-600',
+        inputFocus: 'focus:ring-pink-500 focus:border-pink-500',
     },
     christmas: {
         userRowHover: 'hover:bg-red-50',
+        headerBg: 'bg-red-50',
+        headerBorder: 'border-red-100',
+        titleText: 'text-[#c41e3a]',
+        searchButton: 'bg-[#c41e3a] hover:bg-red-700 text-white',
+        checkboxBorder: 'border-red-300',
+        checkboxChecked: 'data-[state=checked]:bg-[#c41e3a] data-[state=checked]:border-[#c41e3a]',
+        paginationActive: 'bg-[#c41e3a] text-white hover:bg-red-700',
+        paginationHover: 'hover:bg-red-50',
+        badgeBg: 'bg-red-100 text-[#c41e3a]',
+        badgeRemove: 'hover:text-red-700',
+        selectedBg: 'bg-red-50',
+        avatarBg: 'bg-red-100',
+        avatarIcon: 'text-[#c41e3a]',
+        inputFocus: 'focus:ring-[#c41e3a] focus:border-[#c41e3a]',
     },
 };
 
@@ -66,11 +95,11 @@ const UserSelectList = ({
 
     return (
         <div className="h-full flex flex-col">
-            <div className="px-4 py-3 border-b border-slate-100 flex-shrink-0">
-                <p className="text-sm font-medium text-slate-700">수신자 선택</p>
+            <div className={`px-4 py-3 border-b ${themeStyle.headerBorder} ${themeStyle.headerBg} flex-shrink-0`}>
+                <p className={`text-sm font-medium ${themeStyle.titleText}`}>수신자 선택</p>
             </div>
 
-            <div className="px-4 py-3 border-b border-slate-100 flex-shrink-0">
+            <div className={`px-4 py-3 border-b ${themeStyle.headerBorder} flex-shrink-0`}>
                 <div className="flex gap-2">
                     <div className="relative flex-1">
                         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -79,21 +108,22 @@ const UserSelectList = ({
                             onChange={(e) => setSearchKeyword(e.target.value)}
                             onKeyPress={handleKeyPress}
                             placeholder="이름, 이메일로 검색"
-                            className="pl-9"
+                            className={`pl-9 ${themeStyle.inputFocus}`}
                         />
                     </div>
-                    <Button onClick={handleSearch} size="sm" variant="outline">
+                    <Button onClick={handleSearch} size="sm" className={themeStyle.searchButton}>
                         검색
                     </Button>
                 </div>
             </div>
 
-            <div className="px-4 py-2 border-b border-slate-100 flex items-center justify-between flex-shrink-0">
+            <div className={`px-4 py-2 border-b ${themeStyle.headerBorder} flex items-center justify-between flex-shrink-0`}>
                 <div className="flex items-center gap-2">
                     <Checkbox
                         id="selectAll"
                         checked={isAllCurrentPageSelected}
                         onCheckedChange={handleSelectAllChange}
+                        className={`${themeStyle.checkboxBorder} ${themeStyle.checkboxChecked}`}
                     />
                     <label htmlFor="selectAll" className="text-sm text-slate-600 cursor-pointer">
                         현재 페이지 전체 선택
@@ -112,9 +142,12 @@ const UserSelectList = ({
                                 className={`px-4 py-3 flex items-center gap-3 ${themeStyle.userRowHover} cursor-pointer`}
                                 onClick={() => onSelectUser && onSelectUser(user)}
                             >
-                                <Checkbox checked={isSelected} />
-                                <div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center">
-                                    <Users className="w-4 h-4 text-slate-500" />
+                                <Checkbox
+                                    checked={isSelected}
+                                    className={`${themeStyle.checkboxBorder} ${themeStyle.checkboxChecked}`}
+                                />
+                                <div className={`w-8 h-8 rounded-full ${themeStyle.avatarBg} flex items-center justify-center`}>
+                                    <Users className={`w-4 h-4 ${themeStyle.avatarIcon}`} />
                                 </div>
                                 <div className="flex-1 min-w-0">
                                     <p className="text-sm font-medium text-slate-800 truncate">
@@ -129,13 +162,13 @@ const UserSelectList = ({
             </ScrollArea>
 
             {totalPages > 1 && (
-                <div className="px-4 py-2 border-t border-slate-100 flex-shrink-0">
+                <div className={`px-4 py-2 border-t ${themeStyle.headerBorder} flex-shrink-0`}>
                     <Pagination>
                         <PaginationContent>
                             <PaginationItem>
                                 <PaginationPrevious
                                     onClick={() => onPageChange && onPageChange(Math.max(1, currentPage - 1))}
-                                    className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                                    className={`${currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"} ${themeStyle.paginationHover}`}
                                 />
                             </PaginationItem>
                             {[...Array(Math.min(5, totalPages))].map((_, i) => {
@@ -145,7 +178,7 @@ const UserSelectList = ({
                                         <PaginationLink
                                             onClick={() => onPageChange && onPageChange(page)}
                                             isActive={currentPage === page}
-                                            className="cursor-pointer"
+                                            className={`cursor-pointer ${currentPage === page ? themeStyle.paginationActive : themeStyle.paginationHover}`}
                                         >
                                             {page}
                                         </PaginationLink>
@@ -155,7 +188,7 @@ const UserSelectList = ({
                             <PaginationItem>
                                 <PaginationNext
                                     onClick={() => onPageChange && onPageChange(Math.min(totalPages, currentPage + 1))}
-                                    className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                                    className={`${currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"} ${themeStyle.paginationHover}`}
                                 />
                             </PaginationItem>
                         </PaginationContent>
@@ -164,9 +197,9 @@ const UserSelectList = ({
             )}
 
             {selectedUsers.length > 0 && (
-                <div className="px-4 py-3 border-t border-slate-100 flex-shrink-0">
+                <div className={`px-4 py-3 border-t ${themeStyle.headerBorder} ${themeStyle.selectedBg} flex-shrink-0`}>
                     <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm font-medium text-slate-700">
+                        <span className={`text-sm font-medium ${themeStyle.titleText}`}>
                             선택된 수신자 ({selectedUsers.length}명)
                         </span>
                         <Button
@@ -183,11 +216,11 @@ const UserSelectList = ({
                             <Badge
                                 key={user.userId}
                                 variant="secondary"
-                                className="pl-2 pr-1 py-0.5 flex items-center gap-1"
+                                className={`pl-2 pr-1 py-0.5 flex items-center gap-1 ${themeStyle.badgeBg}`}
                             >
                                 <span className="text-xs">{user.nickname}</span>
                                 <X
-                                    className="w-3 h-3 cursor-pointer hover:text-red-500"
+                                    className={`w-3 h-3 cursor-pointer ${themeStyle.badgeRemove}`}
                                     onClick={(e) => {
                                         e.stopPropagation();
                                         onRemoveUser && onRemoveUser(user.userId);
