@@ -2,6 +2,8 @@
 import { useNavigate } from "react-router-dom";
 import httpClient from "@/api/httpClient";
 import { useSignupStore } from "@/store/user/addUserStore";
+import { uploadProfileImage } from "@/api/userApi";
+
 import {
   signup,
   checkCommon,
@@ -19,14 +21,6 @@ const REGEX = {
     /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()])[A-Za-z\d!@#$%^&*()]{8,20}$/,
 };
 
-const toBase64 = (file) =>
-  new Promise((resolve, reject) => {
-    const r = new FileReader();
-    r.onload = () => resolve(r.result);
-    r.onerror = reject;
-    r.readAsDataURL(file);
-  });
-
 export const useSignup = ({ mode = "normal", socialInfo } = {}) => {
   const navigate = useNavigate();
   const { form, errors, setField, setErrorMessage, reset } = useSignupStore();
@@ -43,6 +37,7 @@ export const useSignup = ({ mode = "normal", socialInfo } = {}) => {
       if (form.previewUrl) URL.revokeObjectURL(form.previewUrl);
       reset();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleChange = (e) => {
@@ -59,7 +54,6 @@ export const useSignup = ({ mode = "normal", socialInfo } = {}) => {
     }
   };
 
-  const handleBlur = () => {};
   useEffect(() => {
     if (isSocial) return;
 
@@ -202,15 +196,10 @@ export const useSignup = ({ mode = "normal", socialInfo } = {}) => {
           }
 
           const { phone, ci } = verify.data;
-
-          // 🔥 항상 휴대폰 중복 체크
           const phoneCheck = await checkPhone(phone);
           const available =
             phoneCheck?.data?.available ?? phoneCheck?.data?.data?.available;
-
-          // ❌ 이미 가입된 휴대폰
           if (!phoneCheck?.success || available === false) {
-            // 👉 소셜 간편가입이면 즉시 연동 confirm
             if (
               isSocial &&
               socialInfo?.provider &&
@@ -232,14 +221,12 @@ export const useSignup = ({ mode = "normal", socialInfo } = {}) => {
                 });
               }
 
-              return; // 🔥 여기서 종료 (form에 phone 세팅 X)
+              return;
             }
 
-            // 👉 일반 회원가입
             throw new Error("이미 가입된 휴대폰 번호입니다.");
           }
 
-          // ✅ 신규 휴대폰일 때만 통과
           setField("phone", phone);
           sessionStorage.setItem("PASS_CI", ci);
           setErrorMessage("phone", "본인인증 성공!", false);
@@ -314,11 +301,6 @@ export const useSignup = ({ mode = "normal", socialInfo } = {}) => {
       return alert("소셜 이메일 정보를 확인할 수 없습니다.");
     }
 
-    let base64 = null;
-    if (form.profileImage) {
-      base64 = await toBase64(form.profileImage);
-    }
-
     const payload = isSocial
       ? {
           provider: socialInfo.provider,
@@ -336,7 +318,6 @@ export const useSignup = ({ mode = "normal", socialInfo } = {}) => {
           nickname: form.nickname,
           phone: form.phone,
           agreeMarketing: form.agreeMarketing,
-          profileImageBase64: base64,
           ci,
         };
 
@@ -357,13 +338,28 @@ export const useSignup = ({ mode = "normal", socialInfo } = {}) => {
           accessTokenExpiresIn: accessTokenExpiresIn ?? expiresIn,
         });
 
-        try {
-          const meRes = await fetchCurrentUser();
-          if (meRes?.success && meRes.data) {
-            setUser(meRes.data);
+        if (form.profileImage) {
+          const formData = new FormData();
+          formData.append("file", form.profileImage);
+
+          try {
+            await uploadProfileImage(formData);
+          } catch {
+            alert(
+              "프로필 이미지는 나중에 마이페이지에서 다시 변경할 수 있습니다."
+            );
           }
-        } catch {
-          clearAuth();
+        }
+
+        const meRes = await fetchCurrentUser();
+        if (meRes?.success && meRes.data) {
+          const user = meRes.data;
+
+          if (user.profileImage) {
+            user.profileImage = `${user.profileImage}?v=${Date.now()}`;
+          }
+
+          setUser(user);
         }
 
         navigate("/", { replace: true });

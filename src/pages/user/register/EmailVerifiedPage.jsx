@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useMemo } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useThemeStore } from "@/store/themeStore";
 import { ThemeSwitcher, ChristmasBackground } from "@/config/themeConfig";
@@ -53,15 +54,6 @@ const getThemeStyles = (theme) => {
   }
 };
 
-const safeDecode = (v) => {
-  if (!v) return "";
-  try {
-    return decodeURIComponent(v.replace(/\+/g, " "));
-  } catch {
-    return v;
-  }
-};
-
 export default function EmailVerifiedPage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -69,7 +61,17 @@ export default function EmailVerifiedPage() {
   const result = searchParams.get("result");
   const message = searchParams.get("message");
 
-  const status = result === "success" ? "success" : "error";
+  const status =
+    result === "success" ? "success" : result === "fail" ? "error" : "error";
+
+  const decodedMessage = useMemo(() => {
+    if (!message) return "";
+    try {
+      return decodeURIComponent(message);
+    } catch {
+      return message;
+    }
+  }, [message]);
 
   const { theme, setTheme } = useThemeStore();
   const themeStyles = getThemeStyles(theme);
@@ -113,8 +115,8 @@ export default function EmailVerifiedPage() {
             {status === "error" && (
               <>
                 <p className="text-red-500">
-                  {message ? (
-                    safeDecode(message)
+                  {decodedMessage ? (
+                    decodedMessage
                   ) : (
                     <>
                       유효하지 않거나 만료된 인증 링크입니다.
