@@ -261,9 +261,10 @@ export default function HeaderView({
           rounded-2xl border border-white/30
           shadow-[0_8px_32px_rgba(0,0,0,0.06),inset_0_1px_0_rgba(255,255,255,0.4)]
           transition-all duration-300 ease-out
-          ${isScrolled
-            ? "opacity-100 translate-y-0"
-            : "opacity-0 -translate-y-4 pointer-events-none"
+          ${
+            isScrolled
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 -translate-y-4 pointer-events-none"
           }
         `}
       />
@@ -343,12 +344,13 @@ export default function HeaderView({
                     id="admin-mode"
                     checked={isAdminMode}
                     onCheckedChange={handleAdminSwitch}
-                    className={`${currentTheme === "dark"
-                      ? "data-[state=checked]:bg-[#635bff] data-[state=unchecked]:bg-gray-600"
-                      : currentTheme === "christmas"
+                    className={`${
+                      currentTheme === "dark"
+                        ? "data-[state=checked]:bg-[#635bff] data-[state=unchecked]:bg-gray-600"
+                        : currentTheme === "christmas"
                         ? "data-[state=checked]:bg-[#c41e3a] data-[state=unchecked]:bg-gray-300"
                         : "data-[state=checked]:bg-black data-[state=unchecked]:bg-slate-300"
-                      }`}
+                    }`}
                   />
                   <Label
                     htmlFor="admin-mode"
@@ -379,13 +381,17 @@ export default function HeaderView({
                             src={profileImageUrl}
                             alt={displayNickname}
                           />
-                          <AvatarFallback className={`text-lg font-black ${themeStyle.avatarFallback}`}>
+                          <AvatarFallback
+                            className={`text-lg font-black ${themeStyle.avatarFallback}`}
+                          >
                             {userInitial}
                           </AvatarFallback>
                         </Avatar>
 
                         <div className="hidden xl:flex flex-col items-start gap-0.5 w-32 overflow-hidden">
-                          <span className={`text-[15px] font-black leading-tight truncate text-left ${themeStyle.stickerText}`}>
+                          <span
+                            className={`text-[15px] font-black leading-tight truncate text-left ${themeStyle.stickerText}`}
+                          >
                             {displayNickname}
                           </span>
                           {renderProviderBadge()}
@@ -398,15 +404,21 @@ export default function HeaderView({
                   align="end"
                   className="w-48 p-2 mt-2 bg-white border border-gray-200 rounded-2xl shadow-[4px_4px_12px_rgba(0,0,0,0.08)]"
                 >
-                  <DropdownMenuItem asChild className="cursor-pointer focus:bg-transparent p-0 mb-1">
-                    <Link
-                      to="/mypage"
-                      className="w-full px-3 py-2.5 flex items-center gap-2 font-bold text-gray-700 rounded-xl hover:bg-gray-100 transition-colors"
+                  {!isAdmin && (
+                    <DropdownMenuItem
+                      asChild
+                      className="cursor-pointer focus:bg-transparent p-0 mb-1"
                     >
-                      <Home className="w-4 h-4" />
-                      마이페이지
-                    </Link>
-                  </DropdownMenuItem>
+                      <Link
+                        to="/mypage"
+                        className="w-full px-3 py-2.5 flex items-center gap-2 font-bold text-gray-700 rounded-xl hover:bg-gray-100 transition-colors"
+                      >
+                        <Home className="w-4 h-4" />
+                        마이페이지
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
+
                   <DropdownMenuItem
                     onClick={logout}
                     className="cursor-pointer focus:bg-transparent p-0"
@@ -427,9 +439,11 @@ export default function HeaderView({
                     className="p-0 border-0 bg-transparent hover:bg-transparent md:hidden"
                   >
                     <div
-                      className={`${themeStyle.menuBg} ${themeStyle.menuBorder
-                        } ${currentTheme === "pop" ? "" : "shadow-lg"
-                        } w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-200`}
+                      className={`${themeStyle.menuBg} ${
+                        themeStyle.menuBorder
+                      } ${
+                        currentTheme === "pop" ? "" : "shadow-lg"
+                      } w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-200`}
                     >
                       <Menu className={`w-6 h-6 ${themeStyle.menuText}`} />
                     </div>
@@ -493,12 +507,13 @@ export default function HeaderView({
                             id="admin-mode-dd"
                             checked={isAdminMode}
                             onCheckedChange={handleAdminSwitch}
-                            className={`${currentTheme === "dark"
-                              ? "data-[state=checked]:bg-[#635bff] data-[state=unchecked]:bg-gray-600"
-                              : currentTheme === "christmas"
+                            className={`${
+                              currentTheme === "dark"
+                                ? "data-[state=checked]:bg-[#635bff] data-[state=unchecked]:bg-gray-600"
+                                : currentTheme === "christmas"
                                 ? "data-[state=checked]:bg-[#c41e3a] data-[state=unchecked]:bg-gray-300"
                                 : "data-[state=checked]:bg-black data-[state=unchecked]:bg-slate-300"
-                              }`}
+                            }`}
                           />
                         </div>
                       </Sticker>
@@ -514,11 +529,13 @@ export default function HeaderView({
                     >
                       <div className="w-full">
                         <div
-                          className={`w-full rounded-2xl px-4 py-3 transition-all duration-200 ${themeStyle.accentBg
-                            } ${currentTheme === "pop"
+                          className={`w-full rounded-2xl px-4 py-3 transition-all duration-200 ${
+                            themeStyle.accentBg
+                          } ${
+                            currentTheme === "pop"
                               ? "border-2 border-black"
                               : ""
-                            }`}
+                          }`}
                         >
                           <div
                             className={`flex items-center justify-between gap-2 font-black ${themeStyle.accentText}`}
@@ -566,8 +583,9 @@ export default function HeaderView({
 
               <Link to="/login">
                 <div
-                  className={`${themeStyle.menuBg} ${themeStyle.menuBorder} ${currentTheme === "pop" ? "" : "shadow-lg"
-                    } px-5 py-2 rounded-2xl transition-all duration-200`}
+                  className={`${themeStyle.menuBg} ${themeStyle.menuBorder} ${
+                    currentTheme === "pop" ? "" : "shadow-lg"
+                  } px-5 py-2 rounded-2xl transition-all duration-200`}
                 >
                   <span className={`font-black ${themeStyle.menuText}`}>
                     로그인

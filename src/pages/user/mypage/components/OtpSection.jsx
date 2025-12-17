@@ -21,7 +21,7 @@ export function OtpSection({ otp, backup, actions }) {
   return (
     <div className="space-y-1.5">
       <p className="text-[11px] font-black text-slate-500 uppercase tracking-wider">
-        Security · Google OTP
+        보안 설정
       </p>
 
       <div className="flex items-center justify-between gap-2">

@@ -38,7 +38,7 @@ export function LoginHistoryCard({ loginHistory, onBack }) {
     <div className="w-full">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="font-black tracking-widest text-sm">LOGIN HISTORY</p>
+          <p className="font-black tracking-widest text-sm">로그인 이력</p>
           <div className={`mt-4 ${themeStyle.titleBar} w-full`} />
         </div>
       </div>

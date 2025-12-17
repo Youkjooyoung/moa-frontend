@@ -20,7 +20,7 @@ export default function AdminLoginHistoryCard({ loginHistory }) {
           <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--theme-primary)] border border-[var(--theme-border-light)] shadow-[var(--theme-shadow)]">
             <KeyRound className="w-4 h-4 text-white" />
           </span>
-          LOGIN HISTORY
+          로그인 이력
         </CardTitle>
       </CardHeader>
 

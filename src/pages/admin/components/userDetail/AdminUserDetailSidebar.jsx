@@ -9,7 +9,7 @@ export default function AdminUserDetailSidebar({ userEmail, goLoginHistory }) {
       <CardHeader className="pb-3">
         <CardTitle className="text-xs font-black tracking-[0.18em] text-slate-900 flex items-center gap-2">
           <LayoutDashboard className="w-4 h-4" />
-          ACCOUNT MENU
+          계정 메뉴
         </CardTitle>
       </CardHeader>
       <CardContent className="pt-0 p-4 flex flex-col gap-3">

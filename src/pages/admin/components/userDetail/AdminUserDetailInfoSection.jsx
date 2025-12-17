@@ -13,7 +13,7 @@ export default function AdminUserDetailInfoSection({
 }) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <InfoCard title="ACCOUNT INFO" icon={<User className="w-4 h-4" />}>
+      <InfoCard title="사용자 정보" icon={<User className="w-4 h-4" />}>
         <InfoRow
           label="이메일"
           value={user.userId}
@@ -30,7 +30,7 @@ export default function AdminUserDetailInfoSection({
         />
       </InfoCard>
 
-      <InfoCard title="CONNECTION STATUS" icon={<Zap className="w-4 h-4" />}>
+      <InfoCard title="연결 정보" icon={<Zap className="w-4 h-4" />}>
         <InfoRow label="휴대폰" value={user.phone} />
         <InfoRow
           label="로그인 방식"
@@ -42,7 +42,7 @@ export default function AdminUserDetailInfoSection({
 
         <div className="space-y-3">
           <p className="text-xs font-black tracking-[0.18em] text-slate-900">
-            LINKED ACCOUNTS
+            연동 계정
           </p>
           <div className="flex flex-col gap-3">
             <SocialButton provider="google" isConnected={isGoogleConnected} />

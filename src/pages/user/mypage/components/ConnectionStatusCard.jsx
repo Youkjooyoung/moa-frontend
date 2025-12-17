@@ -58,7 +58,7 @@ export function ConnectionStatusCard({
     <div className="p-6">
       <div className="flex items-center gap-2 mb-4">
         <Smartphone className="w-4 h-4" />
-        <p className="font-black">CONNECTION STATUS</p>
+        <p className="font-black">연결 정보</p>
       </div>
 
       <div className={themeStyle.sectionBorder}>
@@ -80,7 +80,7 @@ export function ConnectionStatusCard({
       <div className={`mt-6 ${themeStyle.sectionBorder} pt-5`}>
         <div className="flex items-center gap-2 mb-3">
           <Link2 className="w-4 h-4" />
-          <p className={SECTION_TITLE}>LINKED ACCOUNTS</p>
+          <p className={SECTION_TITLE}>연동 계정</p>
         </div>
 
         <div className="flex flex-wrap gap-3">
@@ -105,7 +105,7 @@ export function ConnectionStatusCard({
       <div className={`mt-6 ${themeStyle.sectionBorder} pt-5`}>
         <div className="flex items-center gap-2 mb-3">
           <Shield className="w-4 h-4" />
-          <p className={SECTION_TITLE}>SECURITY · GOOGLE OTP</p>
+          <p className={SECTION_TITLE}>보안 설정</p>
         </div>
 
         <div className="flex items-center justify-between gap-3 border border-gray-200 rounded-2xl p-4 bg-white">

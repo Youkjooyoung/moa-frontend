@@ -25,7 +25,7 @@ export default function AdminUserDetailLoginHistorySection({
       <CardHeader className="pb-3 border-b border-[var(--theme-border-light)]">
         <CardTitle className="text-xs font-black tracking-[0.18em] text-[var(--theme-text)] flex items-center gap-2">
           <KeyRound className="w-4 h-4" />
-          LOGIN HISTORY
+          로그인 이력
         </CardTitle>
       </CardHeader>
 

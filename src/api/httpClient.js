@@ -1,4 +1,3 @@
-// src/api/httpClient.js
 import axios from "axios";
 import { useAuthStore } from "@/store/authStore";
 
@@ -20,6 +19,7 @@ const processQueue = (error, token = null) => {
   });
   failedQueue = [];
 };
+
 httpClient.interceptors.request.use(
   (config) => {
     if (config.skipAuth) {
@@ -47,8 +47,12 @@ httpClient.interceptors.response.use(
     if (originalRequest?.skipAuth) {
       return Promise.reject(error);
     }
+
     const isAuthEndpoint =
       originalRequest.url.startsWith("/auth/login") ||
+      originalRequest.url.startsWith("/auth/refresh") ||
+      originalRequest.url.startsWith("/auth/unlock") ||
+      originalRequest.url.startsWith("/auth/restore") ||
       originalRequest.url.startsWith("/signup") ||
       originalRequest.url.startsWith("/auth/verify") ||
       originalRequest.url.startsWith("/auth/otp");
@@ -56,6 +60,7 @@ httpClient.interceptors.response.use(
     if (status === 401 && isAuthEndpoint) {
       return Promise.reject(error);
     }
+
     if (
       status === 401 &&
       originalRequest.url !== "/auth/refresh" &&

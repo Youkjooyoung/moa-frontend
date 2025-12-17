@@ -6,7 +6,8 @@ import { useAuthStore } from "@/store/authStore";
 import {
   login as apiLogin,
   startPassAuth,
-  verifyPassAuth,
+  unlockAccount,
+  restoreAccount,
 } from "@/api/authApi";
 import { purgeLoginPasswords } from "@/store/authStore";
 
@@ -39,9 +40,7 @@ export const purgeLoginPasswordKeys = (primaryStorage, secondaryStorage) => {
     PASSWORD_STORAGE_KEYS.forEach((key) => {
       try {
         storage.removeItem(key);
-      } catch {
-        /* ignore */
-      }
+      } catch {}
     });
   });
 };
@@ -73,7 +72,6 @@ export const useLoginPageLogic = () => {
   } = useLoginStore();
   const { setTokens } = useAuthStore();
 
-  // const [googleLoading, setGoogleLoading] = useState(false);
   const [otpMode, setOtpMode] = useState("otp");
   const [loginLoading, setLoginLoading] = useState(false);
   const [otpLoading, setOtpLoading] = useState(false);
@@ -83,65 +81,109 @@ export const useLoginPageLogic = () => {
     otp: "",
   });
 
+  const runPassCertification = useCallback(async () => {
+    const IMP = await loadIamport();
+    if (!IMP) {
+      alert("본인인증 모듈 로드에 실패했습니다.");
+      return null;
+    }
+
+    const startRes = await startPassAuth();
+    if (!startRes?.success) {
+      alert(startRes?.error?.message || "본인인증 시작에 실패했습니다.");
+      return null;
+    }
+
+    const { impCode, merchantUid } = startRes.data;
+    IMP.init(impCode);
+
+    const impUid = await new Promise((resolve) => {
+      IMP.certification({ merchant_uid: merchantUid }, (rsp) => {
+        if (!rsp?.success) {
+          resolve(null);
+          return;
+        }
+        resolve(rsp.imp_uid || null);
+      });
+    });
+
+    return impUid;
+  }, []);
+
   const handleUnlockByCertification = useCallback(async () => {
     const trimmedEmail = email.trim();
 
     if (!trimmedEmail) {
       setErrors((prev) => ({
         ...prev,
-        email: "Please enter your email.",
+        email: "이메일을 입력해주세요",
       }));
       return;
     }
 
     try {
-      const IMP = await loadIamport();
-      if (!IMP) {
-        alert("Failed to load identity verification module.");
+      const impUid = await runPassCertification();
+      if (!impUid) {
+        alert("본인인증이 취소되었습니다.");
         return;
       }
 
-      const startRes = await startPassAuth();
-      if (!startRes.success) {
-        alert(startRes.error?.message || "Identity verification start failed.");
+      const res = await unlockAccount({ userId: trimmedEmail, impUid });
+
+      if (!res?.success) {
+        alert(res?.error?.message || "본인인증 확인에 실패했습니다.");
         return;
       }
 
-      const { impCode, merchantUid } = startRes.data;
-      IMP.init(impCode);
+      alert("본인인증 완료. 계정 잠금이 해제되었습니다.");
+    } catch (e) {
+      console.error(e);
+      alert("본인인증 처리 중 오류가 발생했습니다.");
+    }
+  }, [email, runPassCertification]);
 
-      IMP.certification({ merchant_uid: merchantUid }, async (rsp) => {
-        if (!rsp.success) {
-          alert("Identity verification was canceled.");
+  const handleRestoreByCertification = useCallback(
+    async (userId) => {
+      const trimmedEmail = (userId || "").trim();
+      if (!trimmedEmail) return;
+
+      try {
+        const impUid = await runPassCertification();
+        if (!impUid) {
+          alert("본인인증이 취소되었습니다.");
           return;
         }
 
-        try {
-          const verifyRes = await verifyPassAuth({
-            imp_uid: rsp.imp_uid,
-            userId: trimmedEmail,
-          });
+        const res = await restoreAccount({ userId: trimmedEmail, impUid });
 
-          if (!verifyRes.success) {
-            alert(
-              verifyRes.error?.message || "Identity verification check failed."
-            );
-            return;
-          }
-
-          alert(
-            "Identity verification complete. Your account has been unlocked."
-          );
-        } catch (e) {
-          console.error(e);
-          alert("Error during identity verification check.");
+        if (!res?.success) {
+          alert(res?.error?.message || "계정 복구에 실패했습니다.");
+          return;
         }
-      });
-    } catch (e) {
-      console.error(e);
-      alert("Error during identity verification.");
-    }
-  }, [email]);
+
+        const data = res.data || {};
+        if (data.accessToken && data.refreshToken) {
+          setTokens({
+            accessToken: data.accessToken,
+            refreshToken: data.refreshToken,
+            accessTokenExpiresIn: data.accessTokenExpiresIn,
+          });
+        }
+
+        const me = await httpClient.get("/users/me");
+        if (me?.success) {
+          useAuthStore.getState().setUser(me.data);
+        }
+
+        alert("계정 복구가 완료되었습니다.");
+        navigate("/", { replace: true });
+      } catch (e) {
+        console.error(e);
+        alert("계정 복구 처리 중 오류가 발생했습니다.");
+      }
+    },
+    [runPassCertification, setTokens, navigate]
+  );
 
   const handleEmailLogin = useCallback(async () => {
     const trimmedEmail = email.trim();
@@ -164,12 +206,22 @@ export const useLoginPageLogic = () => {
 
       if (!response.success) {
         const code = response.error?.code;
-        const message = response.error?.message;
+        const message = response.error?.message || "";
+
+        if (code === "ACCOUNT_WITHDRAW" || message.includes("탈퇴한 계정")) {
+          const ok = window.confirm(
+            "탈퇴한 계정입니다.\n다시 복구하시겠습니까?"
+          );
+          if (ok) {
+            await handleRestoreByCertification(trimmedEmail);
+          }
+          return;
+        }
 
         if (
           code === "N401" ||
           code === "AUTH_FAILED" ||
-          message?.includes("Invalid email or password")
+          message.includes("Invalid email or password")
         ) {
           alert("이메일 또는 비밀번호가 일치하지 않습니다.");
         } else {
@@ -210,7 +262,15 @@ export const useLoginPageLogic = () => {
       const code = apiError?.code;
       const message = apiError?.message || "Login processing error.";
 
-      if (code === "E403" && message?.includes("계정 잠금")) {
+      if (code === "ACCOUNT_WITHDRAW" || message.includes("탈퇴한 계정")) {
+        const ok = window.confirm("탈퇴한 계정입니다.\n다시 복구하시겠습니까?");
+        if (ok) {
+          await handleRestoreByCertification(email.trim());
+        }
+        return;
+      }
+
+      if (code === "E403" && message.includes("계정 잠금")) {
         const start = window.confirm(
           "로그인 실패가 5회 누적되어 계정이 잠겼습니다.\n본인 인증을 진행하시겠습니까?"
         );
@@ -234,6 +294,7 @@ export const useLoginPageLogic = () => {
     setTokens,
     resetOtp,
     handleUnlockByCertification,
+    handleRestoreByCertification,
   ]);
 
   const handleOtpConfirm = useCallback(async () => {
@@ -242,7 +303,7 @@ export const useLoginPageLogic = () => {
     if (otpMode === "otp" && (!otpCode || otpCode.length !== 6)) {
       setErrors((prev) => ({
         ...prev,
-        otp: "Please enter the 6-digit OTP code.",
+        otp: "6자리 OTP 코드를 입력해주세요.",
       }));
       return;
     }
@@ -278,7 +339,7 @@ export const useLoginPageLogic = () => {
       navigate("/", { replace: true });
     } catch (e) {
       console.error(e);
-      alert("An error occurred while processing OTP verification.");
+      alert("OTP 처리 중 오류가 발생했습니다.");
     } finally {
       setOtpLoading(false);
     }

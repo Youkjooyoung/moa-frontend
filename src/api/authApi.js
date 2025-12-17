@@ -38,8 +38,9 @@ export const verifyPassAuth = (data) =>
 export const checkPhone = (phone) =>
   httpClient.post("/signup/check", { type: "phone", value: phone });
 
-export const startRestoreVerify = (userId) =>
-  httpClient.post("/users/restore/start", { userId });
+export const restoreAccount = (data) => httpClient.post("/auth/restore", data);
+
+export const unlockAccount = (data) => httpClient.post("/auth/unlock", data);
 
 export const setupOtp = () => httpClient.post("/auth/otp/setup");
 

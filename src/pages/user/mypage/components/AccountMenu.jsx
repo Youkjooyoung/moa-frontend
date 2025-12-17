@@ -64,7 +64,7 @@ export function AccountMenu({
           <span className="inline-flex items-center justify-center w-8 h-8 rounded-xl border border-gray-200 bg-white">
             ▦
           </span>
-          Account Menu
+          계정 정보
         </p>
       </div>
 
