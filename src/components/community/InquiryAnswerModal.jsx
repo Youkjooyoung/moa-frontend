@@ -12,11 +12,21 @@ import { useThemeStore } from '@/store/themeStore';
 
 // 테마별 스타일
 const communityThemeStyles = {
-  default: {
+  pop: {
     // Neo/Pop 스타일 - 핑크, 시안 계열
     categoryBadge: 'bg-pink-500 text-white',
     focusRing: 'focus:ring-pink-500',
     submitButton: 'bg-pink-500 hover:bg-pink-600 text-white',
+  },
+  classic: {
+    categoryBadge: 'bg-[#635bff] text-white',
+    focusRing: 'focus:ring-[#635bff]',
+    submitButton: 'bg-[#635bff] hover:bg-indigo-600 text-white',
+  },
+  dark: {
+    categoryBadge: 'bg-[#635bff] text-white',
+    focusRing: 'focus:ring-[#635bff]',
+    submitButton: 'bg-[#635bff] hover:bg-indigo-600 text-white',
   },
   christmas: {
     categoryBadge: 'bg-[#c41e3a] text-white',

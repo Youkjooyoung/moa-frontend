@@ -7,7 +7,7 @@ import { useThemeStore } from "@/store/themeStore";
 
 // 테마별 Search 섹션 스타일
 const searchThemeStyles = {
-  default: {
+  pop: {
     linkText: "text-pink-500",
     tagHover: "hover:bg-pink-100 hover:border-pink-500",
   },

@@ -8,6 +8,7 @@ import AddProductModal from '../../components/product/AddProductModal';
 import UpdateProductModal from '../../components/product/UpdateProductModal';
 import { useThemeStore } from '@/store/themeStore';
 import { ChristmasBackground } from '@/config/themeConfig';
+import { getProductIconUrl } from '@/utils/imageUtils';
 
 // Theme-based styles
 const getThemeStyles = (theme) => {
@@ -130,26 +131,26 @@ const ProductDetailModal = ({ product, onClose, user, navigate, onSubscribe, onE
 
         {/* Header Section */}
         <div className={`py-9 px-6 flex flex-row items-center gap-6 relative overflow-hidden flex-shrink-0 ${theme === 'christmas' ? 'bg-[#c41e3a]/10' :
-            theme === 'dark' ? 'bg-[#0F172A]' :
-              theme === 'pop' ? 'bg-pink-100' :
-                theme === 'classic' ? 'bg-[#635bff]/10' :
-                  'bg-purple-50'
+          theme === 'dark' ? 'bg-[#0F172A]' :
+            theme === 'pop' ? 'bg-pink-100' :
+              theme === 'classic' ? 'bg-[#635bff]/10' :
+                'bg-purple-50'
           }`}>
           <div className={`absolute top-0 left-0 w-32 h-32 rounded-full filter blur-3xl opacity-50 -ml-10 -mt-10 ${theme === 'christmas' ? 'bg-[#c41e3a]/30' :
-              theme === 'dark' ? 'bg-[#635bff]/30' :
-                theme === 'pop' ? 'bg-pink-300' :
-                  'bg-purple-200'
+            theme === 'dark' ? 'bg-[#635bff]/30' :
+              theme === 'pop' ? 'bg-pink-300' :
+                'bg-purple-200'
             }`}></div>
           <div className={`absolute bottom-0 right-0 w-32 h-32 rounded-full filter blur-3xl opacity-50 -mr-10 -mb-10 ${theme === 'christmas' ? 'bg-green-300/30' :
-              theme === 'dark' ? 'bg-purple-500/30' :
-                theme === 'pop' ? 'bg-yellow-300' :
-                  'bg-pink-200'
+            theme === 'dark' ? 'bg-purple-500/30' :
+              theme === 'pop' ? 'bg-yellow-300' :
+                'bg-pink-200'
             }`}></div>
 
           <div className="relative z-10 flex-shrink-0">
             {product.image ? (
               <img
-                src={product.image}
+                src={getProductIconUrl(product.image)}
                 alt={product.productName}
                 className={`w-20 h-20 rounded-3xl shadow-lg object-cover ${theme === 'dark' ? 'bg-gray-700' : 'bg-white'}`}
               />
@@ -166,10 +167,10 @@ const ProductDetailModal = ({ product, onClose, user, navigate, onSubscribe, onE
             </h2>
             <div className="flex items-center gap-2 mt-2">
               <span className={`text-xs font-bold px-2.5 py-1 rounded-lg ${theme === 'christmas' ? 'bg-[#c41e3a]/20 text-[#c41e3a]' :
-                  theme === 'dark' ? 'bg-[#635bff]/20 text-[#635bff]' :
-                    theme === 'pop' ? 'bg-pink-200 text-pink-700' :
-                      theme === 'classic' ? 'bg-[#635bff]/20 text-[#635bff]' :
-                        'bg-purple-100 text-purple-700'
+                theme === 'dark' ? 'bg-[#635bff]/20 text-[#635bff]' :
+                  theme === 'pop' ? 'bg-pink-200 text-pink-700' :
+                    theme === 'classic' ? 'bg-[#635bff]/20 text-[#635bff]' :
+                      'bg-purple-100 text-purple-700'
                 }`}>
                 {product.categoryName || '구독'}
               </span>
@@ -256,8 +257,8 @@ const ProductDetailModal = ({ product, onClose, user, navigate, onSubscribe, onE
                       value={startDate}
                       onChange={(e) => setStartDate(e.target.value)}
                       className={`w-full pl-11 pr-4 py-3 border-none rounded-xl font-medium ${theme === 'dark'
-                          ? 'bg-[#0F172A] text-white focus:ring-2 focus:ring-[#635bff]'
-                          : 'bg-stone-50 text-stone-900 focus:ring-2 focus:ring-indigo-500'
+                        ? 'bg-[#0F172A] text-white focus:ring-2 focus:ring-[#635bff]'
+                        : 'bg-stone-50 text-stone-900 focus:ring-2 focus:ring-indigo-500'
                         }`}
                     />
                   </div>
@@ -277,8 +278,8 @@ const ProductDetailModal = ({ product, onClose, user, navigate, onSubscribe, onE
                       min={startDate}
                       placeholder="종료일 미지정 시 계속 유지"
                       className={`w-full pl-11 pr-4 py-3 border-none rounded-xl font-medium ${theme === 'dark'
-                          ? 'bg-[#0F172A] text-white focus:ring-2 focus:ring-[#635bff]'
-                          : 'bg-stone-50 text-stone-900 focus:ring-2 focus:ring-indigo-500'
+                        ? 'bg-[#0F172A] text-white focus:ring-2 focus:ring-[#635bff]'
+                        : 'bg-stone-50 text-stone-900 focus:ring-2 focus:ring-indigo-500'
                         }`}
                     />
                   </div>
@@ -420,15 +421,15 @@ const GetProductList = () => {
       {/* Christmas Background */}
       {theme === 'christmas' && <ChristmasBackground />}
 
-      <div className="container mx-auto px-4 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Header Section */}
         <div className="flex justify-between items-end mb-8">
           <div>
             <h1 className={`text-3xl font-bold flex items-center gap-2 ${themeStyles.text}`}>
               {theme === 'christmas' ? '🎄 구독 상품' : '구독 상품'}
               <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold animate-bounce shadow-sm ml-2 ${theme === 'christmas' ? 'bg-[#c41e3a]/20 text-[#c41e3a]' :
-                  theme === 'dark' ? 'bg-[#635bff]/20 text-[#635bff]' :
-                    'bg-[#FFF4E5] text-[#B95000]'
+                theme === 'dark' ? 'bg-[#635bff]/20 text-[#635bff]' :
+                  'bg-[#FFF4E5] text-[#B95000]'
                 }`}>
                 개인 구독 관리
               </span>
@@ -490,7 +491,7 @@ const GetProductList = () => {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredProducts.map(product => (
               <div
                 key={product.productId}
@@ -501,7 +502,7 @@ const GetProductList = () => {
                     <div className="relative w-[60px] h-[60px] flex-shrink-0">
                       {product.image ? (
                         <img
-                          src={product.image}
+                          src={getProductIconUrl(product.image)}
                           alt={product.productName}
                           className={`w-full h-full rounded-xl object-cover shadow-sm ${theme === 'dark' ? 'border border-gray-700' : 'border border-stone-200'}`}
                         />
@@ -542,6 +543,11 @@ const GetProductList = () => {
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
+                        if (!user) {
+                          alert('로그인이 필요한 서비스입니다. 로그인 페이지로 이동합니다.');
+                          navigate('/login');
+                          return;
+                        }
                         setViewingProduct(product);
                       }}
                       className={`rounded-lg py-2.5 text-sm font-medium transition-colors ${themeStyles.buttonSecondary}`}
@@ -562,6 +568,11 @@ const GetProductList = () => {
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
+                          if (!user) {
+                            alert('로그인이 필요한 서비스입니다. 로그인 페이지로 이동합니다.');
+                            navigate('/login');
+                            return;
+                          }
                           const today = new Date().toISOString().split('T')[0];
                           setSubscribingData({ productId: product.productId, startDate: today, endDate: '' });
                         }}

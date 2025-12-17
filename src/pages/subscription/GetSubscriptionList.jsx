@@ -86,7 +86,7 @@ const GetSubscriptionList = () => {
     const themeStyles = getThemeStyles(theme);
 
     useEffect(() => {
-        console.log("GetSubscriptionList Mounted. User:", user);
+
 
         if (!user?.userId) {
             console.warn("User ID missing in authStore, skipping fetch");
@@ -96,12 +96,12 @@ const GetSubscriptionList = () => {
 
         const fetchSubscriptions = async () => {
             try {
-                console.log("Fetching subscriptions for userId:", user.userId);
+
                 setLoading(true);
                 const response = await httpClient.get('/subscription', {
                     params: { userId: user.userId }
                 });
-                console.log("Subscription Response:", response);
+
 
                 if (Array.isArray(response)) {
                     setSubscriptions(response);

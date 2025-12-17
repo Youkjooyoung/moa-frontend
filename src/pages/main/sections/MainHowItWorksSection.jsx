@@ -4,7 +4,7 @@ import { useThemeStore } from "@/store/themeStore";
 
 // 테마별 HowItWorks 섹션 스타일
 const howItWorksThemeStyles = {
-  default: {
+  pop: {
     stepColors: ["bg-cyan-400", "bg-pink-500", "bg-lime-400"],
     emojis: ["🔍", "💳", "🎬"],
   },

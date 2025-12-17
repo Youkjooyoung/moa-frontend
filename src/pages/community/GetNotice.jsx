@@ -7,11 +7,21 @@ import { NeoCard, NeoButton } from '@/components/common/neo';
 
 // 테마별 스타일
 const communityThemeStyles = {
-    default: {
+    pop: {
         // Neo/Pop 스타일 - 핑크, 시안 계열
         dateBadge: 'bg-cyan-100 text-cyan-700',
         viewBadge: 'bg-pink-100 text-pink-700',
         editButton: 'bg-pink-500 hover:bg-pink-600 text-white',
+    },
+    classic: {
+        dateBadge: 'bg-indigo-100 text-indigo-700',
+        viewBadge: 'bg-purple-100 text-purple-700',
+        editButton: 'bg-[#635bff] hover:bg-indigo-600 text-white',
+    },
+    dark: {
+        dateBadge: 'bg-gray-700 text-gray-200',
+        viewBadge: 'bg-gray-600 text-gray-200',
+        editButton: 'bg-[#635bff] hover:bg-indigo-600 text-white',
     },
     christmas: {
         dateBadge: 'bg-[#1a5f2a] text-white',

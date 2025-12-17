@@ -5,19 +5,34 @@ import httpClient from '../../api/httpClient';
 import { useAuthStore } from '../../store/authStore';
 import UpdateProductModal from '../../components/product/UpdateProductModal';
 import { useThemeStore } from '@/store/themeStore';
+import { getProductIconUrl } from '@/utils/imageUtils';
 
 // 테마별 스타일
 const getProductThemeStyles = {
-    default: {
-        spinnerBorder: 'border-indigo-600',
-        cardShadow: 'shadow-2xl',
-        sparklesIcon: 'text-indigo-500',
-        benefitIcon1: 'bg-indigo-50 text-indigo-600',
-        focusRing: 'focus:ring-indigo-500',
+    pop: {
+        spinnerBorder: 'border-pink-500',
+        cardShadow: 'shadow-[4px_4px_12px_rgba(0,0,0,0.08)]',
+        sparklesIcon: 'text-pink-500',
+        benefitIcon1: 'bg-pink-50 text-pink-600',
+        focusRing: 'focus:ring-pink-500',
+    },
+    classic: {
+        spinnerBorder: 'border-[#635bff]',
+        cardShadow: 'shadow-[4px_4px_12px_rgba(99,91,255,0.1)]',
+        sparklesIcon: 'text-[#635bff]',
+        benefitIcon1: 'bg-indigo-50 text-[#635bff]',
+        focusRing: 'focus:ring-[#635bff]',
+    },
+    dark: {
+        spinnerBorder: 'border-[#635bff]',
+        cardShadow: 'shadow-[4px_4px_12px_rgba(0,0,0,0.3)]',
+        sparklesIcon: 'text-[#635bff]',
+        benefitIcon1: 'bg-gray-700 text-[#635bff]',
+        focusRing: 'focus:ring-[#635bff]',
     },
     christmas: {
         spinnerBorder: 'border-[#c41e3a]',
-        cardShadow: 'shadow-[4px_4px_12px_rgba(0,0,0,0.08)]',
+        cardShadow: 'shadow-[4px_4px_12px_rgba(196,30,58,0.15)]',
         sparklesIcon: 'text-[#c41e3a]',
         benefitIcon1: 'bg-red-50 text-[#c41e3a]',
         focusRing: 'focus:ring-[#c41e3a]',
@@ -67,9 +82,20 @@ const GetProduct = () => {
         }
     };
 
+    // 비로그인 사용자 접근 차단
     useEffect(() => {
-        fetchProduct();
-    }, [id, navigate]);
+        if (!user) {
+            alert('로그인이 필요한 서비스입니다. 로그인 페이지로 이동합니다.');
+            navigate('/login');
+            return;
+        }
+    }, [user, navigate]);
+
+    useEffect(() => {
+        if (user) {
+            fetchProduct();
+        }
+    }, [id, navigate, user]);
 
     const handleSubscribe = () => {
         // 구독 등록 로직 (추후 구현)
@@ -101,7 +127,7 @@ const GetProduct = () => {
                     <div className="relative z-10 flex-shrink-0">
                         {product.image ? (
                             <img
-                                src={product.image}
+                                src={getProductIconUrl(product.image)}
                                 alt={product.productName}
                                 className="w-20 h-20 md:w-24 md:h-24 rounded-3xl shadow-lg object-cover bg-white"
                             />

@@ -10,7 +10,7 @@ import { Separator } from "@/components/ui/separator";
 
 // 테마별 스타일
 const myPageThemeStyles = {
-  default: {
+  pop: {
     // Neo/Pop 스타일 - 핑크, 시안 계열
     accent: "text-pink-500",
     accentBg: "bg-pink-500",

@@ -17,7 +17,21 @@ import { useThemeStore } from '@/store/themeStore';
 
 // 테마별 스타일
 const productModalThemeStyles = {
-    default: {
+    pop: {
+        focusRing: 'focus:ring-pink-500',
+        dragOverlay: 'bg-pink-500/10',
+        dragBorder: 'border-pink-500',
+        dragBg: 'bg-pink-50',
+        iconBg: 'bg-pink-100',
+        iconColor: 'text-pink-600',
+        iconColorAlt: 'text-pink-500',
+        textAccent: 'text-pink-600',
+        textDark: 'text-pink-900',
+        hoverBorder: 'hover:border-pink-400',
+        buttonBg: 'bg-pink-500 hover:bg-pink-600',
+        buttonShadow: 'shadow-pink-200 hover:shadow-pink-300',
+    },
+    classic: {
         focusRing: 'focus:ring-indigo-500',
         dragOverlay: 'bg-indigo-500/10',
         dragBorder: 'border-indigo-500',
@@ -30,6 +44,20 @@ const productModalThemeStyles = {
         hoverBorder: 'hover:border-indigo-400',
         buttonBg: 'bg-indigo-600 hover:bg-indigo-700',
         buttonShadow: 'shadow-indigo-200 hover:shadow-indigo-300',
+    },
+    dark: {
+        focusRing: 'focus:ring-[#635bff]',
+        dragOverlay: 'bg-[#635bff]/10',
+        dragBorder: 'border-[#635bff]',
+        dragBg: 'bg-slate-800',
+        iconBg: 'bg-slate-700',
+        iconColor: 'text-[#635bff]',
+        iconColorAlt: 'text-[#635bff]',
+        textAccent: 'text-[#635bff]',
+        textDark: 'text-white',
+        hoverBorder: 'hover:border-[#635bff]',
+        buttonBg: 'bg-[#635bff] hover:bg-[#5851e8]',
+        buttonShadow: 'shadow-[#635bff]/20 hover:shadow-[#635bff]/30',
     },
     christmas: {
         focusRing: 'focus:ring-[#c41e3a]',

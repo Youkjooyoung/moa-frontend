@@ -3,7 +3,7 @@ import { useThemeStore } from "@/store/themeStore";
 
 // 테마별 스타일
 const otpThemeStyles = {
-  default: {
+  pop: {
     buttonBg: "bg-indigo-600",
     buttonText: "text-indigo-700",
     buttonHover: "hover:bg-indigo-50",

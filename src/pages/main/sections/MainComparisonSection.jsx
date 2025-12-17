@@ -5,7 +5,7 @@ import { useThemeStore } from "@/store/themeStore";
 
 // 테마별 Comparison 섹션 스타일
 const comparisonThemeStyles = {
-  default: {
+  pop: {
     cardBg: "bg-gradient-to-br from-pink-50 to-cyan-50",
     iconBg: "bg-pink-500",
     priceColor: "text-pink-500",

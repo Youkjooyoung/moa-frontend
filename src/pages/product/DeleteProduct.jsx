@@ -14,7 +14,7 @@ import { useThemeStore } from '@/store/themeStore';
 
 // 테마별 스타일
 const deleteProductThemeStyles = {
-    default: {
+    pop: {
         confirmButton: 'bg-indigo-600 hover:bg-indigo-700',
     },
     christmas: {

@@ -5,7 +5,7 @@ import { useThemeStore } from "@/store/themeStore";
 
 // 테마별 Statement 섹션 스타일
 const statementThemeStyles = {
-  default: {
+  pop: {
     badgeBg: "bg-cyan-400",
     accentText: "text-pink-500",
     badgeText: "",

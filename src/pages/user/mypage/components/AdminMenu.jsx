@@ -5,7 +5,7 @@ import { useThemeStore } from "@/store/themeStore";
 
 // 테마별 스타일
 const adminMenuThemeStyles = {
-  default: {
+  pop: {
     cardShadow: "shadow-2xl",
   },
   christmas: {

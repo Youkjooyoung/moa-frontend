@@ -12,11 +12,21 @@ import { useThemeStore } from '@/store/themeStore';
 
 // 테마별 스타일
 const communityThemeStyles = {
-  default: {
+  pop: {
     // Neo/Pop 스타일 - 핑크, 시안 계열
     categoryBadge: 'bg-pink-500 text-white',
     answerCard: 'bg-pink-50',
     answerTextColor: 'text-pink-700',
+  },
+  classic: {
+    categoryBadge: 'bg-[#635bff] text-white',
+    answerCard: 'bg-indigo-50',
+    answerTextColor: 'text-indigo-700',
+  },
+  dark: {
+    categoryBadge: 'bg-[#635bff] text-white',
+    answerCard: 'bg-gray-700',
+    answerTextColor: 'text-gray-200',
   },
   christmas: {
     categoryBadge: 'bg-[#c41e3a] text-white',

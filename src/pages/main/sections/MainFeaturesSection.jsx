@@ -5,7 +5,7 @@ import { useThemeStore } from "@/store/themeStore";
 
 // 테마별 Features 섹션 스타일
 const featuresThemeStyles = {
-  default: {
+  pop: {
     stickerBg: "bg-lime-400",
     accentText: "text-pink-500",
     cardColors: ["bg-cyan-400", "bg-lime-400", "bg-pink-400"],

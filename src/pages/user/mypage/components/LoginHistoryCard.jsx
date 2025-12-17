@@ -6,7 +6,7 @@ const BTN =
 
 // 테마별 스타일
 const loginHistoryThemeStyles = {
-  default: {
+  pop: {
     titleBar: "h-[2px] bg-black",
     headerBorder: "border-b-2 border-black",
     rowBorder: "border-b border-black/10",

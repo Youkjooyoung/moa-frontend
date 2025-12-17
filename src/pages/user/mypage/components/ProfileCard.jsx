@@ -10,7 +10,7 @@ const BTN_DANGER =
 
 // 테마별 스타일
 const profileCardThemeStyles = {
-  default: {
+  pop: {
     buttonHover: "hover:bg-slate-50",
   },
   christmas: {

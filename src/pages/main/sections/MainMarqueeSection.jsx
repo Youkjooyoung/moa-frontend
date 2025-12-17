@@ -5,7 +5,7 @@ import { useThemeStore } from "@/store/themeStore";
 
 // 테마별 마키 스타일
 const marqueeThemeStyles = {
-  default: {
+  pop: {
     starColors: ["text-pink-400 fill-pink-400", "text-cyan-400 fill-cyan-400", "text-lime-400 fill-lime-400", "text-yellow-400 fill-yellow-400"],
   },
   christmas: {

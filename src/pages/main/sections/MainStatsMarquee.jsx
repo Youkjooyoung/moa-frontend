@@ -4,7 +4,7 @@ import { useThemeStore } from "@/store/themeStore";
 
 // 테마별 Stats Marquee 스타일
 const statsMarqueeThemeStyles = {
-  default: {
+  pop: {
     bg: "bg-pink-500",
     border: "border-pink-400",
   },

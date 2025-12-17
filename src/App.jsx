@@ -140,7 +140,10 @@ export default function App() {
   };
 
   return (
-    <div className={`min-h-screen flex flex-col transition-colors duration-300 ${getBgClass()}`}>
+    <div
+      data-theme={theme}
+      className={`min-h-screen flex flex-col transition-colors duration-300 ${getBgClass()}`}
+    >
       <NeoBackground />
       <ScrollToTop />
       {showEasterEgg && <PineappleEasterEgg />}

@@ -19,7 +19,7 @@ import { useThemeStore } from "@/store/themeStore";
 
 // 테마별 스타일
 const updateUserThemeStyles = {
-  default: {
+  pop: {
     sticker: {
       border: "border border-gray-200",
       shadow: "shadow-[4px_4px_12px_rgba(0,0,0,0.08)]",

@@ -3,8 +3,16 @@ import { useThemeStore } from '@/store/themeStore';
 
 // 테마별 페이지네이션 스타일
 const paginationThemeStyles = {
-    default: {
+    pop: {
         activeBg: 'bg-pink-500',
+        activeText: 'text-white',
+    },
+    classic: {
+        activeBg: 'bg-[#635bff]',
+        activeText: 'text-white',
+    },
+    dark: {
+        activeBg: 'bg-[#635bff]',
         activeText: 'text-white',
     },
     christmas: {

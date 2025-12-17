@@ -3,7 +3,7 @@ import { useThemeStore } from "@/store/themeStore";
 
 // 테마별 스타일
 const menuButtonThemeStyles = {
-  default: {
+  pop: {
     activeBg: "bg-indigo-600",
     activeBorder: "border-black",
     activeShadow: "shadow-[4px_4px_12px_rgba(0,0,0,0.08)]",

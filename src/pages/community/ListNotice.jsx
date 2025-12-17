@@ -9,11 +9,21 @@ import { Search } from 'lucide-react';
 
 // 테마별 스타일
 const communityThemeStyles = {
-    default: {
+    pop: {
         // Neo/Pop 스타일 - 핑크, 시안 계열
         button: 'bg-pink-500 hover:bg-pink-600 text-white',
         searchIconHover: 'hover:text-pink-500',
         focusRing: 'focus:ring-pink-500',
+    },
+    classic: {
+        button: 'bg-[#635bff] hover:bg-[#5851e8] text-white',
+        searchIconHover: 'hover:text-[#635bff]',
+        focusRing: 'focus:ring-[#635bff]',
+    },
+    dark: {
+        button: 'bg-[#635bff] hover:bg-[#5851e8] text-white',
+        searchIconHover: 'hover:text-[#635bff]',
+        focusRing: 'focus:ring-[#635bff]',
     },
     christmas: {
         button: 'bg-[#c41e3a] hover:bg-red-700 text-white',

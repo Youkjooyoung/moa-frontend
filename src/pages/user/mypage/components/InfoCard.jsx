@@ -6,7 +6,7 @@ const baseCardClass =
 
 // 테마별 스타일
 const infoCardThemeStyles = {
-  default: {
+  pop: {
     headerBorder: "border-b border-black",
   },
   christmas: {

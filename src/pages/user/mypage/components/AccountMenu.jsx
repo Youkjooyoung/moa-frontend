@@ -11,7 +11,7 @@ const ACTIVE =
 
 // 테마별 스타일
 const accountMenuThemeStyles = {
-  default: {
+  pop: {
     itemHover: "hover:bg-slate-50",
   },
   christmas: {

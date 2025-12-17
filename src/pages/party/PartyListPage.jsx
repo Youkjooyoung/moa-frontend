@@ -42,12 +42,12 @@ const Sticker = ({ children, color = "bg-white", rotate = 0, className = "", onC
 
 // Party 페이지 테마 스타일
 const partyThemeStyles = {
-  default: {
-    accent: 'text-indigo-600',
-    accentBg: 'bg-indigo-600',
-    hoverAccentBg: 'hover:bg-indigo-700',
-    badge: 'bg-indigo-50 text-indigo-600',
-    buttonShadow: 'shadow-indigo-600/25',
+  pop: {
+    accent: 'text-pink-500',
+    accentBg: 'bg-pink-500',
+    hoverAccentBg: 'hover:bg-pink-600',
+    badge: 'bg-pink-50 text-pink-600',
+    buttonShadow: 'shadow-pink-500/25',
   },
   christmas: {
     accent: 'text-[#c41e3a]',
@@ -59,13 +59,6 @@ const partyThemeStyles = {
     greenBadge: 'bg-green-50 text-[#1a5f2a]',
     buttonShadow: 'shadow-[#c41e3a]/25',
     cardShadow: 'shadow-[4px_4px_12px_rgba(0,0,0,0.08)]',
-  },
-  pop: {
-    accent: 'text-pink-500',
-    accentBg: 'bg-pink-500',
-    hoverAccentBg: 'hover:bg-pink-600',
-    badge: 'bg-pink-50 text-pink-600',
-    buttonShadow: 'shadow-pink-500/25',
   },
 };
 
@@ -277,7 +270,7 @@ export default function PartyListPage() {
     <div className="min-h-screen bg-transparent pb-20 -mt-20 pt-20 transition-colors duration-300 relative z-10">
       {/* Snow Plow Button - Christmas theme only */}
       {theme === "christmas" && (
-        <div className="fixed bottom-8 left-8 z-50">
+        <div className="fixed bottom-8 left-24 z-50">
           <SnowPlowButton />
         </div>
       )}
@@ -347,7 +340,7 @@ export default function PartyListPage() {
             >
               {theme === "pop" ? (
                 <Sticker
-                  color="bg-red-800"
+                  color="bg-pink-500"
                   rotate={2}
                   className="px-8 py-4 rounded-2xl cursor-pointer"
                   onClick={() => navigate("/party/create")}
@@ -414,7 +407,7 @@ export default function PartyListPage() {
                 <input
                   type="text"
                   className={`block w-full pl-12 pr-10 py-3.5 rounded-xl transition-all duration-200 ${theme === "pop"
-                    ? "border border-gray-200 bg-white text-black placeholder-gray-500 focus:ring-2 focus:ring-red-800/20"
+                    ? "border border-gray-200 bg-white text-black placeholder-gray-500 focus:ring-2 focus:ring-pink-500/20"
                     : theme === "dark"
                       ? "border border-gray-700 bg-[#0F172A] text-white placeholder-gray-500 focus:ring-2 focus:ring-[#635bff]/20 focus:border-[#635bff]"
                       : theme === "christmas"
@@ -450,8 +443,8 @@ export default function PartyListPage() {
                       onClick={() => setSelectedStatus(filter.value)}
                       className={`px-4 py-2 text-sm font-semibold transition-all duration-200 ${theme === "pop"
                         ? selectedStatus === filter.value
-                          ? "bg-red-800 text-white border border-gray-200 rounded-xl"
-                          : "bg-white text-black border border-gray-200 rounded-xl hover:bg-red-50"
+                          ? "bg-pink-500 text-white border border-gray-200 rounded-xl"
+                          : "bg-white text-black border border-gray-200 rounded-xl hover:bg-pink-50"
                         : theme === "dark"
                           ? selectedStatus === filter.value
                             ? "bg-[#635bff] text-white rounded-full shadow-md shadow-[#635bff]/25"
@@ -635,7 +628,7 @@ export default function PartyListPage() {
                     {/* Service Badge */}
                     <div className="flex items-center gap-2 mb-3">
                       <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${theme === "pop"
-                        ? "text-red-800 bg-red-100 border border-gray-200"
+                        ? "text-pink-600 bg-pink-50 border border-gray-200"
                         : theme === "dark"
                           ? "text-[#635bff] bg-[#635bff]/20"
                           : theme === "christmas"
@@ -648,7 +641,7 @@ export default function PartyListPage() {
 
                     {/* Title */}
                     <h3 className={`font-bold mb-3 line-clamp-1 transition-colors ${theme === "pop"
-                      ? "text-black group-hover:text-red-800"
+                      ? "text-black group-hover:text-pink-500"
                       : theme === "dark"
                         ? "text-white group-hover:text-[#635bff]"
                         : theme === "christmas"

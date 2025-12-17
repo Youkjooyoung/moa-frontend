@@ -555,7 +555,7 @@ export const ThemeSwitcher = ({ theme, onThemeChange }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="fixed top-44 right-4 z-50">
+    <div className="fixed bottom-8 left-8 z-50">
       {/* Main Toggle Button */}
       <motion.button
         whileHover={{ scale: 1.05 }}

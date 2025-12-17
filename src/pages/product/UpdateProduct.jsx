@@ -15,7 +15,7 @@ import { useThemeStore } from '@/store/themeStore';
 
 // 테마별 스타일
 const updateProductThemeStyles = {
-    default: {
+    pop: {
         primary: 'indigo',
         focusRing: 'focus:ring-indigo-500',
         dragBorder: 'border-indigo-500',
@@ -470,8 +470,8 @@ const UpdateProduct = () => {
                             </div>
                         ) : (
                             <div className={`relative w-full h-64 rounded-2xl overflow-hidden group shadow-sm ${theme === 'dark'
-                                    ? 'bg-gray-800 border border-gray-600'
-                                    : 'bg-stone-100 border border-stone-200'
+                                ? 'bg-gray-800 border border-gray-600'
+                                : 'bg-stone-100 border border-stone-200'
                                 }`}>
                                 <img
                                     src={previewUrl}
@@ -497,8 +497,8 @@ const UpdateProduct = () => {
                                     type="button"
                                     onClick={handleRemoveImage}
                                     className={`absolute top-4 right-4 p-2.5 rounded-xl shadow-lg backdrop-blur-sm transition-all hover:scale-105 active:scale-95 ${theme === 'dark'
-                                            ? 'bg-gray-700/90 hover:bg-gray-600 text-white'
-                                            : 'bg-white/90 hover:bg-white text-stone-700'
+                                        ? 'bg-gray-700/90 hover:bg-gray-600 text-white'
+                                        : 'bg-white/90 hover:bg-white text-stone-700'
                                         }`}
                                 >
                                     <X className="w-5 h-5" />
@@ -531,8 +531,8 @@ const UpdateProduct = () => {
                         type="button"
                         onClick={() => navigate('/product')}
                         className={`w-full mt-3 py-4 rounded-xl font-bold transition-colors ${theme === 'dark'
-                                ? 'text-gray-400 hover:bg-gray-800'
-                                : 'text-stone-500 hover:bg-stone-100'
+                            ? 'text-gray-400 hover:bg-gray-800'
+                            : 'text-stone-500 hover:bg-stone-100'
                             }`}
                     >
                         취소

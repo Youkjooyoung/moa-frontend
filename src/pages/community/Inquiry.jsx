@@ -9,9 +9,17 @@ import { NeoCard, NeoPagination } from '@/components/common/neo';
 
 // 테마별 스타일
 const communityThemeStyles = {
-    default: {
+    pop: {
         cardBg: 'bg-white',
         textColor: 'text-black',
+    },
+    classic: {
+        cardBg: 'bg-white',
+        textColor: 'text-black',
+    },
+    dark: {
+        cardBg: 'bg-[#1E293B]',
+        textColor: 'text-gray-200',
     },
     christmas: {
         cardBg: 'bg-white',

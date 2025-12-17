@@ -11,7 +11,7 @@ const BTN_DANGER =
 
 // 테마별 스타일
 const connectionThemeStyles = {
-  default: {
+  pop: {
     sectionBorder: "border-t-2 border-black",
     dividerBorder: "border-t border-black/20",
     buttonHover: "hover:bg-slate-50",

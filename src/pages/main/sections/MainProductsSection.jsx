@@ -18,7 +18,7 @@ import {
 
 // 테마별 Products 섹션 스타일
 const productsThemeStyles = {
-  default: {
+  pop: {
     stickerBg: "bg-cyan-400",
     priceColor: "text-pink-500",
     emoji: "🎬",
