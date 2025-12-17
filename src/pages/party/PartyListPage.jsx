@@ -9,11 +9,7 @@ import {
   themeConfig,
   GridPattern,
 } from "../../config/themeConfig";
-import {
-  SnowPlowProvider,
-  SnowPlowButton,
-  ClearableSnowPile,
-} from "../../components/christmas/SnowPlow";
+import { ClearableSnowPile } from "../../components/christmas/SnowPlow";
 import {
   Sparkles,
   Search,
@@ -269,12 +265,6 @@ export default function PartyListPage() {
 
   const content = (
     <div className="min-h-screen bg-transparent pb-20 -mt-20 pt-20 transition-colors duration-300 relative z-10">
-      {/* Snow Plow Button - Christmas theme only */}
-      {theme === "christmas" && (
-        <div className="fixed bottom-8 left-24 z-50">
-          <SnowPlowButton />
-        </div>
-      )}
 
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-transparent">
@@ -746,15 +736,6 @@ export default function PartyListPage() {
       </div>
     </div>
   );
-
-  // Wrap with SnowPlowProvider for Christmas theme
-  if (theme === "christmas") {
-    return (
-      <SnowPlowProvider enabled={true}>
-        {content}
-      </SnowPlowProvider>
-    );
-  }
 
   return content;
 }
