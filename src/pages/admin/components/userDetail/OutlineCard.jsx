@@ -15,7 +15,7 @@ const outlineCardThemeStyles = {
 
 export default function OutlineCard({ className = "", children }) {
   const { theme } = useThemeStore();
-  const themeStyle = outlineCardThemeStyles[theme] || outlineCardThemeStyles.default;
+  const themeStyle = outlineCardThemeStyles[theme] || outlineCardThemeStyles.pop;
 
   return (
     <Card

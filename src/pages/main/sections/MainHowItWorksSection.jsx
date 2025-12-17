@@ -36,7 +36,7 @@ function Sticker({ children, color = "bg-white", rotate = 0, className = "", isD
 
 export default function MainHowItWorksSection() {
   const { theme } = useThemeStore();
-  const themeStyle = howItWorksThemeStyles[theme] || howItWorksThemeStyles.default;
+  const themeStyle = howItWorksThemeStyles[theme] || howItWorksThemeStyles.pop;
   const isDark = theme === "dark";
 
   const steps = [

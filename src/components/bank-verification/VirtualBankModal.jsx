@@ -37,7 +37,7 @@ const virtualBankModalThemeStyles = {
  */
 export default function VirtualBankModal() {
     const { theme } = useThemeStore();
-    const themeStyle = virtualBankModalThemeStyles[theme] || virtualBankModalThemeStyles.default;
+    const themeStyle = virtualBankModalThemeStyles[theme] || virtualBankModalThemeStyles.pop;
     const {
         showVirtualBankModal,
         closeVirtualBankModal,

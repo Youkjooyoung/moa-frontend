@@ -96,7 +96,7 @@ export default function PartyListPage() {
   // Theme State from Zustand Store
   const { theme, setTheme } = useThemeStore();
   const currentTheme = themeConfig[theme] || themeConfig.classic;
-  const themeStyle = partyThemeStyles[theme] || partyThemeStyles.default;
+  const themeStyle = partyThemeStyles[theme] || partyThemeStyles.pop;
 
   const myPartyIds = Array.isArray(myParties) ? myParties.map(p => p.partyId) : [];
   const isInitialLoading = loadingParties && list.length === 0;
@@ -592,12 +592,12 @@ export default function PartyListPage() {
                     }`}
                 >
                   {/* Service Banner */}
-                  <div className="relative h-40 bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
+                  <div className="relative h-40 bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4 sm:p-6">
                     {party.productImage ? (
                       <img
                         src={party.productImage}
                         alt={party.productName}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        className="max-w-[80%] max-h-[80%] object-contain group-hover:scale-105 transition-transform duration-500"
                       />
                     ) : (
                       <div className={`w-20 h-20 rounded-2xl flex items-center justify-center text-white text-3xl font-black shadow-lg ${theme === "christmas" ? "bg-[#c41e3a]" : "bg-[#635bff]"}`}>

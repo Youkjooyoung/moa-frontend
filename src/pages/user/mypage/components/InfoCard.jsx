@@ -16,7 +16,7 @@ const infoCardThemeStyles = {
 
 export function InfoCard({ title, icon, children }) {
   const { theme } = useThemeStore();
-  const themeStyle = infoCardThemeStyles[theme] || infoCardThemeStyles.default;
+  const themeStyle = infoCardThemeStyles[theme] || infoCardThemeStyles.pop;
 
   return (
     <Card className={baseCardClass}>

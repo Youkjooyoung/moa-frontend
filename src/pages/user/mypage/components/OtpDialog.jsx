@@ -29,7 +29,7 @@ export function OtpDialog({
   handleOtpConfirm,
 }) {
   const { theme } = useThemeStore();
-  const themeStyle = otpDialogThemeStyles[theme] || otpDialogThemeStyles.default;
+  const themeStyle = otpDialogThemeStyles[theme] || otpDialogThemeStyles.pop;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

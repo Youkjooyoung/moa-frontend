@@ -34,7 +34,7 @@ const cardThemeStyles = {
 const NeoCard = React.forwardRef(
   ({ children, color = "bg-white", rotate = 0, hoverable = true, className, ...props }, ref) => {
     const { theme } = useThemeStore();
-    const themeStyle = cardThemeStyles[theme] || cardThemeStyles.default;
+    const themeStyle = cardThemeStyles[theme] || cardThemeStyles.pop;
 
     const Component = hoverable ? motion.div : "div";
     const motionProps = hoverable ? {

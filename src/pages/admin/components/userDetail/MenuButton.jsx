@@ -17,18 +17,17 @@ const menuButtonThemeStyles = {
 
 export default function MenuButton({ icon, label, onClick, active = false }) {
   const { theme } = useThemeStore();
-  const themeStyle = menuButtonThemeStyles[theme] || menuButtonThemeStyles.default;
+  const themeStyle = menuButtonThemeStyles[theme] || menuButtonThemeStyles.pop;
 
   return (
     <Button
       type="button"
       variant="ghost"
       onClick={onClick}
-      className={`w-full justify-start h-11 px-4 text-sm font-bold rounded-2xl border-2 transition-colors ${
-        active
+      className={`w-full justify-start h-11 px-4 text-sm font-bold rounded-2xl border-2 transition-colors ${active
           ? `${themeStyle.activeBorder} ${themeStyle.activeBg} text-white`
           : `border-slate-200 bg-white text-slate-900 ${themeStyle.inactiveHover}`
-      }`}
+        }`}
     >
       <span className="mr-3">{icon}</span>
       {label}

@@ -26,7 +26,7 @@ const getProductThemeStyles = {
 
 const GetProduct = () => {
     const { theme } = useThemeStore();
-    const themeStyle = getProductThemeStyles[theme] || getProductThemeStyles.default;
+    const themeStyle = getProductThemeStyles[theme] || getProductThemeStyles.pop;
     const { id } = useParams();
     const navigate = useNavigate();
     const { user } = useAuthStore();
@@ -97,59 +97,59 @@ const GetProduct = () => {
                     <div className="absolute top-0 left-0 w-32 h-32 bg-purple-200 rounded-full filter blur-3xl opacity-50 -ml-10 -mt-10"></div>
                     <div className="absolute bottom-0 right-0 w-32 h-32 bg-pink-200 rounded-full filter blur-3xl opacity-50 -mr-10 -mb-10"></div>
 
-                        {/* Icon */}
-                        <div className="relative z-10 flex-shrink-0">
-                            {product.image ? (
-                                <img
-                                    src={product.image}
-                                    alt={product.productName}
-                                    className="w-20 h-20 md:w-24 md:h-24 rounded-3xl shadow-lg object-cover bg-white"
-                                />
-                            ) : (
-                                <div className="w-20 h-20 md:w-24 md:h-24 rounded-3xl bg-white shadow-lg flex items-center justify-center text-gray-400">
-                                    No Img
-                                </div>
-                            )}
-                        </div>
-
-                        {/* Title + Category + Price */}
-                        <div className="relative z-10 text-center md:text-left flex-1">
-                            <h1 className={`text-2xl md:text-3xl font-extrabold leading-tight mb-3 ${theme === 'dark' ? 'text-white' : 'text-stone-900'}`}>
-                                {product.productName}
-                            </h1>
-                            <div className="flex flex-wrap items-center justify-center md:justify-start gap-2">
-                                <span className="text-xs font-bold px-2.5 py-1 rounded-lg" style={{
-                                    color: accent,
-                                    backgroundColor: `${accent}20`
-                                }}>
-                                    {product.categoryName || '구독'}
-                                </span>
-                                {product.productStatus === 'INACTIVE' && (
-                                    <span className={`text-xs font-bold px-2.5 py-1 rounded-lg ${theme === 'dark'
-                                            ? 'text-gray-400 bg-gray-700'
-                                            : 'text-gray-600 bg-gray-100'
-                                        }`}>
-                                        판매중지
-                                    </span>
-                                )}
-                                <span className={`font-extrabold text-xl md:text-2xl ${theme === 'dark' ? 'text-white' : 'text-stone-900'}`}>
-                                    ₩{product.price?.toLocaleString()}
-                                    <span className={`text-sm font-normal ml-1 ${theme === 'dark' ? 'text-gray-400' : 'text-stone-500'}`}>/월</span>
-                                </span>
+                    {/* Icon */}
+                    <div className="relative z-10 flex-shrink-0">
+                        {product.image ? (
+                            <img
+                                src={product.image}
+                                alt={product.productName}
+                                className="w-20 h-20 md:w-24 md:h-24 rounded-3xl shadow-lg object-cover bg-white"
+                            />
+                        ) : (
+                            <div className="w-20 h-20 md:w-24 md:h-24 rounded-3xl bg-white shadow-lg flex items-center justify-center text-gray-400">
+                                No Img
                             </div>
+                        )}
+                    </div>
+
+                    {/* Title + Category + Price */}
+                    <div className="relative z-10 text-center md:text-left flex-1">
+                        <h1 className={`text-2xl md:text-3xl font-extrabold leading-tight mb-3 ${theme === 'dark' ? 'text-white' : 'text-stone-900'}`}>
+                            {product.productName}
+                        </h1>
+                        <div className="flex flex-wrap items-center justify-center md:justify-start gap-2">
+                            <span className="text-xs font-bold px-2.5 py-1 rounded-lg" style={{
+                                color: accent,
+                                backgroundColor: `${accent}20`
+                            }}>
+                                {product.categoryName || '구독'}
+                            </span>
+                            {product.productStatus === 'INACTIVE' && (
+                                <span className={`text-xs font-bold px-2.5 py-1 rounded-lg ${theme === 'dark'
+                                    ? 'text-gray-400 bg-gray-700'
+                                    : 'text-gray-600 bg-gray-100'
+                                    }`}>
+                                    판매중지
+                                </span>
+                            )}
+                            <span className={`font-extrabold text-xl md:text-2xl ${theme === 'dark' ? 'text-white' : 'text-stone-900'}`}>
+                                ₩{product.price?.toLocaleString()}
+                                <span className={`text-sm font-normal ml-1 ${theme === 'dark' ? 'text-gray-400' : 'text-stone-500'}`}>/월</span>
+                            </span>
                         </div>
+                    </div>
                 </div>
 
                 {/* Content Section */}
                 <div className="p-8">
-                        {/* Description */}
-                        {product.description && (
-                            <div className="mb-8">
-                                <p className={`leading-relaxed ${theme === 'dark' ? 'text-gray-300' : 'text-stone-600'}`}>
-                                    {product.description}
-                                </p>
-                            </div>
-                        )}
+                    {/* Description */}
+                    {product.description && (
+                        <div className="mb-8">
+                            <p className={`leading-relaxed ${theme === 'dark' ? 'text-gray-300' : 'text-stone-600'}`}>
+                                {product.description}
+                            </p>
+                        </div>
+                    )}
 
                     {/* MoA 구독 관리 혜택 */}
                     <div className="mb-8">
@@ -218,56 +218,56 @@ const GetProduct = () => {
                         </div>
                     )}
 
-                        {/* Action Buttons */}
-                        <div className="flex gap-3 pt-4">
-                            {user?.role === 'ADMIN' ? (
-                                <>
-                                    <button
-                                        onClick={() => setIsEditModalOpen(true)}
-                                        className={`flex-1 py-3.5 rounded-xl font-bold transition-colors ${theme === 'dark'
-                                                ? 'bg-gray-800 border border-gray-600 text-white hover:bg-gray-700'
-                                                : 'bg-white border border-stone-300 text-stone-700 hover:bg-stone-50'
-                                            }`}
-                                    >
-                                        수정하기
-                                    </button>
-                                    <button
-                                        onClick={() => navigate(`/product/${id}/delete`)}
-                                        className={`flex-1 py-3.5 rounded-xl font-bold transition-colors ${theme === 'dark'
-                                                ? 'bg-red-900/30 border border-red-700 text-red-400 hover:bg-red-900/50'
-                                                : 'bg-red-50 border border-red-200 text-red-600 hover:bg-red-100'
-                                            }`}
-                                    >
-                                        삭제하기
-                                    </button>
-                                </>
-                            ) : (
-                                <>
-                                    <button
-                                        onClick={() => navigate('/product')}
-                                        className={`flex-1 py-3.5 rounded-xl font-bold transition-colors ${theme === 'dark'
-                                                ? 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-                                                : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
-                                            }`}
-                                    >
-                                        뒤로가기
-                                    </button>
-                                    <button
-                                        onClick={handleSubscribe}
-                                        className="flex-[2] text-white py-3.5 rounded-xl font-bold transition-all shadow-lg flex items-center justify-center gap-2"
-                                        style={{
-                                            backgroundColor: accent,
-                                            boxShadow: `0 10px 15px -3px ${accent}33`
-                                        }}
-                                        onMouseEnter={(e) => e.currentTarget.style.filter = 'brightness(0.9)'}
-                                        onMouseLeave={(e) => e.currentTarget.style.filter = 'brightness(1)'}
-                                    >
-                                        <CalendarPlus className="w-5 h-5" />
-                                        구독 일정에 등록
-                                    </button>
-                                </>
-                            )}
-                        </div>
+                    {/* Action Buttons */}
+                    <div className="flex gap-3 pt-4">
+                        {user?.role === 'ADMIN' ? (
+                            <>
+                                <button
+                                    onClick={() => setIsEditModalOpen(true)}
+                                    className={`flex-1 py-3.5 rounded-xl font-bold transition-colors ${theme === 'dark'
+                                        ? 'bg-gray-800 border border-gray-600 text-white hover:bg-gray-700'
+                                        : 'bg-white border border-stone-300 text-stone-700 hover:bg-stone-50'
+                                        }`}
+                                >
+                                    수정하기
+                                </button>
+                                <button
+                                    onClick={() => navigate(`/product/${id}/delete`)}
+                                    className={`flex-1 py-3.5 rounded-xl font-bold transition-colors ${theme === 'dark'
+                                        ? 'bg-red-900/30 border border-red-700 text-red-400 hover:bg-red-900/50'
+                                        : 'bg-red-50 border border-red-200 text-red-600 hover:bg-red-100'
+                                        }`}
+                                >
+                                    삭제하기
+                                </button>
+                            </>
+                        ) : (
+                            <>
+                                <button
+                                    onClick={() => navigate('/product')}
+                                    className={`flex-1 py-3.5 rounded-xl font-bold transition-colors ${theme === 'dark'
+                                        ? 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                                        : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
+                                        }`}
+                                >
+                                    뒤로가기
+                                </button>
+                                <button
+                                    onClick={handleSubscribe}
+                                    className="flex-[2] text-white py-3.5 rounded-xl font-bold transition-all shadow-lg flex items-center justify-center gap-2"
+                                    style={{
+                                        backgroundColor: accent,
+                                        boxShadow: `0 10px 15px -3px ${accent}33`
+                                    }}
+                                    onMouseEnter={(e) => e.currentTarget.style.filter = 'brightness(0.9)'}
+                                    onMouseLeave={(e) => e.currentTarget.style.filter = 'brightness(1)'}
+                                >
+                                    <CalendarPlus className="w-5 h-5" />
+                                    구독 일정에 등록
+                                </button>
+                            </>
+                        )}
+                    </div>
                 </div>
             </div>
 

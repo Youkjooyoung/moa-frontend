@@ -90,7 +90,7 @@ export default function MainTrendingSection() {
   const partiesLoading = useMainStore((s) => s.partiesLoading);
   const partiesError = useMainStore((s) => s.partiesError);
   const { theme } = useThemeStore();
-  const themeStyle = trendingThemeStyles[theme] || trendingThemeStyles.default;
+  const themeStyle = trendingThemeStyles[theme] || trendingThemeStyles.pop;
   const isDark = theme === "dark";
 
   // 마감 임박 파티 6개 선택 (모집률 높은 순) - 실제 마감임박 파티만 표시

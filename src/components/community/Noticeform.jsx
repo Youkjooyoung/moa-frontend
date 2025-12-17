@@ -19,7 +19,7 @@ const communityThemeStyles = {
 const NoticeForm = ({ formData, setFormData, onSubmit, submitText, cancelPath }) => {
     const navigate = useNavigate();
     const { theme } = useThemeStore();
-    const themeStyle = communityThemeStyles[theme] || communityThemeStyles.default;
+    const themeStyle = communityThemeStyles[theme] || communityThemeStyles.pop;
 
     const handleChange = (e) => {
         const { name, value } = e.target;

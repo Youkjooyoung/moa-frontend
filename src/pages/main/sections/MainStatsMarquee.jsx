@@ -37,7 +37,7 @@ function Marquee({ children, direction = "left", speed = 20 }) {
 // ============================================
 export default function MainStatsMarquee() {
   const { theme } = useThemeStore();
-  const themeStyle = statsMarqueeThemeStyles[theme] || statsMarqueeThemeStyles.default;
+  const themeStyle = statsMarqueeThemeStyles[theme] || statsMarqueeThemeStyles.pop;
 
   return (
     <div className={`${themeStyle.bg} text-white py-4 border-y ${themeStyle.border}`}>

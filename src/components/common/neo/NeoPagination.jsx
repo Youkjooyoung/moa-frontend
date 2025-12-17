@@ -23,7 +23,7 @@ const paginationThemeStyles = {
  */
 const NeoPagination = ({ currentPage, totalPages, onPageChange, maxVisible = 5 }) => {
     const { theme } = useThemeStore();
-    const themeStyle = paginationThemeStyles[theme] || paginationThemeStyles.default;
+    const themeStyle = paginationThemeStyles[theme] || paginationThemeStyles.pop;
     if (totalPages <= 0) return null;
 
     const getPageNumbers = () => {

@@ -88,7 +88,7 @@ const bankSelectionThemeStyles = {
  */
 export default function BankSelectionStep() {
     const { theme } = useThemeStore();
-    const themeStyle = bankSelectionThemeStyles[theme] || bankSelectionThemeStyles.default;
+    const themeStyle = bankSelectionThemeStyles[theme] || bankSelectionThemeStyles.pop;
     const {
         formData,
         setFormData,

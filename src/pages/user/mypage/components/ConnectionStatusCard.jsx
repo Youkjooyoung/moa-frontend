@@ -32,7 +32,7 @@ export function ConnectionStatusCard({
   actions,
 }) {
   const { theme } = useThemeStore();
-  const themeStyle = connectionThemeStyles[theme] || connectionThemeStyles.default;
+  const themeStyle = connectionThemeStyles[theme] || connectionThemeStyles.pop;
   const phone = user?.phone || "-";
 
   const toggleGoogle = () => {

@@ -37,7 +37,7 @@ export default function AdminUserDetailProfileCard({
   goBlacklistAdd,
 }) {
   const { theme } = useThemeStore();
-  const themeStyle = profileCardThemeStyles[theme] || profileCardThemeStyles.default;
+  const themeStyle = profileCardThemeStyles[theme] || profileCardThemeStyles.pop;
 
   return (
     <OutlineCard>
@@ -103,11 +103,10 @@ export default function AdminUserDetailProfileCard({
           <Button
             type="button"
             onClick={goBlacklistAdd}
-            className={`h-10 px-4 rounded-2xl ${themeStyle.buttonBorder} font-black ${
-              isBlacklisted
+            className={`h-10 px-4 rounded-2xl ${themeStyle.buttonBorder} font-black ${isBlacklisted
                 ? themeStyle.blacklistActive
                 : themeStyle.blacklistButton
-            }`}
+              }`}
           >
             {isBlacklisted ? "블랙리스트 해제" : "블랙리스트 등록"}
           </Button>

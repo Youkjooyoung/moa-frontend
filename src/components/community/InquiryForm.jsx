@@ -32,7 +32,7 @@ const InquiryForm = ({ formData, setFormData, imagePreview, setImageFile, setIma
         },
     };
 
-    const themeColors = communityThemeStyles[theme] || communityThemeStyles.default;
+    const themeColors = communityThemeStyles[theme] || communityThemeStyles.pop;
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -167,7 +167,7 @@ const InquiryForm = ({ formData, setFormData, imagePreview, setImageFile, setIma
                     )}
                 </div>
 
-                </div>
+            </div>
 
             {/* Submit Button - 항상 하단 고정 */}
             <div className="pt-4 mt-auto">

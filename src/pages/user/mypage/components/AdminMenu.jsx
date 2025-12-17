@@ -15,7 +15,7 @@ const adminMenuThemeStyles = {
 
 export function AdminMenu({ actions }) {
   const { theme } = useThemeStore();
-  const themeStyle = adminMenuThemeStyles[theme] || adminMenuThemeStyles.default;
+  const themeStyle = adminMenuThemeStyles[theme] || adminMenuThemeStyles.pop;
 
   return (
     <Card className={`bg-white border border-gray-200 ${themeStyle.cardShadow} rounded-3xl`}>

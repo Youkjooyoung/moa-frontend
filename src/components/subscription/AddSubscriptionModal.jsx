@@ -21,7 +21,7 @@ const modalThemeStyles = {
 
 const AddSubscriptionModal = ({ productId, startDate, endDate, onClose, onSuccess, user }) => {
     const { theme } = useThemeStore();
-    const themeStyle = modalThemeStyles[theme] || modalThemeStyles.default;
+    const themeStyle = modalThemeStyles[theme] || modalThemeStyles.pop;
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
     const [submitting, setSubmitting] = useState(false);

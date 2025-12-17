@@ -36,7 +36,7 @@ const templateFormThemeStyles = {
 
 const TemplateForm = ({ isOpen, onClose, template, onSave, isLoading }) => {
     const { theme } = useThemeStore();
-    const themeStyle = templateFormThemeStyles[theme] || templateFormThemeStyles.default;
+    const themeStyle = templateFormThemeStyles[theme] || templateFormThemeStyles.pop;
     const [form, setForm] = useState({
         codeName: '',
         titleTemplate: '',

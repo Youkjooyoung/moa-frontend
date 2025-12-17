@@ -26,7 +26,7 @@ const depositModalThemeStyles = {
 
 export default function DepositDetailModal({ isOpen, onClose, deposit }) {
   const { theme } = useThemeStore();
-  const themeStyle = depositModalThemeStyles[theme] || depositModalThemeStyles.default;
+  const themeStyle = depositModalThemeStyles[theme] || depositModalThemeStyles.pop;
   if (!deposit) return null;
 
   const getStatusLabel = (status) => {

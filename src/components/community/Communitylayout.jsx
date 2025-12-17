@@ -29,7 +29,7 @@ const CommunityLayout = ({ children }) => {
         },
     };
 
-    const themeColors = communityThemeStyles[theme] || communityThemeStyles.default;
+    const themeColors = communityThemeStyles[theme] || communityThemeStyles.pop;
 
     const isActiveTab = (path) => {
         if (path === '/community/inquiry') {

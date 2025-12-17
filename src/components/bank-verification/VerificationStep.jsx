@@ -72,7 +72,7 @@ const verificationThemeStyles = {
  */
 export default function VerificationStep() {
     const { theme } = useThemeStore();
-    const themeStyle = verificationThemeStyles[theme] || verificationThemeStyles.default;
+    const themeStyle = verificationThemeStyles[theme] || verificationThemeStyles.pop;
     const {
         formData,
         verification,

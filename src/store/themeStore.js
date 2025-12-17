@@ -6,8 +6,8 @@ export const useThemeStore = create(
   persist(
     (set, get) => ({
       // Current theme: 'classic' | 'dark' | 'pop' | 'christmas'
-      // 기본 테마는 pop
-      theme: "pop",
+      // 기본 테마는 christmas
+      theme: "christmas",
 
       // Set theme
       setTheme: (theme) => {

@@ -39,7 +39,7 @@ export default function AddBlacklistFormCard({
   onCancel,
 }) {
   const { theme } = useThemeStore();
-  const themeStyle = blacklistFormThemeStyles[theme] || blacklistFormThemeStyles.default;
+  const themeStyle = blacklistFormThemeStyles[theme] || blacklistFormThemeStyles.pop;
 
   return (
     <section className="relative px-6 md:px-12 pb-24">

@@ -64,7 +64,7 @@ export default function MyPartyListPage() {
 
   // Theme
   const { theme, setTheme, currentTheme } = useTheme("appTheme");
-  const themeStyle = partyThemeStyles[theme] || partyThemeStyles.default;
+  const themeStyle = partyThemeStyles[theme] || partyThemeStyles.pop;
 
   useEffect(() => {
     loadUserAndParties();

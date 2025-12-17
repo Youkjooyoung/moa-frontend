@@ -63,7 +63,7 @@ export default function UserListTableCard({
   formatDate,
 }) {
   const { theme } = useThemeStore();
-  const themeStyle = tableCardThemeStyles[theme] || tableCardThemeStyles.default;
+  const themeStyle = tableCardThemeStyles[theme] || tableCardThemeStyles.pop;
 
   const {
     handleSearchChange,
@@ -248,11 +248,10 @@ export default function UserListTableCard({
                           <TableCell className="py-3 text-sm text-center">
                             <button
                               type="button"
-                              className={`w-full text-center font-black ${
-                                user.blacklisted
+                              className={`w-full text-center font-black ${user.blacklisted
                                   ? "text-red-600 hover:underline"
                                   : "text-black hover:underline"
-                              }`}
+                                }`}
                               onClick={() => handleEmailClick(user.userId)}
                             >
                               {user.userId}
@@ -306,11 +305,10 @@ export default function UserListTableCard({
                       key={p}
                       variant={p === page ? "default" : "outline"}
                       size="icon"
-                      className={`h-10 w-10 text-xs font-black border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] transition rounded-2xl ${
-                        p === page
+                      className={`h-10 w-10 text-xs font-black border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] transition rounded-2xl ${p === page
                           ? themeStyle.activePage
                           : "bg-white hover:bg-white text-black hover:brightness-95"
-                      }`}
+                        }`}
                       onClick={() => handlePageClick(p)}
                     >
                       {p}

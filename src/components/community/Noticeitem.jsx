@@ -26,7 +26,7 @@ const NoticeItem = ({ notice, index, formatDate, onClick }) => {
         },
     };
 
-    const themeColors = communityThemeStyles[theme] || communityThemeStyles.default;
+    const themeColors = communityThemeStyles[theme] || communityThemeStyles.pop;
 
     return (
         <div className="mb-3">

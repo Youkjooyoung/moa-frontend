@@ -69,7 +69,7 @@ export default function PartyDetailPage() {
 
   // Theme
   const { theme, setTheme, currentTheme } = useTheme("appTheme");
-  const themeStyle = partyThemeStyles[theme] || partyThemeStyles.default;
+  const themeStyle = partyThemeStyles[theme] || partyThemeStyles.pop;
 
   // 테마별 악센트 색상
   const getAccentColor = () => {
@@ -222,10 +222,10 @@ export default function PartyDetailPage() {
             animate={{ opacity: 1, x: 0 }}
             onClick={() => navigate("/party")}
             className={`flex items-center gap-2 mb-8 transition-colors group ${theme === "dark"
-                ? "text-gray-400 hover:text-[#635bff]"
-                : theme === "christmas"
-                  ? "text-gray-500 hover:text-red-800"
-                  : "text-gray-500 hover:text-[#635bff]"
+              ? "text-gray-400 hover:text-[#635bff]"
+              : theme === "christmas"
+                ? "text-gray-500 hover:text-red-800"
+                : "text-gray-500 hover:text-[#635bff]"
               }`}
           >
             <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
@@ -242,8 +242,8 @@ export default function PartyDetailPage() {
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.4 }}
                   className={`flex-shrink-0 w-24 h-24 md:w-32 md:h-32 rounded-2xl overflow-hidden bg-white border ${theme === "christmas"
-                      ? "shadow-[4px_4px_12px_rgba(0,0,0,0.08)] border-gray-200"
-                      : "shadow-lg border-gray-100"
+                    ? "shadow-[4px_4px_12px_rgba(0,0,0,0.08)] border-gray-200"
+                    : "shadow-lg border-gray-100"
                     }`}
                 >
                   {party.productImage ? (
@@ -276,8 +276,8 @@ export default function PartyDetailPage() {
                     )}
                     {isMember && !isLeader && (
                       <span className={`bg-white px-3 py-1.5 rounded-full text-xs font-bold border ${theme === "christmas"
-                          ? "text-green-800 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] border-gray-200"
-                          : "text-[#635bff] shadow-lg border-[#635bff]/20"
+                        ? "text-green-800 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] border-gray-200"
+                        : "text-[#635bff] shadow-lg border-[#635bff]/20"
                         }`}>
                         <Check className="w-3 h-3 inline mr-1" />
                         참여중
@@ -314,8 +314,8 @@ export default function PartyDetailPage() {
                   transition={{ delay: 0.1 }}
                   whileHover={{ y: -2 }}
                   className={`bg-white rounded-2xl p-5 border transition-all ${theme === "christmas"
-                      ? "border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] hover:shadow-[4px_4px_12px_rgba(0,0,0,0.08)]"
-                      : "border-gray-100 shadow-sm hover:shadow-lg"
+                    ? "border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] hover:shadow-[4px_4px_12px_rgba(0,0,0,0.08)]"
+                    : "border-gray-100 shadow-sm hover:shadow-lg"
                     }`}
                 >
                   <div className="flex items-center gap-2 text-gray-500 text-sm mb-2">
@@ -343,8 +343,8 @@ export default function PartyDetailPage() {
                   transition={{ delay: 0.2 }}
                   whileHover={{ y: -2 }}
                   className={`bg-white rounded-2xl p-5 border transition-all ${theme === "christmas"
-                      ? "border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] hover:shadow-[4px_4px_12px_rgba(0,0,0,0.08)]"
-                      : "border-gray-100 shadow-sm hover:shadow-lg"
+                    ? "border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] hover:shadow-[4px_4px_12px_rgba(0,0,0,0.08)]"
+                    : "border-gray-100 shadow-sm hover:shadow-lg"
                     }`}
                 >
                   <div className="flex items-center gap-2 text-gray-500 text-sm mb-2">
@@ -367,8 +367,8 @@ export default function PartyDetailPage() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
               className={`w-full lg:w-80 bg-white rounded-2xl p-6 border sticky top-24 ${theme === "christmas"
-                  ? "border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]"
-                  : "border-gray-100 shadow-xl"
+                ? "border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]"
+                : "border-gray-100 shadow-xl"
                 }`}
             >
               <div className={`flex items-center gap-2 mb-4 ${theme === "christmas" ? "text-red-800" : "text-[#635bff]"}`}>
@@ -598,8 +598,8 @@ export default function PartyDetailPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
               className={`bg-white rounded-2xl p-6 border ${theme === "christmas"
-                  ? "border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]"
-                  : "border-gray-100 shadow-sm"
+                ? "border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]"
+                : "border-gray-100 shadow-sm"
                 }`}
             >
               <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
@@ -638,8 +638,8 @@ export default function PartyDetailPage() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               className={`bg-white rounded-2xl p-6 border h-fit sticky top-24 ${theme === "christmas"
-                  ? "border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]"
-                  : "border-gray-100 shadow-sm"
+                ? "border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]"
+                : "border-gray-100 shadow-sm"
                 }`}
             >
               <h3 className="text-sm font-bold text-gray-500 mb-4 uppercase tracking-wide flex items-center gap-2">

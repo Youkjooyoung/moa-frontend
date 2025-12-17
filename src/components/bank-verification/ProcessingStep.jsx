@@ -82,7 +82,7 @@ const PROCESSING_STEPS = [
  */
 export default function ProcessingStep() {
     const { theme } = useThemeStore();
-    const themeStyle = processingThemeStyles[theme] || processingThemeStyles.default;
+    const themeStyle = processingThemeStyles[theme] || processingThemeStyles.pop;
     const { formData } = useBankVerificationStore();
     const [currentStep, setCurrentStep] = useState(0);
     const [progress, setProgress] = useState(0);

@@ -39,7 +39,7 @@ const FaqItem = ({ faq, index, isAdmin, onUpdate, getCategoryFromTitle, isOpen, 
         },
     };
 
-    const themeColors = communityThemeStyles[theme] || communityThemeStyles.default;
+    const themeColors = communityThemeStyles[theme] || communityThemeStyles.pop;
 
     const categories = ['회원', '결제', '구독', '파티', '정산', '기타'];
     const category = getCategoryFromTitle ? getCategoryFromTitle(faq.title) : '기타';

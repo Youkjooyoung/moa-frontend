@@ -20,7 +20,7 @@ const passwordModalThemeStyles = {
 
 export default function PasswordVerificationModal({ isOpen, onClose }) {
   const { theme } = useThemeStore();
-  const themeStyle = passwordModalThemeStyles[theme] || passwordModalThemeStyles.default;
+  const themeStyle = passwordModalThemeStyles[theme] || passwordModalThemeStyles.pop;
 
   if (!isOpen) return null;
 

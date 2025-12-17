@@ -47,7 +47,7 @@ const getServiceColor = (name) => {
 
 export default function MainSearchSection({ products = [] }) {
   const { theme } = useThemeStore();
-  const themeStyle = searchThemeStyles[theme] || searchThemeStyles.default;
+  const themeStyle = searchThemeStyles[theme] || searchThemeStyles.pop;
   const isDark = theme === "dark";
   const [searchQuery, setSearchQuery] = useState("");
   const [isFocused, setIsFocused] = useState(false);

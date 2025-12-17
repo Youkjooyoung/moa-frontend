@@ -21,7 +21,7 @@ const statusBadgeThemeStyles = {
 
 export default function StatusBadge({ status, blacklisted }) {
   const { theme } = useThemeStore();
-  const themeStyle = statusBadgeThemeStyles[theme] || statusBadgeThemeStyles.default;
+  const themeStyle = statusBadgeThemeStyles[theme] || statusBadgeThemeStyles.pop;
 
   if (blacklisted) {
     return (

@@ -66,7 +66,7 @@ const backgroundThemeStyles = {
  */
 const NeoBackground = () => {
   const { theme } = useThemeStore();
-  const themeStyle = backgroundThemeStyles[theme] || backgroundThemeStyles.default;
+  const themeStyle = backgroundThemeStyles[theme] || backgroundThemeStyles.pop;
 
   return (
     <>

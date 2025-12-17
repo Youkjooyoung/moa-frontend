@@ -26,7 +26,7 @@ const ListNotice = () => {
     const navigate = useNavigate();
     const { user } = useAuthStore();
     const { theme } = useThemeStore();
-    const themeStyle = communityThemeStyles[theme] || communityThemeStyles.default;
+    const themeStyle = communityThemeStyles[theme] || communityThemeStyles.pop;
     const [notices, setNotices] = useState([]);
     const [filteredNotices, setFilteredNotices] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);

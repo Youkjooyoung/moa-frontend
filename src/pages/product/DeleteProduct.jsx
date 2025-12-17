@@ -24,7 +24,7 @@ const deleteProductThemeStyles = {
 
 const DeleteProduct = () => {
     const { theme } = useThemeStore();
-    const themeStyle = deleteProductThemeStyles[theme] || deleteProductThemeStyles.default;
+    const themeStyle = deleteProductThemeStyles[theme] || deleteProductThemeStyles.pop;
     const { id } = useParams();
     const navigate = useNavigate();
 

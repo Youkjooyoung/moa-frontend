@@ -26,7 +26,7 @@ const GetNotice = () => {
     const noticeId = params.id || params.communityId;
     const { user } = useAuthStore();
     const { theme } = useThemeStore();
-    const themeStyle = communityThemeStyles[theme] || communityThemeStyles.default;
+    const themeStyle = communityThemeStyles[theme] || communityThemeStyles.pop;
     const [notice, setNotice] = useState(null);
     const [loading, setLoading] = useState(true);
 

@@ -15,7 +15,7 @@ const authThemeStyles = {
 
 export function ResetPwdGuide() {
   const { theme } = useThemeStore();
-  const themeStyle = authThemeStyles[theme] || authThemeStyles.default;
+  const themeStyle = authThemeStyles[theme] || authThemeStyles.pop;
 
   return (
     <div className={`${themeStyle.cardClass} space-y-4 p-5`}>

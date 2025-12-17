@@ -26,7 +26,7 @@ const heroThemeStyles = {
 
 export default function RemoveBlacklistHero() {
   const { theme } = useThemeStore();
-  const themeStyle = heroThemeStyles[theme] || heroThemeStyles.default;
+  const themeStyle = heroThemeStyles[theme] || heroThemeStyles.pop;
 
   return (
     <section className="relative">

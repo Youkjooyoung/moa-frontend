@@ -26,7 +26,7 @@ export function AccountMenu({
   onShowLoginHistory,
 }) {
   const { theme } = useThemeStore();
-  const themeStyle = accountMenuThemeStyles[theme] || accountMenuThemeStyles.default;
+  const themeStyle = accountMenuThemeStyles[theme] || accountMenuThemeStyles.pop;
   const goPassword = () => {
     if (typeof actions?.goChangePwd === "function") return actions.goChangePwd();
     if (typeof actions?.goUpdatePassword === "function")

@@ -24,7 +24,7 @@ export default function MainStatementSection() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const { theme } = useThemeStore();
-  const themeStyle = statementThemeStyles[theme] || statementThemeStyles.default;
+  const themeStyle = statementThemeStyles[theme] || statementThemeStyles.pop;
   const isDark = theme === "dark";
 
   return (

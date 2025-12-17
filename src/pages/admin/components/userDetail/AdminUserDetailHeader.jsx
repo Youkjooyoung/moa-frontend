@@ -16,7 +16,7 @@ const headerThemeStyles = {
 
 export default function AdminUserDetailHeader({ shortId }) {
   const { theme } = useThemeStore();
-  const themeStyle = headerThemeStyles[theme] || headerThemeStyles.default;
+  const themeStyle = headerThemeStyles[theme] || headerThemeStyles.pop;
 
   return (
     <section className="bg-white">

@@ -32,7 +32,7 @@ export default function MainComparisonSection() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const { theme } = useThemeStore();
-  const themeStyle = comparisonThemeStyles[theme] || comparisonThemeStyles.default;
+  const themeStyle = comparisonThemeStyles[theme] || comparisonThemeStyles.pop;
 
   return (
     <section ref={ref} className="py-24 px-6 bg-slate-100 border-b border-gray-200">

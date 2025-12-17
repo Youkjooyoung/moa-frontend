@@ -36,7 +36,7 @@ function Marquee({ children, direction = "left", speed = 20 }) {
 // ============================================
 export default function MainMarqueeSection() {
   const { theme } = useThemeStore();
-  const themeStyle = marqueeThemeStyles[theme] || marqueeThemeStyles.default;
+  const themeStyle = marqueeThemeStyles[theme] || marqueeThemeStyles.pop;
 
   return (
     <div className="bg-black text-white py-4 border-y border-gray-800">

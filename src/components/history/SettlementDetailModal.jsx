@@ -28,7 +28,7 @@ const settlementModalThemeStyles = {
 
 export default function SettlementDetailModal({ isOpen, onClose, settlement }) {
   const { theme } = useThemeStore();
-  const themeStyle = settlementModalThemeStyles[theme] || settlementModalThemeStyles.default;
+  const themeStyle = settlementModalThemeStyles[theme] || settlementModalThemeStyles.pop;
   if (!settlement) return null;
 
   const getStatusLabel = (status) => {

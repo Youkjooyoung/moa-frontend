@@ -28,7 +28,7 @@ const paymentModalThemeStyles = {
 
 export default function PaymentDetailModal({ isOpen, onClose, payment, onRetrySuccess }) {
   const { theme } = useThemeStore();
-  const themeStyle = paymentModalThemeStyles[theme] || paymentModalThemeStyles.default;
+  const themeStyle = paymentModalThemeStyles[theme] || paymentModalThemeStyles.pop;
   const [isRetrying, setIsRetrying] = useState(false);
 
   if (!payment) return null;
@@ -142,20 +142,19 @@ export default function PaymentDetailModal({ isOpen, onClose, payment, onRetrySu
                   <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
                     <span className="text-slate-600 font-medium">상태</span>
                     <span
-                      className={`flex items-center gap-1.5 px-3 py-1 rounded-lg font-bold text-sm ${
-                        payment.paymentStatus === "COMPLETED"
+                      className={`flex items-center gap-1.5 px-3 py-1 rounded-lg font-bold text-sm ${payment.paymentStatus === "COMPLETED"
                           ? "bg-emerald-500 text-white"
                           : payment.paymentStatus === "FAILED"
-                          ? "bg-red-500 text-white"
-                          : "bg-amber-500 text-white"
-                      }`}
+                            ? "bg-red-500 text-white"
+                            : "bg-amber-500 text-white"
+                        }`}
                     >
                       {payment.paymentStatus === "COMPLETED" && <CheckCircle className="w-4 h-4" />}
                       {payment.paymentStatus === "COMPLETED"
                         ? "결제완료"
                         : payment.paymentStatus === "FAILED"
-                        ? "결제실패"
-                        : "처리중"}
+                          ? "결제실패"
+                          : "처리중"}
                     </span>
                   </div>
                 </div>

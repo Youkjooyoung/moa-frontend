@@ -12,7 +12,7 @@ const socialButtonThemeStyles = {
 
 export default function SocialButton({ provider, isConnected }) {
   const { theme } = useThemeStore();
-  const themeStyle = socialButtonThemeStyles[theme] || socialButtonThemeStyles.default;
+  const themeStyle = socialButtonThemeStyles[theme] || socialButtonThemeStyles.pop;
   const isGoogle = provider === "google";
 
   const base = `w-full h-10 rounded-2xl ${themeStyle.border} text-xs font-black flex items-center justify-between px-4`;

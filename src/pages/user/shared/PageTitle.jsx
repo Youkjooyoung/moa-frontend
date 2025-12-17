@@ -13,7 +13,7 @@ const authThemeStyles = {
 
 export function PageTitle({ title, subtitle }) {
   const { theme } = useThemeStore();
-  const themeStyle = authThemeStyles[theme] || authThemeStyles.default;
+  const themeStyle = authThemeStyles[theme] || authThemeStyles.pop;
 
   return (
     <>

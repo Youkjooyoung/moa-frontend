@@ -17,7 +17,7 @@ const authThemeStyles = {
 
 export function PageSteps({ steps }) {
   const { theme } = useThemeStore();
-  const themeStyle = authThemeStyles[theme] || authThemeStyles.default;
+  const themeStyle = authThemeStyles[theme] || authThemeStyles.pop;
 
   if (!steps || steps.length === 0) return null;
 
@@ -29,9 +29,8 @@ export function PageSteps({ steps }) {
         return (
           <div key={step.label} className="flex items-center gap-2">
             <span
-              className={`w-6 h-6 rounded-full flex items-center justify-center text-xs ${
-                isActive ? `${themeStyle.activeBg} text-white` : `${themeStyle.inactiveBg} ${themeStyle.inactiveText}`
-              }`}
+              className={`w-6 h-6 rounded-full flex items-center justify-center text-xs ${isActive ? `${themeStyle.activeBg} text-white` : `${themeStyle.inactiveBg} ${themeStyle.inactiveText}`
+                }`}
             >
               {step.number}
             </span>

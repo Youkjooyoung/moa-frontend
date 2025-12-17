@@ -20,7 +20,7 @@ const loginHistoryThemeStyles = {
 
 export function LoginHistoryCard({ loginHistory, onBack }) {
   const { theme } = useThemeStore();
-  const themeStyle = loginHistoryThemeStyles[theme] || loginHistoryThemeStyles.default;
+  const themeStyle = loginHistoryThemeStyles[theme] || loginHistoryThemeStyles.pop;
   const items =
     loginHistory?.items ||
     loginHistory?.data?.items ||

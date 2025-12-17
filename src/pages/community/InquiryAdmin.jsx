@@ -31,7 +31,7 @@ const InquiryAdmin = () => {
     const navigate = useNavigate();
     const { user } = useAuthStore();
     const { theme } = useThemeStore();
-    const themeStyle = communityThemeStyles[theme] || communityThemeStyles.default;
+    const themeStyle = communityThemeStyles[theme] || communityThemeStyles.pop;
     const [inquiries, setInquiries] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);

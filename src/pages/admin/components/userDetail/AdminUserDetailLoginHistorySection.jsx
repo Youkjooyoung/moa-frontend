@@ -40,7 +40,7 @@ export default function AdminUserDetailLoginHistorySection({
   goHistoryLast,
 }) {
   const { theme } = useThemeStore();
-  const themeStyle = historyThemeStyles[theme] || historyThemeStyles.default;
+  const themeStyle = historyThemeStyles[theme] || historyThemeStyles.pop;
 
   return (
     <OutlineCard>
@@ -101,9 +101,8 @@ export default function AdminUserDetailLoginHistorySection({
                         {item.loginAtFormatted}
                       </td>
                       <td
-                        className={`py-3 px-3 font-black ${
-                          item.success ? "text-emerald-600" : "text-red-500"
-                        }`}
+                        className={`py-3 px-3 font-black ${item.success ? "text-emerald-600" : "text-red-500"
+                          }`}
                       >
                         {item.successText}
                       </td>
@@ -144,11 +143,10 @@ export default function AdminUserDetailLoginHistorySection({
                 <Button
                   key={p}
                   type="button"
-                  className={`h-10 min-w-[2.5rem] rounded-2xl ${themeStyle.buttonBorder} font-black ${
-                    p === historyPage
+                  className={`h-10 min-w-[2.5rem] rounded-2xl ${themeStyle.buttonBorder} font-black ${p === historyPage
                       ? themeStyle.activeButton
                       : `bg-white text-slate-900 ${themeStyle.buttonHover}`
-                  }`}
+                    }`}
                   onClick={() => goHistoryPage(p)}
                 >
                   {p}

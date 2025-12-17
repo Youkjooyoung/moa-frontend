@@ -27,7 +27,7 @@ export default function RemoveBlacklistFormCard({
   onCancel,
 }) {
   const { theme } = useThemeStore();
-  const themeStyle = formCardThemeStyles[theme] || formCardThemeStyles.default;
+  const themeStyle = formCardThemeStyles[theme] || formCardThemeStyles.pop;
 
   return (
     <div className="max-w-7xl mx-auto px-6 lg:px-10 -mt-10">

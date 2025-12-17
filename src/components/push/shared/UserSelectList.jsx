@@ -69,7 +69,7 @@ const UserSelectList = ({
     onClearSelected,
 }) => {
     const { theme } = useThemeStore();
-    const themeStyle = userSelectThemeStyles[theme] || userSelectThemeStyles.default;
+    const themeStyle = userSelectThemeStyles[theme] || userSelectThemeStyles.pop;
     const [searchKeyword, setSearchKeyword] = useState("");
 
     const handleSearch = () => {
@@ -84,7 +84,7 @@ const UserSelectList = ({
         }
     };
 
-    const isAllCurrentPageSelected = users.length > 0 && 
+    const isAllCurrentPageSelected = users.length > 0 &&
         users.every((user) => selectedUsers.some((s) => s.userId === user.userId));
 
     const handleSelectAllChange = (checked) => {

@@ -21,7 +21,7 @@ const AddNotice = () => {
     const navigate = useNavigate();
     const { user } = useAuthStore();
     const { theme } = useThemeStore();
-    const themeStyle = communityThemeStyles[theme] || communityThemeStyles.default;
+    const themeStyle = communityThemeStyles[theme] || communityThemeStyles.pop;
     const [formData, setFormData] = useState({
         communityCodeId: 10,
         title: '',

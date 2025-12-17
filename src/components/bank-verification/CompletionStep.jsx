@@ -78,7 +78,7 @@ try {
 export default function CompletionStep() {
     const navigate = useNavigate();
     const { theme } = useThemeStore();
-    const themeStyle = completionThemeStyles[theme] || completionThemeStyles.default;
+    const themeStyle = completionThemeStyles[theme] || completionThemeStyles.pop;
     const { formData, verification, reset } = useBankVerificationStore();
 
     // 은행 정보 가져오기

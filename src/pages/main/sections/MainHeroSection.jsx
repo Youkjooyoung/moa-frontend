@@ -101,7 +101,7 @@ export default function MainHeroSection({ parties, products = [] }) {
 
   // 테마 설정
   const { theme } = useThemeStore();
-  const themeStyle = heroThemeStyles[theme] || heroThemeStyles.default;
+  const themeStyle = heroThemeStyles[theme] || heroThemeStyles.pop;
   const isDark = theme === "dark";
 
   // 로그인 상태 확인
@@ -136,14 +136,14 @@ export default function MainHeroSection({ parties, products = [] }) {
   // 구독상품 검색 필터링
   const filteredProducts = searchQuery.trim()
     ? products.filter((p) => {
-        const name = (p?.productName || p?.name || "").toLowerCase();
-        const query = searchQuery.toLowerCase();
-        if (name.includes(query)) return true;
-        for (const [kor, eng] of Object.entries(koreanToEnglish)) {
-          if (query.includes(kor) && name.includes(eng)) return true;
-        }
-        return false;
-      }).slice(0, 5)
+      const name = (p?.productName || p?.name || "").toLowerCase();
+      const query = searchQuery.toLowerCase();
+      if (name.includes(query)) return true;
+      for (const [kor, eng] of Object.entries(koreanToEnglish)) {
+        if (query.includes(kor) && name.includes(eng)) return true;
+      }
+      return false;
+    }).slice(0, 5)
     : [];
 
   // 흩어진 위치 (초기)

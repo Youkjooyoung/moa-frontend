@@ -36,7 +36,7 @@ const adminPushThemeStyles = {
 
 const AdminPushModal = ({ isOpen, onClose }) => {
     const { theme } = useThemeStore();
-    const themeStyle = adminPushThemeStyles[theme] || adminPushThemeStyles.default;
+    const themeStyle = adminPushThemeStyles[theme] || adminPushThemeStyles.pop;
     const {
         activeTab,
         setActiveTab,

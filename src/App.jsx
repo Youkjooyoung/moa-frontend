@@ -121,7 +121,7 @@ export default function App() {
   useGlobalLinkHandler();
   const { user } = useAuthStore();
   const { theme, setTheme } = useThemeStore();
-  const currentTheme = themeConfig[theme] || themeConfig.default;
+  const currentTheme = themeConfig[theme] || themeConfig.pop;
 
   // Easter egg for specific test accounts
   const showEasterEgg =

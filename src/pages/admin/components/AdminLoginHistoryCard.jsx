@@ -26,7 +26,7 @@ const historyCardThemeStyles = {
 
 export default function AdminLoginHistoryCard({ loginHistory }) {
   const { theme } = useThemeStore();
-  const themeStyle = historyCardThemeStyles[theme] || historyCardThemeStyles.default;
+  const themeStyle = historyCardThemeStyles[theme] || historyCardThemeStyles.pop;
   const {
     state: { items, page, pages, pageCount, loading, totalCount },
     actions: { goFirst, goPrev, goPage, goNextBlock, goLast },
@@ -95,9 +95,8 @@ export default function AdminLoginHistoryCard({ loginHistory }) {
                         {item.loginAtFormatted}
                       </td>
                       <td
-                        className={`py-3 px-3 font-black whitespace-nowrap ${
-                          item.success ? "text-emerald-600" : "text-red-600"
-                        }`}
+                        className={`py-3 px-3 font-black whitespace-nowrap ${item.success ? "text-emerald-600" : "text-red-600"
+                          }`}
                       >
                         {item.successText}
                       </td>
@@ -140,11 +139,10 @@ export default function AdminLoginHistoryCard({ loginHistory }) {
                 <Button
                   key={p}
                   variant={p === page ? "default" : "outline"}
-                  className={`h-10 min-w-[2.5rem] text-xs font-black border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] rounded-xl hover:brightness-95 ${
-                    p === page
+                  className={`h-10 min-w-[2.5rem] text-xs font-black border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)] rounded-xl hover:brightness-95 ${p === page
                       ? themeStyle.activePage
                       : "bg-white text-black"
-                  }`}
+                    }`}
                   onClick={() => goPage(p)}
                 >
                   {p}

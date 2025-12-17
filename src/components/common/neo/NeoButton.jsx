@@ -33,7 +33,7 @@ const buttonThemeStyles = {
 const NeoButton = React.forwardRef(
   ({ children, color = "bg-pink-500", size = "md", className, ...props }, ref) => {
     const { theme } = useThemeStore();
-    const themeStyle = buttonThemeStyles[theme] || buttonThemeStyles.default;
+    const themeStyle = buttonThemeStyles[theme] || buttonThemeStyles.pop;
 
     const sizeClasses = {
       xs: "px-4 py-3 text-sm font-bold",

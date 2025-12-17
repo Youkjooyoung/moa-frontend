@@ -17,7 +17,7 @@ const authThemeStyles = {
 
 export function ResetPwdForm() {
   const { theme } = useThemeStore();
-  const themeStyle = authThemeStyles[theme] || authThemeStyles.default;
+  const themeStyle = authThemeStyles[theme] || authThemeStyles.pop;
 
   return (
     <div

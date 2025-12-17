@@ -19,7 +19,7 @@ const backupCodeThemeStyles = {
 
 export function BackupCodeDialog({ backup }) {
   const { theme } = useThemeStore();
-  const themeStyle = backupCodeThemeStyles[theme] || backupCodeThemeStyles.default;
+  const themeStyle = backupCodeThemeStyles[theme] || backupCodeThemeStyles.pop;
   return (
     <Dialog
       open={backup.open}

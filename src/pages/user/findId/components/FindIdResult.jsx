@@ -17,7 +17,7 @@ const authThemeStyles = {
 
 export function FindIdResult({ email }) {
   const { theme } = useThemeStore();
-  const themeStyle = authThemeStyles[theme] || authThemeStyles.default;
+  const themeStyle = authThemeStyles[theme] || authThemeStyles.pop;
 
   return (
     <div className={`${themeStyle.cardBorder} rounded-xl p-8 ${themeStyle.cardBg}`}>

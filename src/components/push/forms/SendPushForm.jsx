@@ -38,7 +38,7 @@ const SendPushForm = ({
     onSendToAll,
 }) => {
     const { theme } = useThemeStore();
-    const themeStyle = sendFormThemeStyles[theme] || sendFormThemeStyles.default;
+    const themeStyle = sendFormThemeStyles[theme] || sendFormThemeStyles.pop;
 
     const handleSend = () => {
         if (onSend && typeof onSend === "function") {

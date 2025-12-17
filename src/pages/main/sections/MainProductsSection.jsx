@@ -81,7 +81,7 @@ export default function MainProductsSection() {
   const productsLoading = useMainStore((s) => s.productsLoading);
   const productsError = useMainStore((s) => s.productsError);
   const { theme } = useThemeStore();
-  const themeStyle = productsThemeStyles[theme] || productsThemeStyles.default;
+  const themeStyle = productsThemeStyles[theme] || productsThemeStyles.pop;
   const isDark = theme === "dark";
 
   // 랜덤 3개 상품 선택
@@ -175,8 +175,8 @@ export default function MainProductsSection() {
                   status === "ACTIVE"
                     ? { label: "이용 가능", cls: "bg-lime-400" }
                     : status
-                    ? { label: String(status), cls: "bg-slate-200" }
-                    : { label: "준비중", cls: "bg-slate-200" };
+                      ? { label: String(status), cls: "bg-slate-200" }
+                      : { label: "준비중", cls: "bg-slate-200" };
 
                 return (
                   <BouncyCard
