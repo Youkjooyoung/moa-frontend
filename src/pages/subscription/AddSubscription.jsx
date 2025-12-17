@@ -4,6 +4,7 @@ import { AlertTriangle } from 'lucide-react';
 import httpClient from '../../api/httpClient';
 import { useThemeStore } from '@/store/themeStore';
 import { ChristmasBackground } from '@/config/themeConfig';
+import { getProductIconUrl } from '@/utils/imageUtils';
 
 // 테마별 스타일
 const addSubscriptionThemeStyles = {
@@ -106,10 +107,10 @@ const AddSubscription = () => {
             {theme === 'christmas' && <ChristmasBackground />}
 
             <div className={`p-8 rounded-2xl border shadow-lg relative z-10 ${theme === 'dark'
-                    ? 'bg-[#1E293B] border-slate-700'
-                    : theme === 'christmas'
-                        ? 'bg-white/95 backdrop-blur-sm border-red-200'
-                        : 'bg-white border-gray-200'
+                ? 'bg-[#1E293B] border-slate-700'
+                : theme === 'christmas'
+                    ? 'bg-white/95 backdrop-blur-sm border-red-200'
+                    : 'bg-white border-gray-200'
                 }`}>
                 <h1 className={`text-2xl font-bold mb-2 text-center ${theme === 'dark' ? 'text-white' : 'text-gray-900'
                     }`}>구독 신청</h1>
@@ -118,15 +119,15 @@ const AddSubscription = () => {
 
                 {/* 상품 정보 */}
                 <div className={`p-6 rounded-xl mb-6 text-center ${theme === 'dark'
-                        ? 'bg-[#0B1120]'
-                        : theme === 'christmas'
-                            ? 'bg-red-50/50'
-                            : 'bg-gray-50'
+                    ? 'bg-[#0B1120]'
+                    : theme === 'christmas'
+                        ? 'bg-red-50/50'
+                        : 'bg-gray-50'
                     }`}>
                     <img
-                        src={product.image || '/placeholder.png'}
+                        src={getProductIconUrl(product.image) || '/placeholder.png'}
                         alt={product.productName}
-                        className="w-24 h-24 object-cover rounded-lg mx-auto mb-4"
+                        className="w-24 h-24 object-contain rounded-lg mx-auto mb-4 bg-white p-2"
                     />
                     <h3 className="text-xl font-bold text-gray-900 mb-1">{product.productName}</h3>
                     <p className={`${themeStyle.priceText} font-bold text-2xl`}>
@@ -138,10 +139,10 @@ const AddSubscription = () => {
 
                 {/* 구독 일정 정보 */}
                 <div className={`rounded-2xl p-5 mb-6 border ${theme === 'dark'
-                        ? 'bg-[#0B1120] border-slate-700'
-                        : theme === 'christmas'
-                            ? 'bg-red-50/50 border-red-200'
-                            : 'bg-stone-50 border-stone-100'
+                    ? 'bg-[#0B1120] border-slate-700'
+                    : theme === 'christmas'
+                        ? 'bg-red-50/50 border-red-200'
+                        : 'bg-stone-50 border-stone-100'
                     }`}>
                     <h4 className={`font-bold mb-3 text-sm ${theme === 'dark' ? 'text-white' : 'text-stone-800'
                         }`}>구독 일정</h4>
@@ -176,8 +177,8 @@ const AddSubscription = () => {
                     <button
                         onClick={() => navigate(-1)}
                         className={`w-full border py-4 rounded-xl font-bold transition-colors ${theme === 'dark'
-                                ? 'bg-slate-700 border-slate-600 text-slate-300 hover:bg-slate-600'
-                                : 'bg-white border-gray-300 text-gray-600 hover:bg-gray-50'
+                            ? 'bg-slate-700 border-slate-600 text-slate-300 hover:bg-slate-600'
+                            : 'bg-white border-gray-300 text-gray-600 hover:bg-gray-50'
                             }`}
                     >
                         취소
@@ -198,10 +199,10 @@ const AddSubscription = () => {
                             }`}>아래 내용으로 내 구독 일정에 등록하시겠습니까?</p>
 
                         <div className={`rounded-2xl p-4 mb-6 text-left space-y-3 border ${theme === 'dark'
-                                ? 'bg-[#0B1120] border-slate-700'
-                                : theme === 'christmas'
-                                    ? 'bg-red-50/50 border-red-200'
-                                    : 'bg-stone-50 border-stone-100'
+                            ? 'bg-[#0B1120] border-slate-700'
+                            : theme === 'christmas'
+                                ? 'bg-red-50/50 border-red-200'
+                                : 'bg-stone-50 border-stone-100'
                             }`}>
                             <div className="flex justify-between">
                                 <span className={`text-sm ${theme === 'dark' ? 'text-slate-400' : 'text-stone-500'
@@ -235,8 +236,8 @@ const AddSubscription = () => {
                             <button
                                 onClick={() => setShowConfirmModal(false)}
                                 className={`flex-1 py-3 rounded-xl font-bold transition-colors ${theme === 'dark'
-                                        ? 'bg-slate-700 text-slate-300 hover:bg-slate-600'
-                                        : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
+                                    ? 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                                    : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
                                     }`}
                             >
                                 취소

@@ -16,7 +16,7 @@ import { useThemeStore } from '@/store/themeStore'
 
 // 테마별 스타일
 const popoverThemeStyles = {
-    default: {
+    pop: {
         // Neo/Pop 스타일 - 핑크, 시안 계열 (깔끔한 흰색 배경)
         readAllHover: 'hover:text-pink-500',
         headerBg: 'bg-white',
@@ -48,7 +48,7 @@ const popoverThemeStyles = {
 export default function NotificationPopover({ children }) {
     const { user } = useAuthStore()
     const { theme } = useThemeStore()
-    const themeStyle = popoverThemeStyles[theme] || popoverThemeStyles.default
+    const themeStyle = popoverThemeStyles[theme] || popoverThemeStyles.pop
     const isAdmin = user?.role === 'ADMIN'
     const [isAdminModalOpen, setIsAdminModalOpen] = useState(false)
 

@@ -12,7 +12,7 @@ import { useThemeStore } from '@/store/themeStore'
 
 // 테마별 스타일
 const templatesThemeStyles = {
-    default: {
+    pop: {
         // Neo/Pop 스타일 - 핑크, 시안 계열 (깔끔한 흰색 배경)
         buttonBg: 'bg-pink-500 hover:bg-pink-600',
         editHover: 'hover:text-pink-600 hover:bg-pink-100',
@@ -39,7 +39,7 @@ const templatesThemeStyles = {
 
 const TemplatesTab = ({ templates, isLoading, onAdd, onEdit, onDelete }) => {
     const { theme } = useThemeStore()
-    const themeStyle = templatesThemeStyles[theme] || templatesThemeStyles.default
+    const themeStyle = templatesThemeStyles[theme] || templatesThemeStyles.pop
     const [expandedId, setExpandedId] = useState('')
 
     return (
@@ -78,9 +78,8 @@ const TemplatesTab = ({ templates, isLoading, onAdd, onEdit, onDelete }) => {
                                 <AccordionItem
                                     key={template.pushCodeId}
                                     value={template.pushCodeId.toString()}
-                                    className={`border ${themeStyle.cardBorder} rounded-xl overflow-hidden transition-colors ${
-                                        isExpanded ? themeStyle.cardExpanded : themeStyle.cardBg
-                                    }`}
+                                    className={`border ${themeStyle.cardBorder} rounded-xl overflow-hidden transition-colors ${isExpanded ? themeStyle.cardExpanded : themeStyle.cardBg
+                                        }`}
                                 >
                                     <div
                                         className="flex items-center w-full px-4 py-3 cursor-pointer"
@@ -89,11 +88,11 @@ const TemplatesTab = ({ templates, isLoading, onAdd, onEdit, onDelete }) => {
                                         <Badge variant="outline" className="font-mono text-xs flex-shrink-0 w-40 justify-center bg-white">
                                             {template.codeName}
                                         </Badge>
-                                        
+
                                         <span className="font-medium text-slate-900 truncate flex-1 ml-3">
                                             {template.titleTemplate}
                                         </span>
-                                        
+
                                         <div className="flex items-center gap-1 ml-3 flex-shrink-0">
                                             <Button
                                                 variant="ghost"

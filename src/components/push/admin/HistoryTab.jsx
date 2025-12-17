@@ -17,7 +17,7 @@ const PAGE_SIZE_OPTIONS = [10, 20, 30, 40, 50, 100]
 
 // 테마별 스타일
 const historyThemeStyles = {
-    default: {
+    pop: {
         // Neo/Pop 스타일 - 핑크, 시안 계열 (깔끔한 흰색 배경)
         searchButton: 'bg-pink-500 hover:bg-pink-600',
         tableRowHover: 'hover:bg-pink-50',
@@ -63,7 +63,7 @@ const HistoryTab = ({
     onPageSizeChange
 }) => {
     const { theme } = useThemeStore()
-    const themeStyle = historyThemeStyles[theme] || historyThemeStyles.default
+    const themeStyle = historyThemeStyles[theme] || historyThemeStyles.pop
 
     return (
         <div className="h-full flex flex-col">

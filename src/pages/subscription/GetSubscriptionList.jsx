@@ -4,6 +4,7 @@ import httpClient from '../../api/httpClient';
 import { useAuthStore } from '../../store/authStore';
 import { useThemeStore } from '@/store/themeStore';
 import { ThemeSwitcher, ChristmasBackground } from '@/config/themeConfig';
+import { getProductIconUrl } from '@/utils/imageUtils';
 
 // Theme-based styles
 const getThemeStyles = (theme) => {
@@ -158,9 +159,9 @@ const GetSubscriptionList = () => {
                             >
                                 <div className="flex items-center gap-5">
                                     <img
-                                        src={sub.productImage || '/placeholder.png'}
+                                        src={getProductIconUrl(sub.productImage) || '/placeholder.png'}
                                         alt={sub.productName}
-                                        className={`w-16 h-16 rounded-lg object-cover ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-100'}`}
+                                        className={`w-16 h-16 rounded-lg object-contain p-1 ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-100'}`}
                                     />
                                     <div>
                                         <h3 className={`font-bold text-lg ${themeStyles.text}`}>{sub.productName}</h3>
@@ -171,8 +172,8 @@ const GetSubscriptionList = () => {
                                 </div>
                                 <div className="text-right">
                                     <span className={`inline-block px-3 py-1 rounded-full text-xs font-bold mb-2 ${sub.subscriptionStatus === 'ACTIVE'
-                                            ? themeStyles.statusActive
-                                            : themeStyles.statusInactive
+                                        ? themeStyles.statusActive
+                                        : themeStyles.statusInactive
                                         }`}>
                                         {sub.subscriptionStatus === 'ACTIVE' ? '이용중' : '해지됨'}
                                     </span>

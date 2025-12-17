@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { X } from 'lucide-react';
 import httpClient from '../../api/httpClient';
 import { useThemeStore } from '@/store/themeStore';
+import { getProductIconUrl } from '@/utils/imageUtils';
 
 // 테마별 스타일
 const modalThemeStyles = {
@@ -113,9 +114,9 @@ const AddSubscriptionModal = ({ productId, startDate, endDate, onClose, onSucces
                         <div className="bg-gray-50 p-6 rounded-xl mb-6 text-center">
                             {product.image ? (
                                 <img
-                                    src={product.image}
+                                    src={getProductIconUrl(product.image)}
                                     alt={product.productName}
-                                    className="w-24 h-24 object-cover rounded-lg mx-auto mb-4"
+                                    className="w-24 h-24 object-contain rounded-lg mx-auto mb-4 bg-white p-2"
                                 />
                             ) : (
                                 <div className="w-24 h-24 bg-stone-100 rounded-lg mx-auto mb-4 flex items-center justify-center text-stone-400">

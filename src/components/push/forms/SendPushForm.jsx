@@ -6,7 +6,7 @@ import { useThemeStore } from "@/store/themeStore";
 
 // 테마별 스타일
 const sendFormThemeStyles = {
-    default: {
+    pop: {
         // Neo/Pop 스타일 - 핑크, 시안 계열 (깔끔한 흰색 배경)
         buttonBg: 'bg-pink-500 hover:bg-pink-600',
         warningBg: 'bg-cyan-50 border-cyan-200',

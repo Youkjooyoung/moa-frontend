@@ -15,7 +15,7 @@ import { useThemeStore } from "@/store/themeStore";
 
 // 테마별 스타일
 const adminPushThemeStyles = {
-    default: {
+    pop: {
         // Neo/Pop 스타일 - 핑크, 시안 계열 (깔끔한 흰색 배경)
         iconBg: "bg-pink-100",
         iconColor: "text-pink-600",

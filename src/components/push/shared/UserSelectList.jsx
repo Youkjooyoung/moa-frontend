@@ -17,7 +17,7 @@ import { useThemeStore } from "@/store/themeStore";
 
 // 테마별 스타일
 const userSelectThemeStyles = {
-    default: {
+    pop: {
         // Neo/Pop 스타일 - 핑크, 시안 계열
         userRowHover: 'hover:bg-pink-50',
         headerBg: 'bg-white',

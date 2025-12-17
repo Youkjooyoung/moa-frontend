@@ -13,7 +13,7 @@ import { useThemeStore } from '@/store/themeStore'
 
 // 테마별 스타일
 const templateFormThemeStyles = {
-    default: {
+    pop: {
         // Neo/Pop 스타일 - 핑크, 시안 계열 (깔끔한 흰색 배경)
         dialogBg: 'bg-white',
         titleText: 'text-pink-600',

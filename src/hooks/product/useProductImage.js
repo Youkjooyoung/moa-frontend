@@ -171,10 +171,25 @@ export const useProductImages = (initialLogoUrl = '') => {
 
     // 이미지 업로드 (로고 + 아이콘 동시)
     const uploadImagesIfSelected = async (currentFormImage) => {
-        if (logoFile) {
-            // 새 로고 파일이 있으면 업로드 (아이콘은 선택사항)
+        // 로고 또는 아이콘 중 하나라도 새 파일이 있으면 업로드
+        if (logoFile || iconFile) {
+            // 로고가 없으면 기존 이미지 유지, 아이콘만 새로 업로드하는 경우 처리
             const uploadResponse = await uploadProductImages(logoFile, iconFile);
-            return uploadResponse; // 로고 URL 반환
+            console.log('[useProductImages] uploadResponse:', uploadResponse);
+
+            // 응답이 문자열(URL)이면 그대로 반환
+            if (typeof uploadResponse === 'string') {
+                return uploadResponse;
+            }
+            // 응답이 객체면 URL 추출 시도
+            if (uploadResponse?.data) {
+                return uploadResponse.data;
+            }
+            if (uploadResponse?.url) {
+                return uploadResponse.url;
+            }
+            // 그 외의 경우 응답 자체 반환
+            return uploadResponse;
         }
         return currentFormImage; // 변경 없으면 기존 URL 반환
     };

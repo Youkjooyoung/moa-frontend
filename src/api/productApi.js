@@ -45,16 +45,19 @@ export const uploadProductImage = (formData) => {
 
 /**
  * 로고 + 아이콘 이미지 동시 업로드
- * @param {File} logoFile - 로고 이미지 파일 (필수)
+ * @param {File} logoFile - 로고 이미지 파일 (선택)
  * @param {File} iconFile - 아이콘 이미지 파일 (선택)
  * @returns {Promise<string>} 로고 이미지 URL (DB 저장용)
  */
 export const uploadProductImages = (logoFile, iconFile) => {
     const formData = new FormData();
-    formData.append('logoFile', logoFile);
+    if (logoFile) {
+        formData.append('logoFile', logoFile);
+    }
     if (iconFile) {
         formData.append('iconFile', iconFile);
     }
+    console.log('[productApi] uploading images - logoFile:', !!logoFile, 'iconFile:', !!iconFile);
     return httpClient.post('/product/upload-images', formData, {
         headers: {
             'Content-Type': 'multipart/form-data'

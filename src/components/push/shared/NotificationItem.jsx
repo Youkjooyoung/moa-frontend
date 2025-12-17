@@ -9,7 +9,7 @@ import { useThemeStore } from '@/store/themeStore'
 
 // 테마별 스타일
 const notificationThemeStyles = {
-    default: {
+    pop: {
         // Neo/Pop 스타일 - 핑크, 시안 계열
         unreadBg: 'bg-pink-50/50 border-pink-100',
         unreadDot: 'bg-pink-500',
@@ -44,7 +44,7 @@ const NotificationItem = ({
     onMarkAsRead
 }) => {
     const { theme } = useThemeStore()
-    const themeStyle = notificationThemeStyles[theme] || notificationThemeStyles.default
+    const themeStyle = notificationThemeStyles[theme] || notificationThemeStyles.pop
     const isUnread = notification.isRead === 'N'
 
     const handleClick = () => {
@@ -66,13 +66,12 @@ const NotificationItem = ({
     return (
         <AccordionItem
             value={notification.pushId.toString()}
-            className={`border rounded-lg mb-2 overflow-hidden transition-colors ${
-                isUnread
-                    ? themeStyle.unreadBg
-                    : 'bg-white border-slate-100'
-            }`}
+            className={`border rounded-lg mb-2 overflow-hidden transition-colors ${isUnread
+                ? themeStyle.unreadBg
+                : 'bg-white border-slate-100'
+                }`}
         >
-            <div 
+            <div
                 className="flex items-center w-full px-3 py-2.5 cursor-pointer group hover:bg-slate-50/50 transition-colors"
                 onClick={handleClick}
             >
@@ -83,11 +82,10 @@ const NotificationItem = ({
                     <div className="text-left">
                         <div className="flex items-center gap-2">
                             <p
-                                className={`text-sm ${
-                                    isUnread
-                                        ? 'font-semibold text-slate-900'
-                                        : 'font-medium text-slate-700'
-                                }`}
+                                className={`text-sm ${isUnread
+                                    ? 'font-semibold text-slate-900'
+                                    : 'font-medium text-slate-700'
+                                    }`}
                             >
                                 {notification.title}
                             </p>
@@ -101,10 +99,9 @@ const NotificationItem = ({
                     </div>
                 </div>
                 <div className="flex items-center gap-1 ml-auto flex-shrink-0">
-                    <ChevronDown 
-                        className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${
-                            isExpanded ? 'rotate-180' : ''
-                        }`} 
+                    <ChevronDown
+                        className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''
+                            }`}
                     />
                     {onDelete && (
                         <Button

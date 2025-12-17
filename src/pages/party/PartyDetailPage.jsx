@@ -14,6 +14,7 @@ import {
   Sticker,
   themeConfig
 } from "../../config/themeConfig";
+import { getProductIconUrl } from "../../utils/imageUtils";
 import {
   Eye,
   EyeOff,
@@ -248,9 +249,9 @@ export default function PartyDetailPage() {
                 >
                   {party.productImage ? (
                     <img
-                      src={party.productImage}
+                      src={getProductIconUrl(party.productImage)}
                       alt={party.productName}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-contain p-2"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#635bff]/10 to-[#00d4ff]/10">
