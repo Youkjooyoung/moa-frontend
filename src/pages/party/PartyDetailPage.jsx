@@ -183,7 +183,8 @@ export default function PartyDetailPage() {
       const totalAmount = party.monthlyFee * 2;
       await joinParty(id, {
         useExistingCard: true,
-        amount: totalAmount
+        amount: totalAmount,
+        paymentMethod: "CARD"
       });
       alert("파티 가입이 완료되었습니다! 🎉");
       // 파티 상세 및 멤버 목록 새로고침

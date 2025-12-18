@@ -54,6 +54,7 @@ import UserSubscriptionList from "./pages/subscription/UserSubscriptionList";
 import PaymentSuccessPage from "./pages/payment/PaymentSuccessPage";
 import BillingSuccessPage from "./pages/payment/BillingSuccessPage";
 import BillingRegisterPage from "./pages/payment/BillingRegisterPage";
+import BillingFailPage from "./pages/payment/BillingFailPage";
 
 import ListNotice from "./pages/community/ListNotice";
 import GetNotice from "./pages/community/GetNotice";
@@ -386,6 +387,10 @@ function AppContent() {
           <Route
             path="/payment/billing/success"
             element={<BillingSuccessPage />}
+          />
+          <Route
+            path="/payment/billing/fail"
+            element={<BillingFailPage />}
           />
 
           <Route path="/community/notice" element={<ListNotice />} />

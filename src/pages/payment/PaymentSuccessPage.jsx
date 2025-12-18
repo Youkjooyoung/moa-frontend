@@ -3,51 +3,26 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { CheckCircle, AlertCircle, Loader2, Home, Sparkles } from "lucide-react";
 import { processLeaderDeposit, joinParty, createParty } from "../../api/partyApi";
-
-// Animated gradient background component for Variant T
-function AnimatedGradient() {
-    return (
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            <motion.div
-                className="absolute -top-1/2 -left-1/2 w-full h-full rounded-full opacity-30"
-                style={{
-                    background: "radial-gradient(circle, rgba(99,91,255,0.15) 0%, transparent 70%)",
-                }}
-                animate={{
-                    x: [0, 100, 0],
-                    y: [0, 50, 0],
-                }}
-                transition={{
-                    duration: 20,
-                    repeat: Infinity,
-                    ease: "linear",
-                }}
-            />
-            <motion.div
-                className="absolute -bottom-1/2 -right-1/2 w-full h-full rounded-full opacity-30"
-                style={{
-                    background: "radial-gradient(circle, rgba(0,212,255,0.15) 0%, transparent 70%)",
-                }}
-                animate={{
-                    x: [0, -100, 0],
-                    y: [0, -50, 0],
-                }}
-                transition={{
-                    duration: 25,
-                    repeat: Infinity,
-                    ease: "linear",
-                }}
-            />
-        </div>
-    );
-}
+import { useTheme } from "../../config/themeConfig";
 
 export default function PaymentSuccessPage() {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const [status, setStatus] = useState("processing"); // processing, success, fail
+    const { theme, currentTheme } = useTheme("appTheme");
 
     const isProcessed = useRef(false); // 중복 실행 방지 플래그 (useRef 사용)
+
+    // 테마별 악센트 색상
+    const getAccentColor = () => {
+        switch (theme) {
+            case "christmas": return "#c41e3a";
+            case "pop": return "#ec4899";
+            case "dark": return "#635bff";
+            default: return "#635bff";
+        }
+    };
+    const accentColor = getAccentColor();
 
     useEffect(() => {
         const paymentKey = searchParams.get("paymentKey");
@@ -102,11 +77,18 @@ export default function PaymentSuccessPage() {
                     // 파티 생성 4단계(계정 정보 입력)로 이동
                     navigate(`/party/create?step=4&partyId=${partyId}`);
                 } else if (type === "JOIN_PARTY") {
-                    await joinParty(partyId, paymentData);
+                    // 파티 가입은 빌링키 기반 결제로 처리됨 (BillingSuccessPage에서 처리)
+                    // 이 코드는 레거시 호환성을 위해 유지
+                    // 저장된 카드가 있는 경우에만 가입 시도
+                    const joinPaymentData = {
+                        useExistingCard: true,
+                        amount: amount,
+                        paymentMethod: "CARD"
+                    };
+                    await joinParty(partyId, joinPaymentData);
                     localStorage.removeItem("pendingPayment");
 
-                    // ✨ 빌링키 등록은 파티 상세 페이지에서 유도 (OTT 정보 확인 시)
-                    // 결제 즉시 리다이렉트 하지 않고 파티 상세로 바로 이동
+                    // 파티 상세로 이동
                     navigate(`/party/${partyId}`);
                 } else if (type === "RETRY_DEPOSIT") {
                     await processLeaderDeposit(partyId, paymentData);
@@ -148,12 +130,18 @@ export default function PaymentSuccessPage() {
     }, [navigate, searchParams]);
 
     return (
-        <div className="min-h-screen bg-[#fafafa] flex flex-col items-center justify-center relative">
-            <AnimatedGradient />
+        <div className={`min-h-screen flex flex-col items-center justify-center relative transition-colors duration-300 ${currentTheme.bg}`}>
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-white p-10 rounded-2xl shadow-lg shadow-[#635bff]/10 text-center border border-gray-100 relative z-10 max-w-md w-full mx-4"
+                className={`p-10 rounded-2xl text-center relative z-10 max-w-md w-full mx-4 ${theme === "pop"
+                    ? "bg-white/90 backdrop-blur-sm border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]"
+                    : theme === "dark"
+                        ? "bg-[#1E293B] border border-gray-700 shadow-lg"
+                        : theme === "christmas"
+                            ? "bg-white/90 backdrop-blur-sm border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]"
+                            : "bg-white/90 backdrop-blur-sm shadow-lg shadow-[#635bff]/10 border border-gray-100"
+                    }`}
             >
                 {status === "processing" && (
                     <>
@@ -162,10 +150,10 @@ export default function PaymentSuccessPage() {
                             transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                             className="mx-auto mb-6"
                         >
-                            <Loader2 className="w-12 h-12 text-[#635bff]" />
+                            <Loader2 className="w-12 h-12" style={{ color: accentColor }} />
                         </motion.div>
-                        <h2 className="text-2xl font-bold text-gray-900 mb-2">결제 확인 중입니다...</h2>
-                        <p className="text-gray-500 font-medium">잠시만 기다려주세요.</p>
+                        <h2 className={`text-2xl font-bold mb-2 ${currentTheme.text}`}>결제 확인 중입니다...</h2>
+                        <p className={`font-medium ${currentTheme.subtext}`}>잠시만 기다려주세요.</p>
                     </>
                 )}
                 {status === "success" && (
@@ -178,8 +166,8 @@ export default function PaymentSuccessPage() {
                         >
                             <CheckCircle className="w-10 h-10 text-emerald-500" />
                         </motion.div>
-                        <h2 className="text-2xl font-bold text-gray-900 mb-2">결제가 완료되었습니다!</h2>
-                        <p className="text-gray-500 font-medium">다음 단계로 이동합니다...</p>
+                        <h2 className={`text-2xl font-bold mb-2 ${currentTheme.text}`}>결제가 완료되었습니다!</h2>
+                        <p className={`font-medium ${currentTheme.subtext}`}>다음 단계로 이동합니다...</p>
                     </>
                 )}
                 {status === "fail" && (
@@ -192,13 +180,18 @@ export default function PaymentSuccessPage() {
                         >
                             <AlertCircle className="w-10 h-10 text-red-500" />
                         </motion.div>
-                        <h2 className="text-2xl font-bold text-gray-900 mb-2">결제 처리에 실패했습니다</h2>
-                        <p className="text-gray-500 font-medium mb-6">다시 시도해주세요.</p>
+                        <h2 className={`text-2xl font-bold mb-2 ${currentTheme.text}`}>결제 처리에 실패했습니다</h2>
+                        <p className={`font-medium mb-6 ${currentTheme.subtext}`}>다시 시도해주세요.</p>
                         <motion.button
                             whileHover={{ scale: 1.02, y: -1 }}
                             whileTap={{ scale: 0.98 }}
                             onClick={() => navigate("/")}
-                            className="inline-flex items-center gap-2 px-6 py-3 bg-[#635bff] hover:bg-[#5851e8] text-white rounded-full font-semibold shadow-lg shadow-[#635bff]/25 transition-all"
+                            className={`inline-flex items-center gap-2 px-6 py-3 text-white rounded-full font-semibold shadow-lg transition-colors duration-200 ${theme === "pop"
+                                ? "bg-pink-500 hover:bg-pink-600 shadow-pink-500/25"
+                                : theme === "christmas"
+                                    ? "bg-[#c41e3a] hover:bg-[#a51830] shadow-[#c41e3a]/25"
+                                    : "bg-[#635bff] hover:bg-[#5851e8] shadow-[#635bff]/25"
+                                }`}
                         >
                             <Home className="w-5 h-5" />
                             메인으로 돌아가기

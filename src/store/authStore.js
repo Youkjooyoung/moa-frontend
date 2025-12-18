@@ -18,14 +18,14 @@ export const purgeLoginPasswords = () => {
     PASSWORD_STORAGE_KEYS.forEach((key) => {
       try {
         storage.removeItem(key);
-      } catch {}
+      } catch { }
     });
   });
 
   try {
     useLoginStore.getState().setField("password", "");
     useLoginStore.getState().setField("otpCode", "");
-  } catch {}
+  } catch { }
 };
 
 export const useAuthStore = create(
@@ -63,7 +63,14 @@ export const useAuthStore = create(
       },
 
       fetchSession: async () => {
-        const { clearAuth } = get();
+        const { clearAuth, accessToken } = get();
+
+        // 토큰이 없으면 API 호출하지 않음
+        if (!accessToken) {
+          set({ loading: false });
+          return;
+        }
+
         set({ loading: true });
 
         try {
