@@ -78,6 +78,7 @@ export const themeClasses = {
   // Text
   text: {
     primary: 'text-[var(--theme-text)]',
+    secondary: 'text-[var(--theme-text-secondary)]',
     muted: 'text-[var(--theme-text-muted)]',
     accent: 'text-[var(--theme-primary)]',
   },
