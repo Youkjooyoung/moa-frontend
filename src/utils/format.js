@@ -40,6 +40,22 @@ export const formatDateText = (value) => {
   return `${year}.${month}.${day}`;
 };
 
+export const formatPhoneNumber = (value, fallback = "-") => {
+  if (!value) return fallback;
+
+  const digits = String(value).replace(/\D/g, "");
+
+  if (digits.length === 11) {
+    return digits.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3");
+  }
+
+  if (digits.length === 10) {
+    return digits.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3");
+  }
+
+  return value;
+};
+
 export const normalizeList = (payload) => {
   if (!payload) return [];
   if (Array.isArray(payload)) return payload;

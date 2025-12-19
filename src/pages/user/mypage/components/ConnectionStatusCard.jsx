@@ -1,6 +1,7 @@
 import React from "react";
 import { Link2, Shield, Smartphone } from "lucide-react";
 import { useThemeStore } from "@/store/themeStore";
+import { formatPhoneNumber } from "@/utils/format";
 
 const SECTION_TITLE = "text-sm font-bold";
 const ROW = "flex items-center justify-between py-3";
@@ -64,7 +65,7 @@ export function ConnectionStatusCard({
       <div className={themeStyle.sectionBorder}>
         <div className={ROW}>
           <p className="text-sm text-slate-600 font-bold">전화번호</p>
-          <p className="text-sm font-black">{phone}</p>
+          <p className="text-sm font-black">{formatPhoneNumber(phone)}</p>
         </div>
 
         <div className={themeStyle.dividerBorder} />
@@ -86,7 +87,9 @@ export function ConnectionStatusCard({
         <div className="flex flex-wrap gap-3">
           <button
             type="button"
-            className={`${googleConn ? BTN_DANGER : BTN} ${themeStyle.buttonHover}`}
+            className={`${googleConn ? BTN_DANGER : BTN} ${
+              themeStyle.buttonHover
+            }`}
             onClick={toggleGoogle}
           >
             {googleConn ? "GOOGLE 해제" : "GOOGLE 연동"}
@@ -94,7 +97,9 @@ export function ConnectionStatusCard({
 
           <button
             type="button"
-            className={`${kakaoConn ? BTN_DANGER : BTN} ${themeStyle.buttonHover}`}
+            className={`${kakaoConn ? BTN_DANGER : BTN} ${
+              themeStyle.buttonHover
+            }`}
             onClick={toggleKakao}
           >
             {kakaoConn ? "KAKAO 해제" : "KAKAO 연동"}
@@ -113,7 +118,11 @@ export function ConnectionStatusCard({
             {otp?.enabled ? "OTP 사용중" : "OTP 미사용"}
           </span>
 
-          <button type="button" className={`${BTN} ${themeStyle.buttonHover}`} onClick={openOtp}>
+          <button
+            type="button"
+            className={`${BTN} ${themeStyle.buttonHover}`}
+            onClick={openOtp}
+          >
             {otp?.enabled ? "OTP 해제" : "OTP 설정"}
           </button>
         </div>
