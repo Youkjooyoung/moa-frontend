@@ -171,23 +171,6 @@ export default function HeaderView({
                 <ChevronRight className="w-4 h-4" />
               </Link>
             </DropdownMenuItem>
-
-            <DropdownMenuItem
-              asChild
-              className="cursor-pointer focus:bg-transparent"
-            >
-              <Link
-                to="/admin/sales"
-                className="py-2.5 flex items-center justify-between gap-3 font-black text-black rounded-2xl hover:bg-black hover:text-white border border-gray-200 bg-white px-3 transition-colors"
-              >
-                <span className="flex items-center gap-2">
-                  <CreditCard className="w-5 h-5" />
-                  매출 조회
-                </span>
-                <ChevronRight className="w-4 h-4" />
-              </Link>
-            </DropdownMenuItem>
-
             <DropdownMenuItem
               asChild
               className="cursor-pointer focus:bg-transparent"
@@ -294,14 +277,6 @@ export default function HeaderView({
                   active={isActive("/admin/users")}
                 >
                   회원 관리
-                </NavPill>
-                <NavPill
-                  theme={currentTheme}
-                  to="/admin/sales"
-                  icon={CreditCard}
-                  active={isActive("/admin/sales")}
-                >
-                  매출 조회
                 </NavPill>
                 <NavPill
                   theme={currentTheme}
@@ -461,11 +436,55 @@ export default function HeaderView({
                     usePortal={false}
                     className="w-72 sm:w-80 max-w-[calc(100vw-24px)] p-3 bg-white border border-gray-200 rounded-3xl shadow-[4px_4px_12px_rgba(0,0,0,0.08)] z-[150]"
                   >
-                  {!isAdmin && (
-                    <DropdownMenuItem asChild className="cursor-pointer focus:bg-transparent p-0 mb-3">
-                      <Link to="/mypage">
+                    {!isAdmin && (
+                      <DropdownMenuItem
+                        asChild
+                        className="cursor-pointer focus:bg-transparent p-0 mb-3"
+                      >
+                        <Link to="/mypage">
+                          <div
+                            className={`rounded-2xl p-3 w-full ${themeStyle.dropdownItemBg} hover:opacity-80 transition-opacity`}
+                          >
+                            <div className="flex items-center gap-3">
+                              <Avatar className="h-11 w-11 border border-gray-200 bg-white">
+                                <AvatarImage
+                                  src={profileImageUrl}
+                                  alt={displayNickname}
+                                />
+                                <AvatarFallback
+                                  className={`text-lg font-black ${themeStyle.avatarFallback}`}
+                                >
+                                  {userInitial}
+                                </AvatarFallback>
+                              </Avatar>
+
+                              <div className="min-w-0 flex-1">
+                                <p
+                                  className={`text-sm font-black truncate ${themeStyle.dropdownItemText}`}
+                                >
+                                  {displayNickname}님
+                                </p>
+                                <p
+                                  className={`text-xs font-bold truncate ${themeStyle.dropdownItemSubtext}`}
+                                >
+                                  {displayEmail}
+                                </p>
+                                <div className="mt-1">
+                                  {renderProviderBadge()}
+                                </div>
+                              </div>
+                              <ChevronRight
+                                className={`w-5 h-5 ${themeStyle.dropdownItemSubtext}`}
+                              />
+                            </div>
+                          </div>
+                        </Link>
+                      </DropdownMenuItem>
+                    )}
+                    {isAdmin && (
+                      <DropdownMenuLabel className="font-normal p-0 mb-3">
                         <div
-                          className={`rounded-2xl p-3 w-full ${themeStyle.dropdownItemBg} hover:opacity-80 transition-opacity`}
+                          className={`rounded-2xl p-3 ${themeStyle.dropdownItemBg}`}
                         >
                           <div className="flex items-center gap-3">
                             <Avatar className="h-11 w-11 border border-gray-200 bg-white">
@@ -491,107 +510,70 @@ export default function HeaderView({
                               >
                                 {displayEmail}
                               </p>
-                              <div className="mt-1">{renderProviderBadge()}</div>
+                              <div className="mt-1">
+                                {renderProviderBadge()}
+                              </div>
                             </div>
-                            <ChevronRight className={`w-5 h-5 ${themeStyle.dropdownItemSubtext}`} />
                           </div>
                         </div>
-                      </Link>
-                    </DropdownMenuItem>
-                  )}
-                  {isAdmin && (
-                    <DropdownMenuLabel className="font-normal p-0 mb-3">
-                      <div
-                        className={`rounded-2xl p-3 ${themeStyle.dropdownItemBg}`}
-                      >
-                        <div className="flex items-center gap-3">
-                          <Avatar className="h-11 w-11 border border-gray-200 bg-white">
-                            <AvatarImage
-                              src={profileImageUrl}
-                              alt={displayNickname}
+                      </DropdownMenuLabel>
+                    )}
+                    {user?.role === "ADMIN" && (
+                      <div className="lg:hidden mb-3">
+                        <Sticker className="rounded-2xl px-3 py-3">
+                          <div className="flex items-center justify-between gap-3">
+                            <div className="flex flex-col">
+                              <span
+                                className={`text-xs font-black tracking-[0.18em] uppercase ${themeStyle.dropdownItemText}`}
+                              >
+                                ADMIN MODE
+                              </span>
+                              <span
+                                className={`text-[11px] font-bold ${themeStyle.dropdownItemSubtext}`}
+                              >
+                                {isAdminMode ? "SUP" : "MGR"}
+                              </span>
+                            </div>
+                            <Switch
+                              id="admin-mode-dd"
+                              checked={isAdminMode}
+                              onCheckedChange={handleAdminSwitch}
+                              className={`${
+                                currentTheme === "dark"
+                                  ? "data-[state=checked]:bg-[#635bff] data-[state=unchecked]:bg-gray-600"
+                                  : currentTheme === "christmas"
+                                  ? "data-[state=checked]:bg-[#c41e3a] data-[state=unchecked]:bg-gray-300"
+                                  : "data-[state=checked]:bg-black data-[state=unchecked]:bg-slate-300"
+                              }`}
                             />
-                            <AvatarFallback
-                              className={`text-lg font-black ${themeStyle.avatarFallback}`}
-                            >
-                              {userInitial}
-                            </AvatarFallback>
-                          </Avatar>
-
-                          <div className="min-w-0 flex-1">
-                            <p
-                              className={`text-sm font-black truncate ${themeStyle.dropdownItemText}`}
-                            >
-                              {displayNickname}님
-                            </p>
-                            <p
-                              className={`text-xs font-bold truncate ${themeStyle.dropdownItemSubtext}`}
-                            >
-                              {displayEmail}
-                            </p>
-                            <div className="mt-1">{renderProviderBadge()}</div>
                           </div>
-                        </div>
+                        </Sticker>
                       </div>
-                    </DropdownMenuLabel>
-                  )}
-                  {user?.role === "ADMIN" && (
-                    <div className="lg:hidden mb-3">
-                      <Sticker className="rounded-2xl px-3 py-3">
-                        <div className="flex items-center justify-between gap-3">
-                          <div className="flex flex-col">
-                            <span
-                              className={`text-xs font-black tracking-[0.18em] uppercase ${themeStyle.dropdownItemText}`}
-                            >
-                              ADMIN MODE
-                            </span>
-                            <span
-                              className={`text-[11px] font-bold ${themeStyle.dropdownItemSubtext}`}
-                            >
-                              {isAdminMode ? "SUP" : "MGR"}
-                            </span>
-                          </div>
-                          <Switch
-                            id="admin-mode-dd"
-                            checked={isAdminMode}
-                            onCheckedChange={handleAdminSwitch}
-                            className={`${
-                              currentTheme === "dark"
-                                ? "data-[state=checked]:bg-[#635bff] data-[state=unchecked]:bg-gray-600"
-                                : currentTheme === "christmas"
-                                ? "data-[state=checked]:bg-[#c41e3a] data-[state=unchecked]:bg-gray-300"
-                                : "data-[state=checked]:bg-black data-[state=unchecked]:bg-slate-300"
-                            }`}
-                          />
-                        </div>
-                      </Sticker>
-                    </div>
-                  )}
+                    )}
 
-                  {renderMobileNavItems()}
+                    {renderMobileNavItems()}
 
-                  <DropdownMenuGroup>
-                    <DropdownMenuItem
-                      onClick={logout}
-                      className="cursor-pointer focus:bg-transparent p-0"
-                    >
-                      <div className="w-full">
-                        <div
-                          className={`w-full rounded-2xl px-4 py-3 transition-all duration-200 ${
-                            themeStyle.accentBg
-                          } border border-gray-200`}
-                        >
+                    <DropdownMenuGroup>
+                      <DropdownMenuItem
+                        onClick={logout}
+                        className="cursor-pointer focus:bg-transparent p-0"
+                      >
+                        <div className="w-full">
                           <div
-                            className={`flex items-center justify-between gap-2 font-black ${themeStyle.accentText}`}
+                            className={`w-full rounded-2xl px-4 py-3 transition-all duration-200 ${themeStyle.accentBg} border border-gray-200`}
                           >
-                            <span className="flex items-center gap-2">
-                              <LogOut className="w-5 h-5" />
-                              로그아웃
-                            </span>
-                            <ChevronRight className="w-4 h-4" />
+                            <div
+                              className={`flex items-center justify-between gap-2 font-black ${themeStyle.accentText}`}
+                            >
+                              <span className="flex items-center gap-2">
+                                <LogOut className="w-5 h-5" />
+                                로그아웃
+                              </span>
+                              <ChevronRight className="w-4 h-4" />
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </DropdownMenuItem>
+                      </DropdownMenuItem>
                     </DropdownMenuGroup>
                   </DropdownMenuContent>
                 </DropdownMenu>
