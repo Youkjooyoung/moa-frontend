@@ -117,7 +117,7 @@ import LandingPageZParticles from "@/pages/landing/LandingPageZParticles";
 import LandingPageZPhysics from "@/pages/landing/LandingPageZPhysics";
 import LandingPageZPortrait from "@/pages/landing/LandingPageZPortrait";
 import LandingPageZPortraitV2 from "@/pages/landing/LandingPageZPortraitV2";
-import LandingPageZOQ from "@/pages/landing/LandingPageZOQ";
+import LandingPageZQQ from "@/pages/landing/LandingPageZQQ";
 import LandingPageZRetro from "@/pages/landing/LandingPageZRetro";
 import LandingPageZRiso from "@/pages/landing/LandingPageZRiso";
 import LandingPageZRiso2 from "@/pages/landing/LandingPageZRiso2";
@@ -465,7 +465,7 @@ function AppContent() {
             path="/landing/z/portrait-v2"
             element={<LandingPageZPortraitV2 />}
           />
-          <Route path="/landing/z/oq" element={<LandingPageZOQ />} />
+          <Route path="/landing/z/oq" element={<LandingPageZQQ />} />
           <Route path="/landing/z/retro" element={<LandingPageZRetro />} />
           <Route path="/landing/z/riso" element={<LandingPageZRiso />} />
           <Route path="/landing/z/riso2" element={<LandingPageZRiso2 />} />
