@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { Navigate, useLocation } from "react-router-dom";
 import { useLoginPageLogic } from "@/hooks/auth/useLogin";
 import {
   Card,
@@ -11,9 +12,12 @@ import { LoginForm } from "./components/LoginForm";
 import { SocialLoginButtons } from "./components/SocialLoginButtons";
 import { LoginOtpDialog } from "./components/LoginOtpDialog";
 import { useThemeStore } from "@/store/themeStore";
+import { useAuthStore } from "@/store/authStore";
 import { themeClasses } from "@/utils/themeUtils";
 
 export default function LoginPage() {
+  const location = useLocation();
+  const user = useAuthStore((s) => s.user);
   const {
     email,
     password,
@@ -43,10 +47,15 @@ export default function LoginPage() {
 
   const isBackupMode = otpMode === "backup";
   const isLoginDisabled = loginLoading || !email.trim() || !password.trim();
+  const redirectTo = location.state?.from || "/mypage";
 
   useEffect(() => {
     setField("password", "");
   }, [setField]);
+
+  if (user) {
+    return <Navigate to={redirectTo} replace />;
+  }
 
   return (
     <div className={`min-h-screen bg-transparent pb-20 relative z-10`}>

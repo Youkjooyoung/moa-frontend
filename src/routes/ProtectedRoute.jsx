@@ -1,5 +1,5 @@
 import { Navigate } from "react-router-dom";
-import { useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useAuthStore } from "@/store/authStore";
 
 const LoadingFallback = () => (
@@ -9,33 +9,39 @@ const LoadingFallback = () => (
 );
 
 export default function ProtectedRoute({ element }) {
-  const { user, accessToken, loading, fetchSession } = useAuthStore();
-  const hasRequestedSession = useRef(false);
+  const { user, loading, fetchSession } = useAuthStore();
+  const [sessionChecked, setSessionChecked] = useState(false);
 
   useEffect(() => {
-    if (!accessToken) {
-      // No token: ensure we are not stuck in a loading state and skip any API calls.
-      if (loading) {
-        useAuthStore.setState({ loading: false });
-      }
-      return;
+    let cancelled = false;
+
+    if (user) {
+      setSessionChecked(true);
+      return () => {
+        cancelled = true;
+      };
     }
 
-    if (!user && !hasRequestedSession.current) {
-      hasRequestedSession.current = true;
-      Promise.resolve(fetchSession())
-        .catch(() => {
-          // Swallow errors here; navigation logic below will redirect unauthenticated users.
-        })
-        .finally(() => {
+    setSessionChecked(false);
+    Promise.resolve(fetchSession())
+      .catch(() => {
+        // Swallow errors here; navigation logic below will redirect unauthenticated users.
+      })
+      .finally(() => {
+        if (!cancelled) {
+          setSessionChecked(true);
           useAuthStore.setState({ loading: false });
-        });
-    }
-  }, [accessToken, user, loading, fetchSession]);
+        }
+      });
 
-  if (!accessToken) return <Navigate to="/login" replace />;
+    return () => {
+      cancelled = true;
+    };
+  }, [user, fetchSession]);
 
-  if (loading || (!user && hasRequestedSession.current)) {
+  if (user) return element;
+
+  if (loading || !sessionChecked) {
     return <LoadingFallback />;
   }
 

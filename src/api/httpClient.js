@@ -1,12 +1,11 @@
 import axios from "axios";
 import { useAuthStore } from "@/store/authStore";
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "/api";
+
 const httpClient = axios.create({
-  baseURL: import.meta.env.PROD ? "https://www.moamoa.cloud/api" : "/api",
+  baseURL: API_BASE_URL,
   withCredentials: true,
-  headers: {
-    "Content-Type": "application/json; charset=UTF-8",
-  },
 });
 
 let isTokenRefreshing = false;
@@ -24,6 +23,11 @@ httpClient.interceptors.request.use(
   (config) => {
     if (config.skipAuth) {
       return config;
+    }
+
+    if (config.data instanceof FormData) {
+      delete config.headers?.["Content-Type"];
+      delete config.headers?.["content-type"];
     }
 
     const { accessToken } = useAuthStore.getState();
@@ -89,13 +93,17 @@ httpClient.interceptors.response.use(
       }
 
       try {
-        const refreshRes = await axios.post("/api/auth/refresh", null, {
-          withCredentials: true,
-          headers: {
-            "Refresh-Token": refreshToken,
-            "Content-Type": "application/json; charset=UTF-8",
-          },
-        });
+        const refreshRes = await axios.post(
+          `${API_BASE_URL}/auth/refresh`,
+          null,
+          {
+            withCredentials: true,
+            headers: {
+              "Refresh-Token": refreshToken,
+              "Content-Type": "application/json; charset=UTF-8",
+            },
+          }
+        );
 
         const apiRes = refreshRes.data;
 

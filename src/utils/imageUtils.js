@@ -13,8 +13,17 @@
  */
 const getApiBaseUrl = () => {
     // Vite 환경변수에서 API URL 가져오기
-    const apiUrl = import.meta.env.VITE_API_URL || '';
-    return apiUrl;
+    const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || '';
+    if (/^https?:\/\//i.test(apiBaseUrl)) {
+        return new URL(apiBaseUrl).origin;
+    }
+
+    const legacyApiUrl = import.meta.env.VITE_API_URL || '';
+    if (/^https?:\/\//i.test(legacyApiUrl)) {
+        return new URL(legacyApiUrl).origin;
+    }
+
+    return '';
 };
 
 /**

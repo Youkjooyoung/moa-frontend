@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Search, Coffee, X, Calendar, CalendarPlus, Sparkles, LayoutGrid, Bell, Users, Lightbulb, AlertTriangle, ArrowRight, List } from 'lucide-react';
+import { Search, Coffee, X, Calendar, CalendarPlus, Sparkles, LayoutGrid, Bell, Users, Lightbulb, AlertTriangle, ArrowRight, List, ImageIcon } from 'lucide-react';
 import httpClient from '../../api/httpClient';
 import { useAuthStore } from '../../store/authStore';
 import AddSubscriptionModal from '../../components/subscription/AddSubscriptionModal';
@@ -9,7 +9,7 @@ import AddProductModal from '../../components/product/AddProductModal';
 import UpdateProductModal from '../../components/product/UpdateProductModal';
 import { useThemeStore } from '@/store/themeStore';
 import { ChristmasBackground } from '@/config/themeConfig';
-import { getProductIconUrl } from '@/utils/imageUtils';
+import { getProductLogoUrl } from '@/utils/imageUtils';
 
 // Theme-based styles
 const getThemeStyles = (theme) => {
@@ -108,6 +108,74 @@ const getThemeStyles = (theme) => {
 };
 
 // ProductDetailModal 컴포넌트
+const PRODUCT_IMAGE_ALIASES = [
+  { match: /disney.*tving|tving.*disney/i, base: 'disneyplustving' },
+  { match: /chat\s*gpt|chatgpt/i, base: 'chatgpt' },
+  { match: /google\s*ai|google/i, base: 'googleai' },
+  { match: /disney/i, base: 'disneyplus' },
+  { match: /netflix/i, base: 'netflix' },
+  { match: /tving/i, base: 'tving' },
+  { match: /wavve/i, base: 'wavve' },
+  { match: /naver/i, base: 'naverplus' },
+  { match: /skillshare/i, base: 'skillshare' },
+  { match: /linkedin/i, base: 'linkedinlearning' },
+  { match: /youtube/i, base: 'YouTube' },
+  { match: /watcha/i, base: 'watcha' },
+];
+
+const buildProductImageCandidates = (product, variant = 'logo') => {
+  const candidates = [];
+  const addCandidate = (path) => {
+    const url = getProductLogoUrl(path);
+    if (url && !candidates.includes(url)) candidates.push(url);
+  };
+
+  const primarySuffix = variant === 'icon' ? 'icon' : 'logo';
+  const fallbackSuffix = variant === 'icon' ? 'logo' : 'icon';
+  const alias = PRODUCT_IMAGE_ALIASES.find(({ match }) => match.test(product?.productName || ''));
+
+  if (alias) addCandidate(`/uploads/product-image/${alias.base}_${primarySuffix}.png`);
+
+  if (product?.image) {
+    addCandidate(product.image.replace(/\.png$/i, `_${primarySuffix}.png`));
+    addCandidate(product.image.replace(/_(logo|icon)\.png$/i, `_${primarySuffix}.png`));
+    addCandidate(product.image);
+    addCandidate(product.image.replace(/\.png$/i, `_${fallbackSuffix}.png`));
+    addCandidate(product.image.replace(/_(logo|icon)\.png$/i, `_${fallbackSuffix}.png`));
+  }
+
+  if (alias) addCandidate(`/uploads/product-image/${alias.base}_${fallbackSuffix}.png`);
+
+  return candidates;
+};
+
+const ProductImage = ({ product, variant = 'logo', className, fallbackClassName, themeStyles }) => {
+  const candidates = buildProductImageCandidates(product, variant);
+  const [candidateIndex, setCandidateIndex] = useState(0);
+  const imageUrl = candidates[candidateIndex];
+  const fallbackLabel = product?.productName?.trim()?.slice(0, 1)?.toUpperCase() || '?';
+
+  if (imageUrl) {
+    return (
+      <img
+        src={imageUrl}
+        alt={product.productName}
+        className={className}
+        onError={() => setCandidateIndex((current) => current + 1)}
+      />
+    );
+  }
+
+  return (
+    <div className={`${className} ${fallbackClassName || ''} flex items-center justify-center text-center`}>
+      <div className="flex flex-col items-center gap-1">
+        <ImageIcon className={`w-5 h-5 ${themeStyles?.subtext || 'text-gray-400'}`} />
+        <span className={`text-xs font-bold ${themeStyles?.text || 'text-gray-700'}`}>{fallbackLabel}</span>
+      </div>
+    </div>
+  );
+};
+
 const ProductDetailModal = ({ product, onClose, user, navigate, onSubscribe, onEdit, themeStyles, theme }) => {
   const [startDate, setStartDate] = useState(new Date().toISOString().split('T')[0]);
   const [endDate, setEndDate] = useState('');
@@ -122,7 +190,7 @@ const ProductDetailModal = ({ product, onClose, user, navigate, onSubscribe, onE
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[999] overflow-y-auto animate-in fade-in duration-200">
       <div className="min-h-full flex items-start justify-center p-4 pt-24 pb-8">
-        <div className={`${themeStyles.modalBg} w-full max-w-xl rounded-2xl relative flex flex-col animate-in zoom-in-95 duration-200 ${theme === 'pop' ? 'border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]' : 'shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)]'}`}>
+        <div className={`${themeStyles.modalBg} w-full max-w-xl rounded-2xl overflow-hidden relative flex flex-col animate-in zoom-in-95 duration-200 ${theme === 'pop' ? 'border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]' : 'shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)]'}`}>
 
           {/* Close Button */}
           <button
@@ -136,10 +204,11 @@ const ProductDetailModal = ({ product, onClose, user, navigate, onSubscribe, onE
           <div className={`py-9 px-6 flex flex-row items-center gap-6 ${theme === 'dark' ? 'bg-[#1E293B]' : theme === 'christmas' ? 'bg-transparent' : 'bg-white'}`}>
             <div className="flex-shrink-0">
               {product.image ? (
-                <img
-                  src={getProductIconUrl(product.image)}
-                  alt={product.productName}
-                  className={`w-20 h-20 rounded-3xl shadow-lg object-cover ${theme === 'dark' ? 'bg-gray-700' : theme === 'christmas' ? 'bg-stone-100' : 'bg-white'}`}
+                <ProductImage
+                  product={product}
+                  variant="logo"
+                  themeStyles={themeStyles}
+                  className={`w-20 h-20 rounded-3xl shadow-lg object-contain p-3 ${theme === 'dark' ? 'bg-gray-700' : theme === 'christmas' ? 'bg-stone-100' : 'bg-white'}`}
                 />
               ) : (
                 <div className={`w-20 h-20 rounded-3xl shadow-lg flex items-center justify-center ${theme === 'dark' ? 'bg-gray-700 text-gray-400' : theme === 'christmas' ? 'bg-stone-100 text-gray-400' : 'bg-white text-gray-400'}`}>
@@ -589,10 +658,12 @@ const GetProductList = () => {
                   <div className="flex items-start gap-3">
                     <div className="relative w-[60px] h-[60px] flex-shrink-0">
                       {product.image ? (
-                        <img
-                          src={getProductIconUrl(product.image)}
-                          alt={product.productName}
-                          className={`w-full h-full rounded-xl object-cover shadow-sm ${theme === 'dark' ? 'border border-gray-700' : 'border border-stone-200'}`}
+                        <ProductImage
+                          product={product}
+                          variant="icon"
+                          themeStyles={themeStyles}
+                          className={`w-full h-full rounded-xl object-contain p-2 shadow-sm ${theme === 'dark' ? 'bg-gray-700 border border-gray-700' : 'bg-white border border-stone-200'}`}
+                          fallbackClassName={theme === 'dark' ? 'bg-gray-700' : 'bg-stone-100'}
                         />
                       ) : (
                         <div className={`w-full h-full rounded-xl flex items-center justify-center ${theme === 'dark' ? 'bg-gray-700 border border-gray-600' : 'bg-stone-100 border border-stone-200'}`}>

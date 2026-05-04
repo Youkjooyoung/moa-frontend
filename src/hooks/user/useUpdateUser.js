@@ -7,6 +7,7 @@ import { getUser, updateUser, uploadProfileImage } from "@/api/userApi";
 
 import { loadIamport } from "@/utils/iamport";
 import { buildPassRedirectUrl, consumePassImpUid } from "@/utils/passRedirect";
+import { resolveProfileImageUrl } from "@/utils/profileImage";
 
 const BAD_WORDS = [
   "fuck",
@@ -42,11 +43,7 @@ export default function useUpdateUser() {
   } = useUpdateUserStore();
 
   const displayImage = useMemo(() => {
-    if (previewImage) {
-      if (previewImage.startsWith("blob:") || previewImage.startsWith("http"))
-        return previewImage;
-      return `${window.location.origin}${previewImage}`;
-    }
+    if (previewImage) return resolveProfileImageUrl(previewImage);
     return "https://static.thenounproject.com/png/363633-200.png";
   }, [previewImage]);
 
@@ -252,7 +249,14 @@ export default function useUpdateUser() {
       if (!res?.success)
         throw new Error(res?.error?.message || "회원정보 수정 실패");
 
-      const updatedUser = res.data;
+      const currentUser = useAuthStore.getState().user || {};
+      const updatedUser = {
+        ...currentUser,
+        ...res.data,
+        loginProvider: res.data?.loginProvider || currentUser.loginProvider,
+        oauthConnections:
+          res.data?.oauthConnections ?? currentUser.oauthConnections,
+      };
 
       useAuthStore.getState().setUser(updatedUser);
       setUserData(updatedUser);

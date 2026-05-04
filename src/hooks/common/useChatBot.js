@@ -28,7 +28,7 @@ export const useChatBot = () => {
       pushMessage(
         createMessage(
           "bot",
-          "안녕! 나는 MoA ChatBot이야 😊  아래 추천 질문을 눌러봐!"
+          "안녕하세요. MOA 이용을 도와드릴게요. 구독 상품, 파티 찾기, 결제/정산, 계정 문제를 물어보세요."
         )
       );
     }
@@ -54,12 +54,17 @@ export const useChatBot = () => {
 
       try {
         const chat = await sendChatMessage(text);
-        const reply = chat?.reply ?? "응답을 가져오지 못했어!";
+        const reply =
+          chat?.reply ||
+          "답변을 찾지 못했습니다. 구독, 파티, 결제, 계정 중 어떤 문제인지 조금 더 자세히 적어주세요.";
 
         pushMessage(createMessage("bot", reply));
       } catch (e) {
         pushMessage(
-          createMessage("bot", "서버 오류가 발생했어. 잠시 후 다시 시도해줘!")
+          createMessage(
+            "bot",
+            "현재 챗봇 요청을 처리하지 못했습니다. 잠시 후 다시 시도해 주세요."
+          )
         );
       } finally {
         setLoading(false);

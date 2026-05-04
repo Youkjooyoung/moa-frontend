@@ -3,7 +3,6 @@ import { Routes, Route, useLocation } from "react-router-dom";
 
 import Header from "./components/common/Header";
 import Footer from "./components/common/Footer";
-import RequireAuth from "@/routes/RequireAuth";
 import { useGlobalLinkHandler } from "@/hooks/common/useGlobalLinkHandler";
 
 import ProtectedRoute from "@/routes/ProtectedRoute";
@@ -130,11 +129,8 @@ function AppContent() {
   const location = useLocation();
   const { user } = useAuthStore();
   const { theme, setTheme } = useThemeStore();
-  const currentTheme = themeConfig[theme] || themeConfig.pop;
 
   const [pineappleEnabled, setPineappleEnabled] = useState(false);
-
-  const isAdminPage = location.pathname.startsWith("/admin");
 
   useEffect(() => {
     const currentThemeConfig = themeConfig[theme] || themeConfig.pop;
@@ -227,15 +223,6 @@ function AppContent() {
 
           <Route
             path="/mypage"
-            element={
-              <RequireAuth>
-                <MyPage />
-              </RequireAuth>
-            }
-          />
-
-          <Route
-            path="/mypage"
             element={<ProtectedRoute element={<MyPage />} />}
           />
           <Route
@@ -314,12 +301,6 @@ function AppContent() {
                 <ChartComparisonPage />
               </AdminAuthGuard>
             }
-          />
-          <Route path="/admin/users" element={<AdminUserListPage />} />
-          <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
-          <Route
-            path="/admin/chart-comparison"
-            element={<ChartComparisonPage />}
           />
           <Route
             path="/admin/users/:userId"

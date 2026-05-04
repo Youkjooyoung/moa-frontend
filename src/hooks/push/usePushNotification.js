@@ -2,6 +2,18 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import pushApi from "@/api/pushApi";
 import { useAuthStore } from "@/store/authStore";
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "/api";
+
+const buildSseUrl = (accessToken) => {
+  const path = `/push/subscribe?token=${encodeURIComponent(accessToken)}`;
+
+  if (/^https?:\/\//i.test(API_BASE_URL)) {
+    return `${API_BASE_URL.replace(/\/$/, "")}${path}`;
+  }
+
+  return `${API_BASE_URL.replace(/\/$/, "")}${path}`;
+};
+
 export const usePushNotification = () => {
   const { accessToken, user } = useAuthStore();
   const isAdmin = user?.role === "ADMIN";
@@ -153,7 +165,7 @@ export const usePushNotification = () => {
 
     if (esRef.current) return;
 
-    const url = `/api/push/subscribe?token=${encodeURIComponent(accessToken)}`;
+    const url = buildSseUrl(accessToken);
     const es = new EventSource(url);
     esRef.current = es;
 
