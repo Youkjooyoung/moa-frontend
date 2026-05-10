@@ -1,296 +1,222 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { getSettlements, getSettlementDetails } from '@/api/settlementApi';
-import { useThemeStore } from '@/store/themeStore';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { 
-    Dialog, 
-    DialogContent, 
-    DialogHeader, 
-    DialogTitle 
-} from '@/components/ui/dialog';
-import { Loader2, Calendar, ChevronRight, AlertCircle, ArrowLeft, TrendingUp, Sparkles } from 'lucide-react';
+import { useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { AlertCircle, Calendar, ChevronRight, Loader2, ReceiptText, TrendingUp } from "lucide-react";
+import { getSettlementDetails, getSettlements } from "@/api/settlementApi";
+import {
+  MoaBadge,
+  MoaButton,
+  MoaCard,
+  MoaEmptyState,
+  MoaInput,
+  MoaPage,
+  MoaPageHeader,
+} from "@/shared/ui";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
-// 정산 상태 배지
-const StatusBadge = ({ status }) => {
-    const variants = {
-        PENDING: { label: '대기', className: 'bg-yellow-100 text-yellow-800' },
-        IN_PROGRESS: { label: '처리중', className: 'bg-blue-100 text-blue-800' },
-        COMPLETED: { label: '완료', className: 'bg-green-100 text-green-800' },
-        FAILED: { label: '실패', className: 'bg-red-100 text-red-800' }
-    };
-    
-    const variant = variants[status] || variants.PENDING;
-    
-    return (
-        <Badge className={variant.className}>
-            {variant.label}
-        </Badge>
-    );
+const statusMeta = {
+  PENDING: { label: "대기", tone: "warning" },
+  IN_PROGRESS: { label: "처리 중", tone: "info" },
+  COMPLETED: { label: "완료", tone: "success" },
+  FAILED: { label: "실패", tone: "danger" },
 };
 
+function StatusBadge({ status }) {
+  const meta = statusMeta[status] || statusMeta.PENDING;
+  return <MoaBadge tone={meta.tone}>{meta.label}</MoaBadge>;
+}
+
+function formatAmount(amount = 0) {
+  return `${Number(amount || 0).toLocaleString("ko-KR")}원`;
+}
+
+function formatDate(date) {
+  if (!date) return "-";
+  return new Date(date).toLocaleDateString("ko-KR");
+}
+
 export default function SettlementHistoryPage() {
-    const navigate = useNavigate();
-    const { theme } = useThemeStore();
-    const [settlements, setSettlements] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState('');
-    
-    // 필터
-    const [startDate, setStartDate] = useState('');
-    const [endDate, setEndDate] = useState('');
-    
-    // 상세 모달
-    const [selectedSettlement, setSelectedSettlement] = useState(null);
-    const [details, setDetails] = useState([]);
-    const [detailsLoading, setDetailsLoading] = useState(false);
-    
-    useEffect(() => {
-        fetchSettlements();
-    }, []);
-    
-    const fetchSettlements = async () => {
-        try {
-            setLoading(true);
-            setError('');
-            const data = await getSettlements(startDate, endDate);
-            setSettlements(data || []);
-        } catch (err) {
-            setError('정산 내역을 불러오는데 실패했습니다.');
-            console.error(err);
-        } finally {
-            setLoading(false);
-        }
-    };
-    
-    const handleFilter = () => {
-        fetchSettlements();
-    };
-    
-    const handleViewDetails = async (settlement) => {
-        setSelectedSettlement(settlement);
-        setDetailsLoading(true);
-        
-        try {
-            const data = await getSettlementDetails(settlement.settlementId);
-            setDetails(data || []);
-        } catch (err) {
-            console.error('상세 조회 실패:', err);
-        } finally {
-            setDetailsLoading(false);
-        }
-    };
-    
-    // 금액 포맷
-    const formatAmount = (amount) => {
-        return new Intl.NumberFormat('ko-KR').format(amount) + '원';
-    };
-    
-    // 날짜 포맷
-    const formatDate = (dateStr) => {
-        if (!dateStr) return '-';
-        return new Date(dateStr).toLocaleDateString('ko-KR');
-    };
-    
-    if (loading) {
-        return (
-            <div className="flex justify-center items-center min-h-[400px]">
-                <Loader2 className="h-8 w-8 animate-spin" />
-            </div>
-        );
+  const navigate = useNavigate();
+  const [settlements, setSettlements] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [selectedSettlement, setSelectedSettlement] = useState(null);
+  const [details, setDetails] = useState([]);
+  const [detailsLoading, setDetailsLoading] = useState(false);
+
+  const fetchSettlements = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError("");
+      const data = await getSettlements(startDate, endDate);
+      setSettlements(data || []);
+    } catch (err) {
+      console.error(err);
+      setError("정산 내역을 불러오지 못했습니다.");
+    } finally {
+      setLoading(false);
     }
-    
-    return (
-        <div className={`min-h-screen pb-20 transition-colors duration-300 relative z-10 ${theme === "dark" ? "bg-transparent" : "bg-transparent"}`}>
-            {/* Hero Header */}
-            <div className={`relative overflow-hidden bg-transparent ${theme === "dark" ? "border-b border-gray-800" : ""}`}>
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 relative z-10">
-                    <button
-                        onClick={() => navigate(-1)}
-                        className={`flex items-center gap-2 mb-6 transition-colors group ${theme === "dark"
-                            ? "text-gray-400 hover:text-[#635bff]"
-                            : theme === "pop"
-                                ? "text-black hover:text-pink-500"
-                                : theme === "christmas"
-                                    ? "text-gray-500 hover:text-[#c41e3a]"
-                                    : "text-gray-400 hover:text-[#635bff]"
-                            }`}
-                    >
-                        <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-                        <span className="font-semibold">뒤로가기</span>
-                    </button>
+  }, [startDate, endDate]);
 
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5 }}
-                    >
-                        <span className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium mb-4 ${theme === "pop"
-                            ? "bg-pink-100 text-pink-600 border border-pink-200"
-                            : theme === "dark"
-                                ? "bg-[#635bff]/20 text-[#635bff] border border-[#635bff]/30"
-                                : theme === "christmas"
-                                    ? "bg-[#c41e3a]/10 text-[#c41e3a] border border-[#c41e3a]/20"
-                                    : "bg-[#635bff]/10 text-[#635bff]"
-                            }`}>
-                            <Sparkles className="w-4 h-4" />
-                            정산 관리
-                        </span>
-                        <h1 className={`text-3xl sm:text-4xl font-bold mb-2 tracking-tight flex items-center gap-3 ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
-                            <TrendingUp className={`w-7 h-7 sm:w-8 sm:h-8 ${theme === "pop" ? "text-pink-500" : theme === "christmas" ? "text-[#c41e3a]" : "text-[#635bff]"}`} />
-                            정산 내역
-                        </h1>
-                        <p className={theme === "dark" ? "text-gray-400" : "text-gray-500"}>파티별 정산 내역을 확인하세요</p>
-                    </motion.div>
-                </div>
-            </div>
+  useEffect(() => {
+    fetchSettlements();
+  }, [fetchSettlements]);
 
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-            <Card className={theme === "dark" ? "bg-[#1E293B] border-gray-700" : ""}>
-                <CardHeader>
-                    <CardTitle className={theme === "dark" ? "text-white" : ""}>정산 내역</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    {/* 기간 필터 */}
-                    <div className="flex gap-2 mb-6">
-                        <div className="flex-1">
-                            <Label className="text-xs">시작일</Label>
-                            <Input
-                                type="date"
-                                value={startDate}
-                                onChange={(e) => setStartDate(e.target.value)}
-                            />
-                        </div>
-                        <div className="flex-1">
-                            <Label className="text-xs">종료일</Label>
-                            <Input
-                                type="date"
-                                value={endDate}
-                                onChange={(e) => setEndDate(e.target.value)}
-                            />
-                        </div>
-                        <div className="flex items-end">
-                            <Button onClick={handleFilter}>조회</Button>
-                        </div>
-                    </div>
-                    
-                    {error && (
-                        <div className="flex items-center gap-2 text-red-500 mb-4">
-                            <AlertCircle className="h-4 w-4" />
-                            <span>{error}</span>
-                        </div>
-                    )}
-                    
-                    {/* 정산 목록 */}
-                    {settlements.length === 0 ? (
-                        <div className="text-center py-8 text-gray-500">
-                            정산 내역이 없습니다.
-                        </div>
-                    ) : (
-                        <div className="space-y-3">
-                            {settlements.map((settlement) => (
-                                <div
-                                    key={settlement.settlementId}
-                                    className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer"
-                                    onClick={() => handleViewDetails(settlement)}
-                                >
-                                    <div className="flex justify-between items-start">
-                                        <div>
-                                            <p className="font-medium">
-                                                {settlement.partyName || `파티 #${settlement.partyId}`}
-                                            </p>
-                                            <p className="text-sm text-gray-500">
-                                                {settlement.settlementMonth} 정산
-                                            </p>
-                                        </div>
-                                        <div className="text-right">
-                                            <p className="font-bold text-lg">
-                                                {formatAmount(settlement.netAmount)}
-                                            </p>
-                                            <StatusBadge status={settlement.settlementStatus} />
-                                        </div>
-                                    </div>
-                                    
-                                    <div className="flex justify-between items-center mt-2 text-sm text-gray-500">
-                                        <span className="flex items-center gap-1">
-                                            <Calendar className="h-3 w-3" />
-                                            {formatDate(settlement.settlementDate || settlement.regDate)}
-                                        </span>
-                                        <ChevronRight className="h-4 w-4" />
-                                    </div>
-                                    
-                                    {settlement.settlementStatus === 'FAILED' && settlement.failReason && (
-                                        <p className="mt-2 text-sm text-red-500">
-                                            실패 사유: {settlement.failReason}
-                                        </p>
-                                    )}
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                </CardContent>
-            </Card>
-            
-            </div>
+  const handleViewDetails = async (settlement) => {
+    setSelectedSettlement(settlement);
+    setDetails([]);
+    setDetailsLoading(true);
 
-            {/* 상세 모달 */}
-            <Dialog open={!!selectedSettlement} onOpenChange={() => setSelectedSettlement(null)}>
-                <DialogContent className={theme === "dark" ? "bg-[#1E293B] border-gray-700" : ""}>
-                    <DialogHeader>
-                        <DialogTitle>정산 상세</DialogTitle>
-                    </DialogHeader>
-                    
-                    {selectedSettlement && (
-                        <div className="space-y-4">
-                            <div className="grid grid-cols-2 gap-4 text-sm">
-                                <div>
-                                    <p className="text-gray-500">정산월</p>
-                                    <p className="font-medium">{selectedSettlement.settlementMonth}</p>
-                                </div>
-                                <div>
-                                    <p className="text-gray-500">상태</p>
-                                    <StatusBadge status={selectedSettlement.settlementStatus} />
-                                </div>
-                                <div>
-                                    <p className="text-gray-500">총 금액</p>
-                                    <p className="font-medium">{formatAmount(selectedSettlement.totalAmount)}</p>
-                                </div>
-                                <div>
-                                    <p className="text-gray-500">정산 금액</p>
-                                    <p className="font-bold text-lg">{formatAmount(selectedSettlement.netAmount)}</p>
-                                </div>
-                            </div>
-                            
-                            <hr />
-                            
-                            <div>
-                                <p className="font-medium mb-2">포함된 결제 내역</p>
-                                {detailsLoading ? (
-                                    <div className="flex justify-center py-4">
-                                        <Loader2 className="h-6 w-6 animate-spin" />
-                                    </div>
-                                ) : details.length === 0 ? (
-                                    <p className="text-gray-500 text-sm">결제 내역이 없습니다.</p>
-                                ) : (
-                                    <div className="space-y-2 max-h-60 overflow-y-auto">
-                                        {details.map((payment) => (
-                                            <div key={payment.paymentId} className="flex justify-between text-sm p-2 bg-gray-50 rounded">
-                                                <span>{payment.userName || payment.userId}</span>
-                                                <span>{formatAmount(payment.paymentAmount)}</span>
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    )}
-                </DialogContent>
-            </Dialog>
+    try {
+      const data = await getSettlementDetails(settlement.settlementId);
+      setDetails(data || []);
+    } catch (err) {
+      console.error("정산 상세 조회 실패:", err);
+    } finally {
+      setDetailsLoading(false);
+    }
+  };
+
+  return (
+    <MoaPage>
+      <MoaPageHeader
+        eyebrow="Settlement"
+        title="정산 내역"
+        description="파티별 정산 금액과 처리 상태를 한눈에 확인하세요."
+        icon={TrendingUp}
+        backLabel="뒤로가기"
+        onBack={() => navigate(-1)}
+      />
+
+      <MoaCard className="space-y-6">
+        <div className="grid gap-3 md:grid-cols-[1fr_1fr_auto] md:items-end">
+          <label className="space-y-2">
+            <span className="text-sm font-semibold text-[var(--theme-text-muted)]">시작일</span>
+            <MoaInput type="date" value={startDate} onChange={(event) => setStartDate(event.target.value)} />
+          </label>
+          <label className="space-y-2">
+            <span className="text-sm font-semibold text-[var(--theme-text-muted)]">종료일</span>
+            <MoaInput type="date" value={endDate} onChange={(event) => setEndDate(event.target.value)} />
+          </label>
+          <MoaButton onClick={fetchSettlements}>조회</MoaButton>
         </div>
-    );
+
+        {error && (
+          <div className="flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-600 dark:border-red-900/60 dark:bg-red-950/30 dark:text-red-300">
+            <AlertCircle className="h-4 w-4" />
+            {error}
+          </div>
+        )}
+
+        {loading ? (
+          <div className="flex min-h-64 items-center justify-center">
+            <Loader2 className="h-7 w-7 animate-spin text-[var(--theme-primary)]" />
+          </div>
+        ) : settlements.length === 0 ? (
+          <MoaEmptyState
+            icon={ReceiptText}
+            title="정산 내역이 없습니다"
+            description="정산이 완료되면 이곳에서 상세 내역을 확인할 수 있습니다."
+          />
+        ) : (
+          <div className="divide-y divide-[var(--theme-border-light)]">
+            {settlements.map((settlement) => (
+              <button
+                key={settlement.settlementId}
+                type="button"
+                onClick={() => handleViewDetails(settlement)}
+                className="flex w-full items-center justify-between gap-4 py-5 text-left transition hover:bg-[var(--theme-primary-light)]/40"
+              >
+                <div className="min-w-0 space-y-1">
+                  <div className="flex items-center gap-2">
+                    <p className="truncate text-base font-bold text-[var(--theme-text)]">
+                      {settlement.partyName || `파티 #${settlement.partyId}`}
+                    </p>
+                    <StatusBadge status={settlement.settlementStatus} />
+                  </div>
+                  <p className="flex items-center gap-1 text-sm text-[var(--theme-text-muted)]">
+                    <Calendar className="h-3.5 w-3.5" />
+                    {settlement.settlementMonth || formatDate(settlement.settlementDate || settlement.regDate)}
+                  </p>
+                  {settlement.settlementStatus === "FAILED" && settlement.failReason && (
+                    <p className="text-sm font-semibold text-red-500">실패 사유: {settlement.failReason}</p>
+                  )}
+                </div>
+                <div className="flex shrink-0 items-center gap-3">
+                  <p className="text-right text-lg font-black text-[var(--theme-text)]">
+                    {formatAmount(settlement.netAmount)}
+                  </p>
+                  <ChevronRight className="h-5 w-5 text-[var(--theme-text-muted)]" />
+                </div>
+              </button>
+            ))}
+          </div>
+        )}
+      </MoaCard>
+
+      <Dialog open={!!selectedSettlement} onOpenChange={() => setSelectedSettlement(null)}>
+        <DialogContent className="border-[var(--theme-border-light)] bg-[var(--theme-surface)] text-[var(--theme-text)]">
+          <DialogHeader>
+            <DialogTitle>정산 상세</DialogTitle>
+          </DialogHeader>
+
+          {selectedSettlement && (
+            <div className="space-y-5">
+              <div className="grid grid-cols-2 gap-3">
+                <MoaCard className="p-4">
+                  <p className="text-xs font-semibold text-[var(--theme-text-muted)]">정산월</p>
+                  <p className="mt-1 font-bold">{selectedSettlement.settlementMonth || "-"}</p>
+                </MoaCard>
+                <MoaCard className="p-4">
+                  <p className="text-xs font-semibold text-[var(--theme-text-muted)]">상태</p>
+                  <div className="mt-1">
+                    <StatusBadge status={selectedSettlement.settlementStatus} />
+                  </div>
+                </MoaCard>
+                <MoaCard className="p-4">
+                  <p className="text-xs font-semibold text-[var(--theme-text-muted)]">총 금액</p>
+                  <p className="mt-1 font-bold">{formatAmount(selectedSettlement.totalAmount)}</p>
+                </MoaCard>
+                <MoaCard className="p-4">
+                  <p className="text-xs font-semibold text-[var(--theme-text-muted)]">정산 금액</p>
+                  <p className="mt-1 text-lg font-black">{formatAmount(selectedSettlement.netAmount)}</p>
+                </MoaCard>
+              </div>
+
+              <div>
+                <p className="mb-3 font-bold">포함된 결제 내역</p>
+                {detailsLoading ? (
+                  <div className="flex justify-center py-6">
+                    <Loader2 className="h-6 w-6 animate-spin text-[var(--theme-primary)]" />
+                  </div>
+                ) : details.length === 0 ? (
+                  <p className="rounded-lg bg-[var(--theme-bg)] px-4 py-6 text-center text-sm text-[var(--theme-text-muted)]">
+                    결제 내역이 없습니다.
+                  </p>
+                ) : (
+                  <div className="max-h-64 space-y-2 overflow-y-auto">
+                    {details.map((payment) => (
+                      <div
+                        key={payment.paymentId}
+                        className="flex items-center justify-between rounded-lg bg-[var(--theme-bg)] px-4 py-3 text-sm"
+                      >
+                        <span className="font-semibold">{payment.userName || payment.userId}</span>
+                        <span className="font-bold">{formatAmount(payment.paymentAmount)}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+    </MoaPage>
+  );
 }

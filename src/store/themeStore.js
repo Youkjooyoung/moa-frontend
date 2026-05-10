@@ -1,36 +1,61 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
-// Theme Store with localStorage persistence
+const normalizeTheme = (theme) => {
+  if (theme === "dark" || theme === "system") return theme;
+  return "light";
+};
+
+const resolveTheme = (theme, systemTheme) => {
+  if (theme === "system") return systemTheme;
+  return normalizeTheme(theme);
+};
+
 export const useThemeStore = create(
   persist(
     (set, get) => ({
-      // Current theme: 'classic' | 'dark' | 'pop' | 'christmas'
-      // 기본 테마는 pop
-      theme: "pop",
+      theme: "light",
+      systemTheme: "light",
+      resolvedTheme: "light",
 
-      // Set theme
       setTheme: (theme) => {
-        set({ theme });
-        // Also update legacy localStorage key for backward compatibility
-        localStorage.setItem("partyListTheme", theme);
+        const nextTheme = normalizeTheme(theme);
+        const resolvedTheme = resolveTheme(nextTheme, get().systemTheme);
+        set({ theme: nextTheme, resolvedTheme });
+        localStorage.setItem("partyListTheme", nextTheme);
       },
 
-      // Get current theme
-      getTheme: () => get().theme,
+      setSystemTheme: (systemTheme) => {
+        const nextSystemTheme = systemTheme === "dark" ? "dark" : "light";
+        set({
+          systemTheme: nextSystemTheme,
+          resolvedTheme: resolveTheme(get().theme, nextSystemTheme),
+        });
+      },
 
-      // Cycle through themes
+      toggleTheme: () => {
+        const nextTheme = get().resolvedTheme === "dark" ? "light" : "dark";
+        get().setTheme(nextTheme);
+      },
+
       cycleTheme: () => {
-        const themes = ["classic", "dark", "pop", "christmas"];
+        const themes = ["light", "dark", "system"];
         const currentIndex = themes.indexOf(get().theme);
-        const nextIndex = (currentIndex + 1) % themes.length;
-        get().setTheme(themes[nextIndex]);
+        get().setTheme(themes[(currentIndex + 1) % themes.length]);
       },
+
+      getTheme: () => get().theme,
+      getResolvedTheme: () => get().resolvedTheme,
     }),
     {
       name: "app-theme-storage",
       storage: createJSONStorage(() => localStorage),
-      // 저장된 테마 유지 (강제 변경 제거)
+      partialize: (state) => ({ theme: state.theme }),
+      onRehydrateStorage: () => (state) => {
+        if (!state) return;
+        state.theme = normalizeTheme(state.theme);
+        state.resolvedTheme = resolveTheme(state.theme, state.systemTheme || "light");
+      },
     }
   )
 );

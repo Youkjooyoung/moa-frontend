@@ -1,87 +1,99 @@
-﻿import React, { useEffect, useState } from "react";
-import { useMyPage } from "@/hooks/user/useMyPage";
-import { useLoginHistory } from "@/hooks/user/useLoginHistory";
-import { useBackupCodeModal } from "@/hooks/user/useBackupCodeModal";
-import { useOtpStore } from "@/store/user/otpStore";
-import { useThemeStore } from "@/store/themeStore";
+import { createElement, useEffect, useMemo, useState } from "react";
+import {
+  Clock,
+  CreditCard,
+  KeyRound,
+  Link2,
+  LogOut,
+  Shield,
+  Smartphone,
+  UserMinus,
+  UserPen,
+  Users,
+  Wallet,
+} from "lucide-react";
 import { getMyParties } from "@/api/partyApi";
 import httpClient from "@/api/httpClient";
-import { Users, CreditCard } from "lucide-react";
-
-import { Separator } from "@/components/ui/separator";
-
-// 테마별 스타일
-const myPageThemeStyles = {
-  pop: {
-    // Neo/Pop 스타일 - 핑크, 시안 계열
-    accent: "text-pink-500",
-    accentBg: "bg-pink-500",
-    buttonBg: "bg-pink-500 hover:bg-pink-600",
-    accentText: "text-pink-500",
-    cyanText: "text-cyan-500",
-    bg: "bg-transparent",
-    cardBg: "bg-white/90 backdrop-blur-sm border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]",
-    text: "text-slate-900",
-  },
-  christmas: {
-    accent: "text-[#c41e3a]",
-    accentBg: "bg-[#c41e3a]",
-    buttonBg: "bg-[#c41e3a] hover:bg-red-700",
-    accentText: "text-[#c41e3a]",
-    cyanText: "text-[#1a5f2a]",
-    bg: "bg-transparent",
-    cardBg: "bg-white/90 backdrop-blur-sm border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]",
-    text: "text-slate-900",
-  },
-  dark: {
-    accent: "text-[#635bff]",
-    accentBg: "bg-[#635bff]",
-    buttonBg: "bg-[#635bff] hover:bg-[#5851e8]",
-    accentText: "text-[#635bff]",
-    cyanText: "text-[#00d4ff]",
-    bg: "bg-transparent",
-    cardBg: "bg-[#1E293B]/90 backdrop-blur-sm border border-gray-700 shadow-lg",
-    text: "text-white",
-  },
-  classic: {
-    accent: "text-[#635bff]",
-    accentBg: "bg-[#635bff]",
-    buttonBg: "bg-[#635bff] hover:bg-[#5851e8]",
-    accentText: "text-[#635bff]",
-    cyanText: "text-[#00d4ff]",
-    bg: "bg-transparent",
-    cardBg: "bg-white/90 backdrop-blur-sm border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]",
-    text: "text-slate-900",
-  },
-};
-
-import { AccountMenu } from "./components/AccountMenu";
-import { AdminMenu } from "./components/AdminMenu";
-import { AccountInfoCard } from "./components/AccountInfoCard";
-import { ConnectionStatusCard } from "./components/ConnectionStatusCard";
+import { useBackupCodeModal } from "@/hooks/user/useBackupCodeModal";
+import { useLoginHistory } from "@/hooks/user/useLoginHistory";
+import { useMyPage } from "@/hooks/user/useMyPage";
+import { useAuthStore } from "@/store/authStore";
+import { useOtpStore } from "@/store/user/otpStore";
+import { formatPhoneNumber } from "@/utils/format";
+import {
+  MoaBadge,
+  MoaButton,
+  MoaCard,
+  MoaPage,
+  MoaPageHeader,
+} from "@/shared/ui";
+import { BackupCodeDialog } from "./components/BackupCodeDialog";
+import { DeleteUserDialog } from "./components/DeleteUserDialog";
 import { LoginHistoryCard } from "./components/LoginHistoryCard";
 import { OtpDialog } from "./components/OtpDialog";
-import { BackupCodeDialog } from "./components/BackupCodeDialog";
 import { UpdateUserDialog } from "./components/UpdateUserDialog";
-import { DeleteUserDialog } from "./components/DeleteUserDialog";
 
-const HERO_WRAPPER = "relative mt-6 sm:mt-10 overflow-hidden";
+function InfoRow({ label, value, badge }) {
+  return (
+    <div className="flex min-h-12 items-center justify-between gap-4 border-b border-[var(--theme-border-light)] py-3 last:border-b-0">
+      <span className="shrink-0 text-sm font-semibold text-[var(--theme-text-muted)]">
+        {label}
+      </span>
+      <span className="min-w-0 text-right text-sm font-bold text-[var(--theme-text)]">
+        {badge || value || "-"}
+      </span>
+    </div>
+  );
+}
 
-// PANE_WRAPPER는 이제 동적으로 themeStyle.cardBg를 사용합니다
+function MenuItem({ icon, label, active, danger, onClick }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`flex h-12 w-full items-center rounded-xl px-4 text-sm font-bold transition ${
+        active
+          ? "bg-[var(--theme-primary-light)] text-[var(--theme-primary)]"
+          : danger
+            ? "text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10"
+            : "text-[var(--theme-text)] hover:bg-[var(--theme-surface-muted)]"
+      }`}
+    >
+      <span className="inline-flex items-center gap-3">
+        {createElement(icon, { className: "h-4 w-4" })}
+        {label}
+      </span>
+    </button>
+  );
+}
+
+function StatCard({ icon, label, value }) {
+  return (
+    <MoaCard className="flex min-h-24 items-center gap-4 p-5">
+      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[var(--theme-primary-light)] text-[var(--theme-primary)]">
+        {createElement(icon, { className: "h-5 w-5" })}
+      </div>
+      <div className="min-w-0">
+        <p className="text-2xl font-black leading-none text-[var(--theme-text)]">
+          {value}
+        </p>
+        <p className="mt-2 text-sm font-semibold text-[var(--theme-text-muted)]">
+          {label}
+        </p>
+      </div>
+    </MoaCard>
+  );
+}
 
 export default function MyPage() {
-  const { theme } = useThemeStore();
-  const themeStyle = myPageThemeStyles[theme] || myPageThemeStyles.pop;
   const { state, actions } = useMyPage();
-
-  const {
-    user,
-    isAdmin,
-    marketingAgreed,
-    googleConn,
-    kakaoConn,
-    loginProvider,
-  } = state;
+  const { user, isAdmin, marketingAgreed, googleConn, kakaoConn, loginProvider } = state;
+  const [activeView, setActiveView] = useState("main");
+  const [subscriptionCount, setSubscriptionCount] = useState(0);
+  const [partyCount, setPartyCount] = useState(0);
+  const [updateUserOpen, setUpdateUserOpen] = useState(false);
+  const [deleteUserOpen, setDeleteUserOpen] = useState(false);
+  const logout = useAuthStore((store) => store.logout);
 
   const otp = {
     enabled: useOtpStore((s) => s.enabled),
@@ -93,45 +105,54 @@ export default function MyPage() {
   };
 
   const backup = useBackupCodeModal();
-  const showUserUI = !isAdmin;
-  const [activeView, setActiveView] = useState("main");
-  const [subscriptionCount, setSubscriptionCount] = useState(0);
-  const [partyCount, setPartyCount] = useState(0);
-  
-  // 모달 상태
-  const [updateUserOpen, setUpdateUserOpen] = useState(false);
-  const [deleteUserOpen, setDeleteUserOpen] = useState(false);
   const loginHistory = useLoginHistory({
     size: 10,
     enabled: activeView === "history" && !!user,
   });
-  const loginHistoryState = loginHistory?.state;
 
-  // 구독 및 파티 개수 불러오기
+  const nickname =
+    user?.nickname ||
+    user?.name ||
+    user?.userName ||
+    user?.userId?.split("@")[0] ||
+    "회원";
+  const providerBadge = loginProvider || "EMAIL";
+
+  const menuItems = useMemo(
+    () => [
+      { label: "회원정보 수정", icon: UserPen, onClick: () => setUpdateUserOpen(true) },
+      { label: "비밀번호 변경", icon: KeyRound, onClick: () => actions.navigate("/mypage/password") },
+      { label: "구독/결제 관리", icon: CreditCard, onClick: () => actions.navigate("/subscription") },
+      { label: "내 파티 목록", icon: Users, onClick: () => actions.navigate("/my-parties") },
+      { label: "내 지갑", icon: Wallet, onClick: () => actions.navigate("/mypage/wallet") },
+      { label: "로그인 기록", icon: Clock, active: activeView === "history", onClick: () => setActiveView("history") },
+      { label: "회원 탈퇴", icon: UserMinus, danger: true, onClick: () => setDeleteUserOpen(true) },
+    ],
+    [actions, activeView]
+  );
+
   useEffect(() => {
     const fetchCounts = async () => {
       if (!user?.userId) return;
 
       try {
-        // 구독 개수
-        const subResponse = await httpClient.get('/subscription', {
-          params: { userId: user.userId }
+        const subResponse = await httpClient.get("/subscription", {
+          params: { userId: user.userId },
         });
-        if (Array.isArray(subResponse)) {
-          setSubscriptionCount(subResponse.filter(s => s.subscriptionStatus === 'ACTIVE').length);
-        } else if (subResponse?.data) {
-          setSubscriptionCount(subResponse.data.filter(s => s.subscriptionStatus === 'ACTIVE').length);
-        }
+        const subscriptions = Array.isArray(subResponse)
+          ? subResponse
+          : subResponse?.data || [];
+        setSubscriptionCount(
+          subscriptions.filter((item) => item.subscriptionStatus === "ACTIVE").length
+        );
 
-        // 파티 개수
         const partyResponse = await getMyParties();
-        if (partyResponse?.data) {
-          setPartyCount(partyResponse.data.length);
-        } else if (Array.isArray(partyResponse)) {
-          setPartyCount(partyResponse.length);
-        }
+        const parties = Array.isArray(partyResponse)
+          ? partyResponse
+          : partyResponse?.data || [];
+        setPartyCount(parties.length);
       } catch (error) {
-        console.error("Failed to fetch counts:", error);
+        console.error("Failed to fetch mypage counts:", error);
       }
     };
 
@@ -139,15 +160,12 @@ export default function MyPage() {
   }, [user?.userId]);
 
   useEffect(() => {
-    if (otp.enabled) {
-      backup.fetchExistingCodes();
-    }
+    if (otp.enabled) backup.fetchExistingCodes();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [otp.enabled]);
 
   useEffect(() => {
-    if (user) {
-      useOtpStore.getState().setEnabled(!!user.otpEnabled);
-    }
+    if (user) useOtpStore.getState().setEnabled(!!user.otpEnabled);
   }, [user]);
 
   const handleOtpConfirm = async () => {
@@ -162,138 +180,167 @@ export default function MyPage() {
     }
   };
 
+  const openOtp = () => {
+    if (!otp.enabled) {
+      actions.otp.openSetup?.();
+    } else {
+      actions.otp.prepareDisable?.();
+    }
+    actions.handleOtpModalChange?.(true);
+  };
+
+  const handleLogout = async () => {
+    await logout();
+    actions.navigate("/");
+  };
+
   if (!user) return null;
 
-  const paneWrapperClass = `${themeStyle.cardBg} rounded-2xl sm:rounded-3xl`;
+  if (isAdmin) {
+    return (
+      <MoaPage className="max-w-5xl">
+        <MoaPageHeader
+          eyebrow="Admin"
+          title="관리자 계정"
+          description="운영 현황과 서비스 콘텐츠를 관리합니다."
+        />
+        <MoaCard className="grid gap-3 p-5 sm:grid-cols-2">
+          <MoaButton onClick={() => actions.navigate("/admin")}>관리자 홈</MoaButton>
+          <MoaButton variant="secondary" onClick={() => actions.navigate("/admin/landing")}>
+            랜딩 관리
+          </MoaButton>
+        </MoaCard>
+      </MoaPage>
+    );
+  }
 
   return (
-    <div className={`min-h-screen font-sans pb-20 relative z-10 ${themeStyle.bg} ${themeStyle.text}`}>
-      <section className={HERO_WRAPPER}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10">
-          <div className={`${themeStyle.cardBg} rounded-2xl sm:rounded-[32px] min-h-[200px] sm:min-h-[240px] flex items-center`}>
-            <div className="w-full flex flex-col lg:flex-row items-center gap-6 sm:gap-10 px-4 sm:px-6 lg:px-10 py-6 sm:py-10">
-              <div className="text-center lg:text-left lg:flex-shrink-0">
-                <h2 className={`text-3xl sm:text-4xl md:text-5xl font-black leading-tight mb-3 ${themeStyle.text}`}>
-                  나의 구독과 계정
-                  <br />
-                  <span className={themeStyle.accentText}>한곳에서 관리해요</span>
-                </h2>
-              </div>
+    <MoaPage className="max-w-6xl">
+      <MoaPageHeader
+        eyebrow="My MOA"
+        title={`${nickname}님의 계정`}
+        description="구독, 파티, 결제 수단과 보안 설정을 한곳에서 관리하세요."
+      />
 
-              <div className="flex-1 flex items-center justify-center gap-16 sm:gap-24 lg:gap-32">
-                <div className="flex items-center gap-3">
-                  <div className={`w-12 h-12 rounded-full ${themeStyle.accentBg} flex items-center justify-center`}>
-                    <CreditCard className="w-6 h-6 text-white" />
-                  </div>
-                  <div className="text-center">
-                    <p className={`text-3xl sm:text-4xl font-black ${themeStyle.accentText}`}>{subscriptionCount}</p>
-                    <p className="text-xs sm:text-sm text-gray-500 font-bold">구독 상품</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <div className={`w-12 h-12 rounded-full ${themeStyle.accentBg} flex items-center justify-center`}>
-                    <Users className="w-6 h-6 text-white" />
-                  </div>
-                  <div className="text-center">
-                    <p className={`text-3xl sm:text-4xl font-black ${themeStyle.cyanText}`}>{partyCount}</p>
-                    <p className="text-xs sm:text-sm text-gray-500 font-bold">가입 파티</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+      <div className="space-y-6">
+        <div className="grid gap-4 md:grid-cols-2">
+          <StatCard icon={CreditCard} label="구독 상품" value={subscriptionCount} />
+          <StatCard icon={Users} label="가입 파티" value={partyCount} />
         </div>
-      </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 mt-8 sm:mt-12">
-        <div className="flex flex-col lg:flex-row gap-6 sm:gap-8 min-h-[400px] sm:min-h-[520px]">
-          <aside className="w-full lg:w-80 flex flex-col gap-3 sm:gap-4">
-            {showUserUI && (
-              <div className={paneWrapperClass}>
-                <AccountMenu
-                  actions={actions}
-                  activeView={activeView}
-                  onShowMain={() => setActiveView("main")}
-                  onShowLoginHistory={() => setActiveView("history")}
-                  onOpenUpdateUser={() => setUpdateUserOpen(true)}
-                  onOpenDeleteUser={() => setDeleteUserOpen(true)}
+        <div className="grid items-start gap-6 lg:grid-cols-[280px_minmax(0,1fr)]">
+          <MoaCard className="p-3">
+            <div className="space-y-1">
+              {menuItems.map((item) => (
+                <MenuItem key={item.label} {...item} />
+              ))}
+            </div>
+          </MoaCard>
+
+          {activeView === "history" ? (
+            <MoaCard className="overflow-hidden p-5">
+              <LoginHistoryCard loginHistory={loginHistory?.state} onBack={() => setActiveView("main")} />
+            </MoaCard>
+          ) : (
+            <div className="grid gap-6 xl:grid-cols-2">
+              <MoaCard className="p-5">
+                <div className="mb-4 flex items-center gap-2">
+                  <UserPen className="h-5 w-5 text-[var(--theme-primary)]" />
+                  <h2 className="text-lg font-black text-[var(--theme-text)]">계정 정보</h2>
+                </div>
+                <InfoRow label="이메일" value={user.userId || user.email} />
+                <InfoRow label="닉네임" value={nickname} />
+                <InfoRow label="가입일" value={actions.formatDate(user.regDate || user.joinDate || user.createdAt)} />
+                <InfoRow
+                  label="마케팅 동의"
+                  badge={
+                    <MoaBadge tone={marketingAgreed ? "success" : "neutral"}>
+                      {marketingAgreed ? "동의" : "미동의"}
+                    </MoaBadge>
+                  }
                 />
-              </div>
-            )}
+              </MoaCard>
 
-            {isAdmin && (
-              <div className={paneWrapperClass}>
-                <AdminMenu actions={actions} />
-              </div>
-            )}
-          </aside>
+              <MoaCard className="p-5">
+                <div className="mb-4 flex items-center gap-2">
+                  <Smartphone className="h-5 w-5 text-[var(--theme-primary)]" />
+                  <h2 className="text-lg font-black text-[var(--theme-text)]">로그인 정보</h2>
+                </div>
+                <InfoRow label="전화번호" value={formatPhoneNumber(user.phone || "-")} />
+                <InfoRow
+                  label="로그인 방식"
+                  badge={<MoaBadge tone="primary">{providerBadge}</MoaBadge>}
+                />
 
-          {showUserUI && (
-            <main className="flex-1 flex flex-col gap-4 sm:gap-8">
-              {activeView === "main" && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-8">
-                  <div className={paneWrapperClass}>
-                    <AccountInfoCard
-                      user={user}
-                      marketingAgreed={marketingAgreed}
-                      formatDate={actions.formatDate}
-                    />
+                <div className="mt-6 border-t border-[var(--theme-border-light)] pt-5">
+                  <div className="mb-3 flex items-center gap-2">
+                    <Link2 className="h-4 w-4 text-[var(--theme-primary)]" />
+                    <p className="text-sm font-black text-[var(--theme-text)]">소셜 연결</p>
                   </div>
-
-                  <div className={paneWrapperClass}>
-                    <ConnectionStatusCard
-                      user={user}
-                      loginProvider={loginProvider}
-                      googleConn={googleConn}
-                      kakaoConn={kakaoConn}
-                      otp={otp}
-                      backup={backup}
-                      actions={actions}
-                    />
+                  <div className="flex flex-wrap gap-2">
+                    <MoaButton
+                      variant={googleConn ? "danger" : "secondary"}
+                      size="sm"
+                      onClick={actions.handleGoogleClick}
+                    >
+                      GOOGLE {googleConn ? "해제" : "연결"}
+                    </MoaButton>
+                    <MoaButton
+                      variant={kakaoConn ? "danger" : "secondary"}
+                      size="sm"
+                      onClick={actions.handleKakaoClick}
+                    >
+                      KAKAO {kakaoConn ? "해제" : "연결"}
+                    </MoaButton>
                   </div>
                 </div>
-              )}
 
-              {activeView === "history" && (
-                <div className={paneWrapperClass}>
-                  <div className="p-6">
-                    <LoginHistoryCard
-                      loginHistory={loginHistoryState}
-                      onBack={() => setActiveView("main")}
-                    />
+                <div className="mt-6 border-t border-[var(--theme-border-light)] pt-5">
+                  <div className="mb-3 flex items-center gap-2">
+                    <Shield className="h-4 w-4 text-[var(--theme-primary)]" />
+                    <p className="text-sm font-black text-[var(--theme-text)]">보안 설정</p>
                   </div>
-                  <Separator className={theme === "dark" ? "bg-gray-700" : "bg-slate-200"} />
+                  <div className="flex items-center justify-between gap-3 rounded-2xl bg-[var(--theme-bg)] p-4">
+                    <div>
+                      <p className="font-black text-[var(--theme-text)]">OTP</p>
+                      <p className="text-sm text-[var(--theme-text-muted)]">
+                        {otp.enabled ? "사용 중" : "사용 안 함"}
+                      </p>
+                    </div>
+                    <MoaButton variant="secondary" size="sm" onClick={openOtp}>
+                      {otp.enabled ? "해제" : "설정"}
+                    </MoaButton>
+                  </div>
                 </div>
-              )}
-            </main>
+              </MoaCard>
+            </div>
           )}
         </div>
+
+        <MoaCard className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="font-black text-[var(--theme-text)]">계정 세션</p>
+            <p className="mt-1 text-sm text-[var(--theme-text-muted)]">
+              공용 기기에서는 사용 후 로그아웃해 주세요.
+            </p>
+          </div>
+          <MoaButton variant="secondary" onClick={handleLogout}>
+            <LogOut className="h-4 w-4" />
+            로그아웃
+          </MoaButton>
+        </MoaCard>
       </div>
 
-      {showUserUI && (
-        <>
-          <OtpDialog
-            open={otp.modalOpen}
-            onOpenChange={actions.handleOtpModalChange}
-            otp={otp}
-            actions={actions}
-            handleOtpConfirm={handleOtpConfirm}
-          />
-
-          <BackupCodeDialog backup={backup} />
-          
-          <UpdateUserDialog
-            open={updateUserOpen}
-            onOpenChange={setUpdateUserOpen}
-          />
-          
-          <DeleteUserDialog
-            open={deleteUserOpen}
-            onOpenChange={setDeleteUserOpen}
-          />
-        </>
-      )}
-    </div>
+      <OtpDialog
+        open={otp.modalOpen}
+        onOpenChange={actions.handleOtpModalChange}
+        otp={otp}
+        actions={actions}
+        handleOtpConfirm={handleOtpConfirm}
+      />
+      <BackupCodeDialog backup={backup} />
+      <UpdateUserDialog open={updateUserOpen} onOpenChange={setUpdateUserOpen} />
+      <DeleteUserDialog open={deleteUserOpen} onOpenChange={setDeleteUserOpen} />
+    </MoaPage>
   );
 }

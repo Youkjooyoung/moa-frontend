@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Dialog,
   DialogContent,
@@ -7,71 +6,15 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Switch } from "@/components/ui/switch";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { User, Upload, BellRing } from "lucide-react";
-import { useThemeStore } from "@/store/themeStore";
+import { BellRing, Upload, User } from "lucide-react";
 import { formatPhone } from "@/utils/phoneUtils";
 import useUpdateUser from "@/hooks/user/useUpdateUser";
-
-const dialogThemeStyles = {
-  pop: {
-    content: "bg-white border border-gray-200",
-    title: "text-black",
-    label: "text-black",
-    input: "bg-white border-gray-200 text-black",
-    inputReadonly: "bg-slate-100 border-gray-200 text-gray-700",
-    switchBg: "data-[state=checked]:bg-pink-500",
-    primaryBtn: "bg-pink-500 hover:bg-pink-600 text-white",
-    secondaryBtn: "bg-white border-gray-200 text-black hover:bg-slate-50",
-    sectionBg: "bg-slate-100 border-gray-200",
-    mutedText: "text-gray-600",
-  },
-  classic: {
-    content: "bg-white border border-gray-200",
-    title: "text-black",
-    label: "text-black",
-    input: "bg-white border-gray-200 text-black",
-    inputReadonly: "bg-slate-100 border-gray-200 text-gray-700",
-    switchBg: "data-[state=checked]:bg-[#635bff]",
-    primaryBtn: "bg-[#635bff] hover:bg-[#5851e8] text-white",
-    secondaryBtn: "bg-white border-gray-200 text-black hover:bg-slate-50",
-    sectionBg: "bg-slate-100 border-gray-200",
-    mutedText: "text-gray-600",
-  },
-  dark: {
-    content: "bg-[#1E293B] border border-gray-700",
-    title: "text-gray-100",
-    label: "text-gray-200",
-    input: "bg-[#0F172A] border-gray-700 text-gray-100",
-    inputReadonly: "bg-[#0F172A] border-gray-700 text-gray-400",
-    switchBg: "data-[state=checked]:bg-[#635bff]",
-    primaryBtn: "bg-[#635bff] hover:bg-[#5851e8] text-white",
-    secondaryBtn:
-      "bg-[#0F172A] border-gray-700 text-gray-200 hover:bg-gray-800",
-    sectionBg: "bg-[#0F172A] border-gray-700",
-    mutedText: "text-gray-400",
-  },
-  christmas: {
-    content: "bg-white border border-gray-200",
-    title: "text-black",
-    label: "text-black",
-    input: "bg-white border-gray-200 text-black",
-    inputReadonly: "bg-slate-100 border-gray-200 text-gray-700",
-    switchBg: "data-[state=checked]:bg-[#c41e3a]",
-    primaryBtn: "bg-[#c41e3a] hover:bg-red-700 text-white",
-    secondaryBtn: "bg-white border-gray-200 text-black hover:bg-red-50",
-    sectionBg: "bg-slate-100 border-gray-200",
-    mutedText: "text-gray-600",
-  },
-};
+import { MoaButton } from "@/shared/ui";
 
 export function UpdateUserDialog({ open, onOpenChange }) {
-  const { theme } = useThemeStore();
-  const themeStyle = dialogThemeStyles[theme] || dialogThemeStyles.pop;
-
   const {
     fileRef,
     email,
@@ -96,51 +39,41 @@ export function UpdateUserDialog({ open, onOpenChange }) {
       result?.success === true ||
       result?.data?.success === true;
 
-    if (ok) {
-      onOpenChange?.(false);
-    }
+    if (ok) onOpenChange?.(false);
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className={`max-w-md ${themeStyle.content}`}>
+      <DialogContent className="max-w-md rounded-2xl border border-[var(--theme-border-light)] bg-[var(--theme-surface)]">
         <DialogHeader>
-          <DialogTitle
-            className={`flex items-center gap-2 ${themeStyle.title}`}
-          >
-            <User className="w-5 h-5" />
+          <DialogTitle className="flex items-center gap-2 text-[var(--theme-text)]">
+            <User className="h-5 w-5 text-[var(--theme-primary)]" />
             회원정보 수정
           </DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-5 mt-2">
+        <div className="mt-2 space-y-5">
           <div className="flex flex-col items-center gap-3">
-            <div
-              className="relative group cursor-pointer"
+            <button
+              type="button"
+              className="group relative"
               onClick={openFilePicker}
+              aria-label="프로필 이미지 변경"
             >
-              <Avatar className="w-20 h-20 border border-gray-200">
+              <Avatar className="h-20 w-20 border border-[var(--theme-border-light)]">
                 <AvatarImage src={displayImage} className="object-cover" />
-                <AvatarFallback className="bg-slate-200 text-slate-700">
-                  <User className="w-8 h-8" />
+                <AvatarFallback className="bg-[var(--theme-primary-light)] text-[var(--theme-primary)]">
+                  <User className="h-8 w-8" />
                 </AvatarFallback>
               </Avatar>
-              <div className="absolute inset-0 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                <div className="w-20 h-20 rounded-full bg-black/40 flex items-center justify-center">
-                  <Upload className="w-5 h-5 text-white" />
-                </div>
-              </div>
-            </div>
+              <span className="absolute inset-0 flex items-center justify-center rounded-full bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
+                <Upload className="h-5 w-5 text-white" />
+              </span>
+            </button>
 
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={openFilePicker}
-              className={`${themeStyle.secondaryBtn} rounded-xl`}
-            >
+            <MoaButton type="button" variant="secondary" size="sm" onClick={openFilePicker}>
               이미지 변경
-            </Button>
+            </MoaButton>
 
             <input
               ref={fileRef}
@@ -151,77 +84,58 @@ export function UpdateUserDialog({ open, onOpenChange }) {
             />
           </div>
 
-          <Separator
-            className={theme === "dark" ? "bg-gray-700" : "bg-gray-200"}
-          />
+          <Separator className="bg-[var(--theme-border-light)]" />
 
           <div className="space-y-2">
-            <Label className={`text-sm font-bold ${themeStyle.label}`}>
-              이메일 (ID)
-            </Label>
+            <Label className="text-sm font-bold text-[var(--theme-text)]">이메일 (ID)</Label>
             <Input
               readOnly
               value={email || ""}
-              className={`${themeStyle.inputReadonly} rounded-xl cursor-not-allowed`}
+              className="h-12 cursor-not-allowed rounded-xl border-[var(--theme-border)] bg-[var(--theme-bg)] text-[var(--theme-text-muted)]"
             />
           </div>
 
           <div className="space-y-2">
-            <Label className={`text-sm font-bold ${themeStyle.label}`}>
-              닉네임
-            </Label>
+            <Label className="text-sm font-bold text-[var(--theme-text)]">닉네임</Label>
             <Input
               value={nickname || ""}
-              onChange={(e) => onNicknameChange?.(e.target.value)}
+              onChange={(event) => onNicknameChange?.(event.target.value)}
               onBlur={onNicknameBlur}
               placeholder="변경할 닉네임 입력"
-              className={`${themeStyle.input} rounded-xl`}
+              className="h-12 rounded-xl border-[var(--theme-border)] bg-[var(--theme-surface)] text-[var(--theme-text)]"
             />
             {!!nickMsg?.text && (
-              <p
-                className={`text-xs ${
-                  nickMsg.isError ? "text-red-500" : "text-emerald-600"
-                }`}
-              >
+              <p className={`text-xs ${nickMsg.isError ? "text-red-500" : "text-emerald-600"}`}>
                 {nickMsg.text}
               </p>
             )}
           </div>
 
           <div className="space-y-2">
-            <Label className={`text-sm font-bold ${themeStyle.label}`}>
-              휴대폰 번호
-            </Label>
+            <Label className="text-sm font-bold text-[var(--theme-text)]">휴대폰 번호</Label>
             <div className="flex gap-2">
               <Input
                 readOnly
                 value={formatPhone(phone) || "-"}
-                className={`flex-1 ${themeStyle.inputReadonly} rounded-xl cursor-not-allowed`}
+                className="h-12 flex-1 cursor-not-allowed rounded-xl border-[var(--theme-border)] bg-[var(--theme-bg)] text-[var(--theme-text-muted)]"
               />
-              <Button
-                type="button"
-                variant="outline"
-                onClick={onPassVerify}
-                className={`${themeStyle.secondaryBtn} rounded-xl px-4`}
-              >
+              <MoaButton type="button" variant="secondary" onClick={onPassVerify}>
                 본인인증
-              </Button>
+              </MoaButton>
             </div>
           </div>
 
-          <Separator
-            className={theme === "dark" ? "bg-gray-700" : "bg-gray-200"}
-          />
+          <Separator className="bg-[var(--theme-border-light)]" />
 
-          <div className={`${themeStyle.sectionBg} border rounded-xl p-4`}>
+          <div className="rounded-2xl border border-[var(--theme-border-light)] bg-[var(--theme-bg)] p-4">
             <div className="flex items-center justify-between gap-4">
               <div className="flex items-center gap-2">
-                <BellRing className="w-4 h-4" />
+                <BellRing className="h-4 w-4 text-[var(--theme-primary)]" />
                 <div>
-                  <p className={`text-sm font-bold ${themeStyle.label}`}>
+                  <p className="text-sm font-bold text-[var(--theme-text)]">
                     마케팅 정보 수신 동의
                   </p>
-                  <p className={`text-xs ${themeStyle.mutedText}`}>
+                  <p className="text-xs text-[var(--theme-text-muted)]">
                     이벤트 및 혜택 정보를 받아보세요
                   </p>
                 </div>
@@ -229,27 +143,23 @@ export function UpdateUserDialog({ open, onOpenChange }) {
               <Switch
                 checked={!!agreeMarketing}
                 onCheckedChange={onAgreeMarketingChange}
-                className={themeStyle.switchBg}
+                className="data-[state=checked]:bg-[var(--theme-primary)]"
               />
             </div>
           </div>
 
           <div className="flex gap-3 pt-2">
-            <Button
+            <MoaButton
               type="button"
-              variant="outline"
+              variant="secondary"
               onClick={() => onOpenChange?.(false)}
-              className={`flex-1 ${themeStyle.secondaryBtn} rounded-xl`}
+              className="flex-1"
             >
               취소
-            </Button>
-            <Button
-              type="button"
-              onClick={handleSave}
-              className={`flex-1 ${themeStyle.primaryBtn} rounded-xl`}
-            >
+            </MoaButton>
+            <MoaButton type="button" onClick={handleSave} className="flex-1">
               저장하기
-            </Button>
+            </MoaButton>
           </div>
         </div>
       </DialogContent>

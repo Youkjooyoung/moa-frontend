@@ -1,189 +1,110 @@
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Card, CardContent } from '@/components/ui/card';
-import { Check, Circle, Loader2 } from 'lucide-react';
-import useBankVerificationStore from '@/store/bankVerificationStore';
+import { useEffect, useState } from "react";
+import { Check, Circle, Loader2 } from "lucide-react";
 
-// 처리 단계 정의
+import { Card, CardContent } from "@/components/ui/card";
+import useBankVerificationStore from "@/store/bankVerificationStore";
+
+const TEXT = {
+  title: "\uacc4\uc88c \uc815\ubcf4\ub97c \ud655\uc778\ud558\uace0 \uc788\uc2b5\ub2c8\ub2e4",
+};
+
 const PROCESSING_STEPS = [
-    { id: 1, label: '계좌 정보 확인', duration: 1000 },
-    { id: 2, label: '예금주 실명 확인', duration: 1500 },
-    { id: 3, label: '1원 입금 처리 중', duration: 1500 },
+  { id: 1, label: "\uacc4\uc88c\ubc88\ud638 \ud615\uc2dd \ud655\uc778", duration: 900 },
+  { id: 2, label: "\uc608\uae08\uc8fc\uba85 \ud655\uc778", duration: 1500 },
+  { id: 3, label: "\ud14c\uc2a4\ud2b8 \uc778\uc99d\ubc88\ud638 \ubc1c\uae09", duration: 1500 },
+  { id: 4, label: "\uc815\uc0b0 \uacc4\uc88c \ub4f1\ub85d \uc900\ube44", duration: 900 },
 ];
 
-/**
- * Step 2: 처리 중 (로딩 애니메이션)
- * 총 4초 동안 3단계 애니메이션 진행
- * CSS 변수 기반 테마 적용
- */
 export default function ProcessingStep() {
-    const { formData } = useBankVerificationStore();
-    const [currentStep, setCurrentStep] = useState(0);
-    const [progress, setProgress] = useState(0);
+  const { formData } = useBankVerificationStore();
+  const [currentStep, setCurrentStep] = useState(0);
+  const [progress, setProgress] = useState(0);
 
-    // 단계별 애니메이션 진행
-    useEffect(() => {
-        let totalElapsed = 0;
+  useEffect(() => {
+    let totalElapsed = 0;
+    const timeouts = PROCESSING_STEPS.map((step, index) => {
+      const timeout = setTimeout(() => setCurrentStep(index + 1), totalElapsed);
+      totalElapsed += step.duration;
+      return timeout;
+    });
+    return () => timeouts.forEach(clearTimeout);
+  }, []);
 
-        PROCESSING_STEPS.forEach((step, index) => {
-            const timeout = setTimeout(() => {
-                setCurrentStep(index + 1);
-            }, totalElapsed);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setProgress((prev) => {
+        if (prev >= 100) {
+          clearInterval(interval);
+          return 100;
+        }
+        return prev + 3;
+      });
+    }, 150);
+    return () => clearInterval(interval);
+  }, []);
 
-            totalElapsed += step.duration;
+  const getStepStatus = (index) => {
+    if (index < currentStep) return "completed";
+    if (index === currentStep) return "processing";
+    return "pending";
+  };
 
-            return () => clearTimeout(timeout);
-        });
-    }, []);
+  return (
+    <Card className="border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-950">
+      <CardContent className="px-6 py-12">
+        <div className="text-center">
+          <div className="relative mx-auto mb-8 h-24 w-24">
+            <div className="absolute inset-0 rounded-full bg-blue-100" />
+            <div className="absolute inset-0 flex items-center justify-center rounded-full bg-blue-500 shadow-lg shadow-blue-500/20">
+              <Loader2 className="h-10 w-10 animate-spin text-white" />
+            </div>
+          </div>
 
-    // 프로그레스 바 애니메이션
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setProgress(prev => {
-                if (prev >= 100) {
-                    clearInterval(interval);
-                    return 100;
-                }
-                return prev + 2.5; // 4초 동안 0 → 100
-            });
-        }, 100);
+          <h2 className="mb-2 text-xl font-bold text-slate-950 dark:text-white">{TEXT.title}</h2>
+          <p className="mb-8 text-slate-500">
+            {formData.bankName} {formData.accountHolder}
+          </p>
 
-        return () => clearInterval(interval);
-    }, []);
+          <div className="mx-auto mb-8 max-w-xs">
+            <div className="h-2 overflow-hidden rounded-full bg-slate-100">
+              <div className="h-full rounded-full bg-blue-500 transition-all" style={{ width: `${progress}%` }} />
+            </div>
+            <p className="mt-2 text-xs text-slate-400">{Math.round(progress)}%</p>
+          </div>
 
-    // 단계 상태 결정
-    const getStepStatus = (stepIndex) => {
-        if (stepIndex < currentStep) return 'completed';
-        if (stepIndex === currentStep) return 'processing';
-        return 'pending';
-    };
-
-    return (
-        <Card className="border-[var(--theme-border-width)] border-[var(--theme-border-light)] shadow-[var(--theme-shadow)] bg-[var(--theme-bg-card)]">
-            <CardContent className="py-12 px-6">
-                <div className="text-center">
-                    {/* 은행 아이콘 애니메이션 */}
-                    <motion.div
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        transition={{ type: 'spring', stiffness: 200, damping: 15 }}
-                        className="relative mx-auto w-24 h-24 mb-8"
-                    >
-                        {/* 외곽 펄스 애니메이션 */}
-                        <motion.div
-                            className="absolute inset-0 bg-[var(--theme-primary-light)] rounded-full"
-                            animate={{
-                                scale: [1, 1.2, 1],
-                                opacity: [0.5, 0, 0.5]
-                            }}
-                            transition={{
-                                duration: 2,
-                                repeat: Infinity,
-                                ease: 'easeInOut'
-                            }}
-                        />
-                        {/* 메인 아이콘 */}
-                        <div className="absolute inset-0 bg-[var(--theme-primary)] rounded-full flex items-center justify-center shadow-lg">
-                            <motion.div
-                                animate={{ rotate: 360 }}
-                                transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
-                            >
-                                <Loader2 className="w-10 h-10 text-white" />
-                            </motion.div>
-                        </div>
-                    </motion.div>
-
-                    {/* 타이틀 */}
-                    <motion.h2
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.2 }}
-                        className="text-xl font-bold text-[var(--theme-text)] mb-2"
-                    >
-                        계좌 정보를 확인하고 있습니다
-                    </motion.h2>
-
-                    {/* 은행/계좌 정보 */}
-                    <motion.p
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.3 }}
-                        className="text-[var(--theme-text-muted)] mb-8"
-                    >
-                        {formData.bankName} {formData.accountHolder}님
-                    </motion.p>
-
-                    {/* 프로그레스 바 */}
-                    <div className="max-w-xs mx-auto mb-8">
-                        <div className="h-2 bg-[var(--theme-border-light)] rounded-full overflow-hidden">
-                            <motion.div
-                                className="h-full bg-[var(--theme-primary)] rounded-full"
-                                initial={{ width: '0%' }}
-                                animate={{ width: `${progress}%` }}
-                                transition={{ duration: 0.1 }}
-                            />
-                        </div>
-                        <p className="text-xs text-[var(--theme-text-muted)] mt-2">{Math.round(progress)}%</p>
-                    </div>
-
-                    {/* 단계별 체크리스트 */}
-                    <div className="max-w-xs mx-auto space-y-3">
-                        {PROCESSING_STEPS.map((step, index) => {
-                            const status = getStepStatus(index);
-
-                            return (
-                                <motion.div
-                                    key={step.id}
-                                    initial={{ opacity: 0, x: -20 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    transition={{ delay: 0.1 * index }}
-                                    className="flex items-center gap-3"
-                                >
-                                    {/* 상태 아이콘 */}
-                                    <div className="relative w-6 h-6 flex-shrink-0">
-                                        {status === 'completed' ? (
-                                            <motion.div
-                                                initial={{ scale: 0 }}
-                                                animate={{ scale: 1 }}
-                                                className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center"
-                                            >
-                                                <Check className="w-4 h-4 text-white" />
-                                            </motion.div>
-                                        ) : status === 'processing' ? (
-                                            <motion.div
-                                                animate={{ rotate: 360 }}
-                                                transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-                                                className="w-6 h-6 border-2 border-[var(--theme-primary)] border-t-transparent rounded-full"
-                                            />
-                                        ) : (
-                                            <Circle className="w-6 h-6 text-[var(--theme-text-muted)]" />
-                                        )}
-                                    </div>
-
-                                    {/* 레이블 */}
-                                    <span className={`
-                                        text-sm transition-colors duration-300
-                                        ${status === 'completed' ? 'text-green-600 font-medium' : ''}
-                                        ${status === 'processing' ? 'text-[var(--theme-primary)] font-medium' : ''}
-                                        ${status === 'pending' ? 'text-[var(--theme-text-muted)]' : ''}
-                                    `}>
-                                        {status === 'processing' && index === 2 ? (
-                                            <motion.span
-                                                animate={{ opacity: [1, 0.5, 1] }}
-                                                transition={{ duration: 1, repeat: Infinity }}
-                                            >
-                                                {step.label}...
-                                            </motion.span>
-                                        ) : (
-                                            step.label
-                                        )}
-                                    </span>
-                                </motion.div>
-                            );
-                        })}
-                    </div>
+          <div className="mx-auto max-w-xs space-y-3">
+            {PROCESSING_STEPS.map((step, index) => {
+              const status = getStepStatus(index);
+              return (
+                <div key={step.id} className="flex items-center gap-3 text-left">
+                  <div className="h-6 w-6 shrink-0">
+                    {status === "completed" ? (
+                      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-green-500">
+                        <Check className="h-4 w-4 text-white" />
+                      </span>
+                    ) : status === "processing" ? (
+                      <span className="block h-6 w-6 animate-spin rounded-full border-2 border-blue-500 border-t-transparent" />
+                    ) : (
+                      <Circle className="h-6 w-6 text-slate-300" />
+                    )}
+                  </div>
+                  <span
+                    className={`text-sm ${
+                      status === "completed"
+                        ? "font-semibold text-green-600"
+                        : status === "processing"
+                          ? "font-semibold text-blue-600"
+                          : "text-slate-400"
+                    }`}
+                  >
+                    {step.label}
+                  </span>
                 </div>
-            </CardContent>
-        </Card>
-    );
+              );
+            })}
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
 }

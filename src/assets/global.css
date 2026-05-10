@@ -69,65 +69,66 @@ button {
 }
 
 /* ============================================
-   4beans-moa Theme System
-   - pop (default): Neo-brutalism, Pink
-   - classic: Elegant SaaS, Stripe Purple
-   - dark: Dark mode, Purple accent
-   - christmas: Seasonal, Red/Green
+   MOA Theme System
+   - light: Toss-inspired simple product UI
+   - dark: Deep neutral UI with blue accent
+   Legacy theme blocks remain for old screens during migration.
    ============================================ */
 
 :root,
-[data-theme="pop"] {
+[data-theme="light"] {
   --radius: 0.625rem;
-  --background: #f8fafc;
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --background: #f7f9fc;
+  --foreground: #191f28;
+  --card: #ffffff;
+  --card-foreground: #191f28;
+  --popover: #ffffff;
+  --popover-foreground: #191f28;
+  --primary: #3182f6;
+  --primary-foreground: #ffffff;
+  --secondary: #edf2f7;
+  --secondary-foreground: #333d4b;
+  --muted: #f2f4f6;
+  --muted-foreground: #6b7684;
+  --accent: #e8f3ff;
+  --accent-foreground: #1b64da;
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --border: #e5e8eb;
+  --input: #e5e8eb;
+  --ring: #3182f6;
+  --chart-1: #3182f6;
+  --chart-2: #00c2a8;
+  --chart-3: #8b95a1;
+  --chart-4: #f04452;
+  --chart-5: #ffb020;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #191f28;
+  --sidebar-primary: #3182f6;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f2f4f6;
+  --sidebar-accent-foreground: #333d4b;
+  --sidebar-border: #e5e8eb;
+  --sidebar-ring: #3182f6;
 
-  /* Theme-specific: Pop */
-  --theme-primary: #ec4899;
-  --theme-primary-hover: #db2777;
-  --theme-primary-light: #fdf2f8;
-  --theme-secondary: #06b6d4;
-  --theme-bg: #f8fafc;
+  /* Theme-specific: Light */
+  --theme-primary: #3182f6;
+  --theme-primary-hover: #1b64da;
+  --theme-primary-light: #e8f3ff;
+  --theme-secondary: #00c2a8;
+  --theme-bg: #f7f9fc;
   --theme-bg-card: #ffffff;
-  --theme-text: #0f172a;
-  --theme-text-muted: #64748b;
-  --theme-border: #e2e8f0;
-  --theme-border-light: #f1f5f9;
-  --theme-shadow: 0 4px 12px rgba(236,72,153,0.1);
-  --theme-shadow-hover: 0 8px 24px rgba(236,72,153,0.15);
-  --theme-shadow-soft: 0 1px 3px rgba(0,0,0,0.08);
-  --theme-focus-ring: rgba(236,72,153,0.5);
+  --theme-surface: #ffffff;
+  --theme-surface-muted: #f2f4f6;
+  --theme-text: #191f28;
+  --theme-text-muted: #6b7684;
+  --theme-border: #dfe3e8;
+  --theme-border-light: #edf0f3;
+  --theme-shadow: 0 12px 30px rgba(25,31,40,0.06);
+  --theme-shadow-hover: 0 18px 44px rgba(25,31,40,0.10);
+  --theme-shadow-soft: 0 1px 2px rgba(25,31,40,0.06);
+  --theme-focus-ring: rgba(49,130,246,0.35);
   --theme-border-width: 1px;
-  --theme-radius: 1rem;
+  --theme-radius: 1.25rem;
 }
 
 [data-theme="classic"] {
@@ -151,48 +152,50 @@ button {
 }
 
 [data-theme="dark"] {
-  --background: #0B1120;
+  --background: #101318;
   --foreground: oklch(0.985 0 0);
-  --card: #1E293B;
+  --card: #171b22;
   --card-foreground: oklch(0.985 0 0);
-  --popover: #1E293B;
+  --popover: #171b22;
   --popover-foreground: oklch(0.985 0 0);
   --primary: oklch(0.922 0 0);
   --primary-foreground: oklch(0.205 0 0);
-  --secondary: #334155;
+  --secondary: #252b35;
   --secondary-foreground: oklch(0.985 0 0);
-  --muted: #334155;
+  --muted: #252b35;
   --muted-foreground: oklch(0.708 0 0);
-  --accent: #334155;
+  --accent: #252b35;
   --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.704 0.191 22.216);
-  --border: #334155;
-  --input: #334155;
+  --border: #2f3742;
+  --input: #2f3742;
   --ring: oklch(0.556 0 0);
-  --sidebar: #1E293B;
+  --sidebar: #171b22;
   --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: #635bff;
+  --sidebar-primary: #3182f6;
   --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: #334155;
+  --sidebar-accent: #252b35;
   --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: #334155;
+  --sidebar-border: #2f3742;
   --sidebar-ring: oklch(0.556 0 0);
 
   /* Theme-specific: Dark */
-  --theme-primary: #635bff;
-  --theme-primary-hover: #5851e8;
-  --theme-primary-light: #1e1b4b;
-  --theme-secondary: #4fd1c5;
-  --theme-bg: #0B1120;
-  --theme-bg-card: #1E293B;
+  --theme-primary: #4593fc;
+  --theme-primary-hover: #3182f6;
+  --theme-primary-light: rgba(49, 130, 246, 0.16);
+  --theme-secondary: #00c2a8;
+  --theme-bg: #101318;
+  --theme-bg-card: #171b22;
+  --theme-surface: #171b22;
+  --theme-surface-muted: #252b35;
   --theme-text: #f8fafc;
-  --theme-text-muted: #94a3b8;
-  --theme-border: #334155;
-  --theme-border-light: #475569;
-  --theme-shadow: 0 4px 12px rgba(0,0,0,0.3);
-  --theme-shadow-hover: 0 8px 24px rgba(0,0,0,0.4);
+  --theme-text-muted: #9aa5b1;
+  --theme-border: #2f3742;
+  --theme-border-light: #252b35;
+  --theme-shadow: 0 14px 34px rgba(0,0,0,0.34);
+  --theme-shadow-hover: 0 20px 48px rgba(0,0,0,0.44);
   --theme-shadow-soft: 0 1px 3px rgba(0,0,0,0.2);
-  --theme-focus-ring: rgba(99,91,255,0.5);
+  --theme-focus-ring: rgba(49,130,246,0.45);
   --theme-border-width: 1px;
   --theme-radius: 1rem;
 }

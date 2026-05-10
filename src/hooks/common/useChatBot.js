@@ -1,6 +1,6 @@
-// src/hooks/common/useChatBot.js
 import { useCallback } from "react";
 import { sendChatMessage } from "@/api/chatApi";
+import { useI18n } from "@/hooks/useI18n";
 import { useChatBotStore } from "@/store/chatBotStore";
 
 const createMessage = (role, content) => {
@@ -10,6 +10,7 @@ const createMessage = (role, content) => {
 };
 
 export const useChatBot = () => {
+  const { t } = useI18n();
   const isOpen = useChatBotStore((state) => state.isOpen);
   const messages = useChatBotStore((state) => state.messages);
   const input = useChatBotStore((state) => state.input);
@@ -28,11 +29,11 @@ export const useChatBot = () => {
       pushMessage(
         createMessage(
           "bot",
-          "안녕하세요. MOA 이용을 도와드릴게요. 구독 상품, 파티 찾기, 결제/정산, 계정 문제를 물어보세요."
+          t("chatbot.welcome")
         )
       );
     }
-  }, [isOpen, messages.length, toggleOpenStore, pushMessage]);
+  }, [isOpen, messages.length, toggleOpenStore, pushMessage, t]);
 
   const handleInputChange = useCallback(
     (value) => {
@@ -49,28 +50,27 @@ export const useChatBot = () => {
       pushMessage(createMessage("user", text));
 
       if (!forcedMessage) setInput("");
-
       setLoading(true);
 
       try {
         const chat = await sendChatMessage(text);
         const reply =
           chat?.reply ||
-          "답변을 찾지 못했습니다. 구독, 파티, 결제, 계정 중 어떤 문제인지 조금 더 자세히 적어주세요.";
+          t("chatbot.fallback");
 
         pushMessage(createMessage("bot", reply));
-      } catch (e) {
+      } catch {
         pushMessage(
           createMessage(
             "bot",
-            "현재 챗봇 요청을 처리하지 못했습니다. 잠시 후 다시 시도해 주세요."
+            t("chatbot.error")
           )
         );
       } finally {
         setLoading(false);
       }
     },
-    [input, loading, pushMessage, setInput, setLoading]
+    [input, loading, pushMessage, setInput, setLoading, t]
   );
 
   const handleKeyDown = useCallback(

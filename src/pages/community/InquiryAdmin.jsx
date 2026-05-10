@@ -1,259 +1,223 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import CommunityLayout from '../../components/community/CommunityLayout';
-import InquiryStatusBadge from '../../components/community/InquiryStatusBadge';
-import InquiryDetailModal from '../../components/community/InquiryDetailModal';
-import InquiryAnswerModal from '../../components/community/InquiryAnswerModal';
-import { useAuthStore } from '@/store/authStore';
-import { useThemeStore } from '@/store/themeStore';
-import { formatDate, getCategoryName } from '../../utils/communityUtils';
-import { NeoCard, NeoButton, NeoPagination } from '@/components/common/neo';
-import { ImageIcon } from 'lucide-react';
+import { useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { ImageIcon, MessageSquareReply } from "lucide-react";
+import CommunityLayout from "../../components/community/CommunityLayout";
+import InquiryStatusBadge from "../../components/community/InquiryStatusBadge";
+import InquiryDetailModal from "../../components/community/InquiryDetailModal";
+import InquiryAnswerModal from "../../components/community/InquiryAnswerModal";
+import { useAuthStore } from "@/store/authStore";
+import { formatDate, getCategoryName } from "../../utils/communityUtils";
+import {
+  MoaBadge,
+  MoaButton,
+  MoaCard,
+  MoaEmptyState,
+} from "@/components/common/MoaPage";
+import { useI18n } from "@/hooks/useI18n";
 
-// 테마별 스타일
-const communityThemeStyles = {
-    pop: {
-        // Neo/Pop 스타일 - 핑크, 시안 계열
-        categoryBadge: 'bg-pink-100 text-pink-700',
-        answerButton: 'bg-cyan-500 hover:bg-cyan-600 text-white',
-        redirectButton: 'bg-pink-500 hover:bg-pink-600 text-white',
-        hoverBg: 'hover:bg-pink-50',
-    },
-    classic: {
-        categoryBadge: 'bg-indigo-100 text-indigo-700',
-        answerButton: 'bg-emerald-500 hover:bg-emerald-600 text-white',
-        redirectButton: 'bg-[#635bff] hover:bg-indigo-600 text-white',
-        hoverBg: 'hover:bg-indigo-50',
-    },
-    dark: {
-        categoryBadge: 'bg-gray-700 text-gray-200',
-        answerButton: 'bg-emerald-500 hover:bg-emerald-600 text-white',
-        redirectButton: 'bg-[#635bff] hover:bg-indigo-600 text-white',
-        hoverBg: 'hover:bg-gray-700',
-    },
-    christmas: {
-        categoryBadge: 'bg-[#c41e3a] text-white',
-        answerButton: 'bg-[#1a5f2a] hover:bg-green-700 text-white',
-        redirectButton: 'bg-[#c41e3a] hover:bg-red-700 text-white',
-        hoverBg: 'hover:bg-red-50',
-    },
-};
+const pageSize = 10;
 
 const InquiryAdmin = () => {
-    const navigate = useNavigate();
-    const { user } = useAuthStore();
-    const { theme } = useThemeStore();
-    const themeStyle = communityThemeStyles[theme] || communityThemeStyles.pop;
-    const [inquiries, setInquiries] = useState([]);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(0);
-    const [selectedInquiry, setSelectedInquiry] = useState(null);
-    const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
-    const [isAnswerModalOpen, setIsAnswerModalOpen] = useState(false);
-    const pageSize = 10;
+  const navigate = useNavigate();
+  const { user } = useAuthStore();
+  const { t } = useI18n();
+  const [inquiries, setInquiries] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const [selectedInquiry, setSelectedInquiry] = useState(null);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [isAnswerModalOpen, setIsAnswerModalOpen] = useState(false);
 
-    const isAdmin = user?.role === 'ADMIN';
+  const isAdmin = user?.role === "ADMIN";
 
-    useEffect(() => {
-        if (isAdmin) {
-            loadAllInquiries(1);
-        }
-    }, [isAdmin]);
+  const loadAllInquiries = useCallback(async (page) => {
+    try {
+      const response = await fetch(`/api/community/inquiry?page=${page}&size=${pageSize}`);
 
-    const loadAllInquiries = async (page) => {
-        try {
-            const response = await fetch(`/api/community/inquiry?page=${page}&size=${pageSize}`);
+      if (!response.ok) {
+        setInquiries([]);
+        return;
+      }
 
-            if (!response.ok) {
-                setInquiries([]);
-                return;
-            }
-
-            const data = await response.json();
-            setInquiries(data.content || []);
-            setCurrentPage(data.page || 1);
-            setTotalPages(data.totalPages || 0);
-        } catch (error) {
-            setInquiries([]);
-        }
-    };
-
-    if (!isAdmin) {
-        return (
-            <CommunityLayout>
-                <div className="text-center py-20">
-                    <NeoCard
-                        color="bg-white"
-                        hoverable={false}
-                        className="inline-block px-8 py-6 rounded-2xl"
-                    >
-                        <p className="text-gray-600 font-bold mb-6">관리자만 접근 가능합니다.</p>
-                        <NeoButton
-                            onClick={() => navigate('/community/inquiry')}
-                            color={themeStyle.redirectButton}
-                            size="sm"
-                        >
-                            문의하기로 이동
-                        </NeoButton>
-                    </NeoCard>
-                </div>
-            </CommunityLayout>
-        );
+      const data = await response.json();
+      setInquiries(data.content || []);
+      setCurrentPage(data.page || 1);
+      setTotalPages(data.totalPages || 0);
+    } catch {
+      setInquiries([]);
     }
+  }, []);
 
-    const handleTitleClick = (inquiry) => {
-        setSelectedInquiry(inquiry);
-        setIsDetailModalOpen(true);
-    };
+  useEffect(() => {
+    if (isAdmin) {
+      Promise.resolve().then(() => loadAllInquiries(1));
+    }
+  }, [isAdmin, loadAllInquiries]);
 
-    const handleAnswerClick = (inquiry) => {
-        setSelectedInquiry(inquiry);
-        setIsAnswerModalOpen(true);
-    };
+  const handleTitleClick = (inquiry) => {
+    setSelectedInquiry(inquiry);
+    setIsDetailModalOpen(true);
+  };
 
-    const handleAnswerSubmit = async (communityId, answerContent) => {
-        const isUpdate = selectedInquiry?.answerContent;
-        const method = isUpdate ? 'PUT' : 'POST';
+  const handleAnswerClick = (inquiry) => {
+    setSelectedInquiry(inquiry);
+    setIsAnswerModalOpen(true);
+  };
 
-        try {
-            const response = await fetch('/api/community/inquiry/answer', {
-                method: method,
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    communityId: communityId,
-                    answerContent: answerContent
-                }),
-            });
+  const handleAnswerSubmit = async (communityId, answerContent) => {
+    const isUpdate = selectedInquiry?.answerContent;
 
-            if (response.ok) {
-                alert(isUpdate ? '답변이 수정되었습니다.' : '답변이 등록되었습니다.');
-                setIsAnswerModalOpen(false);
-                loadAllInquiries(currentPage);
-            } else {
-                alert('답변 처리에 실패했습니다.');
-            }
-        } catch (error) {
-            alert('답변 처리 중 오류가 발생했습니다.');
-        }
-    };
+    try {
+      const response = await fetch("/api/community/inquiry/answer", {
+        method: isUpdate ? "PUT" : "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          communityId,
+          answerContent,
+        }),
+      });
 
-    const handlePageChange = (page) => {
-        if (page < 1 || page > totalPages) return;
-        loadAllInquiries(page);
-    };
+      if (response.ok) {
+        setIsAnswerModalOpen(false);
+        loadAllInquiries(currentPage);
+      } else {
+        alert("답변 처리에 실패했습니다.");
+      }
+    } catch {
+      alert("답변 처리 중 오류가 발생했습니다.");
+    }
+  };
 
+  const handlePageChange = (page) => {
+    if (page < 1 || page > totalPages) return;
+    loadAllInquiries(page);
+  };
+
+  if (!isAdmin) {
     return (
-        <CommunityLayout>
-            <div className="max-w-5xl mx-auto">
-                <h2 className="text-lg font-black text-black mb-6">
-                    문의 관리
-                </h2>
-
-                <NeoCard
-                    color="bg-white"
-                    hoverable={false}
-                    className="rounded-2xl overflow-hidden"
-                >
-                    {/* 테이블 헤더 */}
-                    <div className="bg-slate-100 border-b border-gray-200">
-                        <div className="grid gap-4 py-3 px-4 text-sm font-black text-black" style={{ gridTemplateColumns: 'repeat(19, minmax(0, 1fr))' }}>
-                            <div className="col-span-1 text-center">번호</div>
-                            <div className="col-span-1 text-center" style={{ whiteSpace: 'nowrap' }}>카테고리</div>
-                            <div className="col-span-8 pl-4">제목</div>
-                            <div className="col-span-3 text-center">작성자</div>
-                            <div className="col-span-2 text-center">작성일</div>
-                            <div className="col-span-2 text-center">상태</div>
-                            <div className="col-span-2 text-center">관리</div>
-                        </div>
-                    </div>
-
-                    {inquiries.length === 0 ? (
-                        <div className="py-20 text-center font-bold text-gray-400">
-                            등록된 문의가 없습니다.
-                        </div>
-                    ) : (
-                        inquiries.map((inquiry, index) => (
-                            <div
-                                key={inquiry.communityId}
-                                onClick={() => handleTitleClick(inquiry)}
-                                className={`grid gap-4 py-4 px-4 border-b border-gray-200 last:border-b-0 ${themeStyle.hoverBg} items-center text-sm cursor-pointer transition-colors`}
-                                style={{ gridTemplateColumns: 'repeat(19, minmax(0, 1fr))' }}
-                            >
-                                <div className="col-span-1 text-center font-bold text-gray-600">
-                                    {(currentPage - 1) * pageSize + index + 1}
-                                </div>
-                                <div className="col-span-1 flex justify-center">
-                                    <span className={`px-2 py-1 text-xs font-black rounded-lg ${themeStyle.categoryBadge} border border-gray-200`} style={{ whiteSpace: 'nowrap' }}>
-                                        {getCategoryName(inquiry.communityCodeId)}
-                                    </span>
-                                </div>
-                                <div className="col-span-8 pl-4 flex items-center gap-2 font-bold text-black">
-                                    <span className="truncate">{inquiry.title}</span>
-                                    {inquiry.fileOriginal && (
-                                        <ImageIcon className="w-4 h-4 text-gray-400 flex-shrink-0" />
-                                    )}
-                                </div>
-                                <div className="col-span-3 text-center font-medium text-gray-600">
-                                    {inquiry.userId}
-                                </div>
-                                <div className="col-span-2 text-center font-medium text-gray-600" style={{ whiteSpace: 'nowrap' }}>
-                                    {formatDate(inquiry.createdAt)}
-                                </div>
-                                <div className="col-span-2 flex justify-center">
-                                    <InquiryStatusBadge status={inquiry.answerStatus} />
-                                </div>
-                                <div className="col-span-2 text-center">
-                                    <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleAnswerClick(inquiry);
-                                        }}
-                                        className={`px-3 py-1.5 text-xs font-black rounded-lg border border-gray-200
-                                            shadow-[4px_4px_12px_rgba(0,0,0,0.08)]
-                                            hover:shadow-[6px_6px_16px_rgba(0,0,0,0.12)]
-                                            transition-all
-                                            ${inquiry.answerStatus === '답변완료'
-                                                ? 'bg-white text-black'
-                                                : themeStyle.answerButton
-                                            }`}
-                                        style={{ whiteSpace: 'nowrap' }}
-                                    >
-                                        {inquiry.answerStatus === '답변완료' ? '수정' : '답변'}
-                                    </button>
-                                </div>
-                            </div>
-                        ))
-                    )}
-
-                    {/* 페이지네이션 */}
-                    {totalPages > 0 && (
-                        <div className="py-6 border-t border-gray-200">
-                            <NeoPagination
-                                currentPage={currentPage}
-                                totalPages={totalPages}
-                                onPageChange={handlePageChange}
-                            />
-                        </div>
-                    )}
-                </NeoCard>
-            </div>
-
-            <InquiryDetailModal
-                isOpen={isDetailModalOpen}
-                onClose={() => setIsDetailModalOpen(false)}
-                inquiry={selectedInquiry}
-            />
-
-            <InquiryAnswerModal
-                isOpen={isAnswerModalOpen}
-                onClose={() => setIsAnswerModalOpen(false)}
-                inquiry={selectedInquiry}
-                onAnswerSubmit={handleAnswerSubmit}
-            />
-        </CommunityLayout>
+      <CommunityLayout>
+        <MoaEmptyState
+          title={t("community.adminOnly")}
+          action={
+            <MoaButton onClick={() => navigate("/community/inquiry")}>
+              {t("community.inquiry.create")}
+            </MoaButton>
+          }
+        />
+      </CommunityLayout>
     );
+  }
+
+  return (
+    <CommunityLayout>
+      <div className="mx-auto max-w-6xl">
+        <div className="mb-6">
+          <h2 className="text-2xl font-bold text-[var(--theme-text)]">문의 관리</h2>
+          <p className="mt-2 text-sm text-[var(--theme-text-muted)]">
+            접수된 1:1 문의를 확인하고 답변을 등록합니다.
+          </p>
+        </div>
+
+        <MoaCard className="overflow-hidden">
+          <div className="hidden grid-cols-[72px_120px_minmax(0,1fr)_140px_120px_120px_100px] gap-4 border-b border-[var(--theme-border-light)] bg-[var(--theme-surface-muted)] px-5 py-3 text-sm font-bold text-[var(--theme-text-muted)] lg:grid">
+            <div className="text-center">번호</div>
+            <div className="text-center">카테고리</div>
+            <div>제목</div>
+            <div className="text-center">작성자</div>
+            <div className="text-center">작성일</div>
+            <div className="text-center">상태</div>
+            <div className="text-center">관리</div>
+          </div>
+
+          {inquiries.length === 0 ? (
+            <MoaEmptyState title={t("community.inquiry.empty")} className="m-5" />
+          ) : (
+            inquiries.map((inquiry, index) => (
+              <div
+                key={inquiry.communityId}
+                onClick={() => handleTitleClick(inquiry)}
+                className="grid cursor-pointer gap-3 border-b border-[var(--theme-border-light)] px-5 py-4 text-sm transition hover:bg-[var(--theme-surface-muted)] last:border-b-0 lg:grid-cols-[72px_120px_minmax(0,1fr)_140px_120px_120px_100px] lg:items-center lg:gap-4"
+              >
+                <div className="font-semibold text-[var(--theme-text-muted)] lg:text-center">
+                  {(currentPage - 1) * pageSize + index + 1}
+                </div>
+                <div className="lg:flex lg:justify-center">
+                  <MoaBadge tone="primary">{getCategoryName(inquiry.communityCodeId)}</MoaBadge>
+                </div>
+                <div className="flex min-w-0 items-center gap-2 font-bold text-[var(--theme-text)]">
+                  <span className="truncate">{inquiry.title}</span>
+                  {inquiry.fileOriginal && (
+                    <ImageIcon className="h-4 w-4 flex-shrink-0 text-[var(--theme-text-muted)]" />
+                  )}
+                </div>
+                <div className="truncate font-semibold text-[var(--theme-text-muted)] lg:text-center">
+                  {inquiry.userId}
+                </div>
+                <div className="font-semibold text-[var(--theme-text-muted)] lg:text-center">
+                  {formatDate(inquiry.createdAt)}
+                </div>
+                <div className="lg:flex lg:justify-center">
+                  <InquiryStatusBadge status={inquiry.answerStatus} />
+                </div>
+                <div className="lg:text-center">
+                  <MoaButton
+                    size="sm"
+                    variant={inquiry.answerStatus === "답변완료" ? "secondary" : "primary"}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      handleAnswerClick(inquiry);
+                    }}
+                  >
+                    <MessageSquareReply className="h-4 w-4" />
+                    {inquiry.answerStatus === "답변완료" ? "수정" : "답변"}
+                  </MoaButton>
+                </div>
+              </div>
+            ))
+          )}
+
+          {totalPages > 0 && (
+            <div className="flex items-center justify-between border-t border-[var(--theme-border-light)] px-5 py-4">
+              <MoaButton
+                variant="secondary"
+                size="sm"
+                disabled={currentPage <= 1}
+                onClick={() => handlePageChange(currentPage - 1)}
+              >
+                {t("common.prev")}
+              </MoaButton>
+              <span className="text-sm font-semibold text-[var(--theme-text-muted)]">
+                {currentPage} / {Math.max(totalPages, 1)}
+              </span>
+              <MoaButton
+                variant="secondary"
+                size="sm"
+                disabled={currentPage >= totalPages}
+                onClick={() => handlePageChange(currentPage + 1)}
+              >
+                {t("common.next")}
+              </MoaButton>
+            </div>
+          )}
+        </MoaCard>
+      </div>
+
+      <InquiryDetailModal
+        isOpen={isDetailModalOpen}
+        onClose={() => setIsDetailModalOpen(false)}
+        inquiry={selectedInquiry}
+      />
+
+      <InquiryAnswerModal
+        isOpen={isAnswerModalOpen}
+        onClose={() => setIsAnswerModalOpen(false)}
+        inquiry={selectedInquiry}
+        onAnswerSubmit={handleAnswerSubmit}
+      />
+    </CommunityLayout>
+  );
 };
 
 export default InquiryAdmin;

@@ -1,22 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
 import { Loader2, CreditCard, Info } from "lucide-react";
 import { useAuthStore } from "../../store/authStore";
 import { requestBillingAuth } from "../../utils/paymentHandler";
 import { handleApiError } from "../../utils/errorHandler";
 import { toast } from "../../utils/toast";
-import {
-  useTheme,
-} from "../../config/themeConfig";
+import { MoaCard } from "@/components/common/MoaPage";
 
 export default function BillingRegisterPage() {
   const navigate = useNavigate();
   const { user } = useAuthStore();
-  const [loading, setLoading] = useState(true);
-
-  // Theme
-  const { theme, setTheme, currentTheme } = useTheme("appTheme");
 
   useEffect(() => {
     if (!user) {
@@ -48,68 +41,45 @@ export default function BillingRegisterPage() {
   }, [user, navigate]);
 
   return (
-    <div className="min-h-screen bg-transparent flex items-center justify-center relative transition-colors duration-300 z-10">
-      <div className="max-w-md w-full mx-4 relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className={`rounded-2xl shadow-lg p-10 ${theme === "pop"
-              ? "bg-white/90 backdrop-blur-sm border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]"
-              : theme === "dark"
-                ? "bg-[#1E293B] border border-gray-700"
-                : theme === "christmas"
-                  ? "bg-white/90 backdrop-blur-sm border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]"
-                  : "bg-white/90 backdrop-blur-sm shadow-[#635bff]/10 border border-gray-100"
-            }`}
-        >
+    <div className="flex min-h-[calc(100vh-5rem)] items-center justify-center px-4 py-12">
+      <div className="relative z-10 w-full max-w-md">
+        <MoaCard className="p-8">
           <div className="text-center">
-            <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-              className="mx-auto mb-6 w-16 h-16 flex items-center justify-center"
-            >
-              <Loader2 className={`w-12 h-12 ${theme === "pop" ? "text-pink-500" : theme === "christmas" ? "text-red-800" : "text-[#635bff]"}`} />
-            </motion.div>
-            <h2 className={`text-2xl font-bold mb-2 ${currentTheme.text}`}>
+            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center">
+              <Loader2 className="h-12 w-12 animate-spin text-[var(--theme-primary)]" />
+            </div>
+            <h2 className="mb-2 text-2xl font-bold text-[var(--theme-text)]">
               {localStorage.getItem("billingRegistrationReason") === "party_join"
-                ? "거의 다 됐어요! 🎉"
+                ? "거의 다 됐어요!"
                 : "자동 결제 설정 중..."}
             </h2>
-            <p className={`font-medium mb-6 ${currentTheme.subtext}`}>
+            <p className="mb-6 font-medium text-[var(--theme-text-muted)]">
               {localStorage.getItem("billingRegistrationReason") === "party_join"
                 ? "파티 가입 완료를 위해 카드를 등록해주세요"
                 : "월 구독료 자동 결제를 위해 카드를 등록합니다"}
             </p>
-            <div className={`rounded-xl p-4 text-left ${theme === "pop"
-                ? "bg-pink-100 border-2 border-black"
-                : theme === "dark"
-                  ? "bg-[#635bff]/10 border border-[#635bff]/20"
-                  : theme === "christmas"
-                    ? "bg-red-50 border border-gray-200"
-                    : "bg-[#635bff]/5 border border-[#635bff]/10"
-              }`}>
-              <div className={`flex items-center gap-2 font-semibold mb-3 ${theme === "pop" ? "text-black" : theme === "christmas" ? "text-red-800" : "text-[#635bff]"
-                }`}>
+            <div className="rounded-xl border border-[var(--theme-border-light)] bg-[var(--theme-surface-muted)] p-4 text-left">
+              <div className="mb-3 flex items-center gap-2 font-semibold text-[var(--theme-primary)]">
                 <Info className="w-4 h-4" />
                 안내사항
               </div>
-              <ul className={`text-sm space-y-2 ${currentTheme.subtext}`}>
+              <ul className="space-y-2 text-sm text-[var(--theme-text-muted)]">
                 <li className="flex items-start gap-2">
-                  <CreditCard className={`w-4 h-4 mt-0.5 flex-shrink-0 ${theme === "pop" ? "text-cyan-500" : theme === "christmas" ? "text-green-800" : "text-[#00d4ff]"}`} />
+                  <CreditCard className="mt-0.5 h-4 w-4 flex-shrink-0 text-[var(--theme-primary)]" />
                   매월 자동으로 구독료가 결제됩니다
                 </li>
                 <li className="flex items-start gap-2">
-                  <CreditCard className={`w-4 h-4 mt-0.5 flex-shrink-0 ${theme === "pop" ? "text-cyan-500" : theme === "christmas" ? "text-green-800" : "text-[#00d4ff]"}`} />
+                  <CreditCard className="mt-0.5 h-4 w-4 flex-shrink-0 text-[var(--theme-primary)]" />
                   결제일은 파티 설정에 따라 다릅니다
                 </li>
                 <li className="flex items-start gap-2">
-                  <CreditCard className={`w-4 h-4 mt-0.5 flex-shrink-0 ${theme === "pop" ? "text-cyan-500" : theme === "christmas" ? "text-green-800" : "text-[#00d4ff]"}`} />
+                  <CreditCard className="mt-0.5 h-4 w-4 flex-shrink-0 text-[var(--theme-primary)]" />
                   언제든지 카드 변경이 가능합니다
                 </li>
               </ul>
             </div>
           </div>
-        </motion.div>
+        </MoaCard>
       </div>
     </div>
   );

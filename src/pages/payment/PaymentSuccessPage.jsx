@@ -1,28 +1,15 @@
 import { useEffect, useState, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { motion } from "framer-motion";
-import { CheckCircle, AlertCircle, Loader2, Home, Sparkles } from "lucide-react";
+import { CheckCircle, AlertCircle, Loader2, Home } from "lucide-react";
 import { processLeaderDeposit, joinParty, createParty } from "../../api/partyApi";
-import { useTheme } from "../../config/themeConfig";
+import { MoaButton, MoaCard } from "@/components/common/MoaPage";
 
 export default function PaymentSuccessPage() {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const [status, setStatus] = useState("processing"); // processing, success, fail
-    const { theme, currentTheme } = useTheme("appTheme");
 
     const isProcessed = useRef(false); // 중복 실행 방지 플래그 (useRef 사용)
-
-    // 테마별 악센트 색상
-    const getAccentColor = () => {
-        switch (theme) {
-            case "christmas": return "#c41e3a";
-            case "pop": return "#ec4899";
-            case "dark": return "#635bff";
-            default: return "#635bff";
-        }
-    };
-    const accentColor = getAccentColor();
 
     useEffect(() => {
         const paymentKey = searchParams.get("paymentKey");
@@ -137,75 +124,40 @@ export default function PaymentSuccessPage() {
     }, [navigate, searchParams]);
 
     return (
-        <div className={`min-h-screen flex flex-col items-center justify-center relative transition-colors duration-300 ${currentTheme.bg}`}>
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className={`p-10 rounded-2xl text-center relative z-10 max-w-md w-full mx-4 ${theme === "pop"
-                    ? "bg-white/90 backdrop-blur-sm border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]"
-                    : theme === "dark"
-                        ? "bg-[#1E293B] border border-gray-700 shadow-lg"
-                        : theme === "christmas"
-                            ? "bg-white/90 backdrop-blur-sm border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]"
-                            : "bg-white/90 backdrop-blur-sm shadow-lg shadow-[#635bff]/10 border border-gray-100"
-                    }`}
-            >
+        <div className="flex min-h-[calc(100vh-5rem)] items-center justify-center px-4 py-12">
+            <MoaCard className="w-full max-w-md p-8 text-center">
                 {status === "processing" && (
                     <>
-                        <motion.div
-                            animate={{ rotate: 360 }}
-                            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                            className="mx-auto mb-6"
-                        >
-                            <Loader2 className="w-12 h-12" style={{ color: accentColor }} />
-                        </motion.div>
-                        <h2 className={`text-2xl font-bold mb-2 ${currentTheme.text}`}>결제 확인 중입니다...</h2>
-                        <p className={`font-medium ${currentTheme.subtext}`}>잠시만 기다려주세요.</p>
+                        <Loader2 className="mx-auto mb-6 h-12 w-12 animate-spin text-[var(--theme-primary)]" />
+                        <h2 className="mb-2 text-2xl font-bold text-[var(--theme-text)]">결제 확인 중입니다...</h2>
+                        <p className="font-medium text-[var(--theme-text-muted)]">잠시만 기다려주세요.</p>
                     </>
                 )}
                 {status === "success" && (
                     <>
-                        <motion.div
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            transition={{ type: "spring", stiffness: 200 }}
-                            className="w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-6"
-                        >
+                        <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50 dark:bg-emerald-500/15">
                             <CheckCircle className="w-10 h-10 text-emerald-500" />
-                        </motion.div>
-                        <h2 className={`text-2xl font-bold mb-2 ${currentTheme.text}`}>결제가 완료되었습니다!</h2>
-                        <p className={`font-medium ${currentTheme.subtext}`}>다음 단계로 이동합니다...</p>
+                        </div>
+                        <h2 className="mb-2 text-2xl font-bold text-[var(--theme-text)]">결제가 완료되었습니다!</h2>
+                        <p className="font-medium text-[var(--theme-text-muted)]">다음 단계로 이동합니다...</p>
                     </>
                 )}
                 {status === "fail" && (
                     <>
-                        <motion.div
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            transition={{ type: "spring", stiffness: 200 }}
-                            className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6"
-                        >
+                        <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-red-50 dark:bg-red-500/15">
                             <AlertCircle className="w-10 h-10 text-red-500" />
-                        </motion.div>
-                        <h2 className={`text-2xl font-bold mb-2 ${currentTheme.text}`}>결제 처리에 실패했습니다</h2>
-                        <p className={`font-medium mb-6 ${currentTheme.subtext}`}>다시 시도해주세요.</p>
-                        <motion.button
-                            whileHover={{ scale: 1.02, y: -1 }}
-                            whileTap={{ scale: 0.98 }}
+                        </div>
+                        <h2 className="mb-2 text-2xl font-bold text-[var(--theme-text)]">결제 처리에 실패했습니다</h2>
+                        <p className="mb-6 font-medium text-[var(--theme-text-muted)]">다시 시도해 주세요.</p>
+                        <MoaButton
                             onClick={() => navigate("/")}
-                            className={`inline-flex items-center gap-2 px-6 py-3 text-white rounded-full font-semibold shadow-lg transition-colors duration-200 ${theme === "pop"
-                                ? "bg-pink-500 hover:bg-pink-600 shadow-pink-500/25"
-                                : theme === "christmas"
-                                    ? "bg-[#c41e3a] hover:bg-[#a51830] shadow-[#c41e3a]/25"
-                                    : "bg-[#635bff] hover:bg-[#5851e8] shadow-[#635bff]/25"
-                                }`}
                         >
                             <Home className="w-5 h-5" />
                             메인으로 돌아가기
-                        </motion.button>
+                        </MoaButton>
                     </>
                 )}
-            </motion.div>
+            </MoaCard>
         </div>
     );
 }

@@ -1,36 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import CommunityLayout from '../../components/community/CommunityLayout';
 import InquiryForm from '../../components/community/InquiryForm';
 import InquiryItem from '../../components/community/InquiryItem';
 import InquiryDetailModal from '../../components/community/InquiryDetailModal';
 import { useAuthStore } from '@/store/authStore';
-import { useThemeStore } from '@/store/themeStore';
-import { NeoCard, NeoPagination } from '@/components/common/neo';
-
-// 테마별 스타일
-const communityThemeStyles = {
-    pop: {
-        cardBg: 'bg-white',
-        textColor: 'text-black',
-    },
-    classic: {
-        cardBg: 'bg-white',
-        textColor: 'text-black',
-    },
-    dark: {
-        cardBg: 'bg-[#1E293B]',
-        textColor: 'text-gray-200',
-    },
-    christmas: {
-        cardBg: 'bg-white',
-        textColor: 'text-black',
-    },
-};
+import { MoaButton, MoaCard, MoaEmptyState } from '@/components/common/MoaPage';
+import { useI18n } from '@/hooks/useI18n';
 
 const Inquiry = () => {
     const { user } = useAuthStore();
-    const { theme } = useThemeStore();
-    const themeStyle = communityThemeStyles[theme] || communityThemeStyles.pop;
+    const { t } = useI18n();
     const [inquiries, setInquiries] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
@@ -47,13 +26,7 @@ const Inquiry = () => {
 
     const userId = user?.userId;
 
-    useEffect(() => {
-        if (userId) {
-            loadMyInquiries(1);
-        }
-    }, [userId]);
-
-    const loadMyInquiries = async (page) => {
+    const loadMyInquiries = useCallback(async (page) => {
         if (!userId) return;
 
         try {
@@ -68,19 +41,25 @@ const Inquiry = () => {
             setInquiries(data.content || []);
             setCurrentPage(data.page || 1);
             setTotalPages(data.totalPages || 0);
-        } catch (error) {
+        } catch {
             setInquiries([]);
         }
-    };
+    }, [userId]);
+
+    useEffect(() => {
+        if (userId) {
+            Promise.resolve().then(() => loadMyInquiries(1));
+        }
+    }, [loadMyInquiries, userId]);
 
     const handleSubmit = async () => {
         if (!formData.title.trim()) {
-            alert('제목을 입력하세요.');
+            alert(t("form.requiredTitle"));
             return;
         }
 
         if (!formData.content.trim()) {
-            alert('내용을 입력하세요.');
+            alert(t("form.requiredContent"));
             return;
         }
 
@@ -101,7 +80,7 @@ const Inquiry = () => {
             });
 
             if (response.ok) {
-                alert('문의가 등록되었습니다.');
+                alert(t("community.inquiry.created"));
                 setFormData({
                     communityCodeId: 1,
                     title: '',
@@ -111,10 +90,10 @@ const Inquiry = () => {
                 setImagePreview(null);
                 loadMyInquiries(1);
             } else {
-                alert('등록에 실패했습니다.');
+                alert(t("form.createFailed"));
             }
-        } catch (error) {
-            alert('등록 중 오류가 발생했습니다.');
+        } catch {
+            alert(t("form.createError"));
         }
     };
 
@@ -132,11 +111,19 @@ const Inquiry = () => {
     return (
         <CommunityLayout>
             <div className="max-w-[1100px] mx-auto">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 min-w-0">
-                    {/* 문의하기 섹션 */}
+                <div className="mb-8">
+                    <h2 className="text-2xl font-bold text-[var(--theme-text)]">
+                        {t("community.inquiry.title")}
+                    </h2>
+                    <p className="mt-2 text-sm text-[var(--theme-text-muted)]">
+                        {t("community.inquiry.description")}
+                    </p>
+                </div>
+
+                <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
                     <div className="min-w-0 overflow-hidden">
-                        <h3 className={`text-lg font-black mb-4 ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
-                            문의하기
+                        <h3 className="mb-4 text-lg font-bold text-[var(--theme-text)]">
+                            {t("community.inquiry.create")}
                         </h3>
                         <InquiryForm
                             formData={formData}
@@ -148,22 +135,17 @@ const Inquiry = () => {
                         />
                     </div>
 
-                    {/* 나의 문의 내역 섹션 */}
                     <div className="min-w-0 overflow-hidden">
-                        <h3 className={`text-lg font-black mb-4 ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
-                            나의 문의 내역
+                        <h3 className="mb-4 text-lg font-bold text-[var(--theme-text)]">
+                            {t("community.inquiry.mine")}
                         </h3>
 
-                        {/* 리스트를 하나의 카드로 감싸기 (문의하기 폼과 동일한 높이) */}
-                        <NeoCard
-                            color={theme === 'dark' ? 'bg-[#1E293B]' : 'bg-white'}
-                            hoverable={false}
-                            className="rounded-2xl p-6 h-[687px] flex flex-col"
-                        >
+                        <MoaCard className="flex min-h-[520px] flex-col p-5 sm:p-6">
                             {inquiries.length === 0 ? (
-                                <div className={`flex-1 flex items-center justify-center font-bold ${theme === 'dark' ? 'text-gray-500' : 'text-gray-400'}`}>
-                                    등록된 문의가 없습니다.
-                                </div>
+                                <MoaEmptyState
+                                    title={t("community.inquiry.empty")}
+                                    className="flex-1 border-0"
+                                />
                             ) : (
                                 <div className="flex-1 overflow-y-auto">
                                     {inquiries.map((inquiry) => (
@@ -176,15 +158,28 @@ const Inquiry = () => {
                                 </div>
                             )}
 
-                            {/* 페이지네이션 - 카드 안 하단 */}
-                            <div className="pt-4">
-                                <NeoPagination
-                                    currentPage={currentPage}
-                                    totalPages={totalPages}
-                                    onPageChange={handlePageChange}
-                                />
+                            <div className="mt-4 flex items-center justify-between border-t border-[var(--theme-border-light)] pt-4">
+                                <MoaButton
+                                    variant="secondary"
+                                    size="sm"
+                                    onClick={() => handlePageChange(currentPage - 1)}
+                                    disabled={currentPage <= 1}
+                                >
+                                    {t("common.prev")}
+                                </MoaButton>
+                                <span className="text-sm font-semibold text-[var(--theme-text-muted)]">
+                                    {currentPage} / {Math.max(totalPages, 1)}
+                                </span>
+                                <MoaButton
+                                    variant="secondary"
+                                    size="sm"
+                                    onClick={() => handlePageChange(currentPage + 1)}
+                                    disabled={currentPage >= totalPages}
+                                >
+                                    {t("common.next")}
+                                </MoaButton>
                             </div>
-                        </NeoCard>
+                        </MoaCard>
                     </div>
                 </div>
             </div>

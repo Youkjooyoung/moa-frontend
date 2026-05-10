@@ -1,48 +1,10 @@
 import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
 import { CheckCircle, XCircle, Loader2, Wallet } from "lucide-react";
 import httpClient from "../../api/httpClient";
 import { handlePaymentError, handleNetworkError } from "../../utils/errorHandler";
 import { toast } from "../../utils/toast";
-
-// Animated gradient background component
-function AnimatedGradient() {
-    return (
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            <motion.div
-                className="absolute -top-1/2 -left-1/2 w-full h-full rounded-full opacity-30"
-                style={{
-                    background: "radial-gradient(circle, rgba(99,91,255,0.15) 0%, transparent 70%)",
-                }}
-                animate={{
-                    x: [0, 100, 0],
-                    y: [0, 50, 0],
-                }}
-                transition={{
-                    duration: 20,
-                    repeat: Infinity,
-                    ease: "linear",
-                }}
-            />
-            <motion.div
-                className="absolute -bottom-1/2 -right-1/2 w-full h-full rounded-full opacity-30"
-                style={{
-                    background: "radial-gradient(circle, rgba(0,212,255,0.15) 0%, transparent 70%)",
-                }}
-                animate={{
-                    x: [0, -100, 0],
-                    y: [0, -50, 0],
-                }}
-                transition={{
-                    duration: 25,
-                    repeat: Infinity,
-                    ease: "linear",
-                }}
-            />
-        </div>
-    );
-}
+import { MoaButton, MoaCard } from "@/components/common/MoaPage";
 
 export default function BillingSuccessPage() {
     const [searchParams] = useSearchParams();
@@ -52,6 +14,7 @@ export default function BillingSuccessPage() {
 
     useEffect(() => {
         registerBillingKey();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const registerBillingKey = async () => {
@@ -179,73 +142,49 @@ export default function BillingSuccessPage() {
     };
 
     return (
-        <div className="min-h-screen bg-[#fafafa] flex items-center justify-center relative">
-            <AnimatedGradient />
-            <div className="max-w-md w-full mx-4 relative z-10">
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="bg-white rounded-2xl shadow-lg shadow-[#635bff]/10 p-10 border border-gray-100"
-                >
+        <div className="flex min-h-[calc(100vh-5rem)] items-center justify-center px-4 py-12">
+            <div className="relative z-10 w-full max-w-md">
+                <MoaCard className="p-8">
                     {status === "processing" && (
                         <div className="text-center">
-                            <motion.div
-                                animate={{ rotate: 360 }}
-                                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                                className="mx-auto mb-6 w-16 h-16 flex items-center justify-center"
-                            >
-                                <Loader2 className="w-12 h-12 text-[#635bff]" />
-                            </motion.div>
-                            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center">
+                                <Loader2 className="h-12 w-12 animate-spin text-[var(--theme-primary)]" />
+                            </div>
+                            <h2 className="mb-2 text-2xl font-bold text-[var(--theme-text)]">
                                 {message}
                             </h2>
-                            <p className="text-gray-500 font-medium">잠시만 기다려주세요...</p>
+                            <p className="font-medium text-[var(--theme-text-muted)]">잠시만 기다려주세요...</p>
                         </div>
                     )}
 
                     {status === "success" && (
                         <div className="text-center">
-                            <motion.div
-                                initial={{ scale: 0 }}
-                                animate={{ scale: 1 }}
-                                transition={{ type: "spring", stiffness: 200 }}
-                                className="w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-6"
-                            >
+                            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50 dark:bg-emerald-500/15">
                                 <CheckCircle className="w-10 h-10 text-emerald-500" />
-                            </motion.div>
-                            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                            </div>
+                            <h2 className="mb-2 text-2xl font-bold text-[var(--theme-text)]">
                                 {message}
                             </h2>
-                            <p className="text-gray-500 font-medium">페이지로 이동합니다...</p>
+                            <p className="font-medium text-[var(--theme-text-muted)]">페이지로 이동합니다...</p>
                         </div>
                     )}
 
                     {status === "error" && (
                         <div className="text-center">
-                            <motion.div
-                                initial={{ scale: 0 }}
-                                animate={{ scale: 1 }}
-                                transition={{ type: "spring", stiffness: 200 }}
-                                className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6"
-                            >
+                            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-red-50 dark:bg-red-500/15">
                                 <XCircle className="w-10 h-10 text-red-500" />
-                            </motion.div>
-                            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                            </div>
+                            <h2 className="mb-2 text-2xl font-bold text-[var(--theme-text)]">
                                 카드 등록 실패
                             </h2>
-                            <p className="text-gray-500 font-medium mb-6">{message}</p>
-                            <motion.button
-                                whileHover={{ scale: 1.02, y: -1 }}
-                                whileTap={{ scale: 0.98 }}
-                                onClick={() => navigate("/user/wallet")}
-                                className="inline-flex items-center gap-2 px-6 py-3 bg-[#635bff] hover:bg-[#5851e8] text-white rounded-full font-semibold shadow-lg shadow-[#635bff]/25 transition-all"
-                            >
+                            <p className="mb-6 font-medium text-[var(--theme-text-muted)]">{message}</p>
+                            <MoaButton onClick={() => navigate("/user/wallet")}>
                                 <Wallet className="w-5 h-5" />
                                 지갑으로 돌아가기
-                            </motion.button>
+                            </MoaButton>
                         </div>
                     )}
-                </motion.div>
+                </MoaCard>
             </div>
         </div>
     );

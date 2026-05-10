@@ -3,13 +3,45 @@ import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import fs from "fs";
 import path from "path";
+import { fileURLToPath } from "url";
+
+const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
 
+  build: {
+    chunkSizeWarningLimit: 650,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          react: ["react", "react-dom", "react-router-dom"],
+          apexcharts: ["apexcharts", "react-apexcharts"],
+          chartjs: ["chart.js", "react-chartjs-2"],
+          recharts: ["recharts"],
+          radix: [
+            "@radix-ui/react-accordion",
+            "@radix-ui/react-alert-dialog",
+            "@radix-ui/react-avatar",
+            "@radix-ui/react-checkbox",
+            "@radix-ui/react-dialog",
+            "@radix-ui/react-dropdown-menu",
+            "@radix-ui/react-label",
+            "@radix-ui/react-popover",
+            "@radix-ui/react-select",
+            "@radix-ui/react-separator",
+            "@radix-ui/react-tabs",
+            "@radix-ui/react-tooltip",
+          ],
+          motion: ["framer-motion"],
+        },
+      },
+    },
+  },
+
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
+      "@": path.resolve(dirname, "./src"),
     },
   },
 
@@ -30,7 +62,7 @@ export default defineConfig({
           return path;
         },
 
-        configure: (proxy, _options) => {
+        configure: (proxy) => {
           proxy.on("error", (err) => {
             console.log("proxy error", err);
           });

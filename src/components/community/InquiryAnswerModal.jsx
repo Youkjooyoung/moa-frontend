@@ -1,48 +1,28 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Dialog,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
-} from '@/components/ui/dialog';
-import { NeoCard, NeoButton } from '@/components/common/neo';
-import { formatDate, getCategoryName } from '../../utils/communityUtils';
-import { useThemeStore } from '@/store/themeStore';
-
-// 테마별 스타일
-const communityThemeStyles = {
-  pop: {
-    // Neo/Pop 스타일 - 핑크, 시안 계열
-    categoryBadge: 'bg-pink-500 text-white',
-    focusRing: 'focus:ring-pink-500',
-    submitButton: 'bg-pink-500 hover:bg-pink-600 text-white',
-  },
-  classic: {
-    categoryBadge: 'bg-[#635bff] text-white',
-    focusRing: 'focus:ring-[#635bff]',
-    submitButton: 'bg-[#635bff] hover:bg-indigo-600 text-white',
-  },
-  dark: {
-    categoryBadge: 'bg-[#635bff] text-white',
-    focusRing: 'focus:ring-[#635bff]',
-    submitButton: 'bg-[#635bff] hover:bg-indigo-600 text-white',
-  },
-  christmas: {
-    categoryBadge: 'bg-[#c41e3a] text-white',
-    focusRing: 'focus:ring-[#c41e3a]',
-    submitButton: 'bg-[#c41e3a] hover:bg-red-700 text-white',
-  },
-};
+} from "@/components/ui/dialog";
+import {
+  MoaBadge,
+  MoaButton,
+  MoaCard,
+  MoaField,
+  MoaTextarea,
+} from "@/components/common/MoaPage";
+import { formatDate, getCategoryName } from "../../utils/communityUtils";
+import { useI18n } from "@/hooks/useI18n";
 
 const InquiryAnswerModalContent = ({ inquiry, onClose, onAnswerSubmit }) => {
-  const [answerContent, setAnswerContent] = useState(inquiry?.answerContent || '');
-  const { theme } = useThemeStore();
-  const themeStyle = communityThemeStyles[theme] || communityThemeStyles.pop;
+  const [answerContent, setAnswerContent] = useState(inquiry?.answerContent || "");
+  const { t } = useI18n();
 
   const handleSubmit = async () => {
     if (!answerContent.trim()) {
-      alert("답변 내용을 입력하세요.");
+      alert(t("community.form.answerPlaceholder"));
       return;
     }
 
@@ -51,90 +31,71 @@ const InquiryAnswerModalContent = ({ inquiry, onClose, onAnswerSubmit }) => {
 
   return (
     <>
-      <DialogHeader>
-        <DialogTitle className="text-2xl font-black text-black">
+      <DialogHeader className="border-b border-[var(--theme-border-light)] px-6 py-5">
+        <DialogTitle className="text-xl font-bold text-[var(--theme-text)]">
           {inquiry.answerContent ? "답변 수정" : "답변 작성"}
         </DialogTitle>
       </DialogHeader>
 
-      <div className="space-y-6">
-        {/* Meta Info */}
-        <div className="flex flex-wrap items-center gap-3">
-          <span className={`px-3 py-1 text-xs font-black rounded-lg ${themeStyle.categoryBadge} border border-gray-200 shadow-[4px_4px_12px_rgba(0,0,0,0.08)]`}>
-            {getCategoryName(inquiry.communityCodeId)}
-          </span>
-          <span className="text-sm font-bold text-gray-500">
+      <div className="space-y-6 px-6 py-6">
+        <div className="flex flex-wrap items-center gap-2">
+          <MoaBadge tone="primary">{getCategoryName(inquiry.communityCodeId)}</MoaBadge>
+          <span className="text-sm font-semibold text-[var(--theme-text-muted)]">
             {formatDate(inquiry.createdAt)}
           </span>
         </div>
 
-        {/* Title & Author */}
         <div>
-          <h3 className="font-black text-xl text-black mb-1">
+          <h3 className="break-words text-xl font-bold text-[var(--theme-text)]">
             {inquiry.title}
           </h3>
-          <p className="text-sm font-bold text-gray-500">
+          <p className="mt-1 text-sm font-semibold text-[var(--theme-text-muted)]">
             작성자: {inquiry.userId}
           </p>
         </div>
 
-        {/* Inquiry Content */}
-        <NeoCard
-          color="bg-slate-50"
-          hoverable={false}
-          className="rounded-xl p-5"
-        >
-          <p className="text-sm font-black text-gray-500 mb-2">문의 내용</p>
-          <p className="text-black font-medium whitespace-pre-wrap leading-relaxed">
+        <MoaCard className="p-5">
+          <p className="mb-2 text-sm font-bold text-[var(--theme-text-muted)]">
+            {t("community.inquiry.content")}
+          </p>
+          <p className="whitespace-pre-wrap break-words text-sm leading-7 text-[var(--theme-text)]">
             {inquiry.content}
           </p>
-        </NeoCard>
+        </MoaCard>
 
-        {/* Attached Image */}
         {inquiry.fileOriginal && (
           <div>
-            <p className="text-sm font-black text-gray-500 mb-3">첨부 이미지</p>
+            <p className="mb-3 text-sm font-bold text-[var(--theme-text-muted)]">
+              {t("community.inquiry.attachment")}
+            </p>
             <img
               src={`/uploads/community/inquiry/${inquiry.fileUuid}`}
               alt={inquiry.fileOriginal}
-              className="max-w-full max-h-64 rounded-xl border border-gray-200 object-contain shadow-[4px_4px_12px_rgba(0,0,0,0.08)]"
+              className="max-h-64 max-w-full rounded-xl border border-[var(--theme-border)] object-contain"
             />
-            <p className="text-xs font-bold text-gray-500 mt-2">
+            <p className="mt-2 text-xs font-semibold text-[var(--theme-text-muted)]">
               {inquiry.fileOriginal}
             </p>
           </div>
         )}
 
-        {/* Answer Input */}
-        <div className="border-t border-gray-200 pt-6">
-          <label className="block text-sm font-black text-black mb-3">
-            답변 작성
-          </label>
-          <textarea
+        <MoaField label="답변 작성">
+          <MoaTextarea
             value={answerContent}
             onChange={(e) => setAnswerContent(e.target.value)}
-            placeholder="답변 내용을 입력하세요"
+            placeholder={t("community.form.answerPlaceholder")}
             rows={8}
-            className={`w-full px-4 py-3 border border-gray-200 rounded-xl font-bold focus:outline-none focus:ring-2 ${themeStyle.focusRing} placeholder-gray-400 resize-none`}
           />
-        </div>
+        </MoaField>
       </div>
 
-      <DialogFooter className="gap-3">
-        <NeoButton
-          color="bg-white"
-          size="sm"
-          onClick={onClose}
-        >
-          취소
-        </NeoButton>
-        <NeoButton
-          color={themeStyle.submitButton}
-          size="sm"
-          onClick={handleSubmit}
-        >
-          {inquiry.answerContent ? '수정' : '등록'}
-        </NeoButton>
+      <DialogFooter className="border-t border-[var(--theme-border-light)] px-6 py-5">
+        <MoaButton variant="secondary" onClick={onClose}>
+          {t("community.form.cancel")}
+        </MoaButton>
+        <MoaButton onClick={handleSubmit}>
+          {inquiry.answerContent ? t("community.form.update") : t("community.form.submit")}
+        </MoaButton>
       </DialogFooter>
     </>
   );
@@ -145,7 +106,7 @@ const InquiryAnswerModal = ({ isOpen, onClose, inquiry, onAnswerSubmit }) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto border border-gray-200 rounded-2xl shadow-[4px_4px_12px_rgba(0,0,0,0.08)]">
+      <DialogContent className="max-h-[82vh] max-w-2xl overflow-y-auto rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-surface)] p-0">
         <InquiryAnswerModalContent
           key={inquiry.communityId}
           inquiry={inquiry}

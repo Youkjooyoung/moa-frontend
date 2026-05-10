@@ -11,7 +11,8 @@
     "tailwind": "npx tailwindcss",
     "test": "vitest",
     "test:ui": "vitest --ui",
-    "test:run": "vitest run"
+    "test:run": "vitest run",
+    "deploy:prod": "powershell -NoProfile -ExecutionPolicy Bypass -File ..\\deploy\\deploy-frontend-cloudfront.ps1"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.9",

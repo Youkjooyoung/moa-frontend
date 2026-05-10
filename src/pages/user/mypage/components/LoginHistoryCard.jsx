@@ -1,62 +1,20 @@
-import React from "react";
-import { useThemeStore } from "@/store/themeStore";
+import { Clock } from "lucide-react";
+import { MoaButton, MoaEmptyState } from "@/shared/ui";
 
-// 테마별 스타일
-const loginHistoryThemeStyles = {
-  pop: {
-    titleText: "text-black",
-    titleBar: "h-[2px] bg-black",
-    subtitleText: "text-slate-700",
-    tableBorder: "border border-gray-200",
-    headerBg: "bg-white",
-    headerBorder: "border-b-2 border-black",
-    headerText: "text-black",
-    rowBorder: "border-b border-black/10",
-    cellText: "text-slate-800",
-    emptyText: "text-slate-700",
-  },
-  christmas: {
-    titleText: "text-black",
-    titleBar: "h-[2px] bg-gray-200",
-    subtitleText: "text-slate-700",
-    tableBorder: "border border-gray-200",
-    headerBg: "bg-white",
-    headerBorder: "border-b border-gray-200",
-    headerText: "text-black",
-    rowBorder: "border-b border-gray-200",
-    cellText: "text-slate-800",
-    emptyText: "text-slate-700",
-  },
-  dark: {
-    titleText: "text-gray-200",
-    titleBar: "h-[2px] bg-gray-700",
-    subtitleText: "text-gray-400",
-    tableBorder: "border border-gray-700",
-    headerBg: "bg-[#0F172A]",
-    headerBorder: "border-b border-gray-700",
-    headerText: "text-gray-200",
-    rowBorder: "border-b border-gray-700",
-    cellText: "text-gray-300",
-    emptyText: "text-gray-400",
-  },
-  classic: {
-    titleText: "text-black",
-    titleBar: "h-[2px] bg-gray-200",
-    subtitleText: "text-slate-700",
-    tableBorder: "border border-gray-200",
-    headerBg: "bg-white",
-    headerBorder: "border-b border-gray-200",
-    headerText: "text-black",
-    rowBorder: "border-b border-gray-200",
-    cellText: "text-slate-800",
-    emptyText: "text-slate-700",
-  },
-};
+function formatDateTime(value) {
+  if (!value) return "-";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return new Intl.DateTimeFormat("ko-KR", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(date);
+}
 
 export function LoginHistoryCard({ loginHistory, onBack }) {
-  const { theme } = useThemeStore();
-  const themeStyle =
-    loginHistoryThemeStyles[theme] || loginHistoryThemeStyles.pop;
   const items =
     loginHistory?.items ||
     loginHistory?.data?.items ||
@@ -72,59 +30,64 @@ export function LoginHistoryCard({ loginHistory, onBack }) {
 
   return (
     <div className="w-full">
-      <div className="flex items-start justify-between gap-4">
+      <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className={`font-black tracking-widest text-sm ${themeStyle.titleText}`}>로그인 이력</p>
-          <div className={`mt-4 ${themeStyle.titleBar} w-full`} />
+          <p className="text-lg font-black text-[var(--theme-text)]">로그인 기록</p>
+          <p className="mt-1 text-sm text-[var(--theme-text-muted)]">
+            최근 로그인 이력 {total ?? 0}건
+          </p>
         </div>
+        {onBack && (
+          <MoaButton variant="secondary" size="sm" onClick={onBack}>
+            계정 정보로
+          </MoaButton>
+        )}
       </div>
 
-      <p className={`mt-6 text-sm font-bold ${themeStyle.subtitleText}`}>
-        최근 로그인 이력 {total ?? 0}건
-      </p>
-
-      <div className={`mt-4 ${themeStyle.tableBorder} rounded-2xl overflow-hidden`}>
-        <table className="w-full text-sm">
-          <thead className={themeStyle.headerBg}>
-            <tr className={themeStyle.headerBorder}>
-              <th className={`text-left p-3 font-black ${themeStyle.headerText}`}>일시</th>
-              <th className={`text-left p-3 font-black ${themeStyle.headerText}`}>결과</th>
-              <th className={`text-left p-3 font-black ${themeStyle.headerText}`}>IP</th>
-              <th className={`text-left p-3 font-black ${themeStyle.headerText}`}>유형</th>
-              <th className={`text-left p-3 font-black ${themeStyle.headerText}`}>User-Agent</th>
-            </tr>
-          </thead>
-          <tbody>
-            {Array.isArray(items) && items.length > 0 ? (
-              items.map((row, idx) => (
-                <tr key={idx} className={themeStyle.rowBorder}>
-                  <td className={`p-3 font-bold ${themeStyle.cellText}`}>
-                    {row?.createdAt || row?.dateTime || row?.loginAt || "-"}
-                  </td>
-                  <td className={`p-3 font-black ${themeStyle.cellText}`}>
-                    {row?.success === false || row?.result === "FAIL"
-                      ? "실패"
-                      : "성공"}
-                  </td>
-                  <td className={`p-3 font-bold ${themeStyle.cellText}`}>{row?.loginIp ?? "-"}</td>
-                  <td className={`p-3 font-bold ${themeStyle.cellText}`}>
-                    {row?.provider || row?.type || "-"}
-                  </td>
-                  <td className={`p-3 font-bold truncate max-w-[220px] ${themeStyle.cellText}`}>
-                    {row?.userAgent || "-"}
-                  </td>
+      {Array.isArray(items) && items.length > 0 ? (
+        <div className="overflow-hidden rounded-2xl border border-[var(--theme-border-light)]">
+          <div className="overflow-x-auto">
+            <table className="min-w-[760px] w-full text-sm">
+              <thead className="bg-[var(--theme-bg)]">
+                <tr className="border-b border-[var(--theme-border-light)]">
+                  <th className="p-3 text-left font-black text-[var(--theme-text)]">일시</th>
+                  <th className="p-3 text-left font-black text-[var(--theme-text)]">결과</th>
+                  <th className="p-3 text-left font-black text-[var(--theme-text)]">IP</th>
+                  <th className="p-3 text-left font-black text-[var(--theme-text)]">유형</th>
+                  <th className="p-3 text-left font-black text-[var(--theme-text)]">User-Agent</th>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td className={`p-4 font-bold ${themeStyle.emptyText}`} colSpan={5}>
-                  로그인 이력이 없습니다.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+              </thead>
+              <tbody>
+                {items.map((row, idx) => (
+                  <tr key={idx} className="border-b border-[var(--theme-border-light)] last:border-b-0">
+                    <td className="whitespace-nowrap p-3 font-semibold text-[var(--theme-text)]">
+                      {formatDateTime(row?.createdAt || row?.dateTime || row?.loginAt)}
+                    </td>
+                    <td className="p-3 font-bold text-[var(--theme-text)]">
+                      {row?.success === false || row?.result === "FAIL" ? "실패" : "성공"}
+                    </td>
+                    <td className="whitespace-nowrap p-3 font-semibold text-[var(--theme-text-muted)]">
+                      {row?.loginIp ?? row?.ip ?? "-"}
+                    </td>
+                    <td className="p-3 font-semibold text-[var(--theme-text-muted)]">
+                      {row?.provider || row?.type || "-"}
+                    </td>
+                    <td className="max-w-[280px] truncate p-3 font-semibold text-[var(--theme-text-muted)]">
+                      {row?.userAgent || "-"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      ) : (
+        <MoaEmptyState
+          icon={Clock}
+          title="로그인 기록이 없습니다"
+          description="새로운 로그인 기록이 생기면 이곳에 표시됩니다."
+        />
+      )}
     </div>
   );
 }
