@@ -1,4 +1,4 @@
-﻿import { useEffect } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import httpClient from "@/api/httpClient";
 import { useAuthStore } from "@/store/authStore";
@@ -12,34 +12,29 @@ function formatDate(value) {
   return d.toISOString().slice(0, 10);
 }
 
+function getLoginProviderLabel(user) {
+  if (!user) return "EMAIL";
+
+  const raw =
+    user.loginProvider ||
+    user.provider ||
+    user.lastLoginType ||
+    (user.oauthConnections || []).find((connection) => connection.provider && !connection.releaseDate)
+      ?.provider;
+
+  const provider = (raw || "").toString().toLowerCase();
+
+  if (provider === "kakao") return "KAKAO";
+  if (provider === "google") return "GOOGLE";
+  return "EMAIL";
+}
+
 export const useMyPage = () => {
   const navigate = useNavigate();
   const { user, setUser } = useAuthStore();
-  const { enabled, modalOpen, qrUrl, code, loading, setEnabled } =
-    useOtpStore();
-
+  const { enabled, modalOpen, qrUrl, code, loading, setEnabled } = useOtpStore();
   const otpActionHandlers = otpHandlers();
 
-  const getLoginProviderLabel = (user) => {
-    if (!user) return "EMAIL";
-
-    const raw =
-      user.loginProvider ||
-      user.provider ||
-      user.lastLoginType ||
-      (user.oauthConnections || []).find((c) => c.provider && !c.releaseDate)
-        ?.provider;
-
-    const p = (raw || "").toString().toLowerCase();
-
-    if (p === "kakao") return "KAKAO";
-    if (p === "google") return "GOOGLE";
-    return "EMAIL";
-  };
-
-  /* ===============================
-   * 사용자 정보 로딩
-   * =============================== */
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -65,9 +60,6 @@ export const useMyPage = () => {
     setEnabled(!!user?.otpEnabled);
   }, [user, setEnabled]);
 
-  /* ===============================
-   * 기본 파생 상태
-   * =============================== */
   const marketingAgreed = user
     ? user.agreeMarketing ?? user.marketing ?? false
     : false;
@@ -75,20 +67,14 @@ export const useMyPage = () => {
   const shortId = user?.userId?.split("@")[0] || user?.userId || "";
   const isAdmin = user?.role === "ADMIN";
 
-  /* ===============================
-   *  OAuth 연결 객체
-   * =============================== */
   const googleOAuth = (user?.oauthConnections || []).find(
-    (c) => c.provider?.toLowerCase() === "google" && !c.releaseDate
+    (connection) => connection.provider?.toLowerCase() === "google" && !connection.releaseDate
   );
 
   const kakaoOAuth = (user?.oauthConnections || []).find(
-    (c) => c.provider?.toLowerCase() === "kakao" && !c.releaseDate
+    (connection) => connection.provider?.toLowerCase() === "kakao" && !connection.releaseDate
   );
 
-  /* ===============================
-   * 화면 표시용 boolean (기존 유지)
-   * =============================== */
   const googleConn = Boolean(
     (user?.loginProvider || "").toLowerCase() === "google" || googleOAuth
   );
@@ -97,11 +83,6 @@ export const useMyPage = () => {
     (user?.loginProvider || "").toLowerCase() === "kakao" || kakaoOAuth
   );
 
-  const loginProviderLabel = getLoginProviderLabel(user);
-
-  /* ===============================
-   * 공통 핸들러
-   * =============================== */
   const handlers = {
     oauthConnect: async (provider) => {
       const res = await httpClient.get(`/oauth/${provider}/auth`, {
@@ -115,7 +96,7 @@ export const useMyPage = () => {
           : body?.url || body?.data?.url || body?.redirectUrl;
 
       if (!url) {
-        alert("연동을 시작할 수 없습니다.");
+        alert("계정 연결을 시작할 수 없습니다.");
         return;
       }
 
@@ -124,7 +105,7 @@ export const useMyPage = () => {
 
     oauthRelease: async (oauthId) => {
       if (!oauthId) {
-        alert("현재 로그인 계정은 해제할 수 없습니다.");
+        alert("현재 로그인에 사용 중인 계정은 해제할 수 없습니다.");
         return;
       }
 
@@ -133,16 +114,13 @@ export const useMyPage = () => {
       if (res.success) {
         await useAuthStore.getState().fetchSession();
       } else {
-        alert("소셜 계정 연동 해제 실패");
+        alert("간편 로그인 연결 해제에 실패했습니다.");
       }
     },
 
     formatDate,
   };
 
-  /* ===============================
-   * 수정된 버튼 클릭 로직
-   * =============================== */
   const handleGoogleClick = () => {
     if (googleOAuth) {
       return handlers.oauthRelease(googleOAuth.oauthId);
@@ -152,7 +130,7 @@ export const useMyPage = () => {
 
   const handleKakaoClick = () => {
     if ((user?.loginProvider || "").toLowerCase() === "kakao") {
-      alert("카카오는 현재 로그인 계정이므로 해제할 수 없습니다.");
+      alert("현재 로그인에 사용 중인 카카오 계정은 해제할 수 없습니다.");
       return;
     }
 
@@ -166,6 +144,7 @@ export const useMyPage = () => {
   const handleOtpModalChange = (isOpen) => {
     if (!isOpen) otpActionHandlers.closeModal();
   };
+
   return {
     state: {
       user,
@@ -174,7 +153,7 @@ export const useMyPage = () => {
       marketingAgreed,
       googleConn,
       kakaoConn,
-      loginProvider: loginProviderLabel,
+      loginProvider: getLoginProviderLabel(user),
       otp: {
         enabled: !!(user?.otpEnabled ?? enabled),
         modalOpen,
