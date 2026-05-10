@@ -28,8 +28,7 @@ export const initResetPwdPage = () => {
 
     await httpClient.post("/users/resetPwd/start-pass", { di });
 
-    guide.innerText =
-      "본인 인증이 완료되었습니다. 새 비밀번호를 입력해 주세요.";
+    guide.innerText = "본인 인증이 완료되었습니다. 새 비밀번호를 입력해 주세요.";
     formArea.classList.remove("hidden");
 
     step1.classList.remove("text-blue-600");
@@ -60,7 +59,7 @@ export const initResetPwdPage = () => {
 
         const IMP = await loadIamport();
         if (!IMP) {
-          alert("본인인증 모듈이 로드되지 않았습니다.");
+          alert("본인인증 모듈을 불러올 수 없습니다.");
           return;
         }
 

@@ -69,17 +69,17 @@ export default function FinancialHistoryPage() {
           <MoaCard className="p-5">
             <Receipt className="mb-3 h-5 w-5 text-[var(--theme-primary)]" />
             <p className="text-sm font-semibold text-[var(--theme-text-muted)]">자동 결제</p>
-            <p className="mt-1 font-black text-[var(--theme-text)]">매월 정기 결제</p>
+            <p className="mt-1 font-black text-[var(--theme-text)]">구독별 결제 흐름</p>
           </MoaCard>
           <MoaCard className="p-5">
             <ShieldCheck className="mb-3 h-5 w-5 text-[var(--theme-primary)]" />
-            <p className="text-sm font-semibold text-[var(--theme-text-muted)]">보증금 보호</p>
-            <p className="mt-1 font-black text-[var(--theme-text)]">안전하게 보관</p>
+            <p className="text-sm font-semibold text-[var(--theme-text-muted)]">보증금 보관</p>
+            <p className="mt-1 font-black text-[var(--theme-text)]">안전하게 보관 중</p>
           </MoaCard>
           <MoaCard className="p-5">
             <TrendingUp className="mb-3 h-5 w-5 text-[var(--theme-primary)]" />
-            <p className="text-sm font-semibold text-[var(--theme-text-muted)]">정산 시스템</p>
-            <p className="mt-1 font-black text-[var(--theme-text)]">투명하게 관리</p>
+            <p className="text-sm font-semibold text-[var(--theme-text-muted)]">정산 처리</p>
+            <p className="mt-1 font-black text-[var(--theme-text)]">계좌 기준 관리</p>
           </MoaCard>
         </div>
       </div>

@@ -84,9 +84,9 @@ export default function UpdatePwdPage() {
           <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--theme-primary-light)] text-[var(--theme-primary)]">
             <ShieldCheck className="h-6 w-6" />
           </div>
-          <h2 className="text-xl font-black text-[var(--theme-text)]">안전한 계정 보호</h2>
+          <h2 className="text-xl font-black text-[var(--theme-text)]">계정 보안 확인</h2>
           <p className="mt-3 text-sm leading-6 text-[var(--theme-text-muted)]">
-            먼저 현재 비밀번호를 확인합니다. 확인이 완료되면 새 비밀번호를 입력할 수 있습니다.
+            안전한 변경을 위해 현재 비밀번호를 먼저 확인합니다. 확인이 끝나면 새 비밀번호를 입력할 수 있습니다.
           </p>
         </MoaCard>
 
@@ -123,7 +123,7 @@ export default function UpdatePwdPage() {
                   value={newPassword}
                   onChange={(event) => handleChange("newPassword", event.target.value)}
                   className="h-12 rounded-xl border-[var(--theme-border)] bg-[var(--theme-surface)] text-[var(--theme-text)]"
-                  placeholder="영문, 숫자, 특수문자 조합 8~20자"
+                  placeholder="영문, 숫자, 특수문자 포함 8~20자"
                 />
                 {error.rule && <p className="text-xs text-red-500">{error.rule}</p>}
               </div>

@@ -246,7 +246,7 @@ export default function MyWalletPage() {
           <WalletMethodCard
             title="결제 카드"
             actionLabel="카드 등록하기"
-            helper="구독 결제에 사용할 카드를 등록하세요."
+            helper="자동 결제에 사용할 카드를 등록하세요."
             icon={CreditCard}
             onHistory={(event) => {
               event.stopPropagation();

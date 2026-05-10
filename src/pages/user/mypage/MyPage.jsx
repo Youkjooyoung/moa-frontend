@@ -196,7 +196,7 @@ export default function MyPage() {
         <MoaPageHeader
           eyebrow="Admin"
           title="관리자 계정"
-          description="서비스 운영과 콘텐츠 설정을 관리할 수 있습니다."
+          description="서비스 운영과 콘텐츠 관리를 위한 관리자 메뉴로 이동할 수 있습니다."
         />
         <MoaCard className="grid gap-3 p-5 sm:grid-cols-2">
           <MoaButton onClick={() => actions.navigate("/admin")}>관리자 홈</MoaButton>

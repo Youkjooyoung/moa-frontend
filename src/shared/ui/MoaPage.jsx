@@ -16,7 +16,7 @@ export function MoaPageHeader({
   description,
   action,
   onBack,
-  backLabel = "돌아가기",
+  backLabel = "뒤로가기",
 }) {
   return (
     <div className="mb-8">
@@ -143,7 +143,11 @@ export function MoaField({ label, children, hint }) {
     <label className="block">
       <span className="mb-2 block text-sm font-bold text-[var(--theme-text)]">{label}</span>
       {children}
-      {hint && <span className="mt-2 block text-xs font-medium text-[var(--theme-text-muted)]">{hint}</span>}
+      {hint && (
+        <span className="mt-2 block text-xs font-medium text-[var(--theme-text-muted)]">
+          {hint}
+        </span>
+      )}
     </label>
   );
 }

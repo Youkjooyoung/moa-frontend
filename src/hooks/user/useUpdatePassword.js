@@ -4,6 +4,8 @@ import { useUpdatePwdStore } from "@/store/user/updatePwdStore";
 import { checkCurrentPassword } from "@/api/authApi";
 
 const PASSWORD_RULE = /^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{8,20}$/;
+const PASSWORD_RULE_MESSAGE =
+  "영문, 숫자, 특수문자를 포함한 8~20자의 비밀번호를 입력해 주세요.";
 
 export const useUpdatePwdLogic = () => {
   const {
@@ -32,14 +34,7 @@ export const useUpdatePwdLogic = () => {
 
       if (key === "newPassword") {
         const nextPassword = value;
-        if (nextPassword && !PASSWORD_RULE.test(nextPassword)) {
-          setError(
-            "rule",
-            "영문, 숫자, 특수문자를 포함한 8~20자를 입력해주세요."
-          );
-        } else {
-          setError("rule", "");
-        }
+        setError("rule", nextPassword && !PASSWORD_RULE.test(nextPassword) ? PASSWORD_RULE_MESSAGE : "");
 
         if (newPasswordConfirm && nextPassword !== newPasswordConfirm) {
           setError("confirm", "비밀번호가 서로 일치하지 않습니다.");
@@ -63,7 +58,7 @@ export const useUpdatePwdLogic = () => {
 
   const validateCurrent = useCallback(() => {
     if (!currentPassword?.trim()) {
-      setError("current", "현재 비밀번호를 입력해주세요.");
+      setError("current", "현재 비밀번호를 입력해 주세요.");
       return false;
     }
     setError("current", "");
@@ -74,17 +69,17 @@ export const useUpdatePwdLogic = () => {
     let valid = true;
 
     if (!newPassword?.trim()) {
-      setError("rule", "새 비밀번호를 입력해주세요.");
+      setError("rule", "새 비밀번호를 입력해 주세요.");
       valid = false;
     } else if (!PASSWORD_RULE.test(newPassword)) {
-      setError("rule", "영문, 숫자, 특수문자를 포함한 8~20자를 입력해주세요.");
+      setError("rule", PASSWORD_RULE_MESSAGE);
       valid = false;
     } else {
       setError("rule", "");
     }
 
     if (!newPasswordConfirm?.trim()) {
-      setError("confirm", "새 비밀번호를 다시 입력해주세요.");
+      setError("confirm", "새 비밀번호를 다시 입력해 주세요.");
       valid = false;
     } else if (newPassword !== newPasswordConfirm) {
       setError("confirm", "비밀번호가 서로 일치하지 않습니다.");
@@ -103,9 +98,7 @@ export const useUpdatePwdLogic = () => {
 
     try {
       setLoading(true);
-
       await checkCurrentPassword(currentPassword);
-
       setVerified(true);
       setModal(false);
       return true;

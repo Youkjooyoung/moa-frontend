@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { AlertCircle, Calendar, ChevronRight, Loader2, ReceiptText, TrendingUp } from "lucide-react";
+import { AlertCircle, Calendar, ChevronRight, Loader2, ReceiptText } from "lucide-react";
 import { getSettlementDetails, getSettlements } from "@/api/settlementApi";
 import {
   MoaBadge,
@@ -20,7 +20,7 @@ import {
 
 const statusMeta = {
   PENDING: { label: "대기", tone: "warning" },
-  IN_PROGRESS: { label: "처리 중", tone: "info" },
+  IN_PROGRESS: { label: "진행 중", tone: "info" },
   COMPLETED: { label: "완료", tone: "success" },
   FAILED: { label: "실패", tone: "danger" },
 };
@@ -89,12 +89,11 @@ export default function SettlementHistoryPage() {
         eyebrow="Settlement"
         title="정산 내역"
         description="파티별 정산 금액과 처리 상태를 한눈에 확인하세요."
-        icon={TrendingUp}
         backLabel="뒤로가기"
         onBack={() => navigate(-1)}
       />
 
-      <MoaCard className="space-y-6">
+      <MoaCard className="space-y-6 p-5">
         <div className="grid gap-3 md:grid-cols-[1fr_1fr_auto] md:items-end">
           <label className="space-y-2">
             <span className="text-sm font-semibold text-[var(--theme-text-muted)]">시작일</span>

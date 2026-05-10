@@ -1,4 +1,3 @@
-// src/pages/user/ResetPwdPage.jsx
 import { useEffect } from "react";
 import { initResetPwdPage } from "@/hooks/auth/useResetPassword";
 import { ResetPwdGuide } from "./components/ResetPwdGuide";
@@ -23,26 +22,25 @@ export default function ResetPwdPage() {
 
   return (
     <div className={`min-h-screen ${themeClasses.bg.base} ${themeClasses.text.primary} transition-colors duration-300`}>
-      {/* Theme Switcher */}
       <ThemeSwitcher theme={theme} onThemeChange={setTheme} />
 
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-10 pt-20 pb-20 space-y-8">
+      <div className="mx-auto max-w-5xl space-y-8 px-4 pb-20 pt-20 sm:px-6 lg:px-10">
         <div className="text-center">
           <PageTitle
-            title={theme === 'christmas' ? '🎄 비밀번호 재설정' : '비밀번호 재설정'}
-            subtitle="PASS 본인 인증 후 새 비밀번호를 설정해 주세요"
+            title={theme === "christmas" ? "비밀번호 재설정" : "비밀번호 재설정"}
+            subtitle="PASS 본인 인증 후 새 비밀번호를 설정해 주세요."
           />
         </div>
 
-        <div className={`p-10 space-y-8 ${themeClasses.card.elevated} rounded-3xl`}>
+        <div className={`space-y-8 rounded-3xl p-10 ${themeClasses.card.elevated}`}>
           <PageSteps steps={steps} />
 
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid gap-6 md:grid-cols-2">
             <ResetPwdGuide />
             <ResetPwdForm />
           </div>
 
-          <p className={`text-xs ${themeClasses.text.muted} text-center`}>
+          <p className={`text-center text-xs ${themeClasses.text.muted}`}>
             본인 확인이 완료된 경우 비밀번호 재설정이 가능합니다.
           </p>
         </div>
