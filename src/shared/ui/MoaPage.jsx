@@ -16,7 +16,7 @@ export function MoaPageHeader({
   description,
   action,
   onBack,
-  backLabel = "뒤로가기",
+  backLabel = "돌아가기",
 }) {
   return (
     <div className="mb-8">

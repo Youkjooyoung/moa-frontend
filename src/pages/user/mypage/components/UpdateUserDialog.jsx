@@ -33,7 +33,7 @@ export function UpdateUserDialog({ open, onOpenChange }) {
   } = useUpdateUser();
 
   const handleSave = async () => {
-    const result = await onSave?.();
+    const result = await onSave?.({ navigateToMypage: false });
     const ok =
       result === true ||
       result?.success === true ||
@@ -101,7 +101,7 @@ export function UpdateUserDialog({ open, onOpenChange }) {
               value={nickname || ""}
               onChange={(event) => onNicknameChange?.(event.target.value)}
               onBlur={onNicknameBlur}
-              placeholder="변경할 닉네임 입력"
+              placeholder="닉네임을 입력하세요"
               className="h-12 rounded-xl border-[var(--theme-border)] bg-[var(--theme-surface)] text-[var(--theme-text)]"
             />
             {!!nickMsg?.text && (
@@ -136,7 +136,7 @@ export function UpdateUserDialog({ open, onOpenChange }) {
                     마케팅 정보 수신 동의
                   </p>
                   <p className="text-xs text-[var(--theme-text-muted)]">
-                    이벤트 및 혜택 정보를 받아보세요
+                    이벤트와 혜택 정보를 받아볼 수 있습니다.
                   </p>
                 </div>
               </div>

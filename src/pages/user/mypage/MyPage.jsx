@@ -36,10 +36,8 @@ import { UpdateUserDialog } from "./components/UpdateUserDialog";
 function InfoRow({ label, value, badge }) {
   return (
     <div className="flex min-h-12 items-center justify-between gap-4 border-b border-[var(--theme-border-light)] py-3 last:border-b-0">
-      <span className="shrink-0 text-sm font-semibold text-[var(--theme-text-muted)]">
-        {label}
-      </span>
-      <span className="min-w-0 text-right text-sm font-bold text-[var(--theme-text)]">
+      <span className="shrink-0 text-sm font-semibold text-[var(--theme-text-muted)]">{label}</span>
+      <span className="min-w-0 truncate text-right text-sm font-bold text-[var(--theme-text)]">
         {badge || value || "-"}
       </span>
     </div>
@@ -59,9 +57,9 @@ function MenuItem({ icon, label, active, danger, onClick }) {
             : "text-[var(--theme-text)] hover:bg-[var(--theme-surface-muted)]"
       }`}
     >
-      <span className="inline-flex items-center gap-3">
-        {createElement(icon, { className: "h-4 w-4" })}
-        {label}
+      <span className="inline-flex min-w-0 items-center gap-3">
+        {createElement(icon, { className: "h-4 w-4 shrink-0" })}
+        <span className="truncate">{label}</span>
       </span>
     </button>
   );
@@ -74,12 +72,8 @@ function StatCard({ icon, label, value }) {
         {createElement(icon, { className: "h-5 w-5" })}
       </div>
       <div className="min-w-0">
-        <p className="text-2xl font-black leading-none text-[var(--theme-text)]">
-          {value}
-        </p>
-        <p className="mt-2 text-sm font-semibold text-[var(--theme-text-muted)]">
-          {label}
-        </p>
+        <p className="text-2xl font-black leading-none text-[var(--theme-text)]">{value}</p>
+        <p className="mt-2 text-sm font-semibold text-[var(--theme-text-muted)]">{label}</p>
       </div>
     </MoaCard>
   );
@@ -202,12 +196,12 @@ export default function MyPage() {
         <MoaPageHeader
           eyebrow="Admin"
           title="관리자 계정"
-          description="운영 현황과 서비스 콘텐츠를 관리합니다."
+          description="서비스 운영과 콘텐츠 설정을 관리할 수 있습니다."
         />
         <MoaCard className="grid gap-3 p-5 sm:grid-cols-2">
           <MoaButton onClick={() => actions.navigate("/admin")}>관리자 홈</MoaButton>
           <MoaButton variant="secondary" onClick={() => actions.navigate("/admin/landing")}>
-            랜딩 관리
+            랜딩 콘텐츠 관리
           </MoaButton>
         </MoaCard>
       </MoaPage>
@@ -304,7 +298,7 @@ export default function MyPage() {
                     <div>
                       <p className="font-black text-[var(--theme-text)]">OTP</p>
                       <p className="text-sm text-[var(--theme-text-muted)]">
-                        {otp.enabled ? "사용 중" : "사용 안 함"}
+                        {otp.enabled ? "사용 중" : "미사용"}
                       </p>
                     </div>
                     <MoaButton variant="secondary" size="sm" onClick={openOtp}>

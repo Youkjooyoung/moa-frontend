@@ -82,7 +82,6 @@ export default function VerificationStep() {
 
   const handleExpire = () => {
     setError(TEXT.expired);
-    setTimeout(() => setStep("input"), 1600);
   };
 
   return (

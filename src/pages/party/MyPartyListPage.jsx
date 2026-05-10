@@ -24,7 +24,7 @@ const STATUS_META = {
   RECRUITING: { label: "모집 중", tone: "success" },
   ACTIVE: { label: "진행 중", tone: "info" },
   PENDING_PAYMENT: { label: "결제 대기", tone: "warning" },
-  CLOSED: { label: "종료됨", tone: "neutral" },
+  CLOSED: { label: "종료", tone: "neutral" },
 };
 
 function SegmentButton({ active, icon: Icon, children, onClick }) {
@@ -83,7 +83,7 @@ function PartyCard({ item, currentUserId }) {
             </p>
           </div>
           <div className="rounded-2xl bg-[var(--theme-bg)] p-4">
-            <p className="text-xs font-bold text-[var(--theme-text-muted)]">월 부담액</p>
+            <p className="text-xs font-bold text-[var(--theme-text-muted)]">월 부담금</p>
             <p className="mt-1 text-lg font-black text-[var(--theme-text)]">
               {Number(fee).toLocaleString("ko-KR")}원
             </p>
@@ -159,8 +159,8 @@ export default function MyPartyListPage() {
       <MoaPageHeader
         eyebrow="My Party"
         title="내 파티"
-        description="참여 중인 파티와 종료된 파티를 한눈에 확인하세요."
-        backLabel="마이페이지로"
+        description="참여 중인 파티와 종료된 파티를 한곳에서 확인하세요."
+        backLabel="돌아가기"
         onBack={() => navigate("/mypage")}
         action={
           <MoaButton onClick={() => navigate("/party/create")}>
@@ -191,7 +191,7 @@ export default function MyPartyListPage() {
               <p className="mt-2 text-2xl font-black text-[var(--theme-text)]">{stats.leader}</p>
             </MoaCard>
             <MoaCard className="p-5">
-              <p className="text-sm font-semibold text-[var(--theme-text-muted)]">멤버</p>
+              <p className="text-sm font-semibold text-[var(--theme-text-muted)]">참여자</p>
               <p className="mt-2 text-2xl font-black text-[var(--theme-text)]">{stats.member}</p>
             </MoaCard>
           </div>
@@ -202,7 +202,7 @@ export default function MyPartyListPage() {
             <MoaEmptyState
               icon={Sparkles}
               title={showClosed ? "종료된 파티가 없습니다" : "가입한 파티가 없습니다"}
-              description={showClosed ? "종료된 파티가 생기면 이곳에서 확인할 수 있어요." : "새로운 파티를 만들거나 참여해보세요."}
+              description={showClosed ? "종료된 파티가 생기면 이곳에서 확인할 수 있습니다." : "새로운 파티를 만들거나 참여해보세요."}
               action={
                 <div className="flex flex-wrap justify-center gap-3">
                   <MoaButton onClick={() => navigate("/party")}>파티 찾아보기</MoaButton>

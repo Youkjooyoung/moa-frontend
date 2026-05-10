@@ -46,6 +46,7 @@ function LogoBox({ logoPath, label, fallback: FallbackIcon, themeStyle }) {
 function WalletMethodCard({
   title,
   actionLabel,
+  helper,
   icon: Icon,
   onHistory,
   onClick,
@@ -80,7 +81,7 @@ function WalletMethodCard({
             </div>
             <div className="min-w-0 flex-1">
               <p className="font-black text-[var(--theme-text)]">{actionLabel}</p>
-              <p className="mt-1 text-sm text-[var(--theme-text-muted)]">눌러서 등록하세요</p>
+              <p className="mt-1 text-sm text-[var(--theme-text-muted)]">{helper}</p>
             </div>
           </>
         )}
@@ -176,7 +177,7 @@ export default function MyWalletPage() {
         eyebrow="Wallet"
         title="내 지갑"
         description="보증금, 정산 계좌, 결제 카드를 안전하게 관리하세요."
-        backLabel="마이페이지로"
+        backLabel="목록으로"
         onBack={() => navigate("/mypage")}
       />
 
@@ -206,6 +207,7 @@ export default function MyWalletPage() {
           <WalletMethodCard
             title="정산 계좌"
             actionLabel="계좌 등록하기"
+            helper="정산받을 계좌를 등록하세요."
             icon={Building2}
             onHistory={(event) => {
               event.stopPropagation();
@@ -244,6 +246,7 @@ export default function MyWalletPage() {
           <WalletMethodCard
             title="결제 카드"
             actionLabel="카드 등록하기"
+            helper="구독 결제에 사용할 카드를 등록하세요."
             icon={CreditCard}
             onHistory={(event) => {
               event.stopPropagation();

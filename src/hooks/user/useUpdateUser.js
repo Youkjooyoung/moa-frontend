@@ -1,33 +1,20 @@
-import { useEffect, useMemo, useRef, useState, useCallback } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUpdateUserStore } from "@/store/user/updateUserStore";
 import { useAuthStore } from "@/store/authStore";
 import { checkCommon, startPassAuth, verifyPassAuth } from "@/api/authApi";
 import { getUser, updateUser, uploadProfileImage } from "@/api/userApi";
-
 import { loadIamport } from "@/utils/iamport";
 import { buildPassRedirectUrl, consumePassImpUid } from "@/utils/passRedirect";
 import { resolveProfileImageUrl } from "@/utils/profileImage";
 
-const BAD_WORDS = [
-  "fuck",
-  "shit",
-  "bitch",
-  "개새",
-  "씨발",
-  "병신",
-  "지랄",
-  "좆",
-  "썅",
-];
-
+const BAD_WORDS = ["fuck", "shit", "bitch"];
 const PURPOSE_UPDATE_PHONE = "update-user-phone";
 
 export default function useUpdateUser() {
   const navigate = useNavigate();
   const fileRef = useRef(null);
   const blobUrlRef = useRef(null);
-
   const [initialNickname, setInitialNickname] = useState("");
   const [nickMsg, setNickMsg] = useState({ text: "", isError: false });
 
@@ -83,8 +70,8 @@ export default function useUpdateUser() {
     fileRef.current?.click();
   };
 
-  const onImageSelect = (e) => {
-    const file = e.target.files?.[0] || null;
+  const onImageSelect = (event) => {
+    const file = event.target.files?.[0] || null;
     if (!file) return;
 
     if (blobUrlRef.current) {
@@ -107,43 +94,38 @@ export default function useUpdateUser() {
   };
 
   const validateNickname = async (currentNickname) => {
-    const v = (currentNickname ?? "").trim();
+    const value = (currentNickname ?? "").trim();
 
-    if (!v) {
-      setNickMsg({ text: "닉네임을 입력해주세요.", isError: true });
+    if (!value) {
+      setNickMsg({ text: "닉네임을 입력해 주세요.", isError: true });
       return false;
     }
 
-    const reg = /^[A-Za-z0-9가-힣]{2,10}$/;
-    if (!reg.test(v)) {
+    const nicknamePattern = /^[A-Za-z0-9가-힣]{2,10}$/;
+    if (!nicknamePattern.test(value)) {
       setNickMsg({
-        text: "닉네임은 2~10자, 한글/영문/숫자만 가능합니다.",
+        text: "닉네임은 2~10자의 한글, 영문, 숫자만 사용할 수 있습니다.",
         isError: true,
       });
       return false;
     }
 
-    const lower = v.toLowerCase();
-    for (const bad of BAD_WORDS) {
-      if (lower.includes(bad)) {
-        setNickMsg({
-          text: "부적절한 단어가 포함되어 있습니다.",
-          isError: true,
-        });
-        return false;
-      }
+    const lower = value.toLowerCase();
+    if (BAD_WORDS.some((word) => lower.includes(word))) {
+      setNickMsg({ text: "사용할 수 없는 단어가 포함되어 있습니다.", isError: true });
+      return false;
     }
 
-    if (v !== initialNickname) {
+    if (value !== initialNickname) {
       try {
-        const res = await checkCommon({ type: "nickname", value: v });
+        const res = await checkCommon({ type: "nickname", value });
         const available = !!res?.data?.available;
         if (!available) {
           setNickMsg({ text: "이미 사용 중인 닉네임입니다.", isError: true });
           return false;
         }
       } catch {
-        setNickMsg({ text: "이미 사용 중인 닉네임입니다.", isError: true });
+        setNickMsg({ text: "닉네임 중복 확인에 실패했습니다.", isError: true });
         return false;
       }
     }
@@ -160,11 +142,11 @@ export default function useUpdateUser() {
     async (impUid) => {
       const verify = await verifyPassAuth({ imp_uid: impUid });
       if (!verify?.success) {
-        throw new Error(verify?.error?.message || "본인인증 실패");
+        throw new Error(verify?.error?.message || "본인인증에 실패했습니다.");
       }
       const verified = verify.data;
       setField("phone", verified.phone);
-      alert("본인인증 성공. 휴대폰 번호 변경됨.");
+      alert("본인인증이 완료되었습니다. 휴대폰 번호가 변경되었습니다.");
     },
     [setField]
   );
@@ -174,7 +156,7 @@ export default function useUpdateUser() {
     if (!impUid) return;
 
     processPhoneImpUid(impUid).catch((err) => {
-      alert(err?.message || "본인인증 실패");
+      alert(err?.message || "본인인증에 실패했습니다.");
     });
   }, [processPhoneImpUid]);
 
@@ -184,7 +166,7 @@ export default function useUpdateUser() {
       const { impCode, merchantUid } = start?.data || {};
 
       const IMP = await loadIamport();
-      if (!IMP) throw new Error("본인인증 모듈이 로드되지 않았습니다.");
+      if (!IMP) throw new Error("본인인증 모듈을 불러오지 못했습니다.");
 
       IMP.init(impCode);
       IMP.certification(
@@ -198,18 +180,17 @@ export default function useUpdateUser() {
           }),
         },
         async (rsp) => {
-          if (!rsp?.success) return;
-          if (!rsp.imp_uid) return;
+          if (!rsp?.success || !rsp.imp_uid) return;
 
           try {
             await processPhoneImpUid(rsp.imp_uid);
           } catch (err) {
-            alert(err?.message || "본인인증 실패");
+            alert(err?.message || "본인인증에 실패했습니다.");
           }
         }
       );
     } catch (err) {
-      alert(err?.message || "본인인증 실패");
+      alert(err?.message || "본인인증에 실패했습니다.");
     }
   };
 
@@ -226,17 +207,17 @@ export default function useUpdateUser() {
       if (!ok) return { success: false };
 
       const file = fileRef.current?.files?.[0] || null;
-
       let nextProfileUrl = profileImage || null;
 
       if (file) {
         const form = new FormData();
         form.append("file", file);
 
-        const up = await uploadProfileImage(form);
-        if (!up?.success)
-          throw new Error(up?.error?.message || "프로필 업로드 실패");
-        nextProfileUrl = up.data;
+        const uploaded = await uploadProfileImage(form);
+        if (!uploaded?.success) {
+          throw new Error(uploaded?.error?.message || "프로필 이미지 업로드에 실패했습니다.");
+        }
+        nextProfileUrl = uploaded.data;
       }
 
       const res = await updateUser({
@@ -246,32 +227,28 @@ export default function useUpdateUser() {
         profileImage: nextProfileUrl,
       });
 
-      if (!res?.success)
-        throw new Error(res?.error?.message || "회원정보 수정 실패");
+      if (!res?.success) {
+        throw new Error(res?.error?.message || "회원정보 수정에 실패했습니다.");
+      }
 
       const currentUser = useAuthStore.getState().user || {};
       const updatedUser = {
         ...currentUser,
         ...res.data,
         loginProvider: res.data?.loginProvider || currentUser.loginProvider,
-        oauthConnections:
-          res.data?.oauthConnections ?? currentUser.oauthConnections,
+        oauthConnections: res.data?.oauthConnections ?? currentUser.oauthConnections,
       };
 
       useAuthStore.getState().setUser(updatedUser);
       setUserData(updatedUser);
 
       if (showAlert) alert("회원정보가 수정되었습니다.");
-
       if (typeof onSuccess === "function") onSuccess(updatedUser);
-
-      if (navigateToMypage) {
-        navigate("/mypage", { replace: true });
-      }
+      if (navigateToMypage) navigate("/mypage", { replace: true });
 
       return { success: true, data: updatedUser };
     } catch (err) {
-      if (showAlert) alert(err?.message || "회원정보 수정 실패");
+      if (showAlert) alert(err?.message || "회원정보 수정에 실패했습니다.");
       if (typeof onFail === "function") onFail(err);
       return { success: false, error: err };
     }

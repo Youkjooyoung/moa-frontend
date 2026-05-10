@@ -31,19 +31,19 @@ export function DeleteUserDialog({ open, onOpenChange }) {
       return;
     }
 
-    const ok = window.confirm("정말 탈퇴할까요? 탈퇴 후에는 복구할 수 없습니다.");
+    const ok = window.confirm("정말 탈퇴하시겠습니까? 탈퇴 후 계정 복구가 어려울 수 있습니다.");
     if (!ok) return;
 
     setLoading(true);
     try {
       const res = await withdrawUser({ deleteReason, deleteDetail });
       if (res?.success) {
-        alert("탈퇴가 완료되었습니다.");
+        alert("회원 탈퇴가 완료되었습니다.");
         window.location.href = "/";
       } else {
         const res2 = await withdrawUser({ reason: deleteReason, detail: deleteDetail });
         if (res2?.success) {
-          alert("탈퇴가 완료되었습니다.");
+          alert("회원 탈퇴가 완료되었습니다.");
           window.location.href = "/";
         } else {
           alert(res2?.error?.message || "탈퇴 처리에 실패했습니다.");
@@ -82,7 +82,7 @@ export function DeleteUserDialog({ open, onOpenChange }) {
             <div className="flex items-start gap-2">
               <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
               <div className="text-xs leading-relaxed text-amber-800 dark:text-amber-200">
-                <p>계정 정보 및 서비스 이용 이력은 관련 법령에 따라 일정 기간 보관 후 안전하게 파기됩니다.</p>
+                <p>탈퇴 시 계정 정보와 서비스 이용 이력은 관련 법령에 따라 일정 기간 보관 후 안전하게 파기됩니다.</p>
                 <p className="mt-1">탈퇴 후에는 동일 이메일로 재가입이 제한될 수 있습니다.</p>
               </div>
             </div>
@@ -121,12 +121,12 @@ export function DeleteUserDialog({ open, onOpenChange }) {
 
           {showDetail && (
             <div className="space-y-2">
-              <p className="text-sm font-bold text-[var(--theme-text)]">상세 사유 (선택)</p>
+              <p className="text-sm font-bold text-[var(--theme-text)]">기타 사유 (선택)</p>
               <textarea
                 value={deleteDetail}
                 onChange={(event) => setDeleteDetail(event.target.value)}
                 className="h-24 w-full resize-none rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-surface)] p-3 text-sm text-[var(--theme-text)] outline-none focus:ring-2 focus:ring-[var(--theme-focus-ring)]"
-                placeholder="기타 사유나 추가 의견이 있다면 입력해 주세요."
+                placeholder="불편했던 점을 입력해 주세요."
               />
             </div>
           )}

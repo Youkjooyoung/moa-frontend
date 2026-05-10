@@ -5,20 +5,19 @@ const DEFAULT_SECONDS = 600;
 
 export default function CountdownTimer({ expiresAt, onExpire }) {
   const expiredRef = useRef(false);
+  const fallbackExpiresAtRef = useRef(null);
   const [timeLeft, setTimeLeft] = useState({ minutes: 10, seconds: 0, total: DEFAULT_SECONDS });
 
   useEffect(() => {
     expiredRef.current = false;
+    fallbackExpiresAtRef.current = Date.now() + DEFAULT_SECONDS * 1000;
 
     const calculateTimeLeft = () => {
-      if (!expiresAt) {
-        return { minutes: 10, seconds: 0, total: DEFAULT_SECONDS };
-      }
-
-      const expireTime = new Date(expiresAt).getTime();
-      if (Number.isNaN(expireTime)) {
-        return { minutes: 10, seconds: 0, total: DEFAULT_SECONDS };
-      }
+      const parsedExpireTime = expiresAt ? new Date(expiresAt).getTime() : NaN;
+      const expireTime =
+        Number.isNaN(parsedExpireTime) || parsedExpireTime <= Date.now()
+          ? fallbackExpiresAtRef.current
+          : parsedExpireTime;
 
       const diff = Math.max(0, Math.floor((expireTime - Date.now()) / 1000));
       return {
@@ -27,6 +26,8 @@ export default function CountdownTimer({ expiresAt, onExpire }) {
         total: diff,
       };
     };
+
+    setTimeLeft(calculateTimeLeft());
 
     const interval = setInterval(() => {
       const newTimeLeft = calculateTimeLeft();

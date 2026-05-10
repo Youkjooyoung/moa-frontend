@@ -47,7 +47,7 @@ export function LoginHistoryCard({ loginHistory, onBack }) {
       {Array.isArray(items) && items.length > 0 ? (
         <div className="overflow-hidden rounded-2xl border border-[var(--theme-border-light)]">
           <div className="overflow-x-auto">
-            <table className="min-w-[760px] w-full text-sm">
+            <table className="w-full min-w-[760px] text-sm">
               <thead className="bg-[var(--theme-bg)]">
                 <tr className="border-b border-[var(--theme-border-light)]">
                   <th className="p-3 text-left font-black text-[var(--theme-text)]">일시</th>
@@ -85,7 +85,7 @@ export function LoginHistoryCard({ loginHistory, onBack }) {
         <MoaEmptyState
           icon={Clock}
           title="로그인 기록이 없습니다"
-          description="새로운 로그인 기록이 생기면 이곳에 표시됩니다."
+          description="최근 로그인 기록이 이곳에 표시됩니다."
         />
       )}
     </div>
