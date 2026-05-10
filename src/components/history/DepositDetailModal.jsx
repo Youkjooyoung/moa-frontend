@@ -1,216 +1,136 @@
-import { motion, AnimatePresence } from "framer-motion";
 import { X, ShieldCheck, Calendar, CheckCircle, AlertCircle } from "lucide-react";
 import { useThemeStore } from "@/store/themeStore";
 
-// 테마별 스타일
-const depositModalThemeStyles = {
-  pop: {
-    gradientBg: 'bg-gradient-to-br from-pink-50 to-cyan-50',
-    iconBg: 'bg-pink-100',
-    iconColor: 'text-pink-600',
-    iconColorSecondary: 'text-cyan-600',
-    border: 'border border-gray-200',
-    shadow: 'shadow-[4px_4px_12px_rgba(0,0,0,0.08)]',
-    hoverBg: 'hover:bg-pink-50',
-  },
-  classic: {
-    gradientBg: 'bg-gradient-to-br from-indigo-50 to-purple-50',
-    iconBg: 'bg-indigo-100',
-    iconColor: 'text-[#635bff]',
-    iconColorSecondary: 'text-purple-600',
-    border: 'border border-gray-200',
-    shadow: 'shadow-[4px_4px_12px_rgba(99,91,255,0.1)]',
-    hoverBg: 'hover:bg-indigo-50',
-  },
-  dark: {
-    gradientBg: 'bg-gradient-to-br from-gray-800 to-gray-900',
-    iconBg: 'bg-gray-700',
-    iconColor: 'text-[#635bff]',
-    iconColorSecondary: 'text-purple-400',
-    border: 'border border-gray-700',
-    shadow: 'shadow-[4px_4px_12px_rgba(0,0,0,0.3)]',
-    hoverBg: 'hover:bg-gray-700',
-  },
-  christmas: {
-    gradientBg: 'bg-gradient-to-br from-red-50 to-green-50',
-    iconBg: 'bg-red-100',
-    iconColor: 'text-[#c41e3a]',
-    iconColorSecondary: 'text-green-800',
-    border: 'border border-gray-200',
-    shadow: 'shadow-[4px_4px_12px_rgba(196,30,58,0.15)]',
-    hoverBg: 'hover:bg-red-50',
-  },
-};
+function formatDate(value) {
+  if (!value) return "-";
+  return String(value).replace("T", " ").split(".")[0];
+}
+
+function getStatusLabel(status) {
+  if (status === "PAID") return "보관 중";
+  if (status === "REFUNDED") return "환불완료";
+  if (status === "FORFEITED") return "몰수";
+  return "진행중";
+}
+
+function getStatusStyle(status) {
+  if (status === "PAID") return "bg-[#3182f6] text-white";
+  if (status === "REFUNDED") return "bg-emerald-500 text-white";
+  if (status === "FORFEITED") return "bg-red-500 text-white";
+  return "bg-amber-500 text-white";
+}
 
 export default function DepositDetailModal({ isOpen, onClose, deposit }) {
   const { theme } = useThemeStore();
-  const themeStyle = depositModalThemeStyles[theme] || depositModalThemeStyles.pop;
-  if (!deposit) return null;
+  const isDark = theme === "dark";
 
-  const getStatusLabel = (status) => {
-    switch (status) {
-      case "PAID":
-        return "보관중";
-      case "REFUNDED":
-        return "환불완료";
-      case "FORFEITED":
-        return "몰수";
-      default:
-        return "처리중";
-    }
-  };
+  if (!isOpen || !deposit) return null;
 
-  const getStatusStyle = (status, currentTheme) => {
-    const themeAccent = currentTheme === 'pop' ? 'bg-pink-500' : currentTheme === 'christmas' ? 'bg-[#c41e3a]' : 'bg-[#635bff]';
-    switch (status) {
-      case "PAID":
-        return `${themeAccent} text-white`;
-      case "REFUNDED":
-        return "bg-slate-500 text-white";
-      case "FORFEITED":
-        return "bg-red-500 text-white";
-      default:
-        return "bg-amber-500 text-white";
-    }
+  const status = deposit.depositStatus || deposit.status;
+  const amount = deposit.depositAmount || deposit.amount || 0;
+
+  return (
+    <>
+      <button
+        type="button"
+        aria-label="닫기"
+        onClick={onClose}
+        className="fixed inset-0 z-[999] bg-black/50 backdrop-blur-sm"
+      />
+
+      <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4">
+        <section className={`max-h-[90vh] w-full max-w-md overflow-y-auto rounded-2xl shadow-2xl ${isDark ? "bg-slate-900 text-white" : "bg-white text-slate-950"}`}>
+          <header className={`flex items-start justify-between border-b p-6 ${isDark ? "border-slate-800" : "border-slate-100"}`}>
+            <div>
+              <h2 className="text-xl font-bold">보증금 상세</h2>
+              <p className={`mt-1 text-sm ${isDark ? "text-slate-400" : "text-slate-500"}`}>보증금 보관 상태와 환불 정보를 확인하세요.</p>
+            </div>
+            <button type="button" onClick={onClose} className={`rounded-lg p-2 transition ${isDark ? "hover:bg-slate-800" : "hover:bg-slate-100"}`}>
+              <X className="h-5 w-5" />
+            </button>
+          </header>
+
+          <div className="space-y-5 p-6">
+            <div className={`rounded-2xl p-6 text-center ${isDark ? "bg-slate-800" : "bg-emerald-50"}`}>
+              <div className={`mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full ${isDark ? "bg-slate-700" : "bg-emerald-100"}`}>
+                <ShieldCheck className="h-6 w-6 text-emerald-600" />
+              </div>
+              <p className={`mb-2 text-sm ${isDark ? "text-slate-400" : "text-slate-600"}`}>보증금</p>
+              <p className="text-3xl font-bold">
+                {Number(amount).toLocaleString()}
+                <span className={`ml-1 text-lg ${isDark ? "text-slate-400" : "text-slate-500"}`}>원</span>
+              </p>
+            </div>
+
+            <div className="space-y-3">
+              <InfoRow icon={<ShieldCheck />} label="상품명" value={deposit.productName || deposit.partyTitle || "-"} isDark={isDark} />
+              <InfoRow icon={<Calendar />} label="보관 시작일" value={formatDate(deposit.paymentDate || deposit.createdAt)} isDark={isDark} />
+
+              <div className={`flex items-center justify-between rounded-xl p-4 ${isDark ? "bg-slate-800" : "bg-slate-50"}`}>
+                <span className={isDark ? "text-slate-300" : "text-slate-600"}>상태</span>
+                <span className={`flex items-center gap-1.5 rounded-lg px-3 py-1 text-sm font-bold ${getStatusStyle(status)}`}>
+                  {status === "REFUNDED" && <CheckCircle className="h-4 w-4" />}
+                  {getStatusLabel(status)}
+                </span>
+              </div>
+
+              {deposit.refundDate && <InfoRow icon={<Calendar />} label="환불일" value={formatDate(deposit.refundDate)} isDark={isDark} />}
+
+              {deposit.refundAmount && (
+                <div className="flex items-center justify-between rounded-xl border border-emerald-100 bg-emerald-50 p-4">
+                  <span className="font-medium text-slate-600">환불 금액</span>
+                  <span className="font-bold text-emerald-600">{Number(deposit.refundAmount).toLocaleString()}원</span>
+                </div>
+              )}
+            </div>
+
+            {status === "REFUNDED" && (
+              <Notice tone="success" icon={<CheckCircle />}>
+                보증금 환불이 완료되었습니다. 실제 입금 시점은 결제 수단 또는 은행 사정에 따라 달라질 수 있습니다.
+              </Notice>
+            )}
+
+            {status === "FORFEITED" && (
+              <Notice tone="danger" icon={<AlertCircle />}>
+                파티 규칙 위반으로 보증금이 몰수되었습니다. 상세 사유는 고객센터에 문의해주세요.
+              </Notice>
+            )}
+
+            {status === "PAID" && (
+              <Notice tone="info" icon={<ShieldCheck />}>
+                파티가 정상 종료될 때까지 보증금을 안전하게 보관합니다.
+              </Notice>
+            )}
+          </div>
+        </section>
+      </div>
+    </>
+  );
+}
+
+function InfoRow({ icon, label, value, isDark }) {
+  return (
+    <div className={`flex items-start gap-3 rounded-xl p-4 ${isDark ? "bg-slate-800" : "bg-slate-50"}`}>
+      <span className="mt-0.5 text-emerald-600 [&>svg]:h-5 [&>svg]:w-5">{icon}</span>
+      <div className="min-w-0 flex-1">
+        <p className={`mb-1 text-xs ${isDark ? "text-slate-400" : "text-slate-500"}`}>{label}</p>
+        <p className="truncate font-semibold">{value}</p>
+      </div>
+    </div>
+  );
+}
+
+function Notice({ tone, icon, children }) {
+  const styles = {
+    success: "border-emerald-100 bg-emerald-50 text-emerald-700",
+    danger: "border-red-100 bg-red-50 text-red-700",
+    info: "border-blue-100 bg-blue-50 text-blue-700",
   };
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <>
-          {/* Backdrop */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={onClose}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[999]"
-          />
-
-          {/* Modal */}
-          <div className="fixed inset-0 z-[999] flex items-center justify-center p-4">
-            <motion.div
-              initial={{ scale: 0.95, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.95, opacity: 0 }}
-              className={`bg-white rounded-2xl ${themeStyle.shadow} max-w-md w-full max-h-[90vh] overflow-y-auto`}
-            >
-              {/* Header */}
-              <div className={`flex items-center justify-between p-6 ${themeStyle.border} border-b`}>
-                <div>
-                  <h2 className="text-xl font-bold text-slate-900">보증금 상세</h2>
-                  <p className="text-sm text-slate-500 mt-1">보증금 내역의 상세 정보입니다</p>
-                </div>
-                <button
-                  onClick={onClose}
-                  className={`w-8 h-8 rounded-lg ${themeStyle.hoverBg} flex items-center justify-center transition-colors`}
-                >
-                  <X className="w-5 h-5 text-slate-500" />
-                </button>
-              </div>
-
-              {/* Content */}
-              <div className="p-6 space-y-6">
-                {/* Amount */}
-                <div className={`text-center py-6 ${themeStyle.gradientBg} rounded-xl`}>
-                  <div className={`w-12 h-12 rounded-full ${themeStyle.iconBg} flex items-center justify-center mx-auto mb-3`}>
-                    <ShieldCheck className={`w-6 h-6 ${themeStyle.iconColor}`} />
-                  </div>
-                  <p className="text-sm text-slate-600 mb-2">보증금 금액</p>
-                  <p className="text-3xl font-bold text-slate-900">
-                    {(deposit.depositAmount || deposit.amount || 0).toLocaleString()}
-                    <span className="text-lg text-slate-500 ml-1">원</span>
-                  </p>
-                </div>
-
-                {/* Details */}
-                <div className="space-y-4">
-                  <div className="flex items-start gap-3 p-4 bg-slate-50 rounded-xl">
-                    <ShieldCheck className={`w-5 h-5 ${themeStyle.iconColor} mt-0.5`} />
-                    <div className="flex-1">
-                      <p className="text-xs text-slate-500 mb-1">상품명</p>
-                      <p className="font-semibold text-slate-900">
-                        {deposit.productName || deposit.partyTitle || "-"}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-3 p-4 bg-slate-50 rounded-xl">
-                    <Calendar className={`w-5 h-5 ${themeStyle.iconColorSecondary} mt-0.5`} />
-                    <div className="flex-1">
-                      <p className="text-xs text-slate-500 mb-1">처리일자</p>
-                      <p className="font-semibold text-slate-900">
-                        {deposit.paymentDate || deposit.createdAt || "-"}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
-                    <span className="text-slate-600 font-medium">상태</span>
-                    <span
-                      className={`flex items-center gap-1.5 px-3 py-1 rounded-lg font-bold text-sm ${getStatusStyle(
-                        deposit.depositStatus || deposit.status, theme
-                      )}`}
-                    >
-                      {(deposit.depositStatus || deposit.status) === "PAID" && (
-                        <CheckCircle className="w-4 h-4" />
-                      )}
-                      {getStatusLabel(deposit.depositStatus || deposit.status)}
-                    </span>
-                  </div>
-
-                  {deposit.refundDate && (
-                    <div className="flex items-start gap-3 p-4 bg-slate-50 rounded-xl">
-                      <Calendar className="w-5 h-5 text-slate-600 mt-0.5" />
-                      <div className="flex-1">
-                        <p className="text-xs text-slate-500 mb-1">환불일자</p>
-                        <p className="font-semibold text-slate-900">{deposit.refundDate}</p>
-                      </div>
-                    </div>
-                  )}
-
-                  {deposit.refundAmount && (
-                    <div className="flex items-center justify-between p-4 bg-emerald-50 rounded-xl border border-emerald-100">
-                      <span className="text-slate-600 font-medium">환불금액</span>
-                      <span className="font-bold text-emerald-600">
-                        {deposit.refundAmount.toLocaleString()}원
-                      </span>
-                    </div>
-                  )}
-                </div>
-
-                {/* Info Messages */}
-                {(deposit.depositStatus === "REFUNDED" || deposit.status === "REFUNDED") && (
-                  <div className="bg-emerald-50 p-4 rounded-xl border border-emerald-100 flex items-start gap-3">
-                    <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                    <p className="text-sm text-emerald-700">
-                      환불이 완료된 보증금입니다. 등록된 정산 계좌로 입금되었습니다.
-                    </p>
-                  </div>
-                )}
-
-                {(deposit.depositStatus === "FORFEITED" || deposit.status === "FORFEITED") && (
-                  <div className="bg-red-50 p-4 rounded-xl border border-red-100 flex items-start gap-3">
-                    <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
-                    <p className="text-sm text-red-700">
-                      몰수된 보증금입니다. 파티 시작 후 탈퇴로 인해 방장에게 정산됩니다.
-                    </p>
-                  </div>
-                )}
-
-                {(deposit.depositStatus === "PAID" || deposit.status === "PAID") && (
-                  <div className={`bg-${theme === 'christmas' ? 'red' : 'blue'}-50 p-4 rounded-xl border border-${theme === 'christmas' ? 'red' : 'blue'}-100 flex items-start gap-3`}>
-                    <ShieldCheck className={`w-5 h-5 ${themeStyle.iconColor} flex-shrink-0 mt-0.5`} />
-                    <p className={`text-sm text-${theme === 'christmas' ? 'red' : 'blue'}-700`}>
-                      안전하게 보관중인 보증금입니다. 파티 종료 시 전액 환불됩니다.
-                    </p>
-                  </div>
-                )}
-              </div>
-            </motion.div>
-          </div>
-        </>
-      )}
-    </AnimatePresence>
+    <div className={`flex items-start gap-3 rounded-xl border p-4 text-sm ${styles[tone]}`}>
+      <span className="[&>svg]:mt-0.5 [&>svg]:h-5 [&>svg]:w-5">{icon}</span>
+      <p>{children}</p>
+    </div>
   );
 }
