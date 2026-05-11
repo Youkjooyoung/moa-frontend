@@ -20,6 +20,7 @@ import {
   MoaPageHeader,
 } from "@/components/common/MoaPage";
 import { useI18n } from "@/hooks/useI18n";
+import { getProductImageCandidates } from "@/utils/imageUtils";
 import { formatLocalizedCurrency, formatLocalizedDate } from "@/utils/localeFormat";
 
 const statusFilters = [
@@ -52,13 +53,20 @@ function getStatusMeta(status, remainingSlots, t) {
 }
 
 function PartyLogo({ party }) {
-  if (party.productImage) {
+  const candidates = getProductImageCandidates(party, "logo");
+  const [imageIndex, setImageIndex] = useState(0);
+  const imageUrl = candidates[imageIndex];
+
+  if (imageUrl) {
     return (
-      <img
-        src={party.productImage}
-        alt={party.productName}
-        className="h-14 w-14 rounded-2xl border border-[var(--theme-border-light)] bg-[var(--theme-surface)] object-contain p-3"
-      />
+      <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-2xl border border-[var(--theme-border-light)] bg-[var(--theme-surface)]">
+        <img
+          src={imageUrl}
+          alt={party.productName || "MOA"}
+          className="h-full w-full object-contain"
+          onError={() => setImageIndex((current) => current + 1)}
+        />
+      </div>
     );
   }
 

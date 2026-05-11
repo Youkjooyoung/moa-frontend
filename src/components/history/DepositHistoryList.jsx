@@ -137,7 +137,6 @@ export default function DepositHistoryList() {
               </div>
 
               <div className={`flex items-end justify-between border-t pt-3 ${themeColors.borderColor}`}>
-                <div className={`text-sm ${themeColors.textSecondary}`}>파티 종료까지 안전하게 보관됩니다</div>
                 <div className={`text-xl font-bold ${themeColors.textPrimary}`}>
                   {Number(amount).toLocaleString()}
                   <span className={`ml-1 text-sm ${themeColors.textMuted}`}>원</span>

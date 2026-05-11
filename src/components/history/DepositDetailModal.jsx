@@ -43,7 +43,6 @@ export default function DepositDetailModal({ isOpen, onClose, deposit }) {
           <header className={`flex items-start justify-between border-b p-6 ${isDark ? "border-slate-800" : "border-slate-100"}`}>
             <div>
               <h2 className="text-xl font-bold">보증금 상세</h2>
-              <p className={`mt-1 text-sm ${isDark ? "text-slate-400" : "text-slate-500"}`}>보증금 보관 상태와 환불 정보를 확인하세요.</p>
             </div>
             <button type="button" onClick={onClose} className={`rounded-lg p-2 transition ${isDark ? "hover:bg-slate-800" : "hover:bg-slate-100"}`}>
               <X className="h-5 w-5" />

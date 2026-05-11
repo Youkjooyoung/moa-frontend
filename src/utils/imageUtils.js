@@ -52,6 +52,9 @@ export const getProductLogoUrl = (imagePath) => {
  */
 export const getProductIconUrl = (imagePath) => {
     if (!imagePath) return '';
+    if (typeof imagePath === 'object') {
+        return getProductImageCandidates(imagePath)[0] || '';
+    }
 
     // 파일명만 변환 (_logo → _icon, 대소문자 모두 처리)
     const iconPath = imagePath.replace(/_[Ll]ogo\./, '_icon.');
@@ -64,6 +67,83 @@ export const getProductIconUrl = (imagePath) => {
     // 상대 경로인 경우 API Base URL 추가
     const baseUrl = getApiBaseUrl();
     return `${baseUrl}${iconPath}`;
+};
+
+const toAbsoluteImageUrl = (imagePath) => {
+    if (!imagePath || typeof imagePath !== 'string') return '';
+
+    if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+        return imagePath;
+    }
+
+    const baseUrl = getApiBaseUrl();
+    return `${baseUrl}${imagePath}`;
+};
+
+const normalizeImagePath = (path) => {
+    if (!path || typeof path !== 'string') return '';
+    return path.trim();
+};
+
+const pushUnique = (list, value) => {
+    if (!value || list.includes(value)) return;
+    list.push(value);
+};
+
+export const getProductImageCandidates = (productOrPath, variant = 'icon') => {
+    const rawPaths = [];
+
+    if (typeof productOrPath === 'string') {
+        pushUnique(rawPaths, normalizeImagePath(productOrPath));
+    } else if (productOrPath && typeof productOrPath === 'object') {
+        const preferredPaths = variant === 'logo'
+            ? [
+                productOrPath.productThumbnailUrl,
+                productOrPath.thumbnailUrl,
+                productOrPath.thumbnail,
+                productOrPath.productLogoUrl,
+                productOrPath.logoUrl,
+                productOrPath.logoImage,
+                productOrPath.image,
+                productOrPath.productImage,
+                productOrPath.imageUrl,
+                productOrPath.iconUrl,
+                productOrPath.productIconUrl,
+            ]
+            : [
+                productOrPath.productIconUrl,
+                productOrPath.iconUrl,
+                productOrPath.productIcon,
+                productOrPath.iconImage,
+                productOrPath.icon,
+                productOrPath.productLogoUrl,
+                productOrPath.logoUrl,
+                productOrPath.image,
+                productOrPath.productImage,
+                productOrPath.imageUrl,
+                productOrPath.productThumbnailUrl,
+                productOrPath.thumbnailUrl,
+                productOrPath.thumbnail,
+            ];
+
+        preferredPaths.forEach((path) => pushUnique(rawPaths, normalizeImagePath(path)));
+    }
+
+    const candidates = [];
+
+    rawPaths.forEach((path) => {
+        const iconPath = path.replace(/_[Ll]ogo\./, '_icon.');
+        if (variant === 'logo') {
+            pushUnique(candidates, toAbsoluteImageUrl(path));
+            pushUnique(candidates, toAbsoluteImageUrl(iconPath));
+            return;
+        }
+
+        pushUnique(candidates, toAbsoluteImageUrl(iconPath));
+        pushUnique(candidates, toAbsoluteImageUrl(path));
+    });
+
+    return candidates;
 };
 
 /**

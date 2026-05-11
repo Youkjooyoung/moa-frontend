@@ -261,6 +261,12 @@ button {
 
   body {
     @apply bg-background text-foreground;
+    overflow-y: scroll;
+    scrollbar-gutter: stable;
+  }
+
+  html {
+    scrollbar-gutter: stable;
   }
 
   /* Custom Scrollbar (Apple Style) */

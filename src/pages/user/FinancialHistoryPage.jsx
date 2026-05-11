@@ -27,7 +27,7 @@ export default function FinancialHistoryPage() {
       <MoaPageHeader
         eyebrow="History"
         title="금융 내역"
-        description="결제, 보증금, 정산 흐름을 한 화면에서 확인하세요."
+        description=""
         backLabel="내 지갑으로"
         onBack={() => navigate("/mypage/wallet")}
       />

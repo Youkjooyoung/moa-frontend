@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
-export const supportedLocales = ["ko", "en"];
+export const supportedLocales = ["ko", "en", "ja"];
 
 const normalizeLocale = (locale) => (supportedLocales.includes(locale) ? locale : "ko");
 
@@ -13,7 +13,8 @@ export const useLocaleStore = create(
       setLocale: (locale) => set({ locale: normalizeLocale(locale) }),
 
       toggleLocale: () => {
-        const nextLocale = get().locale === "ko" ? "en" : "ko";
+        const currentIndex = supportedLocales.indexOf(get().locale);
+        const nextLocale = supportedLocales[(currentIndex + 1) % supportedLocales.length] || "ko";
         set({ locale: nextLocale });
       },
     }),

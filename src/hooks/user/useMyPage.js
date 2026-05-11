@@ -7,9 +7,9 @@ import { otpHandlers } from "@/hooks/user/useOtp";
 
 function formatDate(value) {
   if (!value) return "";
-  const d = new Date(value);
-  if (Number.isNaN(d.getTime())) return value;
-  return d.toISOString().slice(0, 10);
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return date.toISOString().slice(0, 10);
 }
 
 function getLoginProviderLabel(user) {
@@ -114,7 +114,7 @@ export const useMyPage = () => {
       if (res.success) {
         await useAuthStore.getState().fetchSession();
       } else {
-        alert("간편 로그인 연결 해제에 실패했습니다.");
+        alert("소셜 계정 연결 해제에 실패했습니다.");
       }
     },
 

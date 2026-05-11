@@ -1,6 +1,7 @@
 import { createElement } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
+  Check,
   ChevronDown,
   Globe2,
   LayoutDashboard,
@@ -25,7 +26,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useI18n } from "@/hooks/useI18n";
+import { supportedLocales } from "@/store/localeStore";
 import { useThemeStore } from "@/store/themeStore";
+
+const languageLabels = {
+  ko: "한국어",
+  en: "English",
+  ja: "日本語",
+};
 
 function HeaderLink({ to, icon: Icon, active, children }) {
   return (
@@ -43,6 +51,63 @@ function HeaderLink({ to, icon: Icon, active, children }) {
   );
 }
 
+function LanguageMenu({ locale, setLocale, t, compact = false }) {
+  if (compact) {
+    return (
+      <div>
+        <div className="px-3 py-2 text-xs font-black uppercase tracking-wide text-[var(--theme-text-muted)]">
+          {t("control.language")}
+        </div>
+        {supportedLocales.map((item) => (
+          <DropdownMenuItem
+            key={item}
+            onClick={() => setLocale(item)}
+            className="cursor-pointer rounded-xl px-3 py-2.5 text-sm font-bold text-[var(--theme-text)]"
+          >
+            <Globe2 className="mr-3 h-4 w-4" />
+            <span className="flex-1">{languageLabels[item] || item.toUpperCase()}</span>
+            {locale === item && <Check className="h-4 w-4 text-[var(--theme-primary)]" />}
+          </DropdownMenuItem>
+        ))}
+      </div>
+    );
+  }
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          type="button"
+          variant="ghost"
+          className="hidden h-10 gap-2 rounded-full px-3 text-sm font-bold text-[var(--theme-text-muted)] hover:bg-[var(--theme-surface-muted)] hover:text-[var(--theme-text)] sm:inline-flex"
+          aria-label={t("control.language")}
+        >
+          <Globe2 className="h-4 w-4" />
+          {locale.toUpperCase()}
+          <ChevronDown className="h-3.5 w-3.5" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent
+        align="end"
+        sideOffset={10}
+        className="w-44 rounded-2xl border border-[var(--theme-border-light)] bg-[var(--theme-bg-card)] p-2 shadow-[var(--theme-shadow)]"
+      >
+        {supportedLocales.map((item) => (
+          <DropdownMenuItem
+            key={item}
+            onClick={() => setLocale(item)}
+            className="cursor-pointer rounded-xl px-3 py-2.5 text-sm font-bold text-[var(--theme-text)]"
+          >
+            <Globe2 className="mr-2 h-4 w-4 text-[var(--theme-text-muted)]" />
+            <span className="flex-1">{languageLabels[item] || item.toUpperCase()}</span>
+            {locale === item && <Check className="h-4 w-4 text-[var(--theme-primary)]" />}
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
 export default function HeaderView({
   user,
   isAdmin,
@@ -53,7 +118,7 @@ export default function HeaderView({
   logout,
 }) {
   const location = useLocation();
-  const { locale, toggleLocale, t } = useI18n();
+  const { locale, setLocale, t } = useI18n();
   const { resolvedTheme, toggleTheme } = useThemeStore();
 
   const isActive = (to) => {
@@ -113,16 +178,7 @@ export default function HeaderView({
             {resolvedTheme === "dark" ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
           </Button>
 
-          <Button
-            type="button"
-            variant="ghost"
-            className="hidden h-10 gap-2 rounded-full px-3 text-sm font-bold text-[var(--theme-text-muted)] hover:bg-[var(--theme-surface-muted)] hover:text-[var(--theme-text)] sm:inline-flex"
-            aria-label={t("control.language")}
-            onClick={toggleLocale}
-          >
-            <Globe2 className="h-4 w-4" />
-            {locale.toUpperCase()}
-          </Button>
+          <LanguageMenu locale={locale} setLocale={setLocale} t={t} />
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -167,17 +223,13 @@ export default function HeaderView({
                 <DropdownMenuSeparator className="my-2 bg-[var(--theme-border-light)]" />
               </div>
 
-              <DropdownMenuItem
-                onClick={toggleLocale}
-                className="cursor-pointer rounded-xl px-3 py-2.5 text-sm font-bold text-[var(--theme-text)]"
-              >
-                <Globe2 className="mr-3 h-4 w-4" />
-                {t("control.language")} · {locale.toUpperCase()}
-              </DropdownMenuItem>
+              <div className="sm:hidden">
+                <LanguageMenu locale={locale} setLocale={setLocale} t={t} compact />
+                <DropdownMenuSeparator className="my-2 bg-[var(--theme-border-light)]" />
+              </div>
 
               {user ? (
                 <>
-                  <DropdownMenuSeparator className="my-2 bg-[var(--theme-border-light)]" />
                   <div className="px-3 py-2">
                     <p className="truncate text-sm font-bold text-[var(--theme-text)]">{displayNickname}</p>
                     <p className="truncate text-xs font-medium text-[var(--theme-text-muted)]">{displayEmail}</p>
@@ -200,7 +252,6 @@ export default function HeaderView({
                 </>
               ) : (
                 <>
-                  <DropdownMenuSeparator className="my-2 bg-[var(--theme-border-light)]" />
                   <DropdownMenuItem asChild className="rounded-xl p-0">
                     <Link to="/login" className="flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-[var(--theme-text)]">
                       <LogIn className="h-4 w-4" />

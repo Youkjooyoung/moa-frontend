@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { ArrowLeft, CreditCard, Sparkles } from 'lucide-react';
 import httpClient from '../../api/httpClient';
 import { useAuthStore } from '../../store/authStore';
@@ -109,8 +108,7 @@ const GetSubscriptionList = () => {
                         <h1 className={`text-3xl sm:text-4xl font-bold mb-2 tracking-tight flex items-center gap-3 ${themeClasses.text.primary}`}>
                             <CreditCard className="w-7 h-7 sm:w-8 sm:h-8" style={{ color: accentColor }} />
                             {theme === 'christmas' ? '🎄 나의 구독 내역' : '나의 구독 내역'}
-                        </h1>
-                        <p className={themeClasses.text.muted}>구독 중인 상품을 확인하고 관리하세요</p>
+                        </h1>
                     </motion.div>
                 </div>
             </div>

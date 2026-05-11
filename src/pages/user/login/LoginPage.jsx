@@ -1,23 +1,14 @@
 import { useEffect } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { useLoginPageLogic } from "@/hooks/auth/useLogin";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
-import { LoginForm } from "./components/LoginForm";
-import { SocialLoginButtons } from "./components/SocialLoginButtons";
-import { LoginOtpDialog } from "./components/LoginOtpDialog";
-import { useThemeStore } from "@/store/themeStore";
 import { useAuthStore } from "@/store/authStore";
-import { themeClasses } from "@/utils/themeUtils";
+import { LoginForm } from "./components/LoginForm";
+import { LoginOtpDialog } from "./components/LoginOtpDialog";
+import { SocialLoginButtons } from "./components/SocialLoginButtons";
 
 export default function LoginPage() {
   const location = useLocation();
-  const user = useAuthStore((s) => s.user);
+  const user = useAuthStore((state) => state.user);
   const {
     email,
     password,
@@ -42,9 +33,6 @@ export default function LoginPage() {
     handlePasswordChange,
   } = useLoginPageLogic();
 
-  // Theme
-  const { theme } = useThemeStore();
-
   const isBackupMode = otpMode === "backup";
   const isLoginDisabled = loginLoading || !email.trim() || !password.trim();
   const redirectTo = location.state?.from || "/mypage";
@@ -58,42 +46,41 @@ export default function LoginPage() {
   }
 
   return (
-    <div className={`min-h-screen bg-transparent pb-20 relative z-10`}>
-      <section className="min-h-screen flex items-center justify-center px-4 py-8 sm:py-12">
-        <div className="w-full max-w-md">
-          <Card className={`${themeClasses.card.elevated} overflow-hidden`}>
-            <CardHeader className={`px-6 sm:px-10 pt-8 sm:pt-10 pb-4 border-b border-[var(--theme-border-light)]`}>
-              <CardTitle className={`text-xl sm:text-2xl font-black tracking-tight text-[var(--theme-primary)] text-center`}>
-                {theme === 'christmas' ? '🎄 로그인' : '로그인'}
-              </CardTitle>
-            </CardHeader>
+    <main className="min-h-screen bg-[var(--theme-bg)] px-4 py-10 text-[var(--theme-text)] sm:px-6 lg:px-8">
+      <section className="mx-auto flex min-h-[calc(100vh-5rem)] w-full max-w-[480px] items-center">
+        <div className="w-full rounded-[32px] border border-[var(--theme-border-light)] bg-[var(--theme-surface)] p-6 shadow-2xl shadow-slate-900/5 sm:p-8">
+          <div className="mb-7 text-center">
+            <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--theme-primary)] text-xl font-black text-white shadow-lg shadow-blue-500/20">
+              M
+            </div>
+            <h1 className="text-3xl font-black tracking-tight text-[var(--theme-text)]">로그인</h1>
+          </div>
 
-            <CardContent className="px-6 sm:px-10 pt-5 sm:pt-6 pb-5 sm:pb-6 space-y-5 sm:space-y-6">
-              <LoginForm
-                email={email}
-                password={password}
-                remember={remember}
-                errors={errors}
-                onEmailChange={handleEmailChange}
-                onPasswordChange={handlePasswordChange}
-                onRememberChange={(v) => setField("remember", v)}
-                onSubmit={handleEmailLogin}
-                onUnlock={handleUnlockByCertification}
-                isLoginDisabled={isLoginDisabled}
-                loginLoading={loginLoading}
-                theme={theme}
-              />
-            </CardContent>
+          <LoginForm
+            email={email}
+            password={password}
+            remember={remember}
+            errors={errors}
+            onEmailChange={handleEmailChange}
+            onPasswordChange={handlePasswordChange}
+            onRememberChange={(value) => setField("remember", value)}
+            onSubmit={handleEmailLogin}
+            onUnlock={handleUnlockByCertification}
+            isLoginDisabled={isLoginDisabled}
+            loginLoading={loginLoading}
+          />
 
-            <CardFooter className="flex flex-col gap-3 px-6 sm:px-10 pb-8 sm:pb-10 pt-0">
-              <SocialLoginButtons
-                onKakao={handleKakaoLogin}
-                onGoogle={handleGoogleLogin}
-                loginLoading={loginLoading}
-                theme={theme}
-              />
-            </CardFooter>
-          </Card>
+          <div className="my-6 flex items-center gap-3">
+            <span className="h-px flex-1 bg-[var(--theme-border-light)]" />
+            <span className="text-xs font-bold text-[var(--theme-text-muted)]">또는</span>
+            <span className="h-px flex-1 bg-[var(--theme-border-light)]" />
+          </div>
+
+          <SocialLoginButtons
+            onKakao={handleKakaoLogin}
+            onGoogle={handleGoogleLogin}
+            loginLoading={loginLoading}
+          />
         </div>
       </section>
 
@@ -108,8 +95,7 @@ export default function LoginPage() {
         onChangeCode={handleOtpChange}
         onConfirm={handleOtpConfirm}
         loading={otpLoading}
-        theme={theme}
       />
-    </div>
+    </main>
   );
 }

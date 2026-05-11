@@ -176,7 +176,7 @@ export default function MyWalletPage() {
       <MoaPageHeader
         eyebrow="Wallet"
         title="내 지갑"
-        description="보증금, 정산 계좌, 결제 카드를 안전하게 관리하세요."
+        description=""
         backLabel="목록으로"
         onBack={() => navigate("/mypage")}
       />

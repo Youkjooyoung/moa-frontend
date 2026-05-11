@@ -564,7 +564,6 @@ const UpdateProduct = () => {
                 </DialogContent>
             </Dialog>
         </div>
-        </div >
     );
 };
 

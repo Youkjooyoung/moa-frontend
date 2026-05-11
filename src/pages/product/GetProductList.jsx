@@ -25,15 +25,26 @@ import {
 } from "@/components/common/MoaPage";
 import { useI18n } from "@/hooks/useI18n";
 import { formatLocalizedCurrency } from "@/utils/localeFormat";
-import { getProductIconUrl, getProductLogoUrl } from "@/utils/imageUtils";
+import { getProductImageCandidates } from "@/utils/imageUtils";
 
 const ALL_CATEGORY = "__all__";
 
-function ProductLogo({ product, className = "" }) {
-  const [failed, setFailed] = useState(false);
-  const src = product.image ? getProductIconUrl(product.image) || getProductLogoUrl(product.image) : "";
+function ProductLogo({ product, variant = "icon", className = "", imageClassName = "" }) {
+  const [imageState, setImageState] = useState({ key: "", failedIndex: 0 });
+  const imageCandidates = useMemo(() => getProductImageCandidates(product, variant), [product, variant]);
+  const imageKey = [
+    variant,
+    product?.productId,
+    product?.image,
+    product?.productImage,
+    product?.iconUrl,
+    product?.logoUrl,
+    product?.imageUrl,
+  ].filter(Boolean).join("|");
+  const failedIndex = imageState.key === imageKey ? imageState.failedIndex : 0;
+  const src = imageCandidates[failedIndex] || "";
 
-  if (!src || failed) {
+  if (!src) {
     return (
       <div className={`flex items-center justify-center bg-[var(--theme-primary-light)] text-lg font-bold text-[var(--theme-primary)] ${className}`}>
         {product.productName?.slice(0, 1) || "M"}
@@ -45,8 +56,8 @@ function ProductLogo({ product, className = "" }) {
     <img
       src={src}
       alt={product.productName}
-      className={`object-contain ${className}`}
-      onError={() => setFailed(true)}
+      className={`${imageClassName || "object-contain"} ${className}`}
+      onError={() => setImageState({ key: imageKey, failedIndex: failedIndex + 1 })}
     />
   );
 }
@@ -59,7 +70,11 @@ function ProductDetailPanel({ product, user, locale, t, onClose, onSubscribe, on
       <MoaCard className="max-h-[88vh] w-full max-w-xl overflow-y-auto">
         <div className="flex items-start justify-between border-b border-[var(--theme-border-light)] p-6">
           <div className="flex items-center gap-4">
-            <ProductLogo product={product} className="h-16 w-16 rounded-2xl border border-[var(--theme-border-light)] bg-[var(--theme-surface)] p-3" />
+            <ProductLogo
+              product={product}
+              variant="icon"
+              className="h-16 w-16 rounded-2xl border border-[var(--theme-border-light)] bg-[var(--theme-surface)]"
+            />
             <div>
               <h2 className="text-2xl font-bold text-[var(--theme-text)]">{product.productName}</h2>
               <div className="mt-2 flex flex-wrap items-center gap-2">
@@ -269,7 +284,12 @@ export default function GetProductList() {
               className="flex h-full flex-col p-5 text-left transition hover:-translate-y-1 hover:border-[var(--theme-primary)] hover:shadow-[var(--theme-shadow)]"
             >
               <div className="flex items-start gap-4">
-                <ProductLogo product={product} className="h-14 w-14 rounded-2xl border border-[var(--theme-border-light)] bg-[var(--theme-surface)] p-3" />
+                <ProductLogo
+                  product={product}
+                  variant="logo"
+                  imageClassName="object-contain"
+                  className="h-14 w-14 overflow-hidden rounded-2xl border border-[var(--theme-border-light)] bg-[var(--theme-surface)]"
+                />
                 <div className="min-w-0 flex-1">
                   <h3 className="truncate text-lg font-bold text-[var(--theme-text)]">
                     {product.productName}

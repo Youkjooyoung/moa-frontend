@@ -127,8 +127,6 @@ export const SnowPlowButton = ({ className = "" }) => {
   const { theme } = useThemeStore();
   const [isShaking, setIsShaking] = useState(false);
 
-  if (theme !== 'christmas') return null;
-
   // 눈이 쌓이면 버튼 흔들기 힌트
   useEffect(() => {
     if (!context || context.accumulation < 80) return;
@@ -143,6 +141,7 @@ export const SnowPlowButton = ({ className = "" }) => {
     return () => clearTimeout(timer);
   }, [context?.accumulation, context?.isPlowing]);
 
+  if (theme !== 'christmas') return null;
   if (!context) return null;
 
   const { isPlowing, isSnowCleared, startPlow } = context;
@@ -433,9 +432,7 @@ export const ClearableSnowPile = () => {
   const containerRef = useRef(null);
   const [fallingChunks, setFallingChunks] = useState([]);
 
-  if (theme !== 'christmas') return null;
-
-  const { isPlowing, isSnowCleared, plowProgress, accumulation, plowId } = context;
+  const { isPlowing, isSnowCleared, plowProgress, accumulation, plowId } = context || {};
 
   useEffect(() => {
     if (!context?.isPlowing) {
@@ -461,7 +458,7 @@ export const ClearableSnowPile = () => {
     return () => clearInterval(interval);
   }, [context?.isPlowing, context?.plowProgress]);
 
-  if (!context) return null;
+  if (theme !== 'christmas' || !context) return null;
 
   return (
     <div

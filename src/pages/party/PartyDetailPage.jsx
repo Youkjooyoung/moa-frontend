@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { usePartyStore } from "../../store/party/partyStore";
 import { useAuthStore } from "../../store/authStore";
 import { requestBillingAuth, requestPayment } from "../../utils/paymentHandler";
-import { getMyCard, issueBillingKey } from "../../api/userApi";
+import { getMyCard } from "../../api/userApi";
 import { joinParty, processLeaderDeposit } from "../../api/partyApi";
 import LeavePartyWarningModal from "../../components/party/LeavePartyWarningModal";
 import UpdateOttModal from "../../components/party/UpdateOttModal";
@@ -98,7 +98,7 @@ export default function PartyDetailPage() {
   const { user, fetchSession } = useAuthStore();
 
   // Theme (PartyListPage와 동일한 방식 사용)
-  const { theme, setTheme } = useThemeStore();
+  const { theme } = useThemeStore();
   const currentTheme = themeConfig[theme] || themeConfig.classic;
   const themeStyle = partyThemeStyles[theme] || partyThemeStyles.classic;
 
@@ -357,7 +357,7 @@ export default function PartyDetailPage() {
   const memberProgress = (party.currentMembers / party.maxMembers) * 100;
 
   return (
-    <div className={`min-h-screen transition-colors duration-300 relative z-10 ${currentTheme.bg}`}>
+    <div className={`min-h-screen transition-colors duration-300 relative ${currentTheme.bg}`}>
 
       {/* ===== HERO BANNER ===== */}
       <section className="relative overflow-hidden">
@@ -931,9 +931,12 @@ export default function PartyDetailPage() {
         initial={{ y: 100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.5, type: "spring", stiffness: 100 }}
-        className="fixed bottom-0 left-0 right-0 z-50"
+        className={`fixed inset-x-0 bottom-0 z-[900] pointer-events-none bg-gradient-to-t pt-8 ${theme === "dark"
+          ? "from-[#0B1120] via-[#0B1120]/95 to-transparent"
+          : "from-white via-white/95 to-transparent"
+          }`}
       >
-        <div className={`mx-auto max-w-5xl px-4 pb-4`}>
+        <div className="mx-auto max-w-5xl px-4 pb-[calc(1rem+env(safe-area-inset-bottom))] pointer-events-auto">
           <div className={`rounded-2xl p-4 shadow-2xl backdrop-blur-xl ${theme === "dark"
             ? "bg-gray-900/95 border border-gray-700"
             : "bg-white/95 border border-gray-200"

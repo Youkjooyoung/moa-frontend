@@ -6,9 +6,9 @@ import { X } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
-const Dialog = React.forwardRef(({ modal = true, ...props }, ref) => (
+const Dialog = ({ modal = false, ...props }) => (
   <DialogPrimitive.Root modal={modal} {...props} />
-))
+)
 Dialog.displayName = "Dialog"
 
 const DialogTrigger = DialogPrimitive.Trigger
