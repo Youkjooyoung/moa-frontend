@@ -12,9 +12,10 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:run": "node scripts/run-vitest-portable.cjs",
+    "test:unit": "node scripts/run-unit-tests.cjs",
     "deploy:prod": "powershell -NoProfile -ExecutionPolicy Bypass -File ..\\deploy\\deploy-frontend-cloudfront.ps1",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build",
+    "build-storybook": "node scripts/run-storybook-build.cjs",
     "chromatic": "chromatic"
   },
   "dependencies": {

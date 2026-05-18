@@ -60,3 +60,5 @@ replay_pid*
 *storybook.log
 storybook-static
 moa_temp_extracted/
+.cache/
+coverage/
