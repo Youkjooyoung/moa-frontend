@@ -49,7 +49,6 @@ export function MoaPageHeader({
     </div>
   );
 }
-
 export function MoaCard({ children, className = "", as: Component = "div", ...props }) {
   return createElement(
     Component,
@@ -90,7 +89,7 @@ export function MoaButton({
     <button
       type="button"
       className={cn(
-        "inline-flex items-center justify-center gap-2 rounded-xl font-bold transition focus:outline-none focus:ring-2 focus:ring-[var(--theme-focus-ring)] disabled:cursor-not-allowed disabled:opacity-50",
+        "inline-flex items-center justify-center gap-2 rounded-xl border border-transparent font-bold transition focus:outline-none focus:ring-2 focus:ring-[var(--theme-focus-ring)] disabled:cursor-not-allowed disabled:opacity-50",
         variants[variant],
         sizes[size],
         className

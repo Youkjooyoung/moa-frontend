@@ -7,7 +7,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Pretendard', 'Inter', 'Noto Sans KR', 'sans-serif'],
+        sans: ['Noto Sans KR', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
       },
       colors: {
         // Theme-aware colors using CSS variables

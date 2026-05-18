@@ -8,6 +8,7 @@ import { fileURLToPath } from "url";
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
+  root: dirname,
   plugins: [react(), tailwindcss()],
 
   build: {
@@ -48,7 +49,7 @@ export default defineConfig({
   server: {
     host: true,
     https: {
-      pfx: fs.readFileSync("./moa-ssl.p12"),
+      pfx: fs.readFileSync(path.resolve(dirname, "moa-ssl.p12")),
       passphrase: "moa1234",
     },
 

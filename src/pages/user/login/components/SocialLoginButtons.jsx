@@ -1,3 +1,4 @@
+import kakaoLoginButton from "@/assets/kakao_login_medium_wide.png";
 import { Button } from "@/components/ui/button";
 
 function GoogleMark() {
@@ -11,31 +12,28 @@ function GoogleMark() {
   );
 }
 
-function KakaoMark() {
-  return (
-    <span className="relative flex h-5 w-5 items-center justify-center rounded-full bg-[#191919]" aria-hidden="true">
-      <span className="h-2.5 w-3.5 rounded-[50%] bg-[#FEE500]" />
-      <span className="absolute bottom-0.5 right-1 h-1.5 w-1.5 rotate-45 bg-[#FEE500]" />
-    </span>
-  );
-}
-
 export function SocialLoginButtons({ onKakao, onGoogle, loginLoading }) {
+  const sharedSize = "h-12 w-full rounded-2xl";
   const baseClass =
-    "h-12 w-full rounded-2xl border text-[15px] font-bold normal-case tracking-normal shadow-sm transition disabled:opacity-60";
+    `${sharedSize} border text-[15px] font-bold normal-case tracking-normal shadow-sm transition disabled:opacity-60`;
 
   return (
     <div className="space-y-3">
-      <Button
+      <button
         id="btnKakaoLogin"
         type="button"
         onClick={onKakao}
         disabled={loginLoading}
-        className={`${baseClass} border-[#FEE500] bg-[#FEE500] text-[#191919] hover:bg-[#F6DC00] hover:text-[#191919]`}
+        className={`${sharedSize} block overflow-hidden border-0 bg-transparent p-0 shadow-sm transition hover:brightness-[0.98] disabled:opacity-60`}
+        aria-label="카카오 로그인"
       >
-        <KakaoMark />
-        카카오로 계속하기
-      </Button>
+        <img
+          src={kakaoLoginButton}
+          alt="카카오 로그인"
+          className="h-full w-full object-fill"
+          draggable="false"
+        />
+      </button>
 
       <Button
         id="btnGoogleLogin"

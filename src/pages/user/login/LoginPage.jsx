@@ -50,10 +50,7 @@ export default function LoginPage() {
       <section className="mx-auto flex min-h-[calc(100vh-5rem)] w-full max-w-[480px] items-center">
         <div className="w-full rounded-[32px] border border-[var(--theme-border-light)] bg-[var(--theme-surface)] p-6 shadow-2xl shadow-slate-900/5 sm:p-8">
           <div className="mb-7 text-center">
-            <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--theme-primary)] text-xl font-black text-white shadow-lg shadow-blue-500/20">
-              M
-            </div>
-            <h1 className="text-3xl font-black tracking-tight text-[var(--theme-text)]">로그인</h1>
+            <h1 className="text-3xl font-black tracking-tight text-[var(--theme-text)]">{"\uB85C\uADF8\uC778"}</h1>
           </div>
 
           <LoginForm
@@ -72,7 +69,7 @@ export default function LoginPage() {
 
           <div className="my-6 flex items-center gap-3">
             <span className="h-px flex-1 bg-[var(--theme-border-light)]" />
-            <span className="text-xs font-bold text-[var(--theme-text-muted)]">또는</span>
+            <span className="text-xs font-bold text-[var(--theme-text-muted)]">{"\uB610\uB294"}</span>
             <span className="h-px flex-1 bg-[var(--theme-border-light)]" />
           </div>
 
