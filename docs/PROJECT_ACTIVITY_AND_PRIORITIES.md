@@ -2,6 +2,14 @@
 
 문서 기준일: 2026-05-19
 
+## 2026-05-19 자동화 재점검 결과
+
+- Git 상태: `dev` 브랜치가 `origin/dev`와 동기화되어 있고 워킹트리는 clean 상태다.
+- 새 코드 이슈: 이번 점검에서 프론트엔드 소스의 신규 미커밋 변경이나 새 회귀 증상은 발견하지 못했다.
+- 로컬 산출물/민감 파일: `.env`, `.env.production`, `moa-ssl.p12`, `dist`, `storybook-static`, `.cache`, `moa_temp_extracted`는 Git 추적 대상이 아니며 ignore 정책으로 막혀 있다.
+- 검증 결과: lint는 0 errors / 106 warnings로 통과했고, unit test 40개와 production build가 통과했다.
+- 남은 리스크: lint 경고가 여전히 많아 CI 통과 후에도 실제 결함 신호가 묻힐 수 있다.
+
 ## 완료한 고도화 작업
 
 1. 백엔드 로컬 설정 분리 연계
@@ -30,7 +38,8 @@
 
 | 우선순위 | 작업 | 이유 | 다음 액션 |
 | --- | --- | --- | --- |
-| P0 | lint 경고 정리 | 현재 CI는 통과하지만 `no-unused-vars`, hook dependency, React purity 경고가 많다. | 도메인별로 unused import 제거와 hook dependency 정리를 분리 진행 |
+| P0 | lint 경고 정리 | 현재 CI는 통과하지만 `no-unused-vars`, hook dependency, React purity 경고가 많아 신규 결함을 놓치기 쉽다. | 기능 영역별로 unused import 제거, hook dependency 정리, 순수 렌더링 경고를 분리 처리 |
+| P0 | 원격 저장소 URL 정리 | push는 성공하지만 원격 저장소 이동 안내가 반복되어 운영 자동화와 온보딩에 혼선을 줄 수 있다. | `origin` URL을 새 GitHub 저장소 주소로 갱신하고 fetch/push 확인 |
 | P1 | Playwright/E2E 도입 | 핵심 사용자 흐름은 단위 테스트만으로 회귀를 잡기 어렵다. | 로그인, 상품 탐색, 파티 생성, 마이페이지 smoke 시나리오부터 작성 |
 | P1 | 접근성 점검 자동화 | 로그인/관리자/상품 화면의 keyboard flow와 label 상태를 지속 검증해야 한다. | Storybook a11y addon 또는 Playwright axe 검증 추가 |
 | P2 | UI 상태 표준화 | 로딩, 빈 상태, 오류 상태가 화면마다 다르면 유지보수 비용이 커진다. | 공통 status component와 skeleton 패턴 정리 |
@@ -38,7 +47,11 @@
 
 ## Git 활동 요약
 
-마지막 자동화 기준: 2026-05-17T16:29:20Z
+이번 재점검 기준: 2026-05-19T09:36:33+09:00
+
+- 2026-05-19: `a2aadd5`에서 프론트 CI, Storybook coverage, Vitest 단위 테스트 기반을 강화했다.
+- 2026-05-18: `a7b53be`에서 프론트 UI 고도화 내용과 작업 문서를 정리했다.
+- 2026-05-19 재점검: 이후 신규 커밋은 없고 `dev`와 `origin/dev`는 동기화 상태다.
 
 - 2026-05-19: 프론트 CI workflow 추가, Storybook 정리, Vitest 단위 테스트 추가, README/작업 이력 문서 복구, ESLint 산출물 ignore 정리.
 - 2026-05-18: 모바일 레이아웃, sticky header, safe-area, floating UI, favicon/title, Storybook/Vitest browser 기반 검증 설정을 진행.
@@ -48,6 +61,9 @@
 
 ### 2026-05-19
 
+- 자동화 재점검에서 Git 상태, ignore 정책, 로컬 산출물 추적 여부를 확인했다.
+- 신규 미커밋 변경은 없었고 `dev` 브랜치가 `origin/dev`와 동기화되어 있음을 확인했다.
+- 남은 고도화 우선순위에 원격 저장소 URL 정리를 추가했다.
 - GitHub Actions 프론트 CI를 추가했다.
 - Storybook 기본 예제를 제거하고 MOA 전용 stories로 교체했다.
 - Storybook build wrapper와 Vitest unit wrapper를 추가했다.
