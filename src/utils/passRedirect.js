@@ -31,7 +31,9 @@ export const consumePassImpUid = (purpose) => {
 export const stashSession = (key, value) => {
   try {
     sessionStorage.setItem(key, value ?? "");
-  } catch {}
+  } catch {
+    // Ignore session storage failures in restricted browser contexts.
+  }
 };
 
 export const readSession = (key) => {
@@ -45,5 +47,7 @@ export const readSession = (key) => {
 export const removeSession = (key) => {
   try {
     sessionStorage.removeItem(key);
-  } catch {}
+  } catch {
+    // Ignore session storage failures in restricted browser contexts.
+  }
 };

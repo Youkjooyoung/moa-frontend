@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Sparkles, ArrowLeft, Calendar, CreditCard, Settings, XCircle } from 'lucide-react';
-import httpClient from '../../api/httpClient';
+import { getSubscription } from '@/api/subscriptionApi';
 import { useThemeStore } from '@/store/themeStore';
 import { ThemeSwitcher } from '@/config/themeConfig';
 import { getProductIconUrl } from '@/utils/imageUtils';
@@ -19,15 +19,7 @@ const GetSubscription = () => {
         const fetchSubscription = async () => {
             try {
                 setLoading(true);
-                const response = await httpClient.get(`/subscription/${id}`);
-                // Fix: Handle direct DTO response (backend default)
-                if (response && response.subscriptionId) {
-                    setSubscription(response);
-                } else if (response.success) {
-                    setSubscription(response.data);
-                } else {
-                    throw new Error(response.error?.message || "Failed to fetch subscription");
-                }
+                setSubscription(await getSubscription(id));
             } catch (error) {
                 console.error("Failed to fetch subscription", error);
                 alert("구독 정보를 불러오는데 실패했습니다.");

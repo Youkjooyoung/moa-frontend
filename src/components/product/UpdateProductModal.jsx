@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Upload, X } from 'lucide-react';
 import { updateProduct, getProduct } from '../../api/productApi';
 import { useDragAndDrop } from '../../hooks/common/useDragAndDrop';
@@ -215,6 +215,8 @@ const UpdateProductModal = ({ isOpen, onClose, productId, onSuccess, initialData
             };
             initData();
         }
+        // Data initialization is keyed by modal state and selected product only.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isOpen, productId, initialData]);
 
     // input click handler wrapper (로고용)
@@ -267,16 +269,6 @@ const UpdateProductModal = ({ isOpen, onClose, productId, onSuccess, initialData
         } finally {
             setLoading(false);
         }
-    };
-
-    // 유틸리티 함수
-    const formatBytes = (bytes, decimals = 2) => {
-        if (!+bytes) return '0 Bytes';
-        const k = 1024;
-        const dm = decimals < 0 ? 0 : decimals;
-        const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-        const i = Math.floor(Math.log(bytes) / Math.log(k));
-        return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
     };
 
     // Drag and Drop (Hook 사용) - 로고용

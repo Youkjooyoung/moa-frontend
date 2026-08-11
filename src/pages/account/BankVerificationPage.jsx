@@ -44,7 +44,10 @@ export default function BankVerificationPage() {
   };
 
   return (
-    <div className={`min-h-[calc(100vh-160px)] px-4 py-8 ${theme === "dark" ? "bg-slate-950" : "bg-slate-50"}`}>
+    <div
+      className={`min-h-[calc(100vh-160px)] px-4 py-8 ${theme === "dark" ? "bg-slate-950" : "bg-slate-50"}`}
+      data-testid="bank-verification-page"
+    >
       <ThemeSwitcher theme={theme} onThemeChange={setTheme} />
 
       <div className="mx-auto max-w-md">

@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
 import httpClient from "@/api/httpClient";
 import { useLoginStore } from "./user/loginStore";
 import { useOtpStore } from "./user/otpStore";
@@ -14,101 +13,82 @@ const PASSWORD_STORAGE_KEYS = [
 
 export const purgeLoginPasswords = () => {
   [localStorage, sessionStorage].forEach((storage) => {
-    if (!storage) return;
     PASSWORD_STORAGE_KEYS.forEach((key) => {
       try {
         storage.removeItem(key);
-      } catch {}
+      } catch {
+        // Storage can be unavailable in privacy modes.
+      }
     });
   });
 
   try {
     useLoginStore.getState().setField("password", "");
     useLoginStore.getState().setField("otpCode", "");
-  } catch {}
+  } catch {
+    // The login store may not be initialized yet.
+  }
 };
 
-export const useAuthStore = create(
-  persist(
-    (set, get) => ({
+try {
+  localStorage.removeItem("auth-storage");
+} catch {
+  // Legacy token cleanup is best effort.
+}
+
+export const useAuthStore = create((set, get) => ({
+  user: null,
+  accessToken: null,
+  accessTokenExpiresIn: null,
+  loading: false,
+  initialized: false,
+
+  setTokens: ({ accessToken, accessTokenExpiresIn }) => {
+    set({
+      accessToken: accessToken || null,
+      accessTokenExpiresIn: Number(accessTokenExpiresIn) || null,
+    });
+  },
+
+  setUser: (user) => set({ user }),
+
+  clearAuth: () => {
+    set({
       user: null,
       accessToken: null,
-      refreshToken: null,
       accessTokenExpiresIn: null,
       loading: false,
+      initialized: true,
+    });
+  },
 
-      /* =========================
-       * TOKEN SET
-       * ========================= */
-      setTokens: ({ accessToken, refreshToken, accessTokenExpiresIn }) => {
-        set({
-          accessToken,
-          refreshToken,
-          accessTokenExpiresIn: Number(accessTokenExpiresIn),
-        });
-        get().fetchSession();
-      },
+  fetchSession: async () => {
+    if (get().loading) return;
+    set({ loading: true });
 
-      setUser: (user) => set({ user }),
-
-      clearAuth: () => {
-        set({
-          user: null,
-          accessToken: null,
-          refreshToken: null,
-          accessTokenExpiresIn: null,
-          loading: false,
-        });
-        localStorage.removeItem("auth-storage");
-      },
-
-      fetchSession: async () => {
-        const { clearAuth } = get();
-
-        set({ loading: true });
-
-        try {
-          const res = await httpClient.get("/users/me");
-
-          if (res?.success && res.data) {
-            set({ user: res.data });
-            useOtpStore.getState().setEnabled(!!res.data.otpEnabled);
-          } else {
-            clearAuth();
-          }
-        } catch (error) {
-          clearAuth();
-        } finally {
-          set({ loading: false });
-        }
-      },
-
-      logout: async () => {
-        try {
-          await httpClient.post("/auth/logout");
-        } catch (error) {
-          console.error("Logout Error:", error);
-        } finally {
-          purgeLoginPasswords();
-          get().clearAuth();
-        }
-      },
-    }),
-    {
-      name: "auth-storage",
-      storage: createJSONStorage(() => localStorage),
-      partialize: (state) => ({
-        user: state.user,
-        accessToken: state.accessToken,
-        refreshToken: state.refreshToken,
-        accessTokenExpiresIn: state.accessTokenExpiresIn,
-      }),
-      onRehydrateStorage: () => (state) => {
-        // localStorage에서 상태 복원 후 세션 확인
-        if (state?.accessToken) {
-          state.fetchSession();
-        }
-      },
+    try {
+      const res = await httpClient.get("/users/me");
+      if (res?.success && res.data) {
+        set({ user: res.data });
+        useOtpStore.getState().setEnabled(!!res.data.otpEnabled);
+        return res.data;
+      }
+      get().clearAuth();
+      return null;
+    } catch {
+      get().clearAuth();
+      return null;
+    } finally {
+      set({ loading: false, initialized: true });
     }
-  )
-);
+  },
+
+  logout: async () => {
+    try {
+      await httpClient.post("/auth/logout");
+    } finally {
+      purgeLoginPasswords();
+      get().clearAuth();
+    }
+  },
+}));

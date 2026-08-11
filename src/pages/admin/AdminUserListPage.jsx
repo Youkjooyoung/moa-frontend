@@ -22,7 +22,10 @@ export default function AdminUserListPage() {
   } = useAdminUserListLogic();
 
   return (
-    <div className="min-h-screen bg-transparent text-gray-900 overflow-hidden relative z-10">
+    <div
+      className="min-h-screen bg-transparent text-gray-900 overflow-hidden relative z-10"
+      data-testid="admin-user-list-page"
+    >
       <UserListBackground />
       <UserListHero totalCount={totalCount} />
       <UserListTableCard

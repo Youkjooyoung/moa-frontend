@@ -4,14 +4,14 @@ import { useAuthStore } from "@/store/authStore";
 import { resolveProfileImageUrl } from "@/utils/profileImage";
 
 export function useHeaderLogic() {
-  const { user, fetchSession, logout: storeLogout, accessToken } = useAuthStore();
+  const { user, fetchSession, logout: storeLogout, initialized } = useAuthStore();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (accessToken && !user) {
+    if (!initialized) {
       fetchSession();
     }
-  }, [accessToken, user, fetchSession]);
+  }, [initialized, fetchSession]);
 
   const logout = async () => {
     await storeLogout();

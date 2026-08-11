@@ -32,16 +32,27 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      - name: Test
-        run: npm run test:run
+      - name: Unit tests
+        run: npm run test:unit
 
       - name: Build production artifact
         run: npm run build
 
-      - name: Upload verified artifact
+      - name: Build Storybook
+        run: npm run build-storybook
+
+      - name: Upload verified frontend artifact
         uses: actions/upload-artifact@v7
         with:
           name: moa-frontend-dist-${{ github.sha }}
           path: dist
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Upload Storybook artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: moa-storybook-${{ github.sha }}
+          path: storybook-static
           if-no-files-found: error
           retention-days: 7

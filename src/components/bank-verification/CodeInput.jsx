@@ -8,20 +8,20 @@ import { motion } from 'framer-motion';
  * - 에러 시 흔들림 애니메이션
  */
 export default function CodeInput({ value = '', onChange, onComplete, disabled = false, error = false }) {
-    const inputRefs = [useRef(null), useRef(null), useRef(null), useRef(null)];
+    const inputRefs = useRef([]);
     const code = value.padEnd(4, '').split('').slice(0, 4);
 
     // 첫 번째 입력창에 자동 포커스
     useEffect(() => {
-        if (!disabled && inputRefs[0].current) {
-            inputRefs[0].current.focus();
+        if (!disabled && inputRefs.current[0]) {
+            inputRefs.current[0].focus();
         }
     }, [disabled]);
 
     // 에러 시 첫 번째 입력창으로 포커스
     useEffect(() => {
-        if (error && inputRefs[0].current) {
-            inputRefs[0].current.focus();
+        if (error && inputRefs.current[0]) {
+            inputRefs.current[0].focus();
         }
     }, [error]);
 
@@ -39,7 +39,7 @@ export default function CodeInput({ value = '', onChange, onComplete, disabled =
 
         // 다음 입력창으로 포커스 이동
         if (digit && index < 3) {
-            inputRefs[index + 1].current?.focus();
+            inputRefs.current[index + 1]?.focus();
         }
 
         // 4자리 완성 시 콜백
@@ -54,7 +54,7 @@ export default function CodeInput({ value = '', onChange, onComplete, disabled =
         if (e.key === 'Backspace') {
             if (!code[index] && index > 0) {
                 // 현재 값이 없으면 이전 칸으로 이동 후 삭제
-                inputRefs[index - 1].current?.focus();
+                inputRefs.current[index - 1]?.focus();
                 const newCode = [...code];
                 newCode[index - 1] = '';
                 onChange(newCode.join(''));
@@ -69,12 +69,12 @@ export default function CodeInput({ value = '', onChange, onComplete, disabled =
 
         // 왼쪽 화살표
         if (e.key === 'ArrowLeft' && index > 0) {
-            inputRefs[index - 1].current?.focus();
+            inputRefs.current[index - 1]?.focus();
         }
 
         // 오른쪽 화살표
         if (e.key === 'ArrowRight' && index < 3) {
-            inputRefs[index + 1].current?.focus();
+            inputRefs.current[index + 1]?.focus();
         }
     };
 
@@ -89,7 +89,7 @@ export default function CodeInput({ value = '', onChange, onComplete, disabled =
 
             // 마지막 입력된 칸으로 포커스
             const lastIndex = Math.min(digits.length - 1, 3);
-            inputRefs[lastIndex].current?.focus();
+            inputRefs.current[lastIndex]?.focus();
 
             // 4자리 완성 시 콜백
             if (digits.length === 4) {
@@ -116,7 +116,9 @@ export default function CodeInput({ value = '', onChange, onComplete, disabled =
             {[0, 1, 2, 3].map((index) => (
                 <motion.input
                     key={index}
-                    ref={inputRefs[index]}
+                    ref={(element) => {
+                        inputRefs.current[index] = element;
+                    }}
                     type="text"
                     inputMode="numeric"
                     maxLength={1}

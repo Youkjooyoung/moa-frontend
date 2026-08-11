@@ -25,7 +25,6 @@ const UserSelectList = ({
     currentPage = 1,
     totalPages = 1,
     selectedUsers = [],
-    isLoading,
     onSearch,
     onPageChange,
     onSelectUser,

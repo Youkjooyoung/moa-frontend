@@ -96,13 +96,12 @@ export default function PhoneConnectPage() {
           );
         }
 
-        const { accessToken, refreshToken, accessTokenExpiresIn, expiresIn } =
+        const { accessToken, accessTokenExpiresIn, expiresIn } =
           connectRes.data || {};
 
-        if (accessToken && refreshToken) {
+        if (accessToken) {
           setTokens({
             accessToken,
-            refreshToken,
             accessTokenExpiresIn: accessTokenExpiresIn ?? expiresIn,
           });
 

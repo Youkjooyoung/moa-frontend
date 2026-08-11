@@ -46,7 +46,7 @@ export default function ChatBotWidget() {
   if (isAdminRoute) return null;
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
+    <div className="fixed bottom-[env(safe-area-inset-bottom)] right-6 z-50 flex flex-col items-end gap-3">
       {showScrollTop && !isOpen && (
         <button
           type="button"
@@ -59,7 +59,7 @@ export default function ChatBotWidget() {
       )}
 
       {isOpen && (
-        <section className="absolute bottom-20 right-0 flex h-[560px] w-[380px] max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-[1.75rem] border border-[var(--theme-border-light)] bg-[var(--theme-bg-card)] shadow-[var(--theme-shadow)]">
+        <section className="absolute bottom-0 right-0 flex h-[min(560px,calc(100vh-2rem))] w-[380px] max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-[1.75rem] border border-[var(--theme-border-light)] bg-[var(--theme-bg-card)] shadow-[var(--theme-shadow)]">
           <header className="flex items-center justify-between border-b border-[var(--theme-border-light)] px-5 py-4">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[var(--theme-primary-light)] text-[var(--theme-primary)]">
@@ -161,7 +161,7 @@ export default function ChatBotWidget() {
         <Button
           type="button"
           size="icon"
-          className="flex h-14 w-14 items-center justify-center rounded-full bg-[var(--theme-primary)] text-white shadow-[var(--theme-shadow)] transition hover:-translate-y-0.5 hover:bg-[var(--theme-primary-hover)]"
+          className="mb-6 flex h-14 w-14 items-center justify-center rounded-full bg-[var(--theme-primary)] text-white shadow-[var(--theme-shadow)] transition hover:-translate-y-0.5 hover:bg-[var(--theme-primary-hover)]"
           onClick={toggleChatBot}
           aria-label={t("chatbot.open")}
         >

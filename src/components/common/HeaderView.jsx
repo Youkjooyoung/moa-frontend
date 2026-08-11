@@ -28,6 +28,7 @@ import {
 import { useI18n } from "@/hooks/useI18n";
 import { supportedLocales } from "@/store/localeStore";
 import { useThemeStore } from "@/store/themeStore";
+import NotificationPopover from "@/components/push/NotificationPopover";
 
 const languageLabels = {
   ko: "한국어",
@@ -140,8 +141,8 @@ export default function HeaderView({
       ];
 
   return (
-    <header className="fixed inset-x-0 top-0 z-[100] border-b border-[var(--theme-border-light)] bg-[var(--theme-bg-card)]/85 backdrop-blur-xl">
-      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+    <div className="w-full flex justify-center sticky top-6 z-[100] px-4 pointer-events-none transition-all duration-300">
+      <header className="w-full max-w-7xl bg-[var(--theme-bg-card)]/80 backdrop-blur-2xl rounded-[24px] shadow-[0_4px_20px_rgba(0,0,0,0.04)] h-16 md:h-[72px] flex items-center justify-between px-6 md:px-8 pointer-events-auto border border-[var(--theme-border-light)] dark:border-white/10 dark:shadow-[0_4px_20px_rgba(0,0,0,0.2)]">
         <div className="flex min-w-0 items-center gap-7">
           <Link to="/" className="flex items-center gap-2">
             <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[var(--theme-primary)] text-lg font-black text-white">
@@ -179,6 +180,8 @@ export default function HeaderView({
           </Button>
 
           <LanguageMenu locale={locale} setLocale={setLocale} t={t} />
+
+          {user && <NotificationPopover />}
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -269,7 +272,7 @@ export default function HeaderView({
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-      </div>
-    </header>
+      </header>
+    </div>
   );
 }

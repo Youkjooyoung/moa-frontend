@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Upload, X } from 'lucide-react';
 import { createProduct } from '../../api/productApi';
 import { useDragAndDrop } from '../../hooks/common/useDragAndDrop';
@@ -80,7 +80,6 @@ const AddProductModal = ({ isOpen, onClose, onSuccess }) => {
     const themeStyle = productModalThemeStyles[theme] || productModalThemeStyles.pop;
     const {
         formData,
-        setFormData,
         handleChange,
         categories,
         resetForm: resetProductForm
@@ -134,6 +133,8 @@ const AddProductModal = ({ isOpen, onClose, onSuccess }) => {
             setIconPreviewUrl(null);
             setLoading(false);
         }
+        // Modal open should reset the form once with the current hook setters.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isOpen]);
 
     // body 스크롤 강제 허용 (!important로 Radix 스크롤 잠금 오버라이드)

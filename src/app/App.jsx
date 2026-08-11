@@ -51,7 +51,6 @@ const CancelSubscription = lazy(() => import("@/pages/subscription/CancelSubscri
 const GetSubscription = lazy(() => import("@/pages/subscription/GetSubscription"));
 const GetSubscriptionList = lazy(() => import("@/pages/subscription/GetSubscriptionList"));
 const UpdateSubscription = lazy(() => import("@/pages/subscription/UpdateSubscription"));
-const UserSubscriptionList = lazy(() => import("@/pages/subscription/UserSubscriptionList"));
 const FinancialHistoryPage = lazy(() => import("@/pages/user/FinancialHistoryPage"));
 const MyWalletPage = lazy(() => import("@/pages/user/MyWalletPage"));
 const FindIdPage = lazy(() => import("@/pages/user/findId/FindIdPage"));
@@ -80,10 +79,14 @@ function RouteFallback() {
 function AppContent() {
   useGlobalLinkHandler();
 
-  const { user } = useAuthStore();
+  const { user, initialized, fetchSession } = useAuthStore();
   const { locale } = useLocaleStore();
   const { resolvedTheme, setSystemTheme } = useThemeStore();
   const [pineappleEnabled, setPineappleEnabled] = useState(false);
+
+  useEffect(() => {
+    if (!initialized) fetchSession();
+  }, [initialized, fetchSession]);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -161,7 +164,7 @@ function AppContent() {
 
             <Route path="/product" element={<GetProductList />} />
             <Route path="/product/:id" element={<GetProduct />} />
-            <Route path="/product/:id/delete" element={<ProtectedRoute element={<DeleteProduct />} />} />
+            <Route path="/product/:id/delete" element={<AdminRoute><DeleteProduct /></AdminRoute>} />
 
             <Route path="/subscription/add/:productId" element={<ProtectedRoute element={<AddSubscription />} />} />
             <Route path="/subscription" element={<ProtectedRoute element={<GetSubscriptionList />} />} />
@@ -169,7 +172,7 @@ function AppContent() {
             <Route path="/subscription/:id/edit" element={<ProtectedRoute element={<UpdateSubscription />} />} />
             <Route path="/subscription/:id/cancel" element={<ProtectedRoute element={<CancelSubscription />} />} />
             <Route path="/subscriptions" element={<GetProductList />} />
-            <Route path="/my/subscriptions" element={<UserSubscriptionList />} />
+            <Route path="/my/subscriptions" element={<ProtectedRoute element={<GetSubscriptionList />} />} />
 
             <Route path="/payment/success" element={<PaymentSuccessPage />} />
             <Route path="/payment/billing/register" element={<BillingRegisterPage />} />
@@ -178,12 +181,12 @@ function AppContent() {
 
             <Route path="/community/notice" element={<ListNotice />} />
             <Route path="/community/notice/:communityId" element={<GetNotice />} />
-            <Route path="/community/notice/add" element={<AddNotice />} />
-            <Route path="/community/notice/update/:communityId" element={<UpdateNotice />} />
+            <Route path="/community/notice/add" element={<AdminRoute><AddNotice /></AdminRoute>} />
+            <Route path="/community/notice/update/:communityId" element={<AdminRoute><UpdateNotice /></AdminRoute>} />
             <Route path="/community/faq" element={<ListFaq />} />
-            <Route path="/community/faq/add" element={<AddFaq />} />
-            <Route path="/community/inquiry" element={<Inquiry />} />
-            <Route path="/community/inquiry/admin" element={<InquiryAdmin />} />
+            <Route path="/community/faq/add" element={<AdminRoute><AddFaq /></AdminRoute>} />
+            <Route path="/community/inquiry" element={<ProtectedRoute element={<Inquiry />} />} />
+            <Route path="/community/inquiry/admin" element={<AdminRoute><InquiryAdmin /></AdminRoute>} />
           </Routes>
         </Suspense>
       </main>

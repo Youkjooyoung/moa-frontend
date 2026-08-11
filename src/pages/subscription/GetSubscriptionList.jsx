@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { ArrowLeft, CreditCard, Sparkles } from 'lucide-react';
-import httpClient from '../../api/httpClient';
-import { useAuthStore } from '../../store/authStore';
+import { getMySubscriptions } from '@/api/subscriptionApi';
 import { useThemeStore } from '@/store/themeStore';
 import { ThemeSwitcher } from '@/config/themeConfig';
 import { getProductIconUrl } from '@/utils/imageUtils';
@@ -10,33 +10,15 @@ import { themeClasses } from '@/utils/themeUtils';
 
 const GetSubscriptionList = () => {
     const navigate = useNavigate();
-    const { user } = useAuthStore();
     const [subscriptions, setSubscriptions] = useState([]);
     const [loading, setLoading] = useState(true);
     const { theme, setTheme } = useThemeStore();
 
     useEffect(() => {
-        if (!user?.userId) {
-            console.warn("User ID missing in authStore, skipping fetch");
-            setLoading(false);
-            return;
-        }
-
         const fetchSubscriptions = async () => {
             try {
                 setLoading(true);
-                const response = await httpClient.get('/subscription', {
-                    params: { userId: user.userId }
-                });
-
-                if (Array.isArray(response)) {
-                    setSubscriptions(response);
-                } else if (response && response.success) {
-                    setSubscriptions(response.data || []);
-                } else {
-                    console.warn("Unexpected response format:", response);
-                    setSubscriptions([]);
-                }
+                setSubscriptions(await getMySubscriptions());
             } catch (error) {
                 console.error("Failed to fetch subscriptions", error);
             } finally {
@@ -44,7 +26,7 @@ const GetSubscriptionList = () => {
             }
         };
         fetchSubscriptions();
-    }, [user]);
+    }, []);
 
     const activeSubscriptions = subscriptions.filter(sub => sub.subscriptionStatus === 'ACTIVE');
     const inactiveSubscriptions = subscriptions.filter(sub => sub.subscriptionStatus !== 'ACTIVE');

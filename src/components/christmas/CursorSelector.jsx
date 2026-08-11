@@ -119,8 +119,6 @@ export default function CursorSelector({ activeCursor, setActiveCursor }) {
                             // Angles: -90, -67.5, -45, -22.5, 0 (approx distributed)
 
                             const radius = 70; // Distance from center
-                            const totalAngle = 90; // 90 degree span (quarter circle)
-
                             // Start from -90 (Top)
                             // But we probably want to center it a bit?
                             // Let's do -100 to 10? Or just -90 to 0.

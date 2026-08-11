@@ -31,7 +31,6 @@ const accountMenuThemeStyles = {
 export function AccountMenu({
   actions,
   activeView,
-  onShowMain,
   onShowLoginHistory,
   onOpenUpdateUser,
   onOpenDeleteUser,

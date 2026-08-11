@@ -26,6 +26,7 @@ export default function SuccessConfetti({ isActive, onComplete }) {
         delay: Math.random() * 0.3,
         rotation: Math.random() * 360,
         duration: Math.random() * 1 + 1.5,
+        shape: Math.random() > 0.5 ? "50%" : "2px",
       }));
 
       setParticles(newParticles);
@@ -70,7 +71,7 @@ export default function SuccessConfetti({ isActive, onComplete }) {
               width: particle.size,
               height: particle.size,
               backgroundColor: particle.color,
-              borderRadius: Math.random() > 0.5 ? "50%" : "2px",
+              borderRadius: particle.shape,
             }}
           />
         ))}

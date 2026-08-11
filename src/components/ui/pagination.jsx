@@ -32,7 +32,6 @@ PaginationItem.displayName = "PaginationItem"
 const PaginationLink = ({
   className,
   isActive,
-  size = "icon",
   disabled,
   ...props
 }) => (

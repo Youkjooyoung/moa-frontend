@@ -29,7 +29,7 @@ import {
     X,
     Save,
 } from "lucide-react";
-import Chart from "react-apexcharts";
+import LazyApexChart from "@/components/charts/LazyApexChart";
 import { useThemeStore } from "@/store/themeStore";
 
 // Removed theme imports to enforce classic theme
@@ -762,7 +762,7 @@ export default function AdminDashboardPage() {
                                 </div>
                             )}
                         </div>
-                        <Chart options={revenueLineOptions} series={revenueLineSeries} type="area" height={250} />
+                        <LazyApexChart options={revenueLineOptions} series={revenueLineSeries} type="area" height={250} />
                     </motion.div>
 
                     {/* Goal Gauge */}
@@ -785,7 +785,7 @@ export default function AdminDashboardPage() {
                                 <Settings className="w-4 h-4 text-gray-400 group-hover:text-[#ec4899] transition-colors" />
                             </button>
                         </div>
-                        <Chart options={goalGaugeOptions} series={[goalPercentage]} type="radialBar" height={220} />
+                        <LazyApexChart options={goalGaugeOptions} series={[goalPercentage]} type="radialBar" height={220} />
                         <div className="text-center mt-2">
                             <span className="text-sm text-gray-500">
                                 {(safeStats.thisMonthRevenue || 0).toLocaleString()}원 / {monthlyGoal.toLocaleString()}원
@@ -805,7 +805,7 @@ export default function AdminDashboardPage() {
                     >
                         <h3 className="text-lg font-bold text-gray-900 mb-1">월별 매출</h3>
                         <p className="text-sm text-gray-500 mb-4">최근 6개월 비교</p>
-                        <Chart options={monthlyBarOptions} series={monthlyBarSeries} type="bar" height={200} />
+                        <LazyApexChart options={monthlyBarOptions} series={monthlyBarSeries} type="bar" height={200} />
                     </motion.div>
 
                     {/* Party Status Donut */}
@@ -817,7 +817,7 @@ export default function AdminDashboardPage() {
                     >
                         <h3 className="text-lg font-bold text-gray-900 mb-1">파티 현황</h3>
                         <p className="text-sm text-gray-500 mb-4">상태별 분포</p>
-                        <Chart options={partyDonutOptions} series={partyDonutSeries} type="donut" height={200} />
+                        <LazyApexChart options={partyDonutOptions} series={partyDonutSeries} type="donut" height={200} />
                     </motion.div>
 
                     {/* User Growth Area */}
@@ -829,7 +829,7 @@ export default function AdminDashboardPage() {
                     >
                         <h3 className="text-lg font-bold text-gray-900 mb-1">사용자 추이</h3>
                         <p className="text-sm text-gray-500 mb-4">주간 가입/활성</p>
-                        <Chart options={userGrowthOptions} series={userGrowthSeries} type="area" height={200} />
+                        <LazyApexChart options={userGrowthOptions} series={userGrowthSeries} type="area" height={200} />
                     </motion.div>
                 </div>
 
@@ -905,7 +905,7 @@ export default function AdminDashboardPage() {
                             <CreditCard className="w-5 h-5 text-gray-400" />
                         </div>
                         <div className="space-y-2">
-                            {filteredRecentPayments.slice(0, 4).map((payment, index) => (
+                            {filteredRecentPayments.slice(0, 4).map((payment) => (
                                 <div key={payment.paymentId} className="flex items-center gap-3 p-2 rounded-xl hover:bg-gray-50">
                                     <div className="w-9 h-9 rounded-full bg-emerald-100 flex items-center justify-center">
                                         <CheckCircle2 className="w-4 h-4 text-emerald-600" />

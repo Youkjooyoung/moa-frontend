@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import httpClient from "@/api/httpClient";
 
 const formatDateTime = (value) => {
@@ -15,7 +15,7 @@ export const useAdminLoginHistory = (userId, initialSize = 10) => {
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(false);
 
-  const fetchPage = async (targetPage = 1) => {
+  const fetchPage = useCallback(async (targetPage = 1) => {
     if (!userId) return;
 
     try {
@@ -53,11 +53,11 @@ export const useAdminLoginHistory = (userId, initialSize = 10) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [size, userId]);
 
   useEffect(() => {
     fetchPage(1);
-  }, [userId, size]);
+  }, [fetchPage]);
 
   const pageCount = totalCount > 0 ? Math.ceil(totalCount / size) : 1;
   const blockSize = 5;

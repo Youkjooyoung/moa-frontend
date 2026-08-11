@@ -65,20 +65,6 @@ const UpdateProduct = () => {
         productStatus: 'ACTIVE'
     });
 
-    const getAccentColor = () => {
-        switch (theme) {
-            case 'classic':
-            case 'dark':
-                return '#635bff';
-            case 'pop':
-                return '#ec4899';
-            case 'christmas':
-                return '#c41e3a';
-            default:
-                return '#635bff';
-        }
-    };
-
     // 이미지 파일 관리 state
     const [selectedFile, setSelectedFile] = useState(null);
     const [previewUrl, setPreviewUrl] = useState(null);
@@ -334,8 +320,6 @@ const UpdateProduct = () => {
             window.removeEventListener('drop', handleDrop);
         };
     }, []);
-
-    const accent = getAccentColor();
 
     if (loading && !formData.productName) { // 초기 로딩 중일 때만 표시 (데이터 없는 경우)
         return (
