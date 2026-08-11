@@ -6,6 +6,15 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
+const localCertificatePath = path.resolve(dirname, "moa-ssl.p12");
+const localCertificatePassphrase = process.env.MOA_DEV_HTTPS_PASSPHRASE;
+const localHttps =
+  fs.existsSync(localCertificatePath) && localCertificatePassphrase
+    ? {
+        pfx: fs.readFileSync(localCertificatePath),
+        passphrase: localCertificatePassphrase,
+      }
+    : undefined;
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
@@ -47,10 +56,7 @@ export default defineConfig({
 
   server: {
     host: true,
-    https: {
-      pfx: fs.readFileSync("./moa-ssl.p12"),
-      passphrase: "moa1234",
-    },
+    https: localHttps,
 
     proxy: {
       "/api": {
