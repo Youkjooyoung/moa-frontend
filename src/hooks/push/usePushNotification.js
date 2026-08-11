@@ -4,8 +4,8 @@ import { useAuthStore } from "@/store/authStore";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "/api";
 
-const buildSseUrl = (accessToken) => {
-  const path = `/push/subscribe?token=${encodeURIComponent(accessToken)}`;
+const buildSseUrl = () => {
+  const path = "/push/subscribe";
 
   if (/^https?:\/\//i.test(API_BASE_URL)) {
     return `${API_BASE_URL.replace(/\/$/, "")}${path}`;
@@ -15,7 +15,7 @@ const buildSseUrl = (accessToken) => {
 };
 
 export const usePushNotification = () => {
-  const { accessToken, user } = useAuthStore();
+  const { user } = useAuthStore();
   const isAdmin = user?.role === "ADMIN";
 
   const [notifications, setNotifications] = useState([]);
@@ -161,19 +161,21 @@ export const usePushNotification = () => {
   }, [fetchUnreadCount]);
 
   useEffect(() => {
-    if (!accessToken || !user || isAdmin) return;
+    if (!user?.userId || isAdmin) return;
 
     if (esRef.current) return;
 
-    const url = buildSseUrl(accessToken);
-    const es = new EventSource(url);
+    const url = buildSseUrl();
+    const es = new EventSource(url, { withCredentials: true });
     esRef.current = es;
 
     const onUnread = (e) => {
       try {
         const data = JSON.parse(e.data);
         setUnreadCount(data?.count || 0);
-      } catch {}
+      } catch {
+        // Ignore malformed SSE payloads.
+      }
     };
 
     const onPush = (e) => {
@@ -186,23 +188,29 @@ export const usePushNotification = () => {
           const filtered = arr.filter((n) => n?.pushId !== data.pushId);
           return [data, ...filtered];
         });
-      } catch {}
+      } catch {
+        // Ignore malformed SSE payloads.
+      }
     };
 
     es.addEventListener("unread-count", onUnread);
     es.addEventListener("push", onPush);
 
-    es.onerror = () => {};
+    es.onerror = () => {
+      // EventSource reconnects automatically.
+    };
 
     return () => {
       try {
         es.removeEventListener("unread-count", onUnread);
         es.removeEventListener("push", onPush);
         es.close();
-      } catch {}
+      } catch {
+        // Ignore cleanup failures for already closed connections.
+      }
       esRef.current = null;
     };
-  }, [accessToken, user?.userId, isAdmin]);
+  }, [user?.userId, isAdmin]);
 
   return {
     notifications,

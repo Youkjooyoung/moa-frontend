@@ -28,6 +28,7 @@ import {
 import { useI18n } from "@/hooks/useI18n";
 import { supportedLocales } from "@/store/localeStore";
 import { useThemeStore } from "@/store/themeStore";
+import NotificationPopover from "@/components/push/NotificationPopover";
 
 const languageLabels = {
   ko: "한국어",
@@ -179,6 +180,8 @@ export default function HeaderView({
           </Button>
 
           <LanguageMenu locale={locale} setLocale={setLocale} t={t} />
+
+          {user && <NotificationPopover />}
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

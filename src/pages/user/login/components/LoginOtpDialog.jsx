@@ -86,7 +86,7 @@ export function LoginOtpDialog({
         if (!next) onOpenChange();
       }}
     >
-      <DialogContent className="max-w-sm p-0">
+      <DialogContent className="max-w-sm p-0" data-testid="login-otp-dialog">
         <div className={`rounded-[28px] ${styles.container}`}>
           <DialogHeader className="px-8 pt-8 pb-2">
             <DialogTitle className={`text-lg font-black ${styles.title}`}>
@@ -128,6 +128,7 @@ export function LoginOtpDialog({
 
             <Input
               value={otpCode}
+              data-testid="login-otp-input"
               maxLength={isBackupMode ? 16 : 6}
               inputMode={isBackupMode ? "text" : "numeric"}
               placeholder={
@@ -145,6 +146,7 @@ export function LoginOtpDialog({
 
             <Button
               className={`w-full h-12 text-white font-black rounded-2xl ${styles.button}`}
+              data-testid="login-otp-confirm"
               onClick={onConfirm}
               disabled={loading || !otpCode.trim()}
             >

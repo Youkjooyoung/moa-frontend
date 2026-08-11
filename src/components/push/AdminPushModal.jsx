@@ -91,7 +91,11 @@ const AdminPushModal = ({ isOpen, onClose }) => {
     return (
         <>
             <Dialog open={isOpen} onOpenChange={onClose} modal={false}>
-                <DialogContent allowScroll className="max-w-4xl h-[700px] p-0 flex flex-col bg-[var(--theme-bg-card)]">
+                <DialogContent
+                    allowScroll
+                    data-testid="admin-push-modal"
+                    className="max-w-4xl h-[700px] p-0 flex flex-col bg-[var(--theme-bg-card)]"
+                >
                     <DialogHeader className="px-6 py-4 border-b border-[var(--theme-border-light)] bg-[var(--theme-bg-card)] flex-shrink-0">
                         <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-full bg-[var(--theme-primary-light)] flex items-center justify-center">

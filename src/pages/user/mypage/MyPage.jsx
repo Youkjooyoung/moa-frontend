@@ -238,9 +238,7 @@ export default function MyPage() {
       if (!user?.userId) return;
 
       try {
-        const subResponse = await httpClient.get("/subscription", {
-          params: { userId: user.userId },
-        });
+        const subResponse = await httpClient.get("/subscription");
         const subscriptions = Array.isArray(subResponse)
           ? subResponse
           : subResponse?.data || [];

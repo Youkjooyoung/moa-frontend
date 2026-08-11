@@ -7,11 +7,11 @@ export function otpHandlers() {
   const openSetup = async () => {
     const authStore = useAuthStore.getState();
 
-    if (!authStore.accessToken) {
+    if (!authStore.user) {
       await authStore.fetchSession();
     }
 
-    if (!useAuthStore.getState().accessToken) {
+    if (!useAuthStore.getState().user) {
       alert("로그인이 필요합니다.");
       return;
     }
@@ -33,8 +33,7 @@ export function otpHandlers() {
       store.setField("secret", secret);
       store.setEnabled(!!enabled);
       store.setField("modalOpen", true);
-    } catch (e) {
-      console.log(e);
+    } catch {
       alert("OTP 설정 중 오류가 발생했습니다.");
     } finally {
       useOtpStore.getState().setField("loading", false);
@@ -93,8 +92,7 @@ export function otpHandlers() {
       state.reset();
       state.setEnabled(mode === "enable");
       return { success: true, mode };
-    } catch (e) {
-      console.log(e);
+    } catch {
       alert("OTP 처리 중 오류 발생");
       return { success: false, mode };
     } finally {

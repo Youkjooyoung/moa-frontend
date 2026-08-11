@@ -54,8 +54,9 @@ const AddSubscription = () => {
         try {
             const requestBody = {
                 productId: Number(productId),
-                subscriptionStartDate: startDate,
-                subscriptionEndDate: endDate || null
+                startDate,
+                endDate: endDate || null,
+                subscriptionStatus: 'ACTIVE'
             };
 
             const response = await httpClient.post('/subscription', requestBody);
@@ -76,7 +77,7 @@ const AddSubscription = () => {
     if (!product) return null;
 
     return (
-        <div className="min-h-screen bg-transparent pb-20 transition-colors duration-300 relative z-10">
+        <div className="min-h-screen bg-transparent pb-20 transition-colors duration-300 relative z-10" data-testid="subscription-add-page">
             {/* Theme Switcher */}
             <ThemeSwitcher theme={theme} onThemeChange={setTheme} />
 
@@ -166,6 +167,7 @@ const AddSubscription = () => {
                     <div className="space-y-3">
                         <button
                             onClick={handleSubscribeClick}
+                            data-testid="subscription-open-confirm"
                             className="w-full bg-[var(--theme-primary)] hover:bg-[var(--theme-primary-hover)] text-white py-4 rounded-xl font-bold transition-colors shadow-[var(--theme-shadow)]"
                         >
                             구독 시작하기
@@ -220,6 +222,7 @@ const AddSubscription = () => {
                                 </button>
                                 <button
                                     onClick={handleConfirmSubscribe}
+                                    data-testid="subscription-confirm-submit"
                                     className="flex-1 py-3 text-white rounded-xl font-bold transition-colors shadow-lg bg-[var(--theme-primary)] hover:bg-[var(--theme-primary-hover)]"
                                 >
                                     확인

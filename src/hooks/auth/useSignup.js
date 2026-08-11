@@ -30,7 +30,7 @@ export const useSignup = ({ mode = "normal", socialInfo } = {}) => {
   const navigate = useNavigate();
   const { form, errors, setField, setErrorMessage, reset } = useSignupStore();
   const isSocial = mode === "social";
-  const { setTokens, setUser, clearAuth } = useAuthStore();
+  const { setTokens, setUser } = useAuthStore();
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
   const passwordCheckRef = useRef(null);
@@ -42,6 +42,8 @@ export const useSignup = ({ mode = "normal", socialInfo } = {}) => {
       if (form.previewUrl) URL.revokeObjectURL(form.previewUrl);
       reset();
     };
+    // Cleanup should run once for this signup form lifecycle.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleChange = (e) => {
@@ -91,6 +93,8 @@ export const useSignup = ({ mode = "normal", socialInfo } = {}) => {
 
     const t = setTimeout(checkEmail, 400);
     return () => clearTimeout(t);
+    // Validation should run when the edited email changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form.email]);
 
   useEffect(() => {
@@ -107,6 +111,8 @@ export const useSignup = ({ mode = "normal", socialInfo } = {}) => {
     } else {
       setErrorMessage("password", "사용 가능한 비밀번호입니다.", false);
     }
+    // Validation should run when the edited password changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form.password]);
 
   useEffect(() => {
@@ -119,6 +125,8 @@ export const useSignup = ({ mode = "normal", socialInfo } = {}) => {
     } else {
       setErrorMessage("passwordCheck", "비밀번호가 일치합니다.", false);
     }
+    // Validation should run when password values change.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form.passwordCheck, form.password]);
 
   useEffect(() => {
@@ -161,6 +169,8 @@ export const useSignup = ({ mode = "normal", socialInfo } = {}) => {
 
     const t = setTimeout(checkNickname, 400);
     return () => clearTimeout(t);
+    // Validation should run when the edited nickname changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form.nickname]);
 
   const processImpUid = useCallback(
@@ -353,12 +363,11 @@ export const useSignup = ({ mode = "normal", socialInfo } = {}) => {
 
       const { signupType } = res.data || {};
       if (signupType === "SOCIAL") {
-        const { accessToken, refreshToken, accessTokenExpiresIn, expiresIn } =
+        const { accessToken, accessTokenExpiresIn, expiresIn } =
           res.data;
 
         setTokens({
           accessToken,
-          refreshToken,
           accessTokenExpiresIn: accessTokenExpiresIn ?? expiresIn,
         });
 

@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef, createContext, useContext, useMemo } from "react";
-import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import CursorSelector from "./CursorSelector";
 import { useThemeStore } from "../../store/themeStore";
@@ -126,20 +125,22 @@ export const SnowPlowButton = ({ className = "" }) => {
   const context = useSnowPlow();
   const { theme } = useThemeStore();
   const [isShaking, setIsShaking] = useState(false);
+  const accumulation = context?.accumulation ?? 0;
+  const buttonIsPlowing = context?.isPlowing ?? false;
 
   // 눈이 쌓이면 버튼 흔들기 힌트
   useEffect(() => {
-    if (!context || context.accumulation < 80) return;
+    if (accumulation < 80) return;
 
     const timer = setTimeout(() => {
-      if (!context.isPlowing && context.accumulation >= 80) {
+      if (!buttonIsPlowing && accumulation >= 80) {
         setIsShaking(true);
         setTimeout(() => setIsShaking(false), 3000);
       }
     }, 5000);
 
     return () => clearTimeout(timer);
-  }, [context?.accumulation, context?.isPlowing]);
+  }, [accumulation, buttonIsPlowing]);
 
   if (theme !== 'christmas') return null;
   if (!context) return null;
@@ -187,10 +188,7 @@ export const SnowPlowButton = ({ className = "" }) => {
 // ============================================
 // Falling Snow Chunk Component
 // ============================================
-const FallingSnowChunk = ({ delay, startX, size, zIndex }) => {
-  const randomX = useMemo(() => (Math.random() - 0.5) * 60, []);
-  const randomRotate = useMemo(() => Math.random() * 360, []);
-
+const FallingSnowChunk = ({ delay, startX, size, zIndex, driftX, rotation }) => {
   return (
     <motion.div
       className="absolute rounded-full bg-white"
@@ -207,8 +205,8 @@ const FallingSnowChunk = ({ delay, startX, size, zIndex }) => {
         y: [0, 150, 300, 450],
         opacity: [1, 1, 0.8, 0],
         scale: [1, 0.95, 0.9, 0.5],
-        x: [0, randomX * 0.5, randomX, randomX * 1.5],
-        rotate: [0, randomRotate * 0.5, randomRotate],
+        x: [0, driftX * 0.5, driftX, driftX * 1.5],
+        rotate: [0, rotation * 0.5, rotation],
       }}
       transition={{
         duration: 1.5,
@@ -345,7 +343,6 @@ const ChristmasDecorations = () => {
           setShowSanta(true);
           setTimeout(() => setShowSanta(false), 6000);
           inputBuffer.current = [];
-          console.log("🎅 Santa Sleigh Activated!");
         }
       }
     };
@@ -435,7 +432,7 @@ export const ClearableSnowPile = () => {
   const { isPlowing, isSnowCleared, plowProgress, accumulation, plowId } = context || {};
 
   useEffect(() => {
-    if (!context?.isPlowing) {
+    if (!isPlowing) {
       setFallingChunks([]);
       return;
     }
@@ -443,20 +440,22 @@ export const ClearableSnowPile = () => {
     const intervalTime = 60;
 
     const interval = setInterval(() => {
-      if (context.plowProgress < 100) {
+      if (plowProgress < 100) {
         const newChunks = Array.from({ length: 3 }, (_, i) => ({
           id: Date.now() + i,
-          startX: `${context.plowProgress + (Math.random() - 0.5) * 5}%`,
+          startX: `${plowProgress + (Math.random() - 0.5) * 5}%`,
           size: 8 + Math.random() * 12,
           delay: Math.random() * 0.1,
           zIndex: Math.random() > 0.5 ? 25 : 5,
+          driftX: (Math.random() - 0.5) * 60,
+          rotation: Math.random() * 360,
         }));
         setFallingChunks(prev => [...prev.slice(-40), ...newChunks]);
       }
     }, intervalTime);
 
     return () => clearInterval(interval);
-  }, [context?.isPlowing, context?.plowProgress]);
+  }, [isPlowing, plowProgress]);
 
   if (theme !== 'christmas' || !context) return null;
 
@@ -512,6 +511,8 @@ export const ClearableSnowPile = () => {
               size={chunk.size}
               delay={chunk.delay}
               zIndex={chunk.zIndex}
+              driftX={chunk.driftX}
+              rotation={chunk.rotation}
             />
           ))}
         </AnimatePresence>

@@ -84,13 +84,7 @@ httpClient.interceptors.response.use(
       originalRequest._retry = true;
       isTokenRefreshing = true;
 
-      const { refreshToken, clearAuth, setTokens } = useAuthStore.getState();
-
-      if (!refreshToken) {
-        clearAuth();
-        processQueue(error, null);
-        return Promise.reject(error);
-      }
+      const { clearAuth, setTokens } = useAuthStore.getState();
 
       try {
         const refreshRes = await axios.post(
@@ -99,7 +93,6 @@ httpClient.interceptors.response.use(
           {
             withCredentials: true,
             headers: {
-              "Refresh-Token": refreshToken,
               "Content-Type": "application/json; charset=UTF-8",
             },
           }
@@ -118,13 +111,11 @@ httpClient.interceptors.response.use(
 
         const {
           accessToken: newAccessToken,
-          refreshToken: newRefreshToken,
           accessTokenExpiresIn,
         } = apiRes.data || {};
 
         setTokens({
           accessToken: newAccessToken,
-          refreshToken: newRefreshToken || refreshToken,
           accessTokenExpiresIn,
         });
 

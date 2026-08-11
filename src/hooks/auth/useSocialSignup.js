@@ -34,6 +34,8 @@ export const useSocialSignup = () => {
     if (profileImageUrl) setField("previewUrl", profileImageUrl);
 
     return () => reset();
+    // Query params are captured once when entering the social signup screen.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleChange = (e) => {
@@ -73,6 +75,8 @@ export const useSocialSignup = () => {
 
     const t = setTimeout(checkNickname, 400);
     return () => clearTimeout(t);
+    // Validation should run when the edited nickname changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form.nickname]);
 
   const processImpUid = useCallback(

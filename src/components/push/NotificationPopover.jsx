@@ -55,6 +55,8 @@ export default function NotificationPopover({ children }) {
             variant="ghost"
             size="icon"
             onClick={onClick}
+            aria-label={isAdmin ? "Open admin push notifications" : "Open notifications"}
+            data-testid="notification-button"
             className="relative rounded-full w-11 h-11 text-[var(--theme-text-muted)] hover:text-[var(--theme-primary)] hover:bg-[var(--theme-primary-light)] transition-colors"
         >
             <Bell className="w-6 h-6" />

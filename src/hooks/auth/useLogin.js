@@ -33,7 +33,9 @@ export const purgeLoginPasswordKeys = (primaryStorage, secondaryStorage) => {
     PASSWORD_STORAGE_KEYS.forEach((key) => {
       try {
         storage.removeItem(key);
-      } catch {}
+      } catch {
+        // Ignore storage cleanup failures.
+      }
     });
   });
 };
@@ -137,10 +139,9 @@ export const useLoginPageLogic = () => {
       }
 
       const data = res.data || {};
-      if (data.accessToken && data.refreshToken) {
+      if (data.accessToken) {
         setTokens({
           accessToken: data.accessToken,
-          refreshToken: data.refreshToken,
           accessTokenExpiresIn: data.accessTokenExpiresIn,
         });
       }
@@ -264,8 +265,8 @@ export const useLoginPageLogic = () => {
         return;
       }
 
-      const { accessToken, refreshToken, accessTokenExpiresIn } = data;
-      setTokens({ accessToken, refreshToken, accessTokenExpiresIn });
+      const { accessToken, accessTokenExpiresIn } = data;
+      setTokens({ accessToken, accessTokenExpiresIn });
 
       const me = await httpClient.get("/users/me");
       if (me?.success) {
@@ -350,8 +351,8 @@ export const useLoginPageLogic = () => {
         return;
       }
 
-      const { accessToken, refreshToken, accessTokenExpiresIn } = res.data;
-      setTokens({ accessToken, refreshToken, accessTokenExpiresIn });
+      const { accessToken, accessTokenExpiresIn } = res.data;
+      setTokens({ accessToken, accessTokenExpiresIn });
 
       const me = await httpClient.get("/users/me");
       if (me?.success) {

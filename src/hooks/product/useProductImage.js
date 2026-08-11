@@ -175,7 +175,6 @@ export const useProductImages = (initialLogoUrl = '') => {
         if (logoFile || iconFile) {
             // 로고가 없으면 기존 이미지 유지, 아이콘만 새로 업로드하는 경우 처리
             const uploadResponse = await uploadProductImages(logoFile, iconFile);
-            console.log('[useProductImages] uploadResponse:', uploadResponse);
 
             // 응답이 문자열(URL)이면 그대로 반환
             if (typeof uploadResponse === 'string') {

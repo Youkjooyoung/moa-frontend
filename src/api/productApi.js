@@ -57,7 +57,6 @@ export const uploadProductImages = (logoFile, iconFile) => {
     if (iconFile) {
         formData.append('iconFile', iconFile);
     }
-    console.log('[productApi] uploading images - logoFile:', !!logoFile, 'iconFile:', !!iconFile);
     return httpClient.post('/product/upload-images', formData, {
         headers: {
             'Content-Type': 'multipart/form-data'

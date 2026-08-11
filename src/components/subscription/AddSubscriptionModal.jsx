@@ -8,7 +8,7 @@ import { getProductIconUrl } from '@/utils/imageUtils';
  * CSS 변수 기반 테마 적용
  */
 
-const AddSubscriptionModal = ({ productId, startDate, endDate, onClose, onSuccess, user }) => {
+const AddSubscriptionModal = ({ productId, startDate, endDate, onClose, onSuccess }) => {
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
     const [submitting, setSubmitting] = useState(false);
@@ -40,25 +40,14 @@ const AddSubscriptionModal = ({ productId, startDate, endDate, onClose, onSucces
 
         setSubmitting(true);
         try {
-            // 디버깅용 로그
-            console.log('=== 구독 신청 디버깅 ===');
-            console.log('전달받은 user:', user);
-            console.log('productId:', productId);
-            console.log('startDate:', startDate);
-            console.log('endDate:', endDate);
-
             const requestBody = {
-                userId: user?.userId,
                 productId: Number(productId),
                 subscriptionStatus: 'ACTIVE',
                 startDate: startDate,
                 endDate: endDate || null
             };
 
-            console.log('전송할 requestBody:', requestBody);
-
             const response = await httpClient.post('/subscription', requestBody);
-            console.log('응답:', response);
             if (response.success) {
                 alert('구독이 성공적으로 신청되었습니다!');
                 if (onSuccess) onSuccess();

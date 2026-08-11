@@ -5,7 +5,7 @@ import { useAuthStore } from "@/store/authStore";
 const HISTORY_PAGE_SIZE_KEY = "admin_push_history_page_size";
 
 export const useAdminPush = () => {
-    const accessToken = useAuthStore((state) => state.accessToken);
+    const user = useAuthStore((state) => state.user);
 
     const [activeTab, setActiveTab] = useState("templates");
     const [isLoading, setIsLoading] = useState(false);
@@ -291,7 +291,7 @@ export const useAdminPush = () => {
     }, [sendForm]);
 
     useEffect(() => {
-        if (!accessToken) {
+        if (!user) {
             return;
         }
 
@@ -302,7 +302,7 @@ export const useAdminPush = () => {
         } else if (activeTab === "send") {
             fetchUsers(1, "");
         }
-    }, [activeTab, accessToken, fetchTemplates, fetchHistory, fetchUsers, historyPageSize]);
+    }, [activeTab, user, fetchTemplates, fetchHistory, fetchUsers, historyPageSize]);
 
     return {
         activeTab,

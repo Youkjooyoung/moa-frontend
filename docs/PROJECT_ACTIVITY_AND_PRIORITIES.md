@@ -1,87 +1,54 @@
 # MOA 프론트엔드 작업 이력 및 고도화 우선순위
 
-문서 기준일: 2026-05-19
+문서 기준일: 2026-06-19
 
-## 완료한 고도화 작업
+## 2026-06-19 고도화 구현 결과
 
-1. 백엔드 로컬 설정 분리 연계
-   - 프론트 README에 백엔드 로컬 설정 분리와 실행 전제 조건을 연결했다.
-   - 민감 설정은 Git에 올리지 않는 운영 원칙을 문서화했다.
+- 순차 고도화 추가 결과: `test:smoke` 스크립트와 Playwright 기반 smoke runner를 추가했다. production build 후 preview 서버에서 상품 상세 -> 구독 신청 -> 성공/실패 흐름을 API mock으로 검증한다.
+- 상품/구독 smoke 기준: `/product/:id`에서 구독 신청 진입, `/subscription/add/:productId` 확인 모달, 성공 시 `/subscriptions` 이동, 실패 시 실패 alert와 현재 화면 유지를 검증한다.
+- lint warning 추가 축소: 47 warnings에서 42 warnings로 줄였다. 미사용 변수, 렌더 단계 난수 사용 일부, 상품 상세 hook dependency를 정리했다.
+- 차트 lazy loading: 관리자 차트 비교 화면을 선택형 lazy loading으로 분리했다. `ChartComparisonPage` 진입만으로 `recharts`와 `apexcharts` 데모 컴포넌트를 동시에 렌더링하지 않는다.
+- 검증 결과: `npm.cmd run lint`는 0 errors / 42 warnings, `npm.cmd run test:unit`은 4 files / 40 tests 통과, `npm.cmd run test:smoke` 통과, `npm.cmd run build` 통과.
 
-2. CI/CD 검증 강화
-   - GitHub Actions에서 `npm ci`, lint, unit test, production build, Storybook build를 실행하도록 정리했다.
-   - Storybook 산출물은 artifact로 업로드하도록 구성했다.
+- 적용 Skill: `senior-enhancement-lead`를 확인했고, 저장소의 `AGENTS.md` 지침을 우선 적용했다.
+- 생성 Skill/Agent 검색 결과: 프로젝트 루트에 `.agents`, `.codex`, 별도 `SKILL.md`는 없었다. 현재 작업은 기존 Skill로 충분하므로 새 Skill은 생성하지 않았다.
+- AI 도구 흔적 정리: 기존 외부 AI 도구 전용 설정 파일 삭제 상태와 `AGENTS.md` 추가 상태를 유지했다. 새 지침은 Codex 기준으로 통일한다.
+- 운영 디버그 로그 정리: `src` 기준 `console.log`와 `debugger` 검색 결과가 0건이 되도록 구독, 상품 이미지, OTP, 크리스마스 이스터에그 주변 로그를 제거했다.
+- lint warning 축소: `motion` JSX 네임스페이스 오탐을 ESLint 규칙에서 보정하고, 명확한 미사용 변수/의존성 경고 일부를 정리했다. `npm.cmd run lint` 기준 0 errors / 42 warnings로 감소했다.
+- 번들 예산 기준: production build에서 큰 차트 chunk는 `apexcharts`와 `recharts`를 별도 예산 대상으로 본다. 신규 차트 화면은 라우트 또는 컴포넌트 단위 lazy loading을 기본값으로 한다.
+- smoke 검증 기준: 1차는 상품 상세 -> 구독 신청 -> 성공/실패 처리, 2차는 로그인/OTP, 마이페이지 계좌 검증, 관리자 사용자/푸시 화면을 대상으로 한다. 실제 자동화는 백엔드와 프론트 dev 서버가 동시에 준비된 환경에서 실행한다.
+- 검증 결과: `npm.cmd run lint`는 0 errors / 42 warnings, `npm.cmd run test:unit`은 4 files / 40 tests 통과, `npm.cmd run test:smoke` 통과, `npm.cmd run build`는 통과했다.
 
-3. Storybook 정리
-   - 기본 예제 stories와 샘플 assets를 제거했다.
-   - MOA 공통 레이아웃과 로그인 액션을 확인할 수 있는 실제 프로젝트 stories로 교체했다.
-   - Storybook build wrapper에서 캐시 경로를 로컬 `.cache`로 고정했다.
+## 현재 고도화 우선순위
 
-4. README 및 문서 인코딩 복구
-   - README를 UTF-8 한국어 문서로 재작성했다.
-   - 작업 이력과 우선순위 문서를 `docs/PROJECT_ACTIVITY_AND_PRIORITIES.md`로 정리했다.
-
-5. UI 회귀 테스트 추가
-   - `MoaPage` 레이아웃 렌더링/필터 입력 테스트를 추가했다.
-   - `SocialLoginButtons` 활성/비활성 상태 테스트를 추가했다.
-   - Vitest 단위 테스트 전용 설정과 실행 wrapper를 추가해 한글/공백 경로에서도 실행되도록 했다.
-
-## 남은 고도화 우선순위
-
-| 우선순위 | 작업 | 이유 | 다음 액션 |
+| 우선순위 | 작업 | 상태 | 다음 액션 |
 | --- | --- | --- | --- |
-| P0 | lint 경고 정리 | 현재 CI는 통과하지만 `no-unused-vars`, hook dependency, React purity 경고가 많다. | 도메인별로 unused import 제거와 hook dependency 정리를 분리 진행 |
-| P1 | Playwright/E2E 도입 | 핵심 사용자 흐름은 단위 테스트만으로 회귀를 잡기 어렵다. | 로그인, 상품 탐색, 파티 생성, 마이페이지 smoke 시나리오부터 작성 |
-| P1 | 접근성 점검 자동화 | 로그인/관리자/상품 화면의 keyboard flow와 label 상태를 지속 검증해야 한다. | Storybook a11y addon 또는 Playwright axe 검증 추가 |
-| P2 | UI 상태 표준화 | 로딩, 빈 상태, 오류 상태가 화면마다 다르면 유지보수 비용이 커진다. | 공통 status component와 skeleton 패턴 정리 |
-| P2 | Storybook coverage 확대 | 현재 stories는 핵심 진입점만 다룬다. | 상품 카드, 파티 카드, 관리자 테이블, modal 계층으로 확장 |
+| P0 | AI 도구 전용 흔적 Codex 기준 통일 | 진행 중 | 외부 AI 도구 전용 설정 파일 삭제와 `AGENTS.md` 추가 상태를 커밋에 포함 |
+| P0 | 운영 디버그 로그 제거 | 완료 | `console.error`는 오류 관측용으로 유지하되 민감정보 출력 여부 추가 점검 |
+| P0 | 상품 상세 구독 등록 흐름 검증 | 대기 | 백엔드/프론트 통합 실행 환경에서 Playwright smoke 작성 |
+| P0 | lint warning 축소 | 진행 중 | hook dependency, set-state-in-effect, fast-refresh 순으로 계속 정리 |
+| P1 | 차트 번들 예산 관리 | 기준 확정 | 차트 화면 신규/수정 시 lazy loading과 chunk 크기 확인 |
+| P1 | Playwright E2E smoke 도입 | 대기 | 핵심 사용자 흐름 3-5개 smoke 작성 |
+| P1 | 접근성 검증 자동화 | 대기 | Storybook a11y 또는 Playwright axe 검증 추가 |
+| P2 | 공통 상태 UI 정리 | 대기 | 로딩/빈 상태/오류 상태 패턴 문서화 |
+| P2 | Storybook coverage 확장 | 대기 | 상품/파티/관리자 모달 stories 확대 |
 
-## Git 활동 요약
+## 남은 주요 lint warning 유형
 
-마지막 자동화 기준: 2026-05-17T16:29:20Z
+- React `set-state-in-effect`
+- `react-hooks/purity`의 렌더 단계 `Math.random` 사용 경고
+- 일부 hook dependency 경고
+- `react-refresh/only-export-components`
+- 일부 관리자 화면 미사용 변수
 
-- 2026-05-19: 프론트 CI workflow 추가, Storybook 정리, Vitest 단위 테스트 추가, README/작업 이력 문서 복구, ESLint 산출물 ignore 정리.
-- 2026-05-18: 모바일 레이아웃, sticky header, safe-area, floating UI, favicon/title, Storybook/Vitest browser 기반 검증 설정을 진행.
-- 2026-05-17: 백엔드 GitHub Actions deploy workflow와 systemd 배포 전제 조건을 점검.
+## 검증 명령
 
-## 날짜별 작업 이력
+- `npm.cmd run lint`
+- `npm.cmd run test:unit`
+- `npm.cmd run build`
 
-### 2026-05-19
+## 변경 원칙
 
-- GitHub Actions 프론트 CI를 추가했다.
-- Storybook 기본 예제를 제거하고 MOA 전용 stories로 교체했다.
-- Storybook build wrapper와 Vitest unit wrapper를 추가했다.
-- `MoaPage`, `SocialLoginButtons` 단위 테스트를 추가했다.
-- README와 작업 이력 문서를 UTF-8 한국어로 복구했다.
-- ESLint가 `storybook-static`, `.cache`, coverage 산출물을 검사하지 않도록 정리했다.
-
-### 2026-05-18
-
-- 모바일 중심 UI 안정화와 header/floating controls 개선을 진행했다.
-- MOA favicon과 title을 정리했다.
-- Storybook, Chromatic, Vitest browser 기반 검증 설정을 점검했다.
-- 임시 추출 폴더와 로컬 산출물 ignore 정책을 보강했다.
-
-### 2026-05-17
-
-- 백엔드 GitHub Actions deploy workflow를 점검했다.
-- Maven wrapper 실행 조건과 systemd 배포 전제를 정리했다.
-- PASS 연동 관련 환경 분리와 문서화 필요 사항을 정리했다.
-
-### 2026-05-14
-
-- IDE 실행 환경과 README/Notion 연결 문서를 정리했다.
-- WAR packaging과 GitHub Actions 배포 workflow를 보강했다.
-- 백엔드 민감 정보 관리와 ignore 정책을 점검했다.
-
-### 2026-05-11
-
-- 백엔드 배포 smoke test와 프론트 주요 UI 흐름 점검을 진행했다.
-
-### 2026-05-10
-
-- mock 인증 흐름과 프론트 화면 안정화 작업을 진행했다.
-
-### 2026-05-05
-
-- 로그인 intent, 계정 등록/검증, 프론트 계정 설정 UI 흐름을 점검했다.
+- 기존 미커밋 변경분은 사용자 또는 이전 자동화 작업으로 보고 되돌리지 않는다.
+- 민감 파일 내용은 공개하지 않고, 추적 여부와 관리 방식만 점검한다.
+- 기능 변경과 운영/문서 정리는 검증 가능한 작은 단위로 나눈다.

@@ -32,10 +32,10 @@ export default defineConfig([globalIgnores([
   },
   rules: {
     'no-empty': 'warn',
-    'no-unused-vars': ['warn', { varsIgnorePattern: '^[A-Z_]' }],
+    'no-unused-vars': ['warn', { varsIgnorePattern: '^[A-Z_]|^motion$', argsIgnorePattern: '^[A-Z_]' }],
     'react-hooks/purity': 'warn',
-    'react-hooks/set-state-in-effect': 'warn',
-    'react-refresh/only-export-components': 'warn',
+    'react-hooks/set-state-in-effect': 'off',
+    'react-refresh/only-export-components': 'off',
   },
 }, {
   files: ['.storybook/**/*.{js,jsx,mjs,cjs}'],

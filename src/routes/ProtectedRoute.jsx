@@ -9,13 +9,20 @@ const LoadingFallback = () => (
 );
 
 export default function ProtectedRoute({ element }) {
-  const { user, loading, fetchSession } = useAuthStore();
+  const { user, loading, initialized, fetchSession } = useAuthStore();
   const [sessionChecked, setSessionChecked] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
 
     if (user) {
+      setSessionChecked(true);
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    if (initialized) {
       setSessionChecked(true);
       return () => {
         cancelled = true;
@@ -30,14 +37,13 @@ export default function ProtectedRoute({ element }) {
       .finally(() => {
         if (!cancelled) {
           setSessionChecked(true);
-          useAuthStore.setState({ loading: false });
         }
       });
 
     return () => {
       cancelled = true;
     };
-  }, [user, fetchSession]);
+  }, [user, initialized, fetchSession]);
 
   if (user) return element;
 

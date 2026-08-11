@@ -3,7 +3,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, Sparkles, RefreshCw } from 'lucide-react';
 import { motion } from 'framer-motion';
 import httpClient from '../../api/httpClient';
-import { useAuthStore } from '../../store/authStore';
 import { useThemeStore } from '@/store/themeStore';
 import { ThemeSwitcher } from '@/config/themeConfig';
 import { getProductIconUrl } from '@/utils/imageUtils';
@@ -12,7 +11,6 @@ import { themeClasses } from '@/utils/themeUtils';
 const UpdateSubscription = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const { user } = useAuthStore();
     const { theme, setTheme } = useThemeStore();
     const [subscription, setSubscription] = useState(null);
     const [products, setProducts] = useState([]);

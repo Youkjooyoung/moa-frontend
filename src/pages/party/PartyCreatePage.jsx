@@ -10,10 +10,7 @@ import { getMyCard } from "../../api/userApi";
 import { processLeaderDeposit } from "../../api/partyApi";
 import RippleButton from "../../components/party/RippleButton";
 import { getProductIconUrl } from "../../utils/imageUtils";
-import {
-  useTheme,
-  themeConfig
-} from "../../config/themeConfig";
+import { useTheme } from "../../config/themeConfig";
 import {
   Check,
   Calendar,
@@ -27,54 +24,13 @@ import {
   AlertCircle
 } from "lucide-react";
 
-// Party 페이지 테마 스타일
-const partyThemeStyles = {
-  pop: {
-    accent: 'text-pink-500',
-    accentBg: 'bg-pink-500',
-    hoverAccentBg: 'hover:bg-pink-600',
-    badge: 'bg-pink-50 text-pink-600',
-    buttonShadow: 'shadow-pink-500/25',
-    accentColor: '#ec4899',
-  },
-  classic: {
-    accent: 'text-[#635bff]',
-    accentBg: 'bg-[#635bff]',
-    hoverAccentBg: 'hover:bg-[#5851e8]',
-    badge: 'bg-indigo-50 text-[#635bff]',
-    buttonShadow: 'shadow-[#635bff]/25',
-    accentColor: '#635bff',
-  },
-  dark: {
-    accent: 'text-[#635bff]',
-    accentBg: 'bg-[#635bff]',
-    hoverAccentBg: 'hover:bg-[#5851e8]',
-    badge: 'bg-gray-800 text-[#635bff]',
-    buttonShadow: 'shadow-gray-900/25',
-    accentColor: '#635bff',
-  },
-  christmas: {
-    accent: 'text-[#c41e3a]',
-    accentBg: 'bg-[#c41e3a]',
-    hoverAccentBg: 'hover:bg-red-700',
-    greenAccent: 'text-[#1a5f2a]',
-    greenBg: 'bg-[#1a5f2a]',
-    badge: 'bg-red-50 text-[#c41e3a]',
-    greenBadge: 'bg-green-50 text-[#1a5f2a]',
-    buttonShadow: 'shadow-[#c41e3a]/25',
-    cardShadow: 'shadow-[4px_4px_12px_rgba(0,0,0,0.08)]',
-    accentColor: '#c41e3a',
-  },
-};
-
 export default function PartyCreatePage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { user, loading: authLoading } = useAuthStore();
 
   // Theme
-  const { theme, setTheme, currentTheme } = useTheme("appTheme");
-  const themeStyle = partyThemeStyles[theme] || partyThemeStyles.pop;
+  const { theme, currentTheme } = useTheme("appTheme");
 
   // Zustand Store
   const {

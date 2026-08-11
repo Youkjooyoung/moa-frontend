@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Calendar, CalendarPlus, Sparkles, LayoutGrid, Bell, Users, Lightbulb } from 'lucide-react';
 import httpClient from '../../api/httpClient';
@@ -59,7 +59,7 @@ const GetProduct = () => {
     const [startDate, setStartDate] = useState(new Date().toISOString().split('T')[0]);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-    const fetchProduct = async () => {
+    const fetchProduct = useCallback(async () => {
         try {
             setLoading(true);
             const response = await httpClient.get(`/product/${id}`);
@@ -75,7 +75,7 @@ const GetProduct = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [id, navigate]);
 
     // 비로그인 사용자 접근 차단
     useEffect(() => {
@@ -90,7 +90,7 @@ const GetProduct = () => {
         if (user) {
             fetchProduct();
         }
-    }, [id, navigate, user]);
+    }, [fetchProduct, user]);
 
     const handleSubscribe = () => {
         // 구독 등록 로직 (추후 구현)
@@ -274,6 +274,7 @@ const GetProduct = () => {
                                     </button>
                                     <button
                                         onClick={handleSubscribe}
+                                        data-testid="product-subscribe-link"
                                         className="flex-[2] text-white py-3.5 rounded-xl font-bold transition-all shadow-lg flex items-center justify-center gap-2"
                                         style={{
                                             backgroundColor: accent,

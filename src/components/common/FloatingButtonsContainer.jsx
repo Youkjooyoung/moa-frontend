@@ -4,7 +4,6 @@ import { useLocation } from "react-router-dom";
 import { Palette, Sun, Moon, TreePine, MousePointer2, ChevronUp } from "lucide-react";
 import { useThemeStore } from "@/store/themeStore";
 import { themeConfig } from "@/config/themeConfig";
-import { useAuthStore } from "@/store/authStore";
 import { SnowPlowButton, useSnowPlow } from "@/components/christmas/SnowPlow";
 
 // ============================================

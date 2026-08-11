@@ -1,13 +1,18 @@
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { ShieldX, Home, LogIn } from "lucide-react";
 import { useAuthStore } from "@/store/authStore";
 
 export default function AdminAuthGuard({ children }) {
-  const { user, loading } = useAuthStore();
+  const { user, loading, initialized, fetchSession } = useAuthStore();
   const navigate = useNavigate();
 
-  if (loading) {
+  useEffect(() => {
+    if (!initialized) fetchSession();
+  }, [initialized, fetchSession]);
+
+  if (loading || !initialized) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-transparent">
         <motion.div

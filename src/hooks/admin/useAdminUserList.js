@@ -215,6 +215,8 @@ export const useAdminUserListLogic = () => {
 
   useEffect(() => {
     loadUsers();
+    // Initial list load intentionally uses the store snapshot from mount.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return {
