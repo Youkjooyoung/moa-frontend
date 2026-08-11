@@ -1,0 +1,64 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Least-privilege GitHub OIDC role for the MOA frontend deployment
+
+Parameters:
+  GitHubOwner:
+    Type: String
+    Default: Youkjooyoung
+  GitHubRepository:
+    Type: String
+    Default: moa-frontend
+  DeployBranch:
+    Type: String
+    Default: main
+  FrontendBucketName:
+    Type: String
+    Default: moa.jyyouk.shop
+  CloudFrontDistributionId:
+    Type: String
+    Default: EFJI4DCB3J6KJ
+
+Resources:
+  GitHubDeployRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Description: Deploys the MOA frontend artifact to S3 and invalidates CloudFront
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Federated: !Sub arn:${AWS::Partition}:iam::${AWS::AccountId}:oidc-provider/token.actions.githubusercontent.com
+            Action: sts:AssumeRoleWithWebIdentity
+            Condition:
+              StringEquals:
+                token.actions.githubusercontent.com:aud: sts.amazonaws.com
+              StringLike:
+                token.actions.githubusercontent.com:sub: !Sub repo:${GitHubOwner}/${GitHubRepository}:ref:refs/heads/${DeployBranch}
+      Policies:
+        - PolicyName: DeployFrontend
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:ListBucket
+                  - s3:GetBucketLocation
+                Resource: !Sub arn:${AWS::Partition}:s3:::${FrontendBucketName}
+              - Effect: Allow
+                Action:
+                  - s3:DeleteObject
+                  - s3:GetObject
+                  - s3:PutObject
+                Resource: !Sub arn:${AWS::Partition}:s3:::${FrontendBucketName}/*
+              - Effect: Allow
+                Action:
+                  - cloudfront:CreateInvalidation
+                  - cloudfront:GetDistribution
+                  - cloudfront:GetInvalidation
+                Resource: !Sub arn:${AWS::Partition}:cloudfront::${AWS::AccountId}:distribution/${CloudFrontDistributionId}
+
+Outputs:
+  GitHubDeployRoleArn:
+    Description: Store this ARN in the AWS_DEPLOY_ROLE_ARN GitHub Actions variable
+    Value: !GetAtt GitHubDeployRole.Arn
