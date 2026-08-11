@@ -8,9 +8,9 @@ Parameters:
   GitHubRepository:
     Type: String
     Default: moa-frontend
-  DeployBranch:
+  DeploymentEnvironment:
     Type: String
-    Default: main
+    Default: production
   FrontendBucketName:
     Type: String
     Default: moa.jyyouk.shop
@@ -34,7 +34,7 @@ Resources:
               StringEquals:
                 token.actions.githubusercontent.com:aud: sts.amazonaws.com
               StringLike:
-                token.actions.githubusercontent.com:sub: !Sub repo:${GitHubOwner}/${GitHubRepository}:ref:refs/heads/${DeployBranch}
+                token.actions.githubusercontent.com:sub: !Sub repo:${GitHubOwner}/${GitHubRepository}:environment:${DeploymentEnvironment}
       Policies:
         - PolicyName: DeployFrontend
           PolicyDocument:
