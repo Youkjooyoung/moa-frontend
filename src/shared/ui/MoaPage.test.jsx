@@ -8,6 +8,7 @@ import {
   MoaField,
   MoaInput,
   MoaPageHeader,
+  MoaStatusState,
 } from "./MoaPage";
 
 describe("Moa shared UI", () => {
@@ -41,5 +42,13 @@ describe("Moa shared UI", () => {
     expect(screen.getByText("정상")).not.toBeNull();
     expect(screen.getByPlaceholderText("Netflix")).not.toBeNull();
     expect(screen.getByText("결과 없음")).not.toBeNull();
+  });
+
+  it("announces loading and error states to assistive technology", () => {
+    const { rerender } = render(<MoaStatusState title="불러오는 중" />);
+    expect(screen.getByRole("status")).not.toBeNull();
+
+    rerender(<MoaStatusState tone="error" title="불러오지 못했습니다" />);
+    expect(screen.getByRole("alert")).not.toBeNull();
   });
 });

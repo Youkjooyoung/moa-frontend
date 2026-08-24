@@ -1,5 +1,5 @@
-import { lazy, Suspense, useEffect, useState } from "react";
-import { Routes, Route } from "react-router-dom";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
+import { Routes, Route, useLocation } from "react-router-dom";
 
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
@@ -13,6 +13,7 @@ import { useLocaleStore } from "@/store/localeStore";
 import { useThemeStore } from "@/store/themeStore";
 
 import AdminAuthGuard from "@/pages/admin/components/AdminAuthGuard";
+import { MoaStatusState } from "@/shared/ui";
 
 const BankVerificationPage = lazy(() => import("@/pages/account/BankVerificationPage"));
 const AddBlacklistPage = lazy(() => import("@/pages/admin/AddBlacklistPage"));
@@ -63,6 +64,7 @@ const EmailVerifiedPage = lazy(() => import("@/pages/user/register/EmailVerified
 const SocialRegisterPage = lazy(() => import("@/pages/user/register/SocialRegisterPage"));
 const ResetPwdPage = lazy(() => import("@/pages/user/resetPwd/ResetPwdPage"));
 const UpdatePwdPage = lazy(() => import("@/pages/user/resetPwd/UpdatePwdPage"));
+const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
 
 function AdminRoute({ children }) {
   return <AdminAuthGuard>{children}</AdminAuthGuard>;
@@ -70,9 +72,10 @@ function AdminRoute({ children }) {
 
 function RouteFallback() {
   return (
-    <div className="flex min-h-[40vh] items-center justify-center text-sm font-bold text-[var(--theme-text-muted)]">
-      화면을 불러오는 중입니다.
-    </div>
+    <MoaStatusState
+      title="화면을 불러오는 중입니다"
+      description="잠시만 기다려 주세요."
+    />
   );
 }
 
@@ -83,6 +86,8 @@ function AppContent() {
   const { locale } = useLocaleStore();
   const { resolvedTheme, setSystemTheme } = useThemeStore();
   const [pineappleEnabled, setPineappleEnabled] = useState(false);
+  const { pathname } = useLocation();
+  const mainRef = useRef(null);
 
   useEffect(() => {
     if (!initialized) fetchSession();
@@ -104,11 +109,16 @@ function AppContent() {
     return () => media.removeEventListener("change", syncSystemTheme);
   }, [setSystemTheme]);
 
+  useEffect(() => {
+    mainRef.current?.focus({ preventScroll: true });
+  }, [pathname]);
+
   const showEasterEgg =
     user && (user.userId === "usertest1" || user.userId === "admintest");
 
   return (
     <div className="min-h-screen flex flex-col bg-[var(--theme-bg)] text-[var(--theme-text)] transition-colors duration-300">
+      <a className="moa-skip-link" href="#main-content">본문 바로가기</a>
       <ScrollToTop />
       {showEasterEgg && pineappleEnabled && (
         <PineappleEasterEgg showToggle={false} />
@@ -121,7 +131,13 @@ function AppContent() {
 
       <Header />
 
-      <main className="flex-1 transition-all duration-300" style={{ paddingTop: "5rem" }}>
+      <main
+        id="main-content"
+        ref={mainRef}
+        tabIndex={-1}
+        className="flex-1 transition-all duration-300"
+        style={{ paddingTop: "5rem" }}
+      >
         <Suspense fallback={<RouteFallback />}>
           <Routes>
             <Route path="/" element={<MainPage />} />
@@ -187,6 +203,7 @@ function AppContent() {
             <Route path="/community/faq/add" element={<AdminRoute><AddFaq /></AdminRoute>} />
             <Route path="/community/inquiry" element={<ProtectedRoute element={<Inquiry />} />} />
             <Route path="/community/inquiry/admin" element={<AdminRoute><InquiryAdmin /></AdminRoute>} />
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Suspense>
       </main>

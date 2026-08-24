@@ -1,5 +1,5 @@
 import { createElement } from "react";
-import { ArrowLeft, Inbox } from "lucide-react";
+import { AlertCircle, ArrowLeft, Inbox, LoaderCircle } from "lucide-react";
 import { cn } from "@/utils/themeUtils";
 
 export function MoaPage({ children, className = "" }) {
@@ -180,5 +180,40 @@ export function MoaEmptyState({ title, description, action, icon: Icon = Inbox, 
       )}
       {action && <div className="mt-5">{action}</div>}
     </div>
+  );
+}
+
+export function MoaStatusState({
+  tone = "loading",
+  title,
+  description,
+  action,
+  className = "",
+}) {
+  const isError = tone === "error";
+  const Icon = isError ? AlertCircle : LoaderCircle;
+
+  return (
+    <section
+      className={cn("flex min-h-64 flex-col items-center justify-center px-6 py-10 text-center", className)}
+      role={isError ? "alert" : "status"}
+      aria-live={isError ? "assertive" : "polite"}
+    >
+      <div
+        className={cn(
+          "mb-4 flex h-12 w-12 items-center justify-center rounded-full",
+          isError
+            ? "bg-red-50 text-red-600 dark:bg-red-500/15 dark:text-red-300"
+            : "bg-[var(--theme-primary-light)] text-[var(--theme-primary)]"
+        )}
+      >
+        <Icon className={cn("h-6 w-6", !isError && "animate-spin motion-reduce:animate-none")} aria-hidden="true" />
+      </div>
+      <h2 className="text-lg font-bold text-[var(--theme-text)]">{title}</h2>
+      {description && (
+        <p className="mt-2 max-w-md text-sm leading-6 text-[var(--theme-text-muted)]">{description}</p>
+      )}
+      {action && <div className="mt-5">{action}</div>}
+    </section>
   );
 }
