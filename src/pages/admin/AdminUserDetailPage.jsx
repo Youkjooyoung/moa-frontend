@@ -97,7 +97,7 @@ export default function AdminUserDetailPage() {
                 />
               </aside>
 
-              <main className="w-full space-y-6">
+              <section aria-label="사용자 상세 정보" className="w-full space-y-6">
                 <AdminUserDetailProfileCard
                   user={user}
                   statusDotClass={statusDotClass}
@@ -129,7 +129,7 @@ export default function AdminUserDetailPage() {
                   goHistoryNextBlock={goHistoryNextBlock}
                   goHistoryLast={goHistoryLast}
                 />
-              </main>
+              </section>
             </div>
           </div>
         </div>

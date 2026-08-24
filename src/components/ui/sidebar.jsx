@@ -275,7 +275,7 @@ SidebarRail.displayName = "SidebarRail"
 
 const SidebarInset = React.forwardRef(({ className, ...props }, ref) => {
   return (
-    <main
+    <div
       ref={ref}
       className={cn(
         "relative flex w-full flex-1 flex-col bg-background",

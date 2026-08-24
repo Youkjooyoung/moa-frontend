@@ -253,7 +253,7 @@ export default function MainPage() {
 
   return (
     <div className="-mt-20 bg-[var(--theme-bg)] pt-20 pb-16 selection:bg-[var(--theme-primary)] selection:text-white">
-      <main className="w-full max-w-[1200px] mx-auto px-4 sm:px-6 mt-8 md:mt-10 flex flex-col gap-4 md:gap-6">
+      <section aria-label="홈 주요 콘텐츠" className="w-full max-w-[1200px] mx-auto px-4 sm:px-6 mt-8 md:mt-10 flex flex-col gap-4 md:gap-6">
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
           <Hero textOrDefault={textOrDefault} />
@@ -266,7 +266,7 @@ export default function MainPage() {
         </div>
 
         <CurrentParties parties={visibleParties} locale={locale} title={t(partySection.titleKey)} />
-      </main>
+      </section>
 
       {/* CTA Section */}
       <section className="w-full max-w-[1200px] mx-auto px-4 sm:px-6 mt-16 md:mt-24">

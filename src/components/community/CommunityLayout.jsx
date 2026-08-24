@@ -76,9 +76,9 @@ export default function CommunityLayout({ children }) {
         </div>
       </section>
 
-      <main className="mx-auto max-w-7xl px-5 py-10 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-5 py-10 sm:px-6 lg:px-8">
         {children}
-      </main>
+      </div>
     </div>
   );
 }

@@ -46,7 +46,7 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[var(--theme-bg)] px-4 py-10 text-[var(--theme-text)] sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[var(--theme-bg)] px-4 py-10 text-[var(--theme-text)] sm:px-6 lg:px-8">
       <section className="mx-auto flex min-h-[calc(100vh-5rem)] w-full max-w-[480px] items-center">
         <div className="w-full rounded-[32px] border border-[var(--theme-border-light)] bg-[var(--theme-surface)] p-6 shadow-2xl shadow-slate-900/5 sm:p-8">
           <div className="mb-7 text-center">
@@ -93,6 +93,6 @@ export default function LoginPage() {
         onConfirm={handleOtpConfirm}
         loading={otpLoading}
       />
-    </main>
+    </div>
   );
 }
